@@ -1,0 +1,14 @@
+-- Mapear Base de Datos SQL Server con .NET Core Entity Framework
+
+-> Scaffold-DBContext "Server=localhost;Database=db_docentes;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
+-> Scaffold-DBContext "Server=www.developers.upiicsa.ipn.mx;Database=db_docentes;User ID=develop;Password=set.p4$$w0RD.sqla" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
+
+-> Scaffold-DBContext "Server=localhost;Database=db_SITI;Trusted_Connection=True;TrustServerCertificate=True;" -Provider Microsoft.EntityFrameworkCore.SqlServer -OutputDir CapaDataAccess/DBContext -Tables tbUsuariosSolicitantes -Context DBContext -DataAnnotations -Force
+-> Scaffold-DBContext "Server=148.204.211.187;Database=db_SITI;User Id=sa;Password=Up11cs4@2023;TrustServerCertificate=True;" -Provider Microsoft.EntityFrameworkCore.SqlServer -OutputDir CapaDataAccess/DBContext -DataAnnotations -Force
+
+-> Scaffold-DBContext "Server=148.204.211.135;Initial Catalog=db_CorreosInst_UPIICSA;User ID=correos_institucionales;Password=correos_institucionales_05;Trusted_Connection=False;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir CapaDataAccess/DBContext -Force
+-> Scaffold-DBContext "Server=www.developers.upiicsa.ipn.mx;Database=db_CorreosInst_UPIICSA;User ID=correos_institucionales;Password=correos_institucionales_05;Trusted_Connection=False;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir CapaDataAccess/DBContext -Force
+
+DBContext
+=> optionsBuilder.UseSqlServer("Server=148.204.211.187;Database=db_SITI;User Id=sa;Password=Up11cs4@2023;TrustServerCertificate=True;");
+=> optionsBuilder.UseSqlServer("Server=localhost;Database=db_SITI;Trusted_Connection=True;TrustServerCertificate=True;");

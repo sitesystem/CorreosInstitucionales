@@ -1,0 +1,7 @@
+egonzalezb@ipn.mx
+https://localhost:7271/IsAuthenticated
+
+curl -X GET
+	-H "Content-Type: application/json"
+	-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiSUQiOiIxIiwiTmFtZSI6IkVkdWFyZG8iLCJFbWFpbCI6ImVnb256YWxlemJAaXBuLm14IiwiUm9sIjoiMiIsIlBlcm1pc28xIjoiMyIsIm5iZiI6MTY5MjI1NTgxOCwiZXhwIjoxNjkyMzQyMjE4LCJpYXQiOjE2OTIyNTU4MTh9.dU-f6DVbc2sizR9LMa_P3TxDZcsKWb7CwiZijKceCC8"
+	https://localhost:7271/api/Edificios

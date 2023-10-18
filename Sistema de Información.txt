@@ -1,0 +1,54 @@
+SISTEMA DE SOFTWARE
+1. Análisis
+	1.1 Tipo de Proyecto: (Consola/Script, APP Móvil, Desktop, Web, Videojuegos, IoT, IA)
+	1.2 Requerimientos para las Reglas del Negocio
+	1.3 Patrón de Arquitectura en Capas/MVC para el Desarrollo de Sistemas (Mantenible, Reusable, Performance/Rendimiento)
+		- CapaEntities.ViewModels		Clases (Entidades del Negocio)
+		- CapaPresentationPages.UI-UX		Components
+		- CapaServices.BusinessLogic		Interfaces / Clases que implementan la interfaz
+		- CapaDataAccess			DBContext (ConnectionString DataBase) / Controllers
+		- CapaSecurity				Estándar OWASP: Jason Web Token, SQL Injection, Authorization / Authentication: OAuth
+		- Dependency Injections Container	Separar las responsabilidad entre las diferentes capas
+		- CapaTest				Unit Testing / Integration Testing
+	1.4 FrontEnd (Cliente / Request - Petición)						/	BackEnd -> DataBase (Servidor / Response - Respuesta): SOAP, API REST, GraphQL
+		- Protocolo HTTP (Verbos o Métodos):							- Consultas a la Base de Datos: SQL, NoSQL, ORM
+			GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, CONNECT, TRACE			- Jobs (Programming Tasks)
+		- Códigos de Respuestas a las Peticiones:						- Background Tasks (Colas de Procesos)
+			1xx ()										- 
+			2xx (Todo Correcto)
+			3xx ()
+			4xx (Error BadRequest)
+			5xx (Error en el Servidor)
+		- User Interface (UI) / User Experience (UX)
+										- Data Validations
+										- SOLID Principies
+										- Dessign Patterns
+										- Resilence Patterns (Tolerancia a Errores)
+										- Refactoring: Clean Code
+										- Upload and Dowload Files
+										- 
+	1.4 BackEnd - DataBase (Cliente / Request - Petición) / FrontEnd (Servidor / Response - Respuesta)
+			- Real Time Task: Sockets, Jobs en SignalR
+	1.5 Cloud Services: AWS, Azure, Google Cloud
+	1.6 Pay Services: PayPal
+2. Diseño
+	2.1 Diagramas: Componentes, Flujo <=> Estado
+3. Programación / Codificación
+	3.1 Stack: MongoDB/MySQL-ExpressJS-React-NodeJS (MERN), MongoDB/MySQL-ExpressJS-Angular-NodeJS (MEAN), MongoDB/MySQL-ExpressJS-Vue-NodeJS (MEVN), WAMP/LAMP/XAMP, SQLServer-IIS-Blazor WebAssembly/Blazor MAUI-API Entity Framework
+4. DevOps
+	4.1 Testing
+	4.2 Build
+	4.3 Deploy (Despliegue) / Publicación: en IIS o Azure
+		4.3.1 Continuos Integration (CI)
+		4.3.2 Continuos Deploy (CD)
+		4.3.3 Hospedaje: Hosting, Virtual Server, Cloud Server
+5. Pruebas
+	5.1 Unit Testing
+	5.2 Test Driven Design (TDD)
+	5.3 Domain Driven Design (DDD)
+	5.4 Pruebas de estrés para verificar el rendimiento
+6. Seguimiento / Mantenimiento / Actualizaciones (Parches)
+	6.1 Backups (Copias de Seguridad de la DB)
+	6.2 Migraciones de DB
+7. Herramientas de Ciencia y Análisis de Datos
+	7.1 Dashboard en Excel, Power BI, Tableau
