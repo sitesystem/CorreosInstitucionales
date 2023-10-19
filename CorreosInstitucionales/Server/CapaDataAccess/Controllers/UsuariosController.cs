@@ -12,7 +12,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
     public class UsuariosController : ControllerBase
     {
         [HttpGet("filterByStatus/{filterByStatus}")]
-        public async Task<IActionResult> GetAllData(bool filterByStatus)
+        public async Task<IActionResult> GetAllData(bool filterByStatus) 
         {
             Response<List<MceTbUsuario>> oResponse = new();
 
