@@ -4,12 +4,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>CorreosInstitucionales</title>
+    <title>Correos Institucionales</title>
     <base href="/" />
+    <link rel="icon" type="image/png" href="favicon.png" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="favicon.png" />
     <link href="CorreosInstitucionales.Client.styles.css" rel="stylesheet" />
+    <link id="theme" href="_content/Syncfusion.Blazor.Themes/fluent.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -27,6 +28,41 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
-</body>
 
+    <script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" type="text/javascript"></script>
+
+    <script>
+
+        window.cultureInfo =
+        {
+            get: () => window.localStorage['BlazorCulture'],
+            set: (value) => window.localStorage['BlazorCulture'] = value
+        };
+
+        function setTheme(theme) {
+            document.getElementsByTagName('body')[0].style.display = 'none';
+            let synclink = document.getElementById('theme');
+            synclink.href = '_content/Syncfusion.Blazor.Themes/' + theme + '.css';
+            setTimeout(function () { document.getElementsByTagName('body')[0].style.display = 'block'; }, 200);
+        }
+
+        function editKeyDown(id) {
+            document.getElementById(id).addEventListener("keydown", function (e) {
+                if (e.key == "Enter") {
+                    e.stopPropagation();
+                }
+            });
+        }
+
+        window.scrollToTop = function () {
+            window.scrollTo(0, 0); // Desplaza a la parte superior de la página
+        };
+
+        window.scrollToBottom = function () {
+            window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight); // Desplaza al final de la página
+        };
+
+    </script>
+
+</body>
 </html>

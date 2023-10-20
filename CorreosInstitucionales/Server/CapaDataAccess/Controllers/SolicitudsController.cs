@@ -6,11 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class SolicitudesController : ControllerBase
     {
-        [Route("api/[controller]")]
-        [ApiController]
-
         [HttpGet("filterById/{id}")]
         public async Task<IActionResult> GetDataById(int id)
         {

@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request.Login
+{
+    public class LoginAuthViewModel
+    {
+        [Required(ErrorMessage = "Campo requerido.")]
+        //[RegularExpression("^[A-Za-z0-9._%+-]*@ipn.mx$", ErrorMessage = "Formato Incorrecto.")]
+        public string UsuCorreo { get; set; } = null!;
+
+        [Required(ErrorMessage = "Campo requerido.")]
+        public string UsuContraseña { get; set; } = null!;
+    }
+}

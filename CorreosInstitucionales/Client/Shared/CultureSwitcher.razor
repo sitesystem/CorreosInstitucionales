@@ -1,0 +1,36 @@
+﻿@using System.Globalization;
+@inject NavigationManager NavigationManager;
+@inject IJSRuntime JSRuntime;
+
+<select @bind="Culture">
+    @foreach (var culture in supportedCultures)
+    {
+        <option value="@culture">@culture.DisplayName</option>
+    }
+</select>
+
+@code
+{
+    // Culture
+
+    private CultureInfo[] supportedCultures = new[]
+    {
+        new CultureInfo("es"),
+        new CultureInfo("en-US"),
+    };
+
+    private CultureInfo Culture
+    {
+        get => CultureInfo.CurrentCulture;
+        set
+        {
+            if (CultureInfo.CurrentCulture != value)
+            {
+                var js = (IJSInProcessRuntime)JSRuntime;
+                js.InvokeVoid("cultureInfo.set", value.Name);
+
+                NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+            }
+        }
+    }
+}

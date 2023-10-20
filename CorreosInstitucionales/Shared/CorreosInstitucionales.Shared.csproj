@@ -11,8 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CapaEntities.ViewModels\Common\" />
     <Folder Include="CapaServices.BusinessLogic\" />
-    <Folder Include="CapaTools\" />
   </ItemGroup>
 </Project>

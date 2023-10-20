@@ -144,7 +144,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         //[HttpDelete("{Id}")]
-        [HttpPut("editByIdStatus/{Id}/{isActivate}")]
+        [HttpPut("editByIdStatus/{id}/{isActivate}")]
         public IActionResult EnableDisableDataById(int id, bool isActivate)
         {
             Response<object> oRespuesta = new();

@@ -1,17 +1,113 @@
 ﻿@inherits LayoutComponentBase
 
+@inject IJSRuntime JSRuntime;
+
+<style>
+    .control-container .e-appbar.custom-appbar {
+        background: none;
+        color: #fff;
+    }
+
+    .control-container .e-btn.e-inherit {
+        margin: 0 3px;
+    }
+
+    .control-container .syncfusion-logo {
+        background: url(https://cdn.syncfusion.com/blazor/images/demos/syncfusion-logo.svg);
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 30px;
+        width: 150px;
+    }
+</style>
+
 <div class="page">
-    <div class="sidebar">
+    <div class="@sidebarCssClass">
         <NavMenu />
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        <div class="top-row px-4 control-container" style="background-color:#48132E; color:white;">
+            <SfAppBar ColorMode="AppBarColor.Primary" Mode="AppBarMode.Regular" CssClass="custom-appbar">
+
+                <SfButton CssClass="e-inherit" IconCss="e-icons e-menu" OnClick="CollapseSidebar" />
+                @* <a href="https://www.syncfusion.com/blazor-components" target="_blank" rel="noopener" role="link" aria-label="Syncfusion blazor components">
+                <div class="syncfusion-logo"></div>
+                </a> *@
+                <span style="font-variant: small-caps;">Plataforma de Correos Institucionales IPN</span>
+
+                <AppBarSpacer />
+
+                @* <AuthorizeView>
+                    <Authorized>
+                        <div>Nombre: @context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value </div>
+                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
+                        <div>Email: @context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value </div>
+                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
+                        <div>Rol: @context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value</div>
+                    </Authorized>
+                </AuthorizeView> *@
+
+                <AppBarSpacer />
+
+                <CultureSwitcher />
+                <div class="theme-switcher">
+                    @* Theme switcher *@
+                    <SfDropDownList TItem="ThemeDetails" TValue="string" @bind-Value="themeName" DataSource="@Themes" Placeholder="Selecciona el Tema" EnableRtl="false">
+                        <DropDownListFieldSettings Text="Text" Value="ID"></DropDownListFieldSettings>
+                        <DropDownListEvents TItem="ThemeDetails" TValue="string" ValueChange="OnThemeChange"></DropDownListEvents>
+                    </SfDropDownList>
+                </div>
+
+            </SfAppBar>
         </div>
 
-        <article class="content px-4">
+        <article class="content px-4" style="background: url('../fondo.jpg') repeat center center fixed;">
             @Body
         </article>
     </main>
 </div>
+
+@code
+{
+    private string themeName = "fluent";
+
+    public class ThemeDetails
+    {
+        public string? ID { get; set; }
+        public string? Text { get; set; }
+    }
+
+    private List<ThemeDetails> Themes = new List<ThemeDetails>()
+    {
+        new ThemeDetails(){ ID = "bootstrap5", Text = "Bootstrap 5" },
+        new ThemeDetails(){ ID = "bootstrap5-dark", Text = "Bootstrap 5 Dark" },
+        new ThemeDetails(){ ID = "bootstrap4", Text = "Bootstrap 4" },
+        //new ThemeDetails(){ ID = "bootstrap4-dark", Text = "Bootstrap 4 Dark" },
+        new ThemeDetails(){ ID = "bootstrap", Text = "Bootstrap 3" },
+        new ThemeDetails(){ ID = "bootstrap-dark", Text = "Bootstrap 3 Dark" },
+        new ThemeDetails(){ ID = "material", Text = "Material UI" },
+        new ThemeDetails(){ ID = "material-dark", Text = "Material UI Dark" },
+        new ThemeDetails(){ ID = "tailwind", Text = "TailWind CSS"},
+        new ThemeDetails(){ ID = "tailwind-dark", Text = "TailWind CSS Dark" },
+        new ThemeDetails(){ ID = "fabric", Text = "Fabric" },
+        new ThemeDetails(){ ID = "fabric-dark", Text = "Fabric Dark" },
+        new ThemeDetails(){ ID = "fluent", Text = "Fluent" },
+        new ThemeDetails(){ ID = "fluent-dark", Text = "Fluent Dark" },
+        new ThemeDetails(){ ID = "highcontrast", Text = "High Contrast" }
+    };
+
+    public void OnThemeChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, ThemeDetails> args)
+    {
+        JSRuntime.InvokeAsync<object>("setTheme", args.ItemData.ID);
+    }
+
+    private bool sidebarCollapse = true;
+
+    private string? sidebarCssClass => sidebarCollapse ? "sidebar" : "sidebar collapse";
+
+    private void CollapseSidebar()
+    {
+        sidebarCollapse = !sidebarCollapse;
+    }
+}

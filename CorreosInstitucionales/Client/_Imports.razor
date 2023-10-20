@@ -1,5 +1,8 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization;
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -8,3 +11,39 @@
 @using Microsoft.JSInterop
 @using CorreosInstitucionales.Client
 @using CorreosInstitucionales.Client.Shared
+
+@using Syncfusion.Blazor;
+@using Syncfusion.Blazor.BarcodeGenerator;  @* Sf *@
+@using Syncfusion.Blazor.Buttons;           @* SfButton, SfCheckBox, SfChip, SfFloating Action Button, SfRadioButton, SfSpeedDial, SfToogle Switch Button, SfIcon *@
+@using Syncfusion.Blazor.Calendars;         @* SfCalendar, SfDatePicker, SfDateRangePicker, SfDateTimePicker, SfTimePicker *@
+@using Syncfusion.Blazor.Cards;             @* SfCard *@
+@using Syncfusion.Blazor.Charts;            @* Sf *@
+@using Syncfusion.Blazor.Data;              @* SfDataManager *@
+@using Syncfusion.Blazor.DataVizCommon;     @* Sf *@
+@using Syncfusion.Blazor.Diagram;           @* Sf *@
+@using Syncfusion.Blazor.Diagrams;          @* Sf *@
+@using Syncfusion.Blazor.DropDowns;         @* SfDropDownList, SfComboBox, SfAutoComplete, SfMultiSelect Dropdown, SfListBox, SfMention *@
+@using Syncfusion.Blazor.FileManager;       @* Sf *@
+@using Syncfusion.Blazor.Gantt;             @* Sf *@
+@using Syncfusion.Blazor.Grids;             @* IEnumerable, ObservableCollection, OData web services, or DataManager and binding data fields to columns: SfGrid *@
+@using Syncfusion.Blazor.HeatMap;           @* Sf *@
+@using Syncfusion.Blazor.InPlaceEditor;     @* Sf *@
+@using Syncfusion.Blazor.Inputs;            @* SfColorPicker, SfMaskedTextBox, SfNumericTextBox, SfRating, SfTextBox, SfSlider, SfTextBox, file inputs: SfUploader, SfUploader *@
+@using Syncfusion.Blazor.Internal;          @* Sf *@
+@using Syncfusion.Blazor.Kanban;            @* Sf *@
+@using Syncfusion.Blazor.Layouts;           @* SfDashboardLayout, SfSplitter *@
+@using Syncfusion.Blazor.Lists;             @* SfListView *@
+@using Syncfusion.Blazor.Maps;              @* SfMaps *@
+@using Syncfusion.Blazor.Navigations;       @* SfAccordion, SfAppBar, SfBreadcrumb, SfContextMenu, SfMenu, SfSidebar, SfTab, SfToolbar, SfTreeView, SfPager *@
+@using Syncfusion.Blazor.Notifications;     @* SfToast, SfSkeleton, SfMessage *@
+@using Syncfusion.Blazor.PdfViewer;         @* SfPdfViewer *@
+@using Syncfusion.Blazor.PivotView;         @* Sf *@
+@using Syncfusion.Blazor.Popups;            @* SfDialog, SfTooltip *@
+@using Syncfusion.Blazor.ProgressBar;       @* SfProgressBar *@
+@using Syncfusion.Blazor.QueryBuilder;      @* Sf *@
+@using Syncfusion.Blazor.RichTextEditor;    @* Sf *@
+@using Syncfusion.Blazor.Schedule;          @* SfRecurrenceEditor, SfSchedule *@
+@using Syncfusion.Blazor.Spinner;           @* SfSpinner *@
+@using Syncfusion.Blazor.SplitButtons;      @* SfButtonGroup, SfDropDownButton, SfProgressButton, SfSplitButton *@
+@using Syncfusion.Blazor.TreeGrid;          @* Sf *@
+@using Syncfusion.Blazor.TreeMap;           @* Sf *@

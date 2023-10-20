@@ -2,6 +2,7 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: url("../fondo.jpg") repeat center center fixed;
 }
 
 h1:focus {
@@ -96,6 +97,77 @@ a, .btn-link {
     inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
 }
 
-    .loading-progress-text:after {
-        content: var(--blazor-load-percentage-text, "Loading");
-    }
+.loading-progress-text:after {
+    content: var(--blazor-load-percentage-text, "Loading");
+}
+
+.e-altrow {
+    background-color: #fafafa;
+}
+
+.e-grid tr.e-row:hover .e-rowcell:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell) {
+    /*background-color: ;*/
+}
+
+.validation-message {
+    font-size: 14px;
+    color: red;
+    padding: 5px 0px 0px;
+}
+
+.e-msg-content {
+    font-size: 20px;
+}
+
+.e-checkbox-wrapper.e-primary:hover .e-frame.e-check { /* csslint allow: adjoining-classes */
+    background-color: #e03872;
+}
+
+.e-checkbox-wrapper.e-success .e-frame.e-check,
+.e-checkbox-wrapper.e-success .e-checkbox:focus + .e-frame.e-check { /* csslint allow: adjoining-classes */
+    background-color: #689f38;
+    border-color: darkgreen;
+    color: white;
+}
+
+.e-checkbox-wrapper.e-success:hover .e-frame.e-check { /* csslint allow: adjoining-classes */
+    background-color: white;
+    color: darkgreen;
+}
+
+.e-checkbox-wrapper.e-info .e-frame.e-check,
+.e-checkbox-wrapper.e-info .e-checkbox:focus + .e-frame.e-check { /* csslint allow: adjoining-classes */
+    background-color: #2196f3;
+}
+
+.e-checkbox-wrapper.e-info:hover .e-frame.e-check { /* csslint allow: adjoining-classes */
+    background-color: #0b7dda;
+}
+
+.e-checkbox-wrapper.e-warning .e-frame.e-check,
+.e-checkbox-wrapper.e-warning .e-checkbox:focus + .e-frame.e-check { /* csslint allow: adjoining-classes */
+    background-color: #ef6c00;
+}
+
+.e-checkbox-wrapper.e-warning:hover .e-frame.e-check { /* csslint allow: adjoining-classes */
+    background-color: #cc5c00;
+}
+
+.e-checkbox-wrapper.e-danger .e-frame.e-check,
+.e-checkbox-wrapper.e-danger .e-checkbox:focus + .e-frame.e-check { /* csslint allow: adjoining-classes */
+    background-color: #d84315;
+}
+
+.e-checkbox-wrapper.e-danger:hover .e-frame.e-check { /* csslint allow: adjoining-classes */
+    background-color: #ba3912;
+}
+
+.e-toolbar .e-tbar-btn-text {
+    font-variant: small-caps;
+}
+
+
+.Tooltip {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
