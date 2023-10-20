@@ -72,22 +72,26 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 {
                     MceTbUsuario oUsuario = new()
                     {
-                        IdUsuarioSolicitante=model.IdUsuarioSolicitante,
-                        UsuNombre=model.UsuNombre,
-                        UsuPrimerApellido=model.UsuPrimerApellido,
-                        UsuSegundoApellido=model.UsuSegundoApellido,
-                        UsuBoleta=model.UsuBoleta,
-                        UsuNumeroEmpleado=model.UsuNumeroEmpleado,
-                        UsuContraseña=model.UsuContraseña,
-                        UsuRecuperarContraseñas=model.UsuRecuperarContraseñas,
-                        UsuIdTipoPersonal=model.UsuIdTipoPersonal,
-                        UsuStatus=model.UsuStatus,
-                        UsuCorreoPersonal=model.UsuCorreoPersonal,
-                        UsuIdRol=model.UsuIdRol,
-                        UsuCorreroInstitucional=model.UsuCorreroInstitucional,
-                        UsuContraseñaInstitucional=model.UsuContraseñaInstitucional,
-                        UsuIdCarrera=model.UsuIdCarrera,
-                        //UsuIdTipoPersonalNavigation=null
+                        IdUsuarioSolicitante = model.IdUsuarioSolicitante,
+                        UsuNombre = model.UsuNombre,
+                        UsuPrimerApellido = model.UsuPrimerApellido,
+                        UsuSegundoApellido = model.UsuSegundoApellido,
+                        UsuCurp = model.UsuCurp,
+                        UsuFilenameCurp = model.UsuFilenameCurp,
+                        UsuNoCelular = model.UsuNoCelular,
+                        UsuBoleta = model.UsuBoleta,
+                        UsuNumeroEmpleado = model.UsuNumeroEmpleado,
+                        UsuCorreoPersonal = model.UsuCorreoPersonal,
+                        UsuContraseñaPersonal = model.UsuContraseñaPersonal,
+                        UsuRecuperarContraseñas = model.UsuRecuperarContraseñas,
+                        UsuIdTipoPersonal = model.UsuIdTipoPersonal,
+                        UsuIdRol = model.UsuIdRol,
+                        UsuCorreroInstitucional = model.UsuCorreroInstitucional,
+                        UsuContraseñaInstitucional = model.UsuContraseñaInstitucional,
+                        UsuIdCarrera = model.UsuIdCarrera,
+                        UsuFechaHoraAlta = model.UsuFechaHoraAlta,
+                        UsuStatus = model.UsuStatus,                                                
+                        UsuIdTipoPersonalNavigation = null
                     };
                     await db.MceTbUsuarios.AddAsync(oUsuario);
                     await db.SaveChangesAsync();
@@ -117,17 +121,21 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     oUsuario.UsuNombre = model.UsuNombre;
                     oUsuario.UsuPrimerApellido = model.UsuPrimerApellido;
                     oUsuario.UsuSegundoApellido = model.UsuSegundoApellido;
+                    oUsuario.UsuCurp = model.UsuCurp;
+                    oUsuario.UsuFilenameCurp = model.UsuFilenameCurp;
+                    oUsuario.UsuNoCelular = model.UsuNoCelular;
                     oUsuario.UsuBoleta = model.UsuBoleta;
                     oUsuario.UsuNumeroEmpleado = model.UsuNumeroEmpleado;
-                    oUsuario.UsuContraseña = model.UsuContraseña;
-                    oUsuario.UsuRecuperarContraseñas = model.UsuRecuperarContraseñas;
-                    oUsuario.UsuIdTipoPersonal=model.UsuIdTipoPersonal;
-                    oUsuario.UsuStatus = model.UsuStatus;
                     oUsuario.UsuCorreoPersonal = model.UsuCorreoPersonal;
+                    oUsuario.UsuContraseñaPersonal = model.UsuContraseñaPersonal;
+                    oUsuario.UsuRecuperarContraseñas = model.UsuRecuperarContraseñas;
+                    oUsuario.UsuIdTipoPersonal = model.UsuIdTipoPersonal;
                     oUsuario.UsuIdRol = model.UsuIdRol;
                     oUsuario.UsuCorreroInstitucional = model.UsuCorreroInstitucional;
                     oUsuario.UsuContraseñaInstitucional = model.UsuContraseñaInstitucional;
                     oUsuario.UsuIdCarrera = model.UsuIdCarrera;
+                    oUsuario.UsuFechaHoraAlta = model.UsuFechaHoraAlta;
+                    oUsuario.UsuStatus = model.UsuStatus;
 
                     db.Entry(oUsuario).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     db.SaveChanges();

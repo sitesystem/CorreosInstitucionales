@@ -1,17 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
+[Table("MCE_catTipoPersonal")]
 public partial class MceCatTipoPersonal
 {
+    [Key]
     public int IdTipoPersonal { get; set; }
 
+    [Column("tipoperNombre")]
+    [StringLength(100)]
+    [Unicode(false)]
     public string TipoperNombre { get; set; } = null!;
 
-    public bool TipoperStatus { get; set; }
-
+    [Column("tipoperDescripcion", TypeName = "text")]
     public string? TipoperDescripcion { get; set; }
 
+    [Required]
+    [Column("tipoperStatus")]
+    public bool? TipoperStatus { get; set; }
+
+    [InverseProperty("UsuIdTipoPersonalNavigation")]
     public virtual ICollection<MceTbUsuario> MceTbUsuarios { get; set; } = new List<MceTbUsuario>();
 }

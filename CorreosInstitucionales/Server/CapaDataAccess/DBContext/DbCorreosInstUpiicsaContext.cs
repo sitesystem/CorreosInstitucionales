@@ -45,206 +45,71 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
         {
             entity.HasKey(e => e.IdAreaDepto).HasName("PK_MCE_catExtencionesAreas");
 
-            entity.ToTable("MCE_catAreasDeptos");
+            entity.Property(e => e.AreIdEdificio).HasDefaultValueSql("((1))");
+            entity.Property(e => e.AreIdPiso).HasDefaultValueSql("((1))");
+            entity.Property(e => e.AreStatus).HasDefaultValueSql("((1))");
 
-            entity.Property(e => e.IdAreaDepto).HasColumnName("Id_AreaDepto");
-            entity.Property(e => e.AreExtension)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("areExtension");
-            entity.Property(e => e.AreIdEdificio).HasColumnName("areIdEdificio");
-            entity.Property(e => e.AreIdPiso).HasColumnName("areIdPiso");
-            entity.Property(e => e.AreNombre)
-                .HasColumnType("text")
-                .HasColumnName("areNombre");
-            entity.Property(e => e.AreStatus).HasColumnName("areStatus");
-        });
+            entity.HasOne(d => d.AreIdEdificioNavigation).WithMany(p => p.MceCatAreasDeptos)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MCE_catAreasDeptos_MCE_catEdificios");
 
-        modelBuilder.Entity<MceCatCarrera>(entity =>
-        {
-            entity.HasKey(e => e.IdCarrera);
-
-            entity.ToTable("MCE_catCarreras");
-
-            entity.Property(e => e.IdCarrera).HasColumnName("Id_Carrera");
-            entity.Property(e => e.CarrNombre)
-                .HasMaxLength(300)
-                .HasColumnName("carrNombre");
-            entity.Property(e => e.CarrStatus).HasColumnName("carrStatus");
+            entity.HasOne(d => d.AreIdPisoNavigation).WithMany(p => p.MceCatAreasDeptos)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MCE_catAreasDeptos_MCE_catPisos");
         });
 
         modelBuilder.Entity<MceCatEdificio>(entity =>
         {
-            entity.HasKey(e => e.IdEdificio);
-
-            entity.ToTable("MCE_catEdificios");
-
             entity.Property(e => e.IdEdificio).ValueGeneratedNever();
-            entity.Property(e => e.EdiNombreAlias)
-                .HasMaxLength(200)
-                .IsUnicode(false)
-                .HasColumnName("ediNombreAlias");
-            entity.Property(e => e.EdiNombreOficial)
-                .HasMaxLength(200)
-                .IsUnicode(false)
-                .HasColumnName("ediNombreOficial");
-            entity.Property(e => e.EdiStatus).HasColumnName("ediStatus");
-        });
-
-        modelBuilder.Entity<MceCatEstadosSolicitud>(entity =>
-        {
-            entity.HasKey(e => e.IdEstadosSolicitud);
-
-            entity.ToTable("MCE_catEstadosSolicitud");
-
-            entity.Property(e => e.EstsolNombre)
-                .HasMaxLength(30)
-                .IsUnicode(false)
-                .HasColumnName("estsolNombre");
-            entity.Property(e => e.PisoStatus).HasColumnName("pisoStatus");
-        });
-
-        modelBuilder.Entity<MceCatPiso>(entity =>
-        {
-            entity.HasKey(e => e.IdPiso);
-
-            entity.ToTable("MCE_catPisos");
-
-            entity.Property(e => e.PisoDescripcion)
-                .HasMaxLength(50)
-                .HasColumnName("pisoDescripcion");
-            entity.Property(e => e.PisoStatus).HasColumnName("pisoStatus");
-        });
-
-        modelBuilder.Entity<MceCatRole>(entity =>
-        {
-            entity.HasKey(e => e.IdRol);
-
-            entity.ToTable("MCE_catRoles");
-
-            entity.Property(e => e.RolDescripcion)
-                .HasColumnType("text")
-                .HasColumnName("rolDescripcion");
-            entity.Property(e => e.RolNombre)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("rolNombre");
         });
 
         modelBuilder.Entity<MceCatTipoPersonal>(entity =>
         {
             entity.HasKey(e => e.IdTipoPersonal).HasName("PK_MC_TipoPersonal");
 
-            entity.ToTable("MCE_catTipoPersonal");
-
-            entity.Property(e => e.IdTipoPersonal).HasColumnName("Id_Tipo_personal");
-            entity.Property(e => e.TipoperDescripcion)
-                .HasColumnType("text")
-                .HasColumnName("tipoperDescripcion");
-            entity.Property(e => e.TipoperNombre)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("tipoperNombre");
-            entity.Property(e => e.TipoperStatus).HasColumnName("tipoperStatus");
+            entity.Property(e => e.TipoperStatus).HasDefaultValueSql("((1))");
         });
 
         modelBuilder.Entity<MceCatTipoSolicitud>(entity =>
         {
             entity.HasKey(e => e.IdTipoSolicitud).HasName("PK_MC_catTipoSolicitud");
 
-            entity.ToTable("MCE_catTipoSolicitud");
-
             entity.Property(e => e.IdTipoSolicitud).HasComment("ID del tipo de solicitud");
             entity.Property(e => e.TiposolDescripcion)
                 .HasDefaultValueSql("(N'-')")
-                .HasComment("Descripcion del tipo de la solicitud")
-                .HasColumnType("text")
-                .HasColumnName("tiposolDescripcion");
-            entity.Property(e => e.TiposolStatus).HasColumnName("tiposolStatus");
+                .HasComment("Descripcion del tipo de la solicitud");
         });
 
         modelBuilder.Entity<MceTbSolicitud>(entity =>
         {
-            entity.HasKey(e => e.IdSolicitud);
-
-            entity.ToTable("MCE_tbSolicitud");
-
-            entity.Property(e => e.IdSolicitud)
-                .ValueGeneratedNever()
-                .HasColumnName("Id_Solicitud");
-            entity.Property(e => e.SolFecha)
-                .HasColumnType("datetime")
-                .HasColumnName("solFecha");
-            entity.Property(e => e.SolIdAreaDepto).HasColumnName("solIdAreaDepto");
-            entity.Property(e => e.SolIdEstadosSolicitud).HasColumnName("solIdEstadosSolicitud");
-            entity.Property(e => e.SolIdTipoSolicitud).HasColumnName("solIdTipoSolicitud");
-            entity.Property(e => e.SolIdUsuario).HasColumnName("solIdUsuario");
+            entity.Property(e => e.IdSolicitud).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<MceTbUsuario>(entity =>
         {
             entity.HasKey(e => e.IdUsuarioSolicitante).HasName("PK_ML_tbUsuariosSolicitantes");
 
-            entity.ToTable("MCE_tbUsuarios");
-
             entity.Property(e => e.IdUsuarioSolicitante).HasComment("Descripcion del Usuario Solicitante");
-            entity.Property(e => e.UsuBoleta)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasComment("Numero de Boleta del Uusario Solicitante")
-                .HasColumnName("usuBoleta");
-            entity.Property(e => e.UsuContraseña)
-                .HasMaxLength(300)
-                .IsUnicode(false)
-                .HasComment("Contraseña del Usuario Solicitante")
-                .HasColumnName("usuContraseña");
-            entity.Property(e => e.UsuContraseñaInstitucional)
-                .HasMaxLength(300)
-                .IsUnicode(false)
-                .HasColumnName("usuContraseñaInstitucional");
-            entity.Property(e => e.UsuCorreoPersonal)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("usuCorreoPersonal");
-            entity.Property(e => e.UsuCorreroInstitucional)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("usuCorreroInstitucional");
-            entity.Property(e => e.UsuIdCarrera).HasColumnName("usuIdCarrera");
-            entity.Property(e => e.UsuIdRol).HasColumnName("usuIdRol");
-            entity.Property(e => e.UsuIdTipoPersonal)
-                .HasComment("Tipo de Personal del Usuario Solicitante")
-                .HasColumnName("usuIdTipoPersonal");
-            entity.Property(e => e.UsuNombre)
-                .HasMaxLength(200)
-                .IsUnicode(false)
-                .HasComment("Nombre del Usuario Solicitante")
-                .HasColumnName("usuNombre");
-            entity.Property(e => e.UsuNumeroEmpleado)
-                .HasComment("Numero del Empleado del Usuario Solicitante")
-                .HasColumnName("usuNumeroEmpleado");
+            entity.Property(e => e.UsuBoleta).HasComment("Numero de Boleta del Uusario Solicitante");
+            entity.Property(e => e.UsuContraseñaPersonal).HasComment("Contraseña del Usuario Solicitante");
+            entity.Property(e => e.UsuFechaHoraAlta).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.UsuIdTipoPersonal).HasComment("Tipo de Personal del Usuario Solicitante");
+            entity.Property(e => e.UsuNombre).HasComment("Nombre del Usuario Solicitante");
+            entity.Property(e => e.UsuNumeroEmpleado).HasComment("Numero del Empleado del Usuario Solicitante");
             entity.Property(e => e.UsuPrimerApellido)
-                .HasMaxLength(150)
-                .IsUnicode(false)
                 .HasDefaultValueSql("('-')")
-                .HasComment("Primer apellido del Usuario Solicitante")
-                .HasColumnName("usuPrimerApellido");
-            entity.Property(e => e.UsuRecuperarContraseñas)
-                .HasComment("Contraseña Temporal que se le proporciona al Usuario Solicitante")
-                .HasColumnName("usuRecuperarContraseñas");
-            entity.Property(e => e.UsuSegundoApellido)
-                .HasMaxLength(150)
-                .IsUnicode(false)
-                .HasComment("Segundo Apellido del Usuario Solicitante")
-                .HasColumnName("usuSegundoApellido");
+                .HasComment("Primer apellido del Usuario Solicitante");
+            entity.Property(e => e.UsuRecuperarContraseñas).HasComment("Contraseña Temporal que se le proporciona al Usuario Solicitante");
+            entity.Property(e => e.UsuSegundoApellido).HasComment("Segundo Apellido del Usuario Solicitante");
             entity.Property(e => e.UsuStatus)
                 .HasDefaultValueSql("((1))")
-                .HasComment("Activo / Inactivo")
-                .HasColumnName("usuStatus");
+                .HasComment("Activo / Inactivo");
 
-            entity.HasOne(d => d.UsuIdTipoPersonalNavigation).WithMany(p => p.MceTbUsuarios)
-                .HasForeignKey(d => d.UsuIdTipoPersonal)
-                .HasConstraintName("FK_ML_tbUsuariosSolicitantes_MC_TipoPersonal");
+            entity.HasOne(d => d.UsuIdCarreraNavigation).WithMany(p => p.MceTbUsuarios).HasConstraintName("FK_MCE_tbUsuarios_MCE_catCarreras");
+
+            entity.HasOne(d => d.UsuIdRolNavigation).WithMany(p => p.MceTbUsuarios).HasConstraintName("FK_MCE_tbUsuarios_MCE_catRoles");
+
+            entity.HasOne(d => d.UsuIdTipoPersonalNavigation).WithMany(p => p.MceTbUsuarios).HasConstraintName("FK_MCE_tbUsuarios_MCE_catTipoPersonal");
         });
 
         OnModelCreatingPartial(modelBuilder);

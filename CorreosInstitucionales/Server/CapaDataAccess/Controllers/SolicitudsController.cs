@@ -43,12 +43,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 {
                     MceTbSolicitud oSolicitud= new()
                     {
-                        IdSolicitud=model.IdSolicitud,
-                        SolIdTipoSolicitud=model.SolIdTipoSolicitud,
-                        SolIdEstadosSolicitud=model.SolIdEstadosSolicitud,
-                        SolIdAreaDepto=model.SolIdAreaDepto,
-                        SolIdUsuario=model.SolIdUsuario,
-                        SolFecha=model.SolFecha,
+                        //IdSolicitud=model.IdSolicitud,
+                        //SolIdTipoSolicitud=model.SolIdTipoSolicitud,
+                        //SolIdEstadosSolicitud=model.SolIdEstadosSolicitud,
+                        //SolIdAreaDepto=model.SolIdAreaDepto,
+                        //SolIdUsuario=model.SolIdUsuario,
+                        //SolFecha=model.SolFecha,
                     };
                     await db.MceTbSolicituds.AddAsync(oSolicitud);
                     await db.SaveChangesAsync();
@@ -75,13 +75,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 MceTbSolicitud? oSolicitud = db.MceTbSolicituds.Find(model.IdSolicitud);
                 if (oSolicitud != null)
                 {
-                    oSolicitud.IdSolicitud = model.IdSolicitud;
-                    oSolicitud.SolIdTipoSolicitud = model.SolIdTipoSolicitud;
-                    oSolicitud.SolIdEstadosSolicitud = model.SolIdEstadosSolicitud;
-                    oSolicitud.SolIdAreaDepto = model.SolIdAreaDepto;
-                    oSolicitud.SolIdUsuario = model.SolIdUsuario;
-                    oSolicitud.SolFecha = model.SolFecha;
-                    ;
+                    //oSolicitud.IdSolicitud = model.IdSolicitud;
+                    //oSolicitud.SolIdTipoSolicitud = model.SolIdTipoSolicitud;
+                    //oSolicitud.SolIdEstadosSolicitud = model.SolIdEstadosSolicitud;
+                    //oSolicitud.SolIdAreaDepto = model.SolIdAreaDepto;
+                    //oSolicitud.SolIdUsuario = model.SolIdUsuario;
+                    //oSolicitud.SolFecha = model.SolFecha;
 
                     db.Entry(oSolicitud).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     db.SaveChanges();
