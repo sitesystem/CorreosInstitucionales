@@ -9,23 +9,23 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EdifciosController : Controller
+    public class PisosController : ControllerBase
     {
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllData(bool filterByStatus)
         {
-            Response<List<MceCatEdificio>> oResponse = new();
+            Response<List<MceCatPiso>> oResponse = new();
 
             try
             {
                 using (DbCorreosInstUpiicsaContext db = new())
                 {
-                    var list = new List<MceCatEdificio>();
+                    var list = new List<MceCatPiso>();
 
                     if (filterByStatus)
-                        list = await db.MceCatEdificios.Where(e => e.EdiStatus.Equals(filterByStatus)).ToListAsync();
+                        list = await db.MceCatPisos.Where(e => e.PisoStatus.Equals(filterByStatus)).ToListAsync();
                     else
-                        list = await db.MceCatEdificios.ToListAsync();
+                        list = await db.MceCatPisos.ToListAsync();
 
                     oResponse.Success = 1;
                     oResponse.Data = list;
@@ -38,17 +38,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oResponse);
         }
-
         [HttpGet("filterById/{id}")]
         public async Task<IActionResult> GetDataById(int id)
         {
-            Response<MceCatEdificio> oResponse = new();
+            Response<MceCatPiso> oResponse = new();
 
             try
             {
                 using (DbCorreosInstUpiicsaContext db = new())
                 {
-                    var list = await db.MceCatEdificios.FindAsync(id);
+                    var list = await db.MceCatPisos.FindAsync(id);
                     oResponse.Success = 1;
                     oResponse.Data = list;
                 }
@@ -60,9 +59,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oResponse);
         }
-
         [HttpPost]
-        public async Task<IActionResult> AddData(EdificioViewModel model)
+        public async Task<IActionResult> AddData(PisoViewModel model)
         {
             Response<object> oResponse = new();
 
@@ -70,14 +68,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 using (DbCorreosInstUpiicsaContext db = new())
                 {
-                    MceCatEdificio oEdificio = new()
+                    MceCatPiso oPiso = new()
                     {
-                        IdEdificio = model.IdEdificio,
-                        EdiNombreOficial = model.EdiNombreOficial,
-                        EdiNombreAlias = model.EdiNombreAlias,
-                        EdiStatus = true
+                        IdPiso = model.IdPiso,
+                        PisoDescripcion = model.PisoDescripcion,
+                        PisoStatus = true
                     };
-                    await db.MceCatEdificios.AddAsync(oEdificio);
+                    await db.MceCatPisos.AddAsync(oPiso);
                     await db.SaveChangesAsync();
 
                     oResponse.Success = 1;
@@ -90,23 +87,21 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oResponse);
         }
-
         [HttpPut]
-        public IActionResult EditData(EdificioViewModel model)
+        public IActionResult EditData(PisoViewModel model)
         {
             Response<object> oRespuesta = new();
 
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceCatEdificio? oEdificio = db.MceCatEdificios.Find(model.IdEdificio);
-                if (oEdificio != null)
+                MceCatPiso? oPiso = db.MceCatPisos.Find(model.IdPiso);
+                if (oPiso != null)
                 {
-                    oEdificio.EdiNombreOficial = model.EdiNombreOficial;
-                    oEdificio.EdiNombreAlias = model.EdiNombreAlias;
-                    oEdificio.EdiStatus = model.EdiStatus;
+                    oPiso.PisoDescripcion = model.PisoDescripcion;                   
+                    oPiso.PisoStatus = model.PisoStatus;
 
-                    db.Entry(oEdificio).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    db.Entry(oPiso).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     db.SaveChanges();
                 }
 
@@ -119,7 +114,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oRespuesta);
         }
-
         [HttpPut("editByIdStatus/{id}/{isActivate}")]
         public IActionResult EnableDisableDataById(int id, bool isActivate)
         {
@@ -128,12 +122,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceCatEdificio? oEdificio = db.MceCatEdificios.Find(id);
+                MceCatPiso? oPiso = db.MceCatPisos.Find(id);
                 //db.Remove(oPersona);
-                if (oEdificio != null)
+                if (oPiso != null)
                 {
-                    oEdificio.EdiStatus = isActivate;
-                    db.Entry(oEdificio).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    oPiso.PisoStatus = isActivate;
+                    db.Entry(oPiso).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     db.SaveChanges();
                 }
                 oRespuesta.Success = 1;
@@ -144,7 +138,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }
 
             return Ok(oRespuesta);
-
         }
+
+
     }
 }
