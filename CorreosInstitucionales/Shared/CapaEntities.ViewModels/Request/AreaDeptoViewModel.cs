@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 {
-    public class AreasDepto
+    public class AreaDeptoViewModel
     {
     }
 }
