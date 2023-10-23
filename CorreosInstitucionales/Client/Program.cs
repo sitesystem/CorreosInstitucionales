@@ -1,5 +1,6 @@
 using CorreosInstitucionales.Client;
 using CorreosInstitucionales.Client.Shared;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.JSInterop;
@@ -14,6 +15,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 //builder.Services.AddSingleton(sp => new HttpClient(httpClientHandler) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 // Inyección de Dependencias - Módulo de Login
+builder.Services.AddScoped<IPiso, RPiso>();
 
 
 builder.Services.AddSyncfusionBlazor(options => { options.EnableRtl = false; options.Animation = GlobalAnimationMode.Enable; /*options.IgnoreScriptIsolation = true;*/ });

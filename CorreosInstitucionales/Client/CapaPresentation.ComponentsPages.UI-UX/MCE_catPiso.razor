@@ -1,0 +1,25 @@
+﻿@page "/Pisos"
+
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosService;
+
+@inject IPiso servicioPiso
+
+<h3>MCE_catPiso</h3>
+
+@if(oResponse != null & oResponse.Data != null)
+    foreach(var piso in oResponse.Data)
+    {
+        <div>@piso.PisoDescripcion</div>
+    }
+
+@code
+{
+    Response<List<PisoViewModel>> oResponse = new Response<List<PisoViewModel>>();
+
+    protected async override void OnInitialized()
+    {
+        oResponse = await servicioPiso.GetAllDataAsync(false);
+    }
+}
