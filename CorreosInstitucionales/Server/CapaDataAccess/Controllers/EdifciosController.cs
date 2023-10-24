@@ -9,7 +9,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EdifciosController : Controller
+    public class EdificiosController : Controller
     {
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllData(bool filterByStatus)
