@@ -1,5 +1,6 @@
 using CorreosInstitucionales.Client;
 using CorreosInstitucionales.Client.Shared;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificiosService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosService;
 using Microsoft.AspNetCore.Components.Web;
@@ -16,6 +17,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 //builder.Services.AddSingleton(sp => new HttpClient(httpClientHandler) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 // Inyección de Dependencias - Módulo de Login
+builder.Services.AddScoped<ICarrera, RCarrera>();
 builder.Services.AddScoped<IEdificio, REdificio>();
 builder.Services.AddScoped<IPiso, RPiso>();
 
