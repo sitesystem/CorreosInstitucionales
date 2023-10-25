@@ -1,0 +1,130 @@
+﻿@page "/Registros"
+
+@using Syncfusion.Blazor.Inputs
+
+<style>
+    .content-wrapper {
+        width: 90%;
+        margin: 0 auto;
+        min-width: 85px;
+    }
+
+    b.example-label {
+        font-size: 14px;
+    }
+
+    .content-wrapper div.row {
+        padding: 15px 0px;
+    }
+
+    .small-textbox {
+        padding-top: 5px;
+    }
+
+    .tailwind .small-textbox,
+    .tailwind-dark .small-textbox {
+        padding-top: 3px;
+    }
+
+    .e-bigger .small-textbox {
+        padding-top: 10px;
+    }
+
+    .tailwind .e-bigger .small-textbox,
+    .tailwind-dark .e-bigger .small-textbox {
+        padding-top: 1px;
+    }
+
+    @@media only screen and (max-width: 480px) {
+        .content-wrapper {
+            width: 92%;
+        }
+
+        .col-xs-6,
+        .col-xs-4,
+        .col-xs-12 {
+            padding: 10px 5px;
+            width: 100%;
+        }
+
+        .content-wrapper div.row {
+            padding: 0px;
+        }
+    }
+
+    .fabric .row.material,
+    .bootstrap .row.material,
+    .bootstrap4 .row.material,
+    .bootstrap5 .row.material,
+    .highcontrast .row.material,
+    .tailwind .row.material,
+    .fluent .row.material,
+    .fabric-dark .row.material,
+    .bootstrap-dark .row.material,
+    .bootstrap5-dark .row.material,
+    .tailwind-dark .row.material,
+    .fluent-dark .row.material {
+        display: none;
+    }
+</style>
+
+
+<h3>Registro</h3>
+
+@* <div class="row">
+    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+        <b class="example-label">Datos personales</b>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+        <SfTextBox Placeholder="Primer Apellido" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+        <SfTextBox Placeholder="Segundo Apellido" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+        <SfTextBox Placeholder="Nombre(s)" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+    </div>
+</div> *@
+<div class="row">
+    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+        <SfTextBox Placeholder="Primer Apellido" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+        <SfTextBox Placeholder="Segundo Apellido" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+        <SfTextBox Placeholder="Nombre(s)" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+        <b class="example-label">Datos de la cuenta</b>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+        <SfTextBox Placeholder="Correo Personal" Type="Syncfusion.Blazor.Inputs.InputType.Email" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+        <SfTextBox Placeholder="Password" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+        <SfTextBox Placeholder="Password" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+    </div>
+</div>
+@* <form method="get">
+    <p>Descripci&#243n Piso  <input type="text" name="descripcion" size="200px"></p>
+    <p>
+        Status:
+        <input type="radio" name="st" value="A"> Activo
+        <input type="radio" name="st" value="I"> Inactivo
+    </p>
+</form> *@
+
+@code {
+
+}
