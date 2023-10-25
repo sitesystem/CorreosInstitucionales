@@ -38,6 +38,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oResponse);
         }
+
         [HttpGet("filterById/{id}")]
         public async Task<IActionResult> GetDataById(int id)
         {
@@ -59,6 +60,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oResponse);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddData(PisoViewModel model)
         {
@@ -87,22 +89,23 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oResponse);
         }
+
         [HttpPut]
-        public IActionResult EditData(PisoViewModel model)
+        public async Task<IActionResult> EditData(PisoViewModel model)
         {
             Response<object> oRespuesta = new();
 
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceCatPiso? oPiso = db.MceCatPisos.Find(model.IdPiso);
+                MceCatPiso? oPiso = await db.MceCatPisos.FindAsync(model.IdPiso);
                 if (oPiso != null)
                 {
                     oPiso.PisoDescripcion = model.PisoDescripcion;                   
                     oPiso.PisoStatus = model.PisoStatus;
 
-                    db.Entry(oPiso).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oPiso).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
 
                 oRespuesta.Success = 1;
@@ -114,8 +117,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oRespuesta);
         }
+
         [HttpPut("editByIdStatus/{id}/{isActivate}")]
-        public IActionResult EnableDisableDataById(int id, bool isActivate)
+        public async Task<IActionResult> EnableDisableDataById(int id, bool isActivate)
         {
             Response<object> oRespuesta = new();
 
@@ -127,8 +131,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 if (oPiso != null)
                 {
                     oPiso.PisoStatus = isActivate;
-                    db.Entry(oPiso).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oPiso).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
                 oRespuesta.Success = 1;
             }
@@ -139,7 +143,5 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oRespuesta);
         }
-
-
     }
 }

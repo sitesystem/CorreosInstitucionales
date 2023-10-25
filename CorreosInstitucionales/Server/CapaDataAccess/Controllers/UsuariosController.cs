@@ -40,7 +40,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpGet("filterById/{id}")]
-        public async Task <IActionResult> GetDataById(int id)
+        public async Task<IActionResult> GetDataById(int id)
         {
             Response<MceTbUsuario> oResponse = new();
 
@@ -62,7 +62,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPost]
-        public async Task <IActionResult> AddData(UsuarioViewModel model)
+        public async Task<IActionResult> AddData(UsuarioViewModel model)
         {
             Response<object> oResponse = new();
 
@@ -108,7 +108,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditData(UsuarioViewModel model)
+        public async Task<IActionResult> EditData(UsuarioViewModel model)
         {
             Response<object> oRespuesta = new();
 
@@ -137,8 +137,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     oUsuario.UsuFechaHoraAlta = model.UsuFechaHoraAlta;
                     oUsuario.UsuStatus = model.UsuStatus;
 
-                    db.Entry(oUsuario).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oUsuario).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
 
                 oRespuesta.Success = 1;
@@ -153,7 +153,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
         //[HttpDelete("{Id}")]
         [HttpPut("editByIdStatus/{id}/{isActivate}")]
-        public IActionResult EnableDisableDataById(int id, bool isActivate)
+        public async Task<IActionResult> EnableDisableDataById(int id, bool isActivate)
         {
             Response<object> oRespuesta = new();
 
@@ -165,8 +165,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 if (oUsuario != null)
                 {
                     oUsuario.UsuStatus = isActivate;
-                    db.Entry(oUsuario).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oUsuario).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
                 oRespuesta.Success = 1;
             }

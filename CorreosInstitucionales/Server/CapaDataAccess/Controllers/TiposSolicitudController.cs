@@ -91,7 +91,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditData(TipoSolicitudViewModel model)
+        public async Task<IActionResult> EditData(TipoSolicitudViewModel model)
         {
             Response<object> oRespuesta = new();
 
@@ -104,8 +104,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     oTipoSolicitud.TiposolDescripcion = model.TiposolDescripcion;
                     oTipoSolicitud.TiposolStatus = model.TiposolStatus;
 
-                    db.Entry(oTipoSolicitud).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oTipoSolicitud).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
 
                 oRespuesta.Success = 1;
@@ -117,8 +117,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oRespuesta);
         }
+
         [HttpPut("editByIdStatus/{id}/{isActivate}")]
-        public IActionResult EnableDisableDataById(int id, bool isActivate)
+        public async Task<IActionResult> EnableDisableDataById(int id, bool isActivate)
         {
             Response<object> oRespuesta = new();
 
@@ -130,8 +131,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 if (oTipoSolicitud != null)
                 {
                     oTipoSolicitud.TiposolStatus = isActivate;
-                    db.Entry(oTipoSolicitud).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oTipoSolicitud).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
                 oRespuesta.Success = 1;
             }
@@ -141,7 +142,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }
 
             return Ok(oRespuesta);
-
         }
     }
 }

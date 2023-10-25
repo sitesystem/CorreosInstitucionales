@@ -8,24 +8,24 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosService
+namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitudService
 {
-    public class RPiso : IPiso
+    public class RTipoSolicitud : ITipoSolicitud
     {
         private readonly HttpClient _httpClient;
         //const string url = "https://localhost:7271/api/Edificios";
-        const string url = "/api/Pisos/";
+        const string url = "/api/TiposSolicitud/";
 
-        public RPiso(HttpClient httpClient)
+        public RTipoSolicitud(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        public async Task<Response<List<PisoViewModel>>?> GetAllDataAsync(bool filterByStatus)
+        public async Task<Response<List<TipoSolicitudViewModel>>?> GetAllDataAsync(bool filterByStatus)
         {
             var response = await _httpClient.GetAsync(url + "filterByStatus/" + filterByStatus);
             var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Response<List<PisoViewModel>>>(content,
+            var result = JsonSerializer.Deserialize<Response<List<TipoSolicitudViewModel>>>(content,
                 new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true
@@ -34,24 +34,24 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosServi
             return result;
         }
 
-        public async Task<Response<PisoViewModel>?> GetDataByAsync(int id)
+        public async Task<Response<TipoSolicitudViewModel>?> GetDataByIdAsync(int id)
         {
-            var result = await _httpClient.GetFromJsonAsync<Response<PisoViewModel>>(url + "filterById/" + id,
-                 new JsonSerializerOptions()
-                 {
-                     PropertyNameCaseInsensitive = true
-                 });
+            var result = await _httpClient.GetFromJsonAsync<Response<TipoSolicitudViewModel>>(url + "filterById/" + id,
+                new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
 
             return result;
         }
 
-        public async Task<HttpResponseMessage> AddDataAsync(PisoViewModel oPiso)
+        public async Task<HttpResponseMessage> AddDataAsync(TipoSolicitudViewModel oTipoSolicitud)
         {
-            var json = JsonSerializer.Serialize(oPiso);
+            var json = JsonSerializer.Serialize(oTipoSolicitud);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(url, content);
 
-            //var response = await _httpClient.PostAsJsonAsync<PisoViewModel>(url, oEdificio,
+            //var response = await _httpClient.PostAsJsonAsync<TipoSolicitudViewModel>(url, oTipoSolicitud,
             //    new JsonSerializerOptions()
             //    {
             //        PropertyNameCaseInsensitive = true
@@ -60,17 +60,17 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosServi
             return response;
         }
 
-        public async Task<HttpResponseMessage> EditDataAsync(PisoViewModel oPiso)
+        public async Task<HttpResponseMessage> EditDataAsync(TipoSolicitudViewModel oTipoSolicitud)
         {
-            //var json = JsonSerializer.Serialize(oPiso);
+            //var json = JsonSerializer.Serialize(oTipoSolicitud);
             //var content = new StringContent(json, Encoding.UTF8, "application/json");
             //var response = await _httpClient.PutAsync(url, content);
 
-            var response = await _httpClient.PutAsJsonAsync(url, oPiso,
-                 new JsonSerializerOptions()
-                 {
-                     PropertyNameCaseInsensitive = true
-                 });
+            var response = await _httpClient.PutAsJsonAsync(url, oTipoSolicitud,
+                new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
 
             return response;
         }

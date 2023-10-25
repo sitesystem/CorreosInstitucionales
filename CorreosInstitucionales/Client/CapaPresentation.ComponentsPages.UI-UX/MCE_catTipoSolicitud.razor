@@ -1,5 +1,33 @@
-﻿<h3>MCE_catTipoSolicitud</h3>
+﻿@page "/TiposSolicitud"
 
-@code {
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitudService;
 
+@inject ITipoSolicitud servicioTipoSolicitud
+
+<h3>MCE_catTipoSolicitud</h3>
+
+@if (oResponse != null && oResponse.Data != null)
+{
+    foreach (var oTipoSolicitud in oResponse.Data)
+    {
+        <div>@oTipoSolicitud.IdTipoSolicitud</div>
+        <div>@oTipoSolicitud.TiposolDescripcion</div>
+        <div>@oTipoSolicitud.TiposolStatus</div>
+    }
+}
+else
+{
+    <div>Cargando...</div>
+}
+
+@code
+{
+    public Response<List<TipoSolicitudViewModel>>? oResponse = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        oResponse = await servicioTipoSolicitud.GetAllDataAsync(false);
+    }
 }

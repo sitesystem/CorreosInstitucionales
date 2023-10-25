@@ -65,7 +65,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditData(SolicitudViewModel model)
+        public async Task<IActionResult> EditData(SolicitudViewModel model)
         {
             Response<object> oRespuesta = new();
 
@@ -82,8 +82,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     //oSolicitud.SolIdUsuario = model.SolIdUsuario;
                     //oSolicitud.SolFecha = model.SolFecha;
 
-                    db.Entry(oSolicitud).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oSolicitud).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
 
                 oRespuesta.Success = 1;
@@ -95,7 +95,5 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oRespuesta);
         }
-
     }
-    
 }

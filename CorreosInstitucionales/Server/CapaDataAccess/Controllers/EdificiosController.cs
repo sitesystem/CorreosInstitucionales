@@ -144,7 +144,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }
 
             return Ok(oRespuesta);
-
         }
     }
 }

@@ -13,7 +13,7 @@ public partial class MceCatAreasDepto
     public int IdAreaDepto { get; set; }
 
     [Column("areNombre", TypeName = "text")]
-    public string AreNombre { get; set; } = null!;
+    public string? AreNombre { get; set; }
 
     [Column("areExtension")]
     [StringLength(20)]
@@ -21,20 +21,23 @@ public partial class MceCatAreasDepto
     public string? AreExtension { get; set; }
 
     [Column("areIdEdificio")]
-    public int AreIdEdificio { get; set; }
+    public int? AreIdEdificio { get; set; }
 
     [Column("areIdPiso")]
-    public int AreIdPiso { get; set; }
+    public int? AreIdPiso { get; set; }
 
-    [Required]
+    [Column("areTitular")]
+    [StringLength(300)]
+    public string? AreTitular { get; set; }
+
     [Column("areStatus")]
     public bool? AreStatus { get; set; }
 
     [ForeignKey("AreIdEdificio")]
     [InverseProperty("MceCatAreasDeptos")]
-    public virtual MceCatEdificio AreIdEdificioNavigation { get; set; } = null!;
+    public virtual MceCatEdificio? AreIdEdificioNavigation { get; set; }
 
     [ForeignKey("AreIdPiso")]
     [InverseProperty("MceCatAreasDeptos")]
-    public virtual MceCatPiso AreIdPisoNavigation { get; set; } = null!;
+    public virtual MceCatPiso? AreIdPisoNavigation { get; set; }
 }

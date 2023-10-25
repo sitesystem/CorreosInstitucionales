@@ -19,6 +19,5 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosServi
         public Task<HttpResponseMessage> EditDataAsync(PisoViewModel oPiso);
 
         public Task<HttpResponseMessage> EnableDisableDataById(int id,  bool isActivate);
-
     }
 }

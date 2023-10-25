@@ -60,7 +60,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// Numero del Empleado del Usuario Solicitante
         /// </summary>
         [Column("usuNumeroEmpleado")]
-        public int? UsuNumeroEmpleado { get; set; }
+        public string? UsuNumeroEmpleado { get; set; }
 
         [Column("usuCorreoPersonal")]
         [StringLength(100)]

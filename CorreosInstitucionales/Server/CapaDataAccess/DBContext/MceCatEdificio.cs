@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
@@ -22,9 +23,11 @@ public partial class MceCatEdificio
     [Unicode(false)]
     public string? EdiNombreAlias { get; set; }
 
+    [Required]
     [Column("ediStatus")]
-    public bool EdiStatus { get; set; }
+    public bool? EdiStatus { get; set; }
 
+    [JsonIgnore]
     [InverseProperty("AreIdEdificioNavigation")]
     public virtual ICollection<MceCatAreasDepto> MceCatAreasDeptos { get; set; } = new List<MceCatAreasDepto>();
 }

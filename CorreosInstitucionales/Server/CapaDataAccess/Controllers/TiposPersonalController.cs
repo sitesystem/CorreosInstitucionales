@@ -92,7 +92,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditData(TipoPersonalViewModel model)
+        public async Task<IActionResult> EditData(TipoPersonalViewModel model)
         {
             Response<object> oRespuesta = new();
 
@@ -106,8 +106,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     oTipoPersonal.TipoperDescripcion = model.TipoperDescripcion;
                     oTipoPersonal.TipoperStatus = model.TipoperStatus;
 
-                    db.Entry(oTipoPersonal).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oTipoPersonal).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
 
                 oRespuesta.Success = 1;
@@ -121,7 +121,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPut("editByIdStatus/{id}/{isActivate}")]
-        public IActionResult EnableDisableDataById(int id, bool isActivate)
+        public async Task<IActionResult> EnableDisableDataById(int id, bool isActivate)
         {
             Response<object> oRespuesta = new();
 
@@ -133,8 +133,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 if (oTipoPersonal != null)
                 {
                     oTipoPersonal.TipoperStatus = isActivate;
-                    db.Entry(oTipoPersonal).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oTipoPersonal).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
                 oRespuesta.Success = 1;
             }
@@ -144,7 +144,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }
 
             return Ok(oRespuesta);
-
         }
     }
 }

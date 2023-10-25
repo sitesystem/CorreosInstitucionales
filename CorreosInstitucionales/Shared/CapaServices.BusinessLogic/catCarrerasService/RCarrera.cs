@@ -72,6 +72,5 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasSe
 
             return response;
         }
-
     }
 }

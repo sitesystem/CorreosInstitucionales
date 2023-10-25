@@ -49,18 +49,19 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
             entity.Property(e => e.AreIdPiso).HasDefaultValueSql("((1))");
             entity.Property(e => e.AreStatus).HasDefaultValueSql("((1))");
 
-            entity.HasOne(d => d.AreIdEdificioNavigation).WithMany(p => p.MceCatAreasDeptos)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MCE_catAreasDeptos_MCE_catEdificios");
+            entity.HasOne(d => d.AreIdEdificioNavigation).WithMany(p => p.MceCatAreasDeptos).HasConstraintName("FK_MCE_catAreasDeptos_MCE_catEdificios");
 
-            entity.HasOne(d => d.AreIdPisoNavigation).WithMany(p => p.MceCatAreasDeptos)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MCE_catAreasDeptos_MCE_catPisos");
+            entity.HasOne(d => d.AreIdPisoNavigation).WithMany(p => p.MceCatAreasDeptos).HasConstraintName("FK_MCE_catAreasDeptos_MCE_catPisos");
+        });
+
+        modelBuilder.Entity<MceCatCarrera>(entity =>
+        {
+            entity.Property(e => e.CarrStatus).HasDefaultValueSql("((1))");
         });
 
         modelBuilder.Entity<MceCatEdificio>(entity =>
         {
-            entity.Property(e => e.IdEdificio).ValueGeneratedNever();
+            entity.Property(e => e.EdiStatus).HasDefaultValueSql("((1))");
         });
 
         modelBuilder.Entity<MceCatTipoPersonal>(entity =>

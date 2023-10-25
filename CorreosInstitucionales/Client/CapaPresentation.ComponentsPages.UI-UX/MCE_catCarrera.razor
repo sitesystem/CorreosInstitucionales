@@ -5,6 +5,7 @@
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
 
 @inject ICarrera servicioCarrera
+
 <h3>MCE_catCarrera</h3>
 
 @if (oResponse != null && oResponse.Data !=null)
@@ -17,8 +18,15 @@
         <div>@carrera.CarrStatus</div>
     }
 }
-@code {
-    public Response<List<CarreraViewModel>>? oResponse = new Response<List<CarreraViewModel>>();
+else
+{
+    <div>Cargando...</div>
+}
+
+@code
+{
+    public Response<List<CarreraViewModel>>? oResponse = new();
+
     protected override async Task OnInitializedAsync()
     {
         oResponse = await servicioCarrera.GetAllDataAsync(false);

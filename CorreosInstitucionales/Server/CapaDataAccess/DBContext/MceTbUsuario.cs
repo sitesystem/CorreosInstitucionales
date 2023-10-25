@@ -50,7 +50,7 @@ public partial class MceTbUsuario
     public string? UsuFilenameCurp { get; set; }
 
     [Column("usuNoCelular")]
-    [StringLength(10)]
+    [StringLength(50)]
     [Unicode(false)]
     public string? UsuNoCelular { get; set; }
 
@@ -62,11 +62,21 @@ public partial class MceTbUsuario
     [Unicode(false)]
     public string? UsuBoleta { get; set; }
 
+    [Column("usuSemestre")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? UsuSemestre { get; set; }
+
+    [Column("usuAñoEgreso")]
+    public int? UsuAñoEgreso { get; set; }
+
     /// <summary>
     /// Numero del Empleado del Usuario Solicitante
     /// </summary>
     [Column("usuNumeroEmpleado")]
-    public int? UsuNumeroEmpleado { get; set; }
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? UsuNumeroEmpleado { get; set; }
 
     [Column("usuCorreoPersonal")]
     [StringLength(100)]
@@ -96,6 +106,9 @@ public partial class MceTbUsuario
     [Column("usuIdRol")]
     public int? UsuIdRol { get; set; }
 
+    [Column("usuIdCarrera")]
+    public int? UsuIdCarrera { get; set; }
+
     [Column("usuCorreroInstitucional")]
     [StringLength(100)]
     [Unicode(false)]
@@ -106,11 +119,23 @@ public partial class MceTbUsuario
     [Unicode(false)]
     public string? UsuContraseñaInstitucional { get; set; }
 
-    [Column("usuIdCarrera")]
-    public int? UsuIdCarrera { get; set; }
-
     [Column("usuFechaHoraAlta", TypeName = "datetime")]
-    public DateTime UsuFechaHoraAlta { get; set; }
+    public DateTime? UsuFechaHoraAlta { get; set; }
+
+    [Column("usuArchivoCompInscripcion")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string? UsuArchivoCompInscripcion { get; set; }
+
+    [Column("usuArchivoCapturaEscaneo")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string? UsuArchivoCapturaEscaneo { get; set; }
+
+    [Column("usuArchivoCapturaError")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string? UsuArchivoCapturaError { get; set; }
 
     /// <summary>
     /// Activo / Inactivo

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
@@ -24,6 +25,7 @@ public partial class MceCatTipoPersonal
     [Column("tipoperStatus")]
     public bool? TipoperStatus { get; set; }
 
+    [JsonIgnore]
     [InverseProperty("UsuIdTipoPersonalNavigation")]
     public virtual ICollection<MceTbUsuario> MceTbUsuarios { get; set; } = new List<MceTbUsuario>();
 }

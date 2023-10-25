@@ -63,7 +63,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditData(RolViewModel model)
+        public async Task<IActionResult> EditData(RolViewModel model)
         {
             Response<object> oRespuesta = new();
 
@@ -76,8 +76,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     oRol.RolNombre = model.RolNombre;
                     oRol.RolDescripcion = model.RolDescripcion;
 
-                    db.Entry(oRol).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oRol).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
 
                 oRespuesta.Success = 1;
