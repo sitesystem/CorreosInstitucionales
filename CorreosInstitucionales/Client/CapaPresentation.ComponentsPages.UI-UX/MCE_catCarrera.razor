@@ -3,12 +3,13 @@
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
+@using Syncfusion.Blazor.Grids;
 
 @inject ICarrera servicioCarrera
 
 <h3>MCE_catCarrera</h3>
 
-@if (oResponse != null && oResponse.Data !=null)
+@* @if (oResponse != null && oResponse.Data !=null)
 {
     foreach (var carrera in oResponse.Data)
     {
@@ -21,7 +22,16 @@
 else
 {
     <div>Cargando...</div>
-}
+} *@
+
+<SfGrid DataSource="@oResponse.Data" AllowPaging="true">
+    <GridColumns>
+        <GridColumn Field=@nameof(CarreraViewModel.IdCarrera) HeaderText="Id Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(CarreraViewModel.CarrClave) HeaderText="Clave Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(CarreraViewModel.CarrNombre) HeaderText="Nombre Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+
+    </GridColumns>
+</SfGrid>
 
 @code
 {
