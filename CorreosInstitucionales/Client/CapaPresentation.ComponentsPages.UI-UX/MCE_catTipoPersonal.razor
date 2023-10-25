@@ -1,0 +1,41 @@
+﻿@page "/TiposPersonal"
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonalService;
+
+<h3>MCE_catTipoPersonal</h3>
+
+@inject ITipoPersonal servicioTipoPersonal
+
+@if (oResponse != null && oResponse.Data != null)
+{
+
+    foreach (var tipoPersonal in oResponse.Data)
+    {
+        <div>@tipoPersonal.IdTipoPersonal</div>
+        <div>@tipoPersonal.TipoperNombre</div>
+        <div>@tipoPersonal.TipoperDescripcion</div>
+    }
+}
+else
+{
+    <div>Cargando...</div>
+}
+
+<form method="get">
+    <p>Descripci&#243n Tipo personal  <input type="text" name="descripcion" size="200px"></p>
+    <p>
+        Status:
+        <input type="radio" name="st" value="A"> Activo
+        <input type="radio" name="st" value="I"> Inactivo
+    </p>
+</form>
+
+@code {
+    public Response<List<TipoPersonalViewModel>>? oResponse = new Response<List<TipoPersonalViewModel>>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        oResponse = await servicioTipoPersonal.GetAllDataAsync(false);
+    }
+}

@@ -3,6 +3,7 @@ using CorreosInstitucionales.Client.Shared;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificiosService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosService;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonalService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitudService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -22,6 +23,7 @@ builder.Services.AddScoped<IEdificio, REdificio>();
 builder.Services.AddScoped<IPiso, RPiso>();
 builder.Services.AddScoped<ICarrera, RCarrera>();
 builder.Services.AddScoped<ITipoSolicitud, RTipoSolicitud>();
+builder.Services.AddScoped<ITipoPersonal, RTipoPersonal>();
 
 builder.Services.AddSyncfusionBlazor(options => { options.EnableRtl = false; options.Animation = GlobalAnimationMode.Enable; /*options.IgnoreScriptIsolation = true;*/ });
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjcwMzY4OUAzMjMzMmUzMDJlMzBUZHd6Sy8rUkNGSDAvQzNibGRkaXJhVmtZT0MrWlVrTmkvRFFFWW45bFBZPQ==");
