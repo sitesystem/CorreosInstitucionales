@@ -3,6 +3,8 @@
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosService;
+@using Syncfusion.Blazor.Grids
+
 
 @inject IPiso servicioPiso
 
@@ -16,7 +18,14 @@
         <div>@piso.IdPiso</div>
         <div>@piso.PisoDescripcion</div>
         <div>@piso.PisoStatus</div>
-    } 
+    }
+    <SfGrid DataSource="@oResponse.Data" AllowPaging="true">
+        <GridColumns>
+            <GridColumn Field=@nameof(PisoViewModel.IdPiso) HeaderText="ID piso" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+            <GridColumn Field=@nameof(PisoViewModel.PisoDescripcion) HeaderText="Descripción Piso" Width="300"></GridColumn>
+           
+        </GridColumns>
+    </SfGrid>
 }
 else
 {
