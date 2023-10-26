@@ -21,6 +21,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuNombre")]
         [StringLength(200)]
+        [Required(ErrorMessage = "Campo requerido.")]
+        //[RegularExpression("")]
         public string? UsuNombre { get; set; }
 
         /// <summary>
@@ -28,6 +30,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuPrimerApellido")]
         [StringLength(150)]
+        [Required(ErrorMessage = "Campo requerido.")]
+
         public string? UsuPrimerApellido { get; set; }
 
         /// <summary>
@@ -35,10 +39,12 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuSegundoApellido")]
         [StringLength(150)]
+        [Required(ErrorMessage = "Campo requerido.")]
         public string? UsuSegundoApellido { get; set; }
 
         [Column("usuCURP")]
         [StringLength(18)]
+        [Required(ErrorMessage = "Campo requerido.")]
         public string? UsuCurp { get; set; }
 
         [Column("usuFilenameCURP")]
@@ -47,6 +53,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("usuNoCelular")]
         [StringLength(10)]
+        [Required(ErrorMessage = "Campo requerido.")]
         public string? UsuNoCelular { get; set; }
 
         /// <summary>
@@ -54,16 +61,19 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuBoleta")]
         [StringLength(10)]
+        [Required(ErrorMessage = "Campo requerido.")]
         public string? UsuBoleta { get; set; }
 
         /// <summary>
         /// Numero del Empleado del Usuario Solicitante
         /// </summary>
         [Column("usuNumeroEmpleado")]
+        [Required(ErrorMessage = "Campo requerido.")]
         public string? UsuNumeroEmpleado { get; set; }
 
         [Column("usuCorreoPersonal")]
         [StringLength(100)]
+        [Required(ErrorMessage = "Campo requerido.")]
         public string? UsuCorreoPersonal { get; set; }
 
         /// <summary>
@@ -71,6 +81,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuContraseñaPersonal")]
         [StringLength(300)]
+        [Required(ErrorMessage = "Campo requerido.")]
         public string? UsuContraseñaPersonal { get; set; }
 
         /// <summary>
@@ -97,6 +108,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuContraseñaInstitucional { get; set; }
 
         [Column("usuIdCarrera")]
+        [Required(ErrorMessage = "Campo requerido.")]
         public int? UsuIdCarrera { get; set; }
 
         [Column("usuFechaHoraAlta", TypeName = "datetime")]
