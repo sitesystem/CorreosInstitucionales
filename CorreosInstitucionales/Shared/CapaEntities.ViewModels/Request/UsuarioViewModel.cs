@@ -21,8 +21,9 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuNombre")]
         [StringLength(200)]
-        [Required(ErrorMessage = "Campo requerido.")]
         //[RegularExpression("")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        //[RegularExpression("^[A-Za-z0-9._%+-]*@ipn.mx$", ErrorMessage = "Formato Incorrecto.")]
         public string? UsuNombre { get; set; }
 
         /// <summary>
@@ -108,7 +109,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuContraseñaInstitucional { get; set; }
 
         [Column("usuIdCarrera")]
-        [Required(ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public int? UsuIdCarrera { get; set; }
 
         [Column("usuFechaHoraAlta", TypeName = "datetime")]
@@ -131,6 +132,5 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         //[ForeignKey("UsuIdTipoPersonal")]
         //[InverseProperty("MceTbUsuarios")]
         //public virtual MceCatTipoPersonal? UsuIdTipoPersonalNavigation { get; set; }
-
     }
 }

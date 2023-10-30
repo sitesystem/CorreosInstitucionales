@@ -1,4 +1,4 @@
-﻿@page "/Registros"
+﻿@page "/Registro"
 
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
@@ -135,8 +135,10 @@
 </div> *@
 <!-- Etiqueta de datos personales -->
 
-<EditForm Model="@oUsuario" OnSubmit="@Registrar">
-    <DataAnnotationsValidator></DataAnnotationsValidator>
+<EditForm Model="@oUsuario" OnValidSubmit="@Registrar">
+    
+    <DataAnnotationsValidator />
+
     <div class="row">
         <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
             <b class="example-label" size="20px">Datos personales</b>
@@ -145,8 +147,12 @@
     <!-- Etiqueta flotante -->
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <SfTextBox Placeholder="Nombre(s)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNombre"></SfTextBox>
-            <ValidationMessage For="@(() => oUsuario.UsuNombre)"></ValidationMessage>
+            <SfTextBox Placeholder="Nombre(s)"
+                       Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                       FloatLabelType="@FloatLabelType.Auto"
+                       @bind-Value="@oUsuario.UsuNombre">
+            </SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="Primer Apellido" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
@@ -158,21 +164,47 @@
     </div>
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <SfTextBox Placeholder="Boleta"  FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <SfTextBox Placeholder="Boleta" 
+                       FloatLabelType="@FloatLabelType.Auto">
+            </SfTextBox>
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <label class="example-label">               </label>
-                <SfDropDownList TValue="string" TItem="CarreraViewModel" Placeholder="e.g. Lic. o Ing. " AllowFiltering="true" DataSource="@oCarrera.Data">
-                    <DropDownListFieldSettings Value="IdCarrera" Text="CarrNombre" />
-                </SfDropDownList>        
+            <SfDropDownList ID="Data___UsuIdCarrera"
+                            TValue="int?"
+                            TItem="CarreraViewModel"
+                            Placeholder="Carrera"
+                            FloatLabelType="FloatLabelType.Auto"
+                            ShowClearButton="true"
+                            EnableVirtualization="false"
+                            IgnoreCase="true"
+                            DataSource="@oCarrera.Data"
+                            @bind-Value="@oUsuario.UsuIdCarrera"
+                            Enabled="true"
+                            Readonly="false"
+                            CssClass=""
+                            AllowFiltering="true"
+                            FilterBarPlaceholder="Selecciona una opción"
+                            IgnoreAccent="true"
+                            FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                            SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.None">
+                            <DropDownListFieldSettings Value="IdCarrera" Text="CarrNombre" />
+            </SfDropDownList>        
+            <ValidationMessage For="@(() => oUsuario.UsuIdCarrera)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <label class="example-label">               </label>
-            <SfDropDownList TValue="string" TItem="Semestres" Placeholder="e.g. semestre " AllowFiltering="true" DataSource="@Semestre">
-                <DropDownListFieldSettings Value="Key" Text="Value" />
+            <SfDropDownList ID="Data___UsuSemestre"
+                            TValue="string"
+                            TItem="Semestres"
+                            Placeholder="Semestre"
+                            FloatLabelType="FloatLabelType.Auto"
+                            AllowFiltering="true"
+                            DataSource="@Semestre">
+                            <DropDownListFieldSettings Value="Key" Text="Value" />
             </SfDropDownList>
+            @* <ValidationMessage For="@(() => oUsuario.UsuSemestre)" /> *@
         </div>
     </div>
+
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
@@ -240,19 +272,20 @@
     </p>
 </form>*@
 
-@code {
-    //varibles de toggle
+@code
+{
+    // Varibles de toggle
     private bool egresado = false;
-    //Lista de carreras
+
+    private UsuarioViewModel? oUsuario = new();
     public Response<List<CarreraViewModel>>? oCarrera = new();
-    public UsuarioViewModel? oUsuario = new();
 
     protected override async Task OnInitializedAsync()
     {
         oCarrera = await servicioCarrera.GetAllDataAsync(false);
     }
 
-    public void Registrar()
+    public async Task Registrar()
     {
         // servicioUsuario.Add();
     }
@@ -263,6 +296,7 @@
         public string Value { get; set; }
         public string Key { get; set; }
     }
+
     private List<Semestres> Semestre = new List<Semestres>
     {
         new Semestres() { Value = "Primer semestre", Key = "1" },
@@ -275,6 +309,5 @@
         new Semestres() { Value = "Octavo semestre", Key = "8" },
         new Semestres() { Value = "Noveno semestre", Key = "9" },
         new Semestres() { Value = "Decimo semestre", Key = "10" },
-       
     };
 }
