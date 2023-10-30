@@ -19,7 +19,7 @@ public partial class MceTbSolicitud
     public int SolIdEstadoSolicitud { get; set; }
 
     [Column("solIdAreaDepto")]
-    public int? SolIdAreaDepto { get; set; }
+    public int SolIdAreaDepto { get; set; }
 
     [Column("solIdUsuario")]
     public int SolIdUsuario { get; set; }

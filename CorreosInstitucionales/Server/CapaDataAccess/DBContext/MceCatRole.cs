@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
@@ -21,7 +20,6 @@ public partial class MceCatRole
     [Column("rolDescripcion", TypeName = "text")]
     public string? RolDescripcion { get; set; }
 
-    [JsonIgnore]
     [InverseProperty("UsuIdRolNavigation")]
     public virtual ICollection<MceTbUsuario> MceTbUsuarios { get; set; } = new List<MceTbUsuario>();
 }

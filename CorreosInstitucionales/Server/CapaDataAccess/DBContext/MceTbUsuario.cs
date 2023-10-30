@@ -49,10 +49,20 @@ public partial class MceTbUsuario
     [Unicode(false)]
     public string? UsuFilenameCurp { get; set; }
 
-    [Column("usuNoCelular")]
-    [StringLength(50)]
+    [Column("usuArchivoCompInscripcion")]
+    [StringLength(200)]
     [Unicode(false)]
-    public string? UsuNoCelular { get; set; }
+    public string? UsuArchivoCompInscripcion { get; set; }
+
+    [Column("usuNoCelularAnt")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? UsuNoCelularAnt { get; set; }
+
+    [Column("usuNoCelularNuevo")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? UsuNoCelularNuevo { get; set; }
 
     /// <summary>
     /// Numero de Boleta del Uusario Solicitante
@@ -78,6 +88,20 @@ public partial class MceTbUsuario
     [Unicode(false)]
     public string? UsuNumeroEmpleado { get; set; }
 
+    [Column("usuIdRol")]
+    public int? UsuIdRol { get; set; }
+
+    [Column("usuExtension")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? UsuExtension { get; set; }
+
+    /// <summary>
+    /// Tipo de Personal del Usuario Solicitante
+    /// </summary>
+    [Column("usuIdTipoPersonal")]
+    public int? UsuIdTipoPersonal { get; set; }
+
     [Column("usuCorreoPersonal")]
     [StringLength(100)]
     [Unicode(false)]
@@ -86,25 +110,16 @@ public partial class MceTbUsuario
     /// <summary>
     /// Contraseña del Usuario Solicitante
     /// </summary>
-    [Column("usuContraseñaPersonal")]
+    [Column("usuContraseña")]
     [StringLength(300)]
     [Unicode(false)]
-    public string? UsuContraseñaPersonal { get; set; }
+    public string? UsuContraseña { get; set; }
 
     /// <summary>
     /// Contraseña Temporal que se le proporciona al Usuario Solicitante
     /// </summary>
     [Column("usuRecuperarContraseñas")]
     public bool? UsuRecuperarContraseñas { get; set; }
-
-    /// <summary>
-    /// Tipo de Personal del Usuario Solicitante
-    /// </summary>
-    [Column("usuIdTipoPersonal")]
-    public int? UsuIdTipoPersonal { get; set; }
-
-    [Column("usuIdRol")]
-    public int? UsuIdRol { get; set; }
 
     [Column("usuIdCarrera")]
     public int? UsuIdCarrera { get; set; }
@@ -121,11 +136,6 @@ public partial class MceTbUsuario
 
     [Column("usuFechaHoraAlta", TypeName = "datetime")]
     public DateTime? UsuFechaHoraAlta { get; set; }
-
-    [Column("usuArchivoCompInscripcion")]
-    [StringLength(200)]
-    [Unicode(false)]
-    public string? UsuArchivoCompInscripcion { get; set; }
 
     [Column("usuArchivoCapturaEscaneo")]
     [StringLength(200)]

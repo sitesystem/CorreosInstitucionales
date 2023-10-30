@@ -118,7 +118,7 @@
 </style>
 
 
-<h3>Registro</h3>
+<h3>Registro alumno</h3>
 @*
 <div class="row">
     <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
@@ -156,6 +156,7 @@
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="Primer Apellido" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="Segundo Apellido" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
@@ -167,6 +168,7 @@
             <SfTextBox Placeholder="Boleta" 
                        FloatLabelType="@FloatLabelType.Auto">
             </SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuBoleta)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfDropDownList ID="Data___UsuIdCarrera"
@@ -201,16 +203,18 @@
                             DataSource="@Semestre">
                             <DropDownListFieldSettings Value="Key" Text="Value" />
             </SfDropDownList>
-            @* <ValidationMessage For="@(() => oUsuario.UsuSemestre)" /> *@
+            <ValidationMessage For="@(() => oUsuario.UsuSemestre)" /> 
         </div>
     </div>
 
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuCurp)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="No. Celular" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">   
             <p>
@@ -232,9 +236,11 @@
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="Correo Personal" Type="Syncfusion.Blazor.Inputs.InputType.Email" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonal)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="Contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="Confirmar contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
@@ -242,7 +248,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-            <SfTextBox Placeholder="Correo institucional en caso de tenerlo" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
         </div>
     </div>
 
