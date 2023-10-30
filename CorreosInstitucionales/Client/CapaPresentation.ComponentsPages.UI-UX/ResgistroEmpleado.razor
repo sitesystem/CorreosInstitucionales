@@ -1,0 +1,172 @@
+﻿@page "/ResgistroEmpleado"
+
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
+
+@inject IUsuario servicioUsuario
+
+<style>
+    <!-- estilos de insert -->
+    .content-wrapper {
+        width: 90%;
+        margin: 0 auto;
+        min-width: 85px;
+    }
+
+    b.example-label {
+        font-size: 14px;
+    }
+
+    .content-wrapper div.row {
+        padding: 15px 0px;
+    }
+
+    .small-textbox {
+        padding-top: 5px;
+    }
+
+    .tailwind .small-textbox,
+    .tailwind-dark .small-textbox {
+        padding-top: 3px;
+    }
+
+    .e-bigger .small-textbox {
+        padding-top: 10px;
+    }
+
+    .tailwind .e-bigger .small-textbox,
+    .tailwind-dark .e-bigger .small-textbox {
+        padding-top: 1px;
+    }
+
+    @@media only screen and (max-width: 480px) {
+        .content-wrapper {
+            width: 92%;
+        }
+
+        .col-xs-6,
+        .col-xs-4,
+        .col-xs-12 {
+            padding: 10px 5px;
+            width: 100%;
+        }
+
+        .content-wrapper div.row {
+            padding: 0px;
+        }
+    }
+
+    .fabric .row.material,
+    .bootstrap .row.material,
+    .bootstrap4 .row.material,
+    .bootstrap5 .row.material,
+    .highcontrast .row.material,
+    .tailwind .row.material,
+    .fluent .row.material,
+    .fabric-dark .row.material,
+    .bootstrap-dark .row.material,
+    .bootstrap5-dark .row.material,
+    .tailwind-dark .row.material,
+    .fluent-dark .row.material {
+        display: none;
+    }
+    <!-- * rojo
+    .is-required:after {
+        content: '*';
+        margin-left: 3px;
+        color: red;
+        font-weight: bold;
+        font-size: 20px;
+    }
+    -->
+    <!-- dropdownlist filtering -->
+    .control-wrapper {
+        width: 250px;
+        margin: auto;
+    }
+
+    .example-label {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+    <!-- estilo bonton-- >
+    #button-control {
+        width: 100%;
+        margin: 8% 0;
+        text-align: center;
+    }
+
+    #button-control .e-btn {
+        float: left;
+    }
+
+    @@media only screen and (max-width: 500px) {
+        #button-control {
+            margin-left: -3%;
+        }
+    }
+
+    .button-section {
+        width: 80%;
+        margin: auto;
+    }
+
+    #button-control .col-xs-12 {
+        margin: 15px 0;
+    }
+</style>
+
+<h3>Resgistro Empleado</h3>
+
+<EditForm Model="@oUsuario" OnInvalidSubmit="@Registrar">
+    <DataAnnotationsValidator/>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+            <b class="example-label" size="20px">Datos personales</b>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-4 col-sm-4 col-md-4">
+            <SfTextBox Placeholder="Nombre(s)"
+                Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                FloatLabelType="@FloatLabelType.Auto"
+                @bind-Value="@oUsuario.UsuNombre">
+            </SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
+        </div>
+        <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+            <SfTextBox Placeholder="Primer Apellido" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
+        </div>
+        <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+            <SfTextBox Placeholder="Segundo Apellido" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+            <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuCurp)" />
+        </div>
+        <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+            <SfTextBox Placeholder="No.Empleado" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuNumeroEmpleado)" />
+        </div>
+        @* <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+            <SfTextBox Placeholder="Extension" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuExtencion)" />
+        </div>
+        <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+            <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <ValidationMessage For="@(() => oUsuario.UsuCurp)" />
+        </div> *@
+    </div>
+</EditForm>
+
+@code {
+    private UsuarioViewModel? oUsuario = new();
+
+    public async Task Registrar()
+    {
+        servicioUsuario.AddDataAsync(oUsuario);
+    }
+}
