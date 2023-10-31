@@ -201,10 +201,10 @@
 </EditForm>
 
 @code {
-    private UsuarioViewModel? oUsuario = new();
+    public UsuarioViewModel? oUsuario = new();
 
     public async Task Registrar()
     {
-        servicioUsuario.AddDataAsync(oUsuario);
+        var registroExitoso = await servicioUsuario.AddDataAsync(oUsuario);
     }
 }
