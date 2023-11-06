@@ -107,7 +107,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("usuCorreoPersonal")]
         [StringLength(100)]
-        
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuCorreoPersonal { get; set; }
 
         /// <summary>
@@ -125,6 +125,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public bool? UsuRecuperarContraseñas { get; set; }
 
         [Column("usuIdCarrera")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public int? UsuIdCarrera { get; set; }
 
         [Column("usuCorreroInstitucional")]
@@ -167,134 +168,5 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         [ForeignKey("UsuIdTipoPersonal")]
         [InverseProperty("MceTbUsuarios")]
         public virtual TipoPersonalViewModel? UsuIdTipoPersonalNavigation { get; set; }
-
-
-        ///// <summary>
-        ///// Descripcion del Usuario Solicitante
-        ///// </summary>
-        //[Key]
-        //public int IdUsuarioSolicitante { get; set; }
-
-        ///// <summary>
-        ///// Nombre del Usuario Solicitante
-        ///// </summary>
-        //[Column("usuNombre")]
-        //[StringLength(200)]
-        ////[RegularExpression("")]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        ////[RegularExpression("^[A-Za-z0-9._%+-]*@ipn.mx$", ErrorMessage = "Formato Incorrecto.")]
-        //public string? UsuNombre { get; set; }
-
-        ///// <summary>
-        ///// Primer apellido del Usuario Solicitante
-        ///// </summary>
-        //[Column("usuPrimerApellido")]
-        //[StringLength(150)]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-
-        //public string? UsuPrimerApellido { get; set; }
-
-        ///// <summary>
-        ///// Segundo Apellido del Usuario Solicitante
-        ///// </summary>
-        //[Column("usuSegundoApellido")]
-        //[StringLength(150)]
-        //[Required(ErrorMessage = "Campo requerido.")]
-        //public string? UsuSegundoApellido { get; set; }
-
-        //[Column("usuCURP")]
-        //[StringLength(18)]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        //public string? UsuCurp { get; set; }
-
-        //[Column("usuFilenameCURP")]
-        //[StringLength(200)]
-        //public string? UsuFilenameCurp { get; set; }
-
-        //[Column("usuNoCelular")]
-        //[StringLength(10)]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        //public string? UsuNoCelular { get; set; }
-
-        ///// <summary>
-        ///// Numero de Boleta del Uusario Solicitante
-        ///// </summary>
-        //[Column("usuBoleta")]
-        //[StringLength(10)]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        //public string? UsuBoleta { get; set; }
-
-        //[Column("usuSemestre")]
-        //[StringLength(10)]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        //public string? UsuSemestre { get; set; }
-
-        ///// <summary>
-        ///// Numero del Empleado del Usuario Solicitante
-        ///// </summary>
-        //[Column("usuNumeroEmpleado")]
-        //[Required(ErrorMessage = "Campo requerido.")]
-        //public string? UsuNumeroEmpleado { get; set; }
-
-        //[Column("usuCorreoPersonal")]
-        //[StringLength(100)]
-        //[Required(ErrorMessage = "Campo requerido.")]
-        //public string? UsuCorreoPersonal { get; set; }
-
-        ///// <summary>
-        ///// Contraseña del Usuario Solicitante
-        ///// </summary>
-        //[Column("usuContraseñaPersonal")]
-        //[StringLength(300)]
-        //[Required(ErrorMessage = "Campo requerido.")]
-        //public string? UsuContraseñaPersonal { get; set; }
-
-        ///// <summary>
-        ///// Contraseña Temporal que se le proporciona al Usuario Solicitante
-        ///// </summary>
-        //[Column("usuRecuperarContraseñas")]
-        //public bool? UsuRecuperarContraseñas { get; set; }
-
-        ///// <summary>
-        ///// Tipo de Personal del Usuario Solicitante
-        ///// </summary>
-        //[Column("usuIdTipoPersonal")]
-        //public int? UsuIdTipoPersonal { get; set; }
-
-        //[Column("usuIdRol")]
-        //public int? UsuIdRol { get; set; }
-
-        //[Column("usuCorreroInstitucional")]
-        //[StringLength(100)]
-        //public string? UsuCorreroInstitucional { get; set; }
-
-        //[Column("usuContraseñaInstitucional")]
-        //[StringLength(300)]
-        //public string? UsuContraseñaInstitucional { get; set; }
-
-        //[Column("usuIdCarrera")]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        //public int? UsuIdCarrera { get; set; }
-
-        //[Column("usuFechaHoraAlta", TypeName = "datetime")]
-        //public DateTime UsuFechaHoraAlta { get; set; }
-
-        ///// <summary>
-        ///// Activo / Inactivo
-        ///// </summary>
-        //[Column("usuStatus")]
-        //public bool? UsuStatus { get; set; }
-
-        ////[ForeignKey("UsuIdCarrera")]
-        ////[InverseProperty("MceTbUsuarios")]
-        ////public virtual MceCatCarrera? UsuIdCarreraNavigation { get; set; }
-
-        ////[ForeignKey("UsuIdRol")]
-        ////[InverseProperty("MceTbUsuarios")]
-        ////public virtual MceCatRole? UsuIdRolNavigation { get; set; }
-
-        ////[ForeignKey("UsuIdTipoPersonal")]
-        ////[InverseProperty("MceTbUsuarios")]
-        ////public virtual MceCatTipoPersonal? UsuIdTipoPersonalNavigation { get; set; }
     }
 }

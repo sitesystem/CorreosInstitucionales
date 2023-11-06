@@ -115,6 +115,24 @@
     #button-control .col-xs-12 {
         margin: 15px 0;
     }
+    <!-- estilo file upload -->
+    .control-section {
+        min-height: 370px;
+    }
+
+    .control-wrapper-upload {
+        max-width: 350px;
+        margin: 0 auto;
+        padding: 50px 0px 0px;
+    }
+    <!-- toggle button-->
+    .e-switch-wrapper
+    {
+        font-size: 20px;
+        width: 80px;
+        height: 30px;
+    }
+
 </style>
 
 
@@ -221,8 +239,46 @@
 
             </p>
             <label style="padding: 10px 70px 10px 0">Egresado</label>
-            <SfSwitch @bind-Checked="@egresado"></SfSwitch>            
+            <SfSwitch @bind-Checked="@egresado" OnLabel="SÍ" OffLabel="NO" ></SfSwitch>
+                @* private void Change(Syncfusion.Blazor.Buttons.ChangeEventArgs<bool?> args)
+                {
+                    if (egresado==true)
+                    {
+                        <div class="row">
+                            <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                                <SfTextBox Placeholder="Año de egreso" Type="Syncfusion.Blazor.Inputs.InputType.Email" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                    
+                            </div>             
+                        </div>
+            
+                    }
+                }
+            @ValueChange="@Change"*@
+                
         </div>
+    </div>
+    <div class="row">        
+             <div class="control-wrapper-upload">
+                <p>Adjunte el CURP en formato PDF</p>
+                <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
+                    <UploaderEvents OnRemove="OnFileRemove"></UploaderEvents>
+                    <UploaderAsyncSettings SaveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Save" RemoveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Remove"></UploaderAsyncSettings>
+                </SfUploader>
+            </div>
+            <div class="control-wrapper-upload">
+                <p>Adjunte el comprobante de inscripción en PDF</p>
+            <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
+                    <UploaderEvents OnRemove="OnFileRemove"></UploaderEvents>
+                    <UploaderAsyncSettings SaveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Save" RemoveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Remove"></UploaderAsyncSettings>
+                </SfUploader>
+             </div>
+            <div class="control-wrapper-upload">
+                <p>Adjunte credencial institucional en formato PDF</p>
+            <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
+                    <UploaderEvents OnRemove="OnFileRemove"></UploaderEvents>
+                    <UploaderAsyncSettings SaveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Save" RemoveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Remove"></UploaderAsyncSettings>
+                </SfUploader>
+            </div>        
     </div>
     <p>
 
@@ -268,20 +324,12 @@
     </div>
 </EditForm>
 
-
-@* <form method="get">
-    <p>Descripci&#243n Piso  <input type="text" name="descripcion" size="200px"></p>
-    <p>
-        Status:
-        <input type="radio" name="st" value="A"> Activo
-        <input type="radio" name="st" value="I"> Inactivo
-    </p>
-</form>*@
-
 @code
 {
-    // Varibles de toggle
+    // varibles de toggle
     private bool egresado = false;
+            
+    //metodos de API
 
     private UsuarioViewModel? oUsuario = new();
     public Response<List<CarreraViewModel>>? oCarrera = new();
@@ -316,4 +364,10 @@
         new Semestres() { Value = "Noveno semestre", Key = "9" },
         new Semestres() { Value = "Decimo semestre", Key = "10" },
     };
+    //File upload
+    SfUploader UploadObj;
+    public void OnFileRemove(RemovingEventArgs args)
+    {
+        args.PostRawFile = false;
+    }
 }
