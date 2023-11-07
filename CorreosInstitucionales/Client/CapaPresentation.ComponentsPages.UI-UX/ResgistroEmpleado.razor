@@ -115,7 +115,7 @@
     #button-control .col-xs-12 {
         margin: 15px 0;
     }
-</style>
+</style> 
 
 <h3>Resgistro Empleado</h3>
 
@@ -132,31 +132,51 @@
             <SfTextBox Placeholder="Nombre(s)"
                 Type="Syncfusion.Blazor.Inputs.InputType.Text"
                 FloatLabelType="@FloatLabelType.Auto"
-                @bind-Value="@oUsuario.UsuNombre">
+                @bind-Value="oUsuario.UsuNombre">
             </SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <SfTextBox Placeholder="Primer Apellido" Type="Syncfusion.Blazor.Inputs.InputType.Text" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <SfTextBox Placeholder="Primer Apellido" 
+                Type="Syncfusion.Blazor.Inputs.InputType.Text" 
+                FloatLabelType="@FloatLabelType.Auto"
+                @bind-Value="oUsuario.UsuPrimerApellido">
+            </SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <SfTextBox Placeholder="Segundo Apellido" Type="Syncfusion.Blazor.Inputs.InputType.Text" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <SfTextBox Placeholder="Segundo Apellido" 
+                Type="Syncfusion.Blazor.Inputs.InputType.Text" 
+                FloatLabelType="@FloatLabelType.Auto"
+                @bind-Value="oUsuario.UsuSegundoApellido"
+            ></SfTextBox>
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <SfTextBox Placeholder="CURP" Type="Syncfusion.Blazor.Inputs.InputType.Text" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <SfTextBox Placeholder="CURP" 
+                Type="Syncfusion.Blazor.Inputs.InputType.Text" 
+                FloatLabelType="@FloatLabelType.Auto"
+                @bind-Value="oUsuario.UsuCurp"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuCurp)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <SfTextBox Placeholder="Num Empleado" Type="Syncfusion.Blazor.Inputs.InputType.Text" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <SfTextBox Placeholder="Num Empleado" 
+                Type="Syncfusion.Blazor.Inputs.InputType.Text" 
+                FloatLabelType="@FloatLabelType.Auto"
+                @bind-Value="oUsuario.UsuNumeroEmpleado"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuNumeroEmpleado)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <SfTextBox Placeholder="Extensión" Type="Syncfusion.Blazor.Inputs.InputType.Text" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <SfTextBox Placeholder="Extensión" 
+            Type="Syncfusion.Blazor.Inputs.InputType.Text" 
+            FloatLabelType="@FloatLabelType.Auto"
+            @bind-Value="oUsuario.UsuExtension"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuExtension)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <SfTextBox Placeholder="No.Celular" Type="Syncfusion.Blazor.Inputs.InputType.Text" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+            <SfTextBox Placeholder="Num Celular" 
+                Type="Syncfusion.Blazor.Inputs.InputType.Text" 
+                FloatLabelType="@FloatLabelType.Auto"
+                @bind-Value="oUsuario.UsuNoCelularNuevo"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
         </div>
         <!--Cuenta -->
@@ -167,24 +187,38 @@
         </div>
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                <SfTextBox Placeholder="Correo Personal" Type="Syncfusion.Blazor.Inputs.InputType.Email" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                <SfTextBox Placeholder="Correo Personal" 
+                    Type="Syncfusion.Blazor.Inputs.InputType.Email" 
+                    FloatLabelType="@FloatLabelType.Auto"
+                    @bind-Value="oUsuario.UsuCorreoPersonal"></SfTextBox>
                 <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonal)" />
             </div>
             <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                <SfTextBox Placeholder="Contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                <SfTextBox Placeholder="Contraseña" 
+                Type="Syncfusion.Blazor.Inputs.InputType.Password" 
+                FloatLabelType="@FloatLabelType.Auto"
+                @bind-Value="oUsuario.UsuContraseña"></SfTextBox>
                 <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
             </div>
             <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                <SfTextBox Placeholder="Confirmar contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                <SfTextBox Placeholder="Confirmar contraseña" 
+                Type="Syncfusion.Blazor.Inputs.InputType.Password" 
+                FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" Type="Syncfusion.Blazor.Inputs.InputType.Email" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" 
+                    Type="Syncfusion.Blazor.Inputs.InputType.Email" 
+                    FloatLabelType="@FloatLabelType.Auto"
+                    @bind-Value="oUsuario.UsuCorreroInstitucional"></SfTextBox>
             </div>
         </div>
         <!-- bton-->
-        <div class="control-section">
+
+        <button type="submit" class="btn btn-outline-primary">Enviar</button>
+
+        @* <div class="control-section">
             <div class="button-section">
                 <div id="button-control">
                     <div class="row">
@@ -196,7 +230,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> *@
     </div>
 </EditForm>
 
