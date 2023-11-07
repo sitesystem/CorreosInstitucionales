@@ -131,7 +131,7 @@
             <SfTextBox Placeholder="Nombre(s)"
                 Type="Syncfusion.Blazor.Inputs.InputType.Text"
                 FloatLabelType="@FloatLabelType.Auto"
-                @bind-Value="oUsuario.UsuNombre">
+                @bind-Value="@oUsuario.UsuNombre">
             </SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
         </div>
@@ -139,7 +139,7 @@
             <SfTextBox Placeholder="Primer Apellido" 
                 Type="Syncfusion.Blazor.Inputs.InputType.Text" 
                 FloatLabelType="@FloatLabelType.Auto"
-                @bind-Value="oUsuario.UsuPrimerApellido">
+                @bind-Value="@oUsuario.UsuPrimerApellido">
             </SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
         </div>
@@ -147,35 +147,42 @@
             <SfTextBox Placeholder="Segundo Apellido" 
                 Type="Syncfusion.Blazor.Inputs.InputType.Text" 
                 FloatLabelType="@FloatLabelType.Auto"
-                @bind-Value="oUsuario.UsuSegundoApellido"
+                @bind-Value="@oUsuario.UsuSegundoApellido"
             ></SfTextBox>
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="CURP" 
                 Type="Syncfusion.Blazor.Inputs.InputType.Text" 
                 FloatLabelType="@FloatLabelType.Auto"
-                @bind-Value="oUsuario.UsuCurp"></SfTextBox>
+                @bind-Value="@oUsuario.UsuCurp"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuCurp)" />
+        </div>
+        <div class="control-wrapper">
+            <p>Adjunte Archivo CURP</p>
+            <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
+                <UploaderEvents OnRemove="OnFileRemove"></UploaderEvents>
+                <UploaderAsyncSettings SaveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Save" RemoveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Remove"></UploaderAsyncSettings>
+            </SfUploader>            
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="Num Empleado" 
                 Type="Syncfusion.Blazor.Inputs.InputType.Text" 
                 FloatLabelType="@FloatLabelType.Auto"
-                @bind-Value="oUsuario.UsuNumeroEmpleado"></SfTextBox>
+                @bind-Value="@oUsuario.UsuNumeroEmpleado"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuNumeroEmpleado)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="Extensión" 
             Type="Syncfusion.Blazor.Inputs.InputType.Text" 
             FloatLabelType="@FloatLabelType.Auto"
-            @bind-Value="oUsuario.UsuExtension"></SfTextBox>
+            @bind-Value="@oUsuario.UsuExtension"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuExtension)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
             <SfTextBox Placeholder="Num Celular" 
                 Type="Syncfusion.Blazor.Inputs.InputType.Text" 
                 FloatLabelType="@FloatLabelType.Auto"
-                @bind-Value="oUsuario.UsuNoCelularNuevo"></SfTextBox>
+                @bind-Value="@oUsuario.UsuNoCelularNuevo"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
         </div>
         <!--Cuenta -->
@@ -189,14 +196,14 @@
                 <SfTextBox Placeholder="Correo Personal" 
                     Type="Syncfusion.Blazor.Inputs.InputType.Email" 
                     FloatLabelType="@FloatLabelType.Auto"
-                    @bind-Value="oUsuario.UsuCorreoPersonal"></SfTextBox>
+                    @bind-Value="@oUsuario.UsuCorreoPersonal"></SfTextBox>
                 <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonal)" />
             </div>
             <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                 <SfTextBox Placeholder="Contraseña" 
                 Type="Syncfusion.Blazor.Inputs.InputType.Password" 
                 FloatLabelType="@FloatLabelType.Auto"
-                @bind-Value="oUsuario.UsuContraseña"></SfTextBox>
+                @bind-Value="@oUsuario.UsuContraseña"></SfTextBox>
                 <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
             </div>
             <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
@@ -210,7 +217,7 @@
                 <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" 
                     Type="Syncfusion.Blazor.Inputs.InputType.Email" 
                     FloatLabelType="@FloatLabelType.Auto"
-                    @bind-Value="oUsuario.UsuCorreroInstitucional"></SfTextBox>
+                    @bind-Value="@oUsuario.UsuCorreroInstitucional"></SfTextBox>
             </div>
         </div>
         <!-- bton-->
@@ -220,7 +227,12 @@
 
 @code {
     public UsuarioViewModel? oUsuario = new();
+    SfUploader UploadObj;
 
+     public void OnFileRemove(RemovingEventArgs args)
+    {
+        args.PostRawFile = false;
+    }
     public async Task Registrar()
     {
         var registro = await servicioUsuario.AddDataAsync(oUsuario);
