@@ -229,12 +229,12 @@
     public UsuarioViewModel? oUsuario = new();
     SfUploader UploadObj;
 
-     public void OnFileRemove(RemovingEventArgs args)
+    public void OnFileRemove(RemovingEventArgs args)
     {
         args.PostRawFile = false;
     }
     public async Task Registrar()
     {
-        var registro = await servicioUsuario.AddDataAsync(oUsuario);
+        await servicioUsuario.AddDataAsync(oUsuario);
     }
 }
