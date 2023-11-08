@@ -221,7 +221,7 @@
             </div>
         </div>
         <!-- bton-->
-        <button type="submit" class="btn btn-outline-primary">Enviar</button>
+        <button type="submit" class="btn btn-outline-primary" @OnClick="(())=>Registrar(oUsuario)">Enviar</button>
     </div>
 </EditForm>
 
@@ -235,6 +235,6 @@
     }
     public async Task Registrar()
     {
-        await servicioUsuario.AddDataAsync(oUsuario);
+        var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
     }
 }
