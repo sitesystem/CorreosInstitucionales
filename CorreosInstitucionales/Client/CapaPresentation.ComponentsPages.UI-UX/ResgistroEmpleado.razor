@@ -4,7 +4,7 @@
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
 
-@inject IUsuario servicioUsuario
+@inject IUsuario servicioUsuario;
 
 <style>
     <!-- estilos de insert -->
@@ -119,7 +119,7 @@
 
 <h3>Resgistro Empleado</h3>
 
-<EditForm Model="@oUsuario" OnValidSubmit="@RegistrarEmpleado">
+<EditForm Model="oUsuario" OnSubmit="RegistrarEmpleado">
 
     <DataAnnotationsValidator />
 
@@ -205,7 +205,7 @@
                 <div class="row">
                     <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                            <button type="submit" class="btn btn-outline-primary" @OnClick="(())=>RegistrarEmpleado(oUsuario)">Enviar</button>
+                            <button type="submit" class="btn btn-outline-primary">Enviar</button>
                         </div>
                     </div>
                 </div>
@@ -216,10 +216,10 @@
 
 
 @code {
-    public UsuarioViewModel? oUsuario = new UsuarioViewModel();
+    private UsuarioViewModel? oUsuario = new UsuarioViewModel();
     SfUploader UploadObj;
 
-    private async Task RegistrarEmpleado()
+    public async Task RegistrarEmpleado()
     {
         await servicioUsuario.AddDataAsync(oUsuario);
 
