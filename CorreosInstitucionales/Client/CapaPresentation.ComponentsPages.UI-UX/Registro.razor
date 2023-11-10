@@ -2,8 +2,12 @@
 
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.captchaService;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
+@using System;
+@using System.Globalization;
+@using System.Threading;
 
 @inject ICarrera servicioCarrera
 @inject IUsuario servicioUsuario
@@ -133,6 +137,36 @@
         width: 80px;
         height: 30px;
     }
+    <!-- estilo de mensaje -->
+    .msg-content {
+        font-size: 80px;
+    }
+
+    .msg-custom-section .content-section {
+        margin: 0 auto;
+        max-width: 400px;
+        padding-top: 10px;
+    }
+
+    .msg-custom-section .e-message {
+        margin: 10px 0;
+    }
+
+    .msg-custom-section .e-message.rounded {
+        border-radius: 5px;
+    }
+
+    .msg-custom-section .e-message.square {
+        border-radius: 1px;
+    }
+
+    SfMessage {
+        margin-top: 100px;
+        margin-right: 25px;
+        margin-bottom: 100px;
+        margin-left: 25px;
+    }
+
     
 </style>
 
@@ -157,7 +191,8 @@
                        FloatLabelType="@FloatLabelType.Auto"
                        style="text-transform:uppercase"
                        @bind-Value="@oUsuario.UsuNombre"
-                       onkeypress="return /^[A-Z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));">
+                       OnInput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
+                       onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));">
             </SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
         </div>
@@ -218,20 +253,30 @@
     </div>
 
     <div class="row">
-        <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
             <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto" style="text-transform:uppercase" @bind-Value="@oUsuario.UsuCurp"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuCurp)" />
         </div>
-        <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
             <SfTextBox Placeholder="No. Celular" FloatLabelType="@FloatLabelType.Auto" style="text-transform:uppercase" @bind-Value="@oUsuario.UsuNoCelularNuevo"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
-        </div>
-        <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">   
+        </div>        
+    </div>
+    <div class="row">              
+        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
             <p>
+
+
 
             </p>
             <label style="padding: 10px 70px 10px 0">Egresado</label>
-            <SfSwitch @bind-Checked="@egresado" OnLabel="SÍ" OffLabel="NO" ></SfSwitch>                           
+            <SfSwitch @bind-Checked="@egresado" OnLabel="SÍ" OffLabel="NO"></SfSwitch>            
+        </div>
+        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+                    @if (egresado == true)
+                    {
+                        <SfNumericTextBox TValue="int?" Min=1936 Max="@year" Step=1 Placeholder="Año de egreso" FloatLabelType="@FloatLabelType.Auto" Format="####" @bind-Value="@oUsuario.UsuAñoEgreso"></SfNumericTextBox>
+                    }
         </div>
     </div>
     <div class="row">        
@@ -284,29 +329,51 @@
             <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreroInstitucional"></SfTextBox>
         </div>
     </div>
+    @* <div class="row">
+        <ReCaptcha SiteKey="@_siteKey" OnSuccess="OnSuccess" OnExpired="OnExpired"/>
+        <span>@_ReCaptchaMsg</span>
+    </div> *@
+    <!-- Captcha -->
+    @* 
+    <BlazorAppReCaptcha.Components.Recaptcha>
+
+    </BlazorAppReCaptcha.Components.Recaptcha> *@
     <!-- bton -->
     
-    <div class="control-section">
-        <div class="button-section">
-            <div id="button-control">
-                <div class="row">
-                    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                            <button type="submit" class="btn btn-outline-primary" @OnClick="(())=>Registrar(oUsuario)">Enviar</button>
+    @if(egresado==true){
+        <div class="control-section">
+            <div class="button-section">
+                <div id="button-control">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                                <button type="submit" class="btn btn-outline-primary">Enviar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
+    }
+    else
+    {
+        <div class="row">
+           <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                <SfMessage Severity="MessageSeverity.Error" Variant="MessageVariant.Filled">Llene el captcha.</SfMessage>
+           </div>
+        </div>
+    }
 </EditForm>
+
 
 
 @code
 {
     // varibles de toggle
     private bool egresado = false;
+
+    //varible fecha
+    int year = DateTime.Parse(DateTime.Now.ToString()).Year;   
 
     //metodos de API
 
@@ -322,6 +389,7 @@
     public async Task Registrar()
     {
         await servicioUsuario.AddDataAsync(oUsuario);
+
     }
 
     // Lista de semestres
@@ -333,16 +401,16 @@
 
     private List<Semestres> Semestre = new List<Semestres>
     {
-        new Semestres() { Value = "Primer semestre", Key = "1" },
-        new Semestres() { Value = "Segundo semestre", Key = "2" },
-        new Semestres() { Value = "Tercero semestre", Key = "3" },
-        new Semestres() { Value = "Cuarto semestre", Key = "4" },
-        new Semestres() { Value = "Quinto semestre", Key = "5" },
-        new Semestres() { Value = "Sexto semestre", Key = "6" },
-        new Semestres() { Value = "Septimo semestre", Key = "7" },
-        new Semestres() { Value = "Octavo semestre", Key = "8" },
-        new Semestres() { Value = "Noveno semestre", Key = "9" },
-        new Semestres() { Value = "Decimo semestre", Key = "10" },
+        new Semestres() { Value = "1ro semestre", Key = "1" },
+        new Semestres() { Value = "2do semestre", Key = "2" },
+        new Semestres() { Value = "3ro semestre", Key = "3" },
+        new Semestres() { Value = "4to semestre", Key = "4" },
+        new Semestres() { Value = "5to semestre", Key = "5" },
+        new Semestres() { Value = "6to semestre", Key = "6" },
+        new Semestres() { Value = "7mo semestre", Key = "7" },
+        new Semestres() { Value = "8vo semestre", Key = "8" },
+        new Semestres() { Value = "9no semestre", Key = "9" },
+        new Semestres() { Value = "10mo semestre", Key = "10" },
     };
     //File upload
     SfUploader UploadObj;
@@ -350,6 +418,36 @@
     {
         args.PostRawFile = false;
     }
+
+    // Captcha
+
+    // [Inject]
+    // IReCaptcha? _RCaptcha {get; set;}
+
+    // [Inject]
+    // protected IConfiguration? _configuration {get; set;}
+
+    // private string _ReCaptchaMsg="";
+    // private string _siteKey="";
+    // private string _secretKey="";
+
+    // protected override void OnInitialized()
+    // {
+    //     _siteKey = _configuration!.GetSection("ReCaptcha:SiteKey").Value ?? "";
+    //     _secretKey = _configuration!.GetSection("ReCaptcha:SecretKey").Value ?? "";
+    // }
+
+    // private async void OnSuccess(string reCaptchaResponse)
+    // {
+    //     var isValid = await _RCaptcha.ValidateResponse(reCaptchaResponse,_siteKey);
+    //     _ReCaptchaMsg = isValid ? "ReCaptcha OK" : "ReCaptcha Failed";
+    //     StateHasChanged();
+    // }
+    // private void OnExpired()
+    // {
+    //     _ReCaptchaMsg = "ReCaptcha Expired";
+    //     StateHasChanged();
+    // }
 }
 
          
