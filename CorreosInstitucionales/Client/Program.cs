@@ -1,11 +1,14 @@
 using CorreosInstitucionales.Client;
+using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX;
 using CorreosInstitucionales.Client.Shared;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.captchaService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificiosService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonalService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitudService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.captchaService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.JSInterop;
@@ -26,6 +29,7 @@ builder.Services.AddScoped<ICarrera, RCarrera>();
 builder.Services.AddScoped<ITipoSolicitud, RTipoSolicitud>();
 builder.Services.AddScoped<ITipoPersonal, RTipoPersonal>();
 builder.Services.AddScoped<IUsuario, RUsuario>();
+builder.Services.AddScoped<IReCaptcha, RCaptcha> ();
 
 builder.Services.AddSyncfusionBlazor(options => { options.EnableRtl = false; options.Animation = GlobalAnimationMode.Enable; /*options.IgnoreScriptIsolation = true;*/ });
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjcwMzY4OUAzMjMzMmUzMDJlMzBUZHd6Sy8rUkNGSDAvQzNibGRkaXJhVmtZT0MrWlVrTmkvRFFFWW45bFBZPQ==");
