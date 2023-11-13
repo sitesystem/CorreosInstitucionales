@@ -22,7 +22,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuNombre")]
         [StringLength(200)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         //[RegularExpression("^[A-Z. ]$", ErrorMessage = "Formato Incorrecto.")] // NO ADMITE ACENTOS
         public string? UsuNombre { get; set; }
 
@@ -31,7 +31,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuPrimerApellido")]
         [StringLength(150)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuPrimerApellido { get; set; }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("usuCURP")]
         [StringLength(18)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuCurp { get; set; }
 
         [Column("usuFilenameCURP")]
@@ -64,7 +64,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("usuNoCelularNuevo")]
         [StringLength(20)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuNoCelularNuevo { get; set; }
 
         /// <summary>
@@ -72,12 +72,12 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuBoleta")]
         [StringLength(10)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuBoleta { get; set; }
 
         [Column("usuSemestre")]
         [StringLength(10)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuSemestre { get; set; }
 
         [Column("usuAñoEgreso")]
@@ -88,7 +88,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuNumeroEmpleado")]
         [StringLength(100)]
-        
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuNumeroEmpleado { get; set; }
 
         [Column("usuIdRol")]
@@ -96,7 +96,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("usuExtension")]
         [StringLength(20)]
-        
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuExtension { get; set; }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("usuCorreoPersonal")]
         [StringLength(100)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuCorreoPersonal { get; set; }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuContraseña")]
         [StringLength(300)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuContraseña { get; set; }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public bool? UsuRecuperarContraseñas { get; set; }
 
         [Column("usuIdCarrera")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public int? UsuIdCarrera { get; set; }
 
         [Column("usuCorreroInstitucional")]
