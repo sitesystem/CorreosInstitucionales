@@ -120,14 +120,14 @@
     <!--sombra-->
     .mi-sf-textbox{
         position:relative;
-        
+
     }
     .mi-sf-textbox::after{
         content:' ';
         position:absolute;
         left:0;
         bottom: -3px;
-        width: 315px;
+        width:100%;
         height: 2px;
         background-color:red;
     }
@@ -142,6 +142,7 @@
     <div class="row">
         <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
             <b class="example-label" size="20px">Datos personales</b>
+            <p>Llenar correctamente los datos solicitados marcados en rojo.</p>
         </div>
     </div>
     <!-- Etiqueta flotante -->
@@ -187,7 +188,7 @@
     <br />
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-            <SfTextBox Placeholder="Num Empleado" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNumeroEmpleado" CssClass="mi-sf-textbox"></SfTextBox>
+            <SfTextBox Placeholder="Num Empleado" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNumeroEmpleado"  CssClass="mi-sf-textbox"></SfTextBox>
             <ValidationMessage For="@(() => oUsuario.UsuNumeroEmpleado)" />
         </div>
         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
@@ -215,8 +216,8 @@
             <SfTextBox Placeholder="Confirmar contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" CssClass="mi-sf-textbox"></SfTextBox>
         </div>
     </div>
+    <br />
     <div class="row">
-        <br />
         <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
             <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreroInstitucional"></SfTextBox>
         </div>
@@ -245,17 +246,17 @@
 
     public async Task RegistrarEmpleado()
     {
-        try{
+        try
+        {
             await servicioUsuario.AddDataAsync(oUsuario);
         }
         catch(Exception ex)
         {
             Console.WriteLine("Error al registrar empleado: {ex.Message}");
         }
-
     }
-    //await servicioUsuario.AddDataAsync(oUsuario);
 
+    //await servicioUsuario.AddDataAsync(oUsuario);
     public void OnFileRemove(RemovingEventArgs args)
     {
         args.PostRawFile = false;

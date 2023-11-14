@@ -22,7 +22,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuNombre")]
         [StringLength(200)]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         //[RegularExpression("^[A-Z. ]$", ErrorMessage = "Formato Incorrecto.")] // NO ADMITE ACENTOS
         public string? UsuNombre { get; set; }
 
