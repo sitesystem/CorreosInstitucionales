@@ -73,7 +73,7 @@ public partial class MceTbUsuario
     public string? UsuBoleta { get; set; }
 
     [Column("usuSemestre")]
-    [StringLength(10)]
+    [StringLength(15)]
     [Unicode(false)]
     public string? UsuSemestre { get; set; }
 

@@ -43,7 +43,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuSegundoApellido { get; set; }
 
         [Column("usuCURP")]
-        [StringLength(18)]
+        [StringLength(18, ErrorMessage = "Verifique que el CURP tenga 18 digitos")]
+        [MinLength(18, ErrorMessage = "Verifique que el CURP tenga 18 digitos")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuCurp { get; set; }
 
@@ -59,11 +60,14 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("usuNoCelularAnt")]
         [StringLength(20)]
-        
+        [MinLength(10, ErrorMessage = "Verifique su numeración que tenga al menos 10 dígitos")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+
         public string? UsuNoCelularAnt { get; set; }
 
         [Column("usuNoCelularNuevo")]
         [StringLength(20)]
+        [MinLength(10, ErrorMessage = "Verifique su numeración que tenga al menos 10 dígitos")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuNoCelularNuevo { get; set; }
 
@@ -76,7 +80,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuBoleta { get; set; }
 
         [Column("usuSemestre")]
-        [StringLength(10)]
+        [StringLength(15)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuSemestre { get; set; }
 

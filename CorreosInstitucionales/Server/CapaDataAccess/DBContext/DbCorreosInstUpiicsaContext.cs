@@ -21,7 +21,11 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
 
     public virtual DbSet<MceCatEdificio> MceCatEdificios { get; set; }
 
+    public virtual DbSet<MceCatEscuela> MceCatEscuelas { get; set; }
+
     public virtual DbSet<MceCatEstadosSolicitud> MceCatEstadosSolicituds { get; set; }
+
+    public virtual DbSet<MceCatLink> MceCatLinks { get; set; }
 
     public virtual DbSet<MceCatPiso> MceCatPisos { get; set; }
 
@@ -62,6 +66,16 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
         modelBuilder.Entity<MceCatEdificio>(entity =>
         {
             entity.Property(e => e.EdiStatus).HasDefaultValueSql("((1))");
+        });
+
+        modelBuilder.Entity<MceCatEscuela>(entity =>
+        {
+            entity.Property(e => e.EscStatus).HasDefaultValueSql("((1))");
+        });
+
+        modelBuilder.Entity<MceCatLink>(entity =>
+        {
+            entity.Property(e => e.LinkStatus).HasDefaultValueSql("((1))");
         });
 
         modelBuilder.Entity<MceCatTipoPersonal>(entity =>
