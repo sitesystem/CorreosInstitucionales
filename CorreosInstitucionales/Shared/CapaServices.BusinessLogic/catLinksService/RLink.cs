@@ -31,7 +31,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksServi
             return result;
         }
 
-        public async Task<Response<LinkViewModel>?> GetDataByAsync(int id)
+        public async Task<Response<LinkViewModel>?> GetDataByIdAsync(int id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<LinkViewModel>>(url + "filterById/" + id,
                  new JsonSerializerOptions()

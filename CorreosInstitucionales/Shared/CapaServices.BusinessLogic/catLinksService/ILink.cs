@@ -12,7 +12,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksServi
     {
         public Task<Response<List<LinkViewModel>>?> GetAllDataAsync(bool filterByStatus);
 
-        public Task<Response<LinkViewModel>?> GetDataByAsync(int id);
+        public Task<Response<LinkViewModel>?> GetDataByIdAsync(int id);
 
         public Task<HttpResponseMessage> AddDataAsync(LinkViewModel oLink);
 
