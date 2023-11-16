@@ -16,11 +16,11 @@
 @inject IUsuario servicioUsuario
 @inject ILink servicioLink
 @inject IJSRuntime JSRuntime
-<head>
-    @* <script src="https://www.google.com/recaptcha/api.js" async defer></script>     *@
+@* <head>
+     <script src="https://www.google.com/recaptcha/api.js" async defer></script>     
     
 
-</head>
+</head> *@
 <style> 
     <!-- estilos de insert -->
     .content-wrapper {
@@ -175,15 +175,7 @@
         margin-bottom: 100px;
         margin-left: 25px;
     }
-    <!-- link -->
-    a::after{
-        content:" ";
-        width: 30px; height:30px;
-        background-image: url(wwwroot\external-link.png); 
-        background-size: contain;
-        background-repea: no-repeat;
-        display: inline-block;
-    }
+    
     <!-- centrado de switch button -->
     .contenedor {
       position: relative;
@@ -199,14 +191,7 @@
 
 
 <h3>Registro alumno</h3>
-    <a href="https://www.google.com" target="_blank">
-         Google   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-                   <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
-                  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
-                 </svg>
-    </a>
-
-<!-- Etiqueta de datos personales -->
+ <!-- Etiqueta de datos personales -->
 
 <EditForm Model="@oUsuario" OnValidSubmit="@Registrar">
     
@@ -317,13 +302,15 @@
             <br />
             <div class="row">
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4"> <!-- <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">-->
-                        <a >Consulta CURP <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                    <a href="@link.LinkNombre" target="_blank">
+                        Consulta CURP
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
                                           <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
                                           <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
                                           </svg>
                         </a>
                         <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCurp" OnInput="@((e) => oUsuario.UsuCurp = e.Value.ToString().ToUpper())"
-                                   onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"></SfTextBox>
+                                   onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"></SfTextBox>
                         <ValidationMessage For="@(() => oUsuario.UsuCurp)" /> <br />
                             
                     </div>
@@ -395,26 +382,18 @@
         <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
             <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreroInstitucional"></SfTextBox>
         </div>
-    </div>
+    </div><br /><br />
     @* <div class="row">
         <ReCaptcha SiteKey="@_siteKey" OnSuccess="OnSuccess" OnExpired="OnExpired"/>
         <span>@_ReCaptchaMsg</span>
     </div> *@
     <!-- Captcha -->
 
-    <p>
-
-
-    </p>    
     @* <input type="text" name="toke" id="token" value="@recaptchaResponse" />
     <div id="recaptcha" class="g-recaptcha" data-sitekey="6Ld0YAkpAAAAAExADS4hr3ZCw0f6P3NdzJ64d8cg" data-callback="RecaptchaCallback"></div> *@
-    <p>
 
-
-    </p>
     <!-- bton -->
-    @if (egresado == false) 
-    {
+   
             <!-- es true -->
         <div class="control-section">
             <div class="button-section">
@@ -422,22 +401,20 @@
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
                             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                                <button type="submit" class="btn btn-outline-primary" >Enviar</button>                                    
+                                <button type="submit" class="btn btn-outline-primary">Enviar</button>                                    
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    }
-    else
-    {
+    
         <div class="row">
            <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
                 <SfMessage Severity="MessageSeverity.Error" Variant="MessageVariant.Filled">Llene el captcha.</SfMessage>
            </div>
         </div>
-    }
+  
     @* <script src="/js/recaptchaInterop.js"></script> *@
 </EditForm>
 
@@ -453,25 +430,35 @@
     //metodos de API
 
     private UsuarioViewModel? oUsuario = new();
-    //Lista de carreras
-    public Response<List<CarreraViewModel>>? oCarrera = new();
+    
+
+
     //variable que llamada a catalogo de links
-    public Response<List<LinkViewModel>>? oLink = new();
+    public Response<LinkViewModel>? oLink = new();
+    public LinkViewModel? link = new();
 
     protected override async Task OnInitializedAsync()
     {
         oCarrera = await servicioCarrera.GetAllDataAsync(false);
-        oLink = await servicioLink.GetAllDataAsync(false);
-        //captcha
-        //await JSRuntime.InvokeVoidAsync("initRecaptcha");
+        // oLink = await servicioLink.GetAllDataAsync(false);
+        oLink = await servicioLink.GetDataByIdAsync(1);
+        link = oLink.Data;
+        // LINQ .NET
+        // link = oLink.Data.Where(link => link.IdLink.Equals(1)).FirstOrDefault();
     }
 
     public async Task Registrar()
     {
+        Console.WriteLine("alta exitosa");
+        oUsuario.UsuIdRol=2;
+        oUsuario.UsuNumeroEmpleado=null;
+        oUsuario.UsuExtension=null;
+        oUsuario.UsuIdTipoPersonal=1;
         await servicioUsuario.AddDataAsync(oUsuario);
 
     }
-
+    //Lista de carreras
+    public Response<List<CarreraViewModel>>? oCarrera = new();
     // Lista de semestres
     public class Semestres
     {
