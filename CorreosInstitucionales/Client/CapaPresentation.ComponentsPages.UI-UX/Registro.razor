@@ -327,11 +327,6 @@
 
         </div>
     </div>
-
-    
-
-
-    
   
     <div class="row">        
              <div class="control-wrapper-upload">
@@ -431,8 +426,6 @@
 
     private UsuarioViewModel? oUsuario = new();
     
-
-
     //variable que llamada a catalogo de links
     public Response<LinkViewModel>? oLink = new();
     public LinkViewModel? link = new();
@@ -449,16 +442,16 @@
 
     public async Task Registrar()
     {
-        Console.WriteLine("alta exitosa");
         oUsuario.UsuIdRol=2;
         oUsuario.UsuNumeroEmpleado=null;
         oUsuario.UsuExtension=null;
         oUsuario.UsuIdTipoPersonal=1;
         await servicioUsuario.AddDataAsync(oUsuario);
-
     }
+
     //Lista de carreras
     public Response<List<CarreraViewModel>>? oCarrera = new();
+    
     // Lista de semestres
     public class Semestres
     {

@@ -249,14 +249,15 @@
 
     public async Task RegistrarEmpleado()
     {
-        oUsuario.UsuIdRol = 2;
-        oUsuario.UsuIdTipoPersonal = 2;
-        oUsuario.UsuIdCarrera = null;
-        oUsuario.UsuAñoEgreso = null;
-        oUsuario.UsuBoleta = null;
-        oUsuario.UsuSemestre = null;
         try
         {
+            oUsuario.UsuIdRol = 2;
+            oUsuario.UsuIdTipoPersonal = 2;
+            oUsuario.UsuIdCarrera = null;
+            oUsuario.UsuAñoEgreso = null;
+            oUsuario.UsuBoleta = null;
+            oUsuario.UsuSemestre = null;
+
             await servicioUsuario.AddDataAsync(oUsuario);
         }
         catch (Exception ex)
