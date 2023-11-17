@@ -327,6 +327,11 @@
 
         </div>
     </div>
+
+    
+
+
+    
   
     <div class="row">        
              <div class="control-wrapper-upload">
@@ -396,7 +401,7 @@
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
                             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                                <button type="submit" class="btn btn-outline-primary">Enviar</button>                                    
+                                <button type="submit" class="btn btn-outline-primary" onclick="@Registrar">Enviar</button>                                    
                             </div>
                         </div>
                     </div>
@@ -426,6 +431,8 @@
 
     private UsuarioViewModel? oUsuario = new();
     
+
+
     //variable que llamada a catalogo de links
     public Response<LinkViewModel>? oLink = new();
     public LinkViewModel? link = new();
@@ -442,16 +449,16 @@
 
     public async Task Registrar()
     {
+        Console.WriteLine("alta exitosa");
         oUsuario.UsuIdRol=2;
         oUsuario.UsuNumeroEmpleado=null;
         oUsuario.UsuExtension=null;
         oUsuario.UsuIdTipoPersonal=1;
         await servicioUsuario.AddDataAsync(oUsuario);
-    }
 
+    }
     //Lista de carreras
     public Response<List<CarreraViewModel>>? oCarrera = new();
-    
     // Lista de semestres
     public class Semestres
     {
