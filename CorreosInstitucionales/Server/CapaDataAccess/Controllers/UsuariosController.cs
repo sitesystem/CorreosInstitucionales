@@ -1,9 +1,11 @@
 ﻿using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+using CorreosInstitucionales.Shared.CapaTools;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
@@ -83,7 +85,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         UsuBoleta = model.UsuBoleta,
                         UsuNumeroEmpleado = model.UsuNumeroEmpleado,
                         UsuCorreoPersonal = model.UsuCorreoPersonal,
-                        UsuContraseña = model.UsuContraseña,
+                        UsuContraseña = Encrypt.GetSHA256(model.UsuContraseña),
                         UsuRecuperarContraseñas = model.UsuRecuperarContraseñas,
                         UsuIdTipoPersonal = model.UsuIdTipoPersonal,
                         UsuIdRol = model.UsuIdRol,
