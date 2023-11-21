@@ -10,10 +10,290 @@
 
 <h3>MCE_catPiso</h3>
 
+<PageTitle>Catálogo de Pisos </PageTitle>
+
+<SfBreadcrumb EnableActiveItemNavigation="true" EnableNavigation="false">
+    <BreadcrumbItems>
+        <BreadcrumbItem Text="Módulo de Catálogos" IconCss="e-icons e-settings" Disabled="true" />
+        <BreadcrumbItem Text="Catálogo de Pisos (Niveles)" IconCss="e-icons e-resizer-1" Disabled="true" />
+    </BreadcrumbItems>
+</SfBreadcrumb>
+<h3 style="font-variant: small-caps;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-bar-chart-steps" viewBox="0 0 18 18">
+        <path d="M.5 0a.5.5 0 0 1 .5.5v15a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 .5 0zM2 1.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z" />
+    </svg> Catálogo de Pisos (Niveles)
+</h3>
+
+<style type="text/css">
+
+</style>
+
 @if(oResponse != null && oResponse.Data != null)
 {
-   
-    foreach(var piso in oResponse.Data)
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                @* <span>RowIndex: @SelectedValue</span> *@
+                @*RowRenderingMode="RowDirection.Vertical" EnableAdaptiveUI="true"*@
+                <SfGrid ID="Grid" @ref="Grid" EnablePersistence="false" TValue="PisoViewModel" DataSource="@oResponse.Data" GridLines="Syncfusion.Blazor.Grids.GridLine.Both"
+                        AllowSorting="true" AllowFiltering="true" AllowTextWrap="true"
+                        AllowResizing="true" AllowPaging="true" AllowSelection="true"
+                        AllowGrouping="true" AllowReordering="true"
+                        AllowExcelExport="true" AllowPdfExport="true"
+                        ShowColumnChooser="true" EnableHover="true"
+                        SelectedRowIndex="0" ShowColumnMenu="true"
+                        Height="100%" Width="auto"
+                        RowHeight="@GridRowHeight" EnableStickyHeader="true"
+                        Toolbar="@(new List<object>() { new ItemModel() { Id = "Grid_add", Text = "Agregar", TooltipText = "Agregar", PrefixIcon = "e-add", CssClass = "e-txt-casing" },
+                                                        new ItemModel() { Id = "Grid_edit", Text = "Editar", TooltipText = "Editar", PrefixIcon = "e-edit", CssClass = "e-txt-casing" },
+                                                        new ItemModel() { Id = "Grid_cancel", Text = "Cancelar", TooltipText = "Cancelar", PrefixIcon = "e-cancel" },
+                                                        new ItemModel() { Id = "Grid_update", Text = "Guardar", TooltipText = "Actualizar", PrefixIcon = "e-update" },
+                                                        new ItemModel() { Id = "", Text = "|", TooltipText = "", PrefixIcon = "" },
+                                                        new ItemModel() { Id = "Grid_enable", Text = "Habilitar", TooltipText = "Activar", PrefixIcon = "e-check-box", CssClass = "e-success" },
+                                                        new ItemModel() { Id = "Grid_disable", Text = "Deshabilitar", TooltipText = "Desactivar", PrefixIcon = "e-trash", CssClass = "e-danger" },
+                                                        new ItemModel() { Id = "", Text = "|", TooltipText = "", PrefixIcon = "" },
+                                                        new ItemModel() { Id = "Grid_excelexport", Text = "Excel", TooltipText = "Exportar a Excel", PrefixIcon = "e-excelexport" },
+                                                        // new ItemModel() { Id = "Grid_csvexport", Text = "CSV", TooltipText = "Exportar a CSV", PrefixIcon = "e-csvexport" },
+                                                        new ItemModel() { Id = "Grid_pdfexport", Text = "PDF", TooltipText = "Exportar a PDF", PrefixIcon = "e-pdfexport" },
+                                                        new ItemModel() { Id = "copyheader", Text = "Copiar con Encabezado", TooltipText = "Copiar con Encabezado", PrefixIcon = "e-copy" },
+                                                        new ItemModel { Id = "small", PrefixIcon = "e-line-very-small", Align = ItemAlign.Right, TooltipText="20px" },
+                                                        new ItemModel { Id = "medium", PrefixIcon = "e-line-small", Align = ItemAlign.Right, TooltipText="40px" },
+                                                        new ItemModel { Id = "big", PrefixIcon = "e-line-normal", Align = ItemAlign.Right, TooltipText="60px" },
+                                                        "ColumnChooser",
+                                                        "Search" })"
+                        ContextMenuItems="@(new List<object>() { "AutoFit", "AutoFitAll", "SortAscending", "SortDescending",
+                                                                 "Copy",
+                                                                 "Edit", "Delete", "Save", "Cancel",
+                                                                 "PdfExport", "ExcelExport", "CsvExport",
+                                                                 "FirstPage", "PrevPage","LastPage", "NextPage"})">
+                    @*<SfToolbar OverflowMode="OverflowMode.Scrollable">
+                <ToolbarItems>
+                <ToolbarItem Type="ItemType.Button" Text="Dehabilitar" TooltipText="Inactivar"
+                PrefixIcon="e-icons e-trash" TabIndex="0" Align="@ItemAlign.Left"
+                CssClass="e-danger" OnClick="(() => EnableDisableByMultiSelect(false))" />
+                <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
+                </ToolbarItems>
+                </SfToolbar>*@
+
+                    <GridGroupSettings ShowGroupedColumn="true" ShowDropArea="true" />
+                    <GridEvents ExcelQueryCellInfoEvent="ExcelQueryCellInfoHandler"
+                                PdfQueryCellInfoEvent="PdfQueryCellInfoHandler"
+                                ExportComplete="ExportCompleteHandler"
+                                OnToolbarClick="ToolbarClick"
+                                TValue="PisoViewModel"
+                                OnActionBegin="OnActionBeginHandler"
+                                OnActionComplete="OnActionCompleteHandler"
+                                RowSelected="GetSelectedRecords"
+                                RowDeselected="GetDeselectedRecords"
+                                CommandClicked="OnCommandClicked" />
+                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Excel" />
+                    <GridSelectionSettings Type="Syncfusion.Blazor.Grids.SelectionType.Multiple"
+                                           PersistSelection="true"
+                                           Mode="Syncfusion.Blazor.Grids.SelectionMode.Both"
+                                           CheckboxMode="CheckboxSelectionType.ResetOnRowClick"
+                                           CheckboxOnly="false"
+                                           EnableToggle="false"
+                                           EnableSimpleMultiRowSelection="true" />
+                    <GridPageSettings PageCount="5" PageSize="10" PageSizes="@(new object[] { 5, 10, 25, 50, 100, "All" })" />
+                    @if (!EditModeSelection)
+                    {
+                        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true"
+                                          Mode="Syncfusion.Blazor.Grids.EditMode.Dialog"
+                                          ShowDeleteConfirmDialog="false">
+                            <Validator>
+                                <DataAnnotationsValidator />
+                            </Validator>
+                        </GridEditSettings>
+                    }
+                    else
+                    {
+                        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true"
+                                          Mode="Syncfusion.Blazor.Grids.EditMode.Normal"
+                                          ShowDeleteConfirmDialog="false">
+                            <Validator>
+                                <DataAnnotationsValidator />
+                            </Validator>
+                        </GridEditSettings>
+                    }
+                    <GridColumns>
+                        <GridColumn Type="Syncfusion.Blazor.Grids.ColumnType.CheckBox"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    Width="30">
+                        </GridColumn>
+
+                        <GridColumn Field=@nameof(PisoViewModel.IdPiso)
+                                    HeaderText="ID"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    IsPrimaryKey="true"
+                                    IsIdentity="true"
+                                    Visible="false"
+                                    Width="50">
+                            <HeaderTemplate>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
+                                        <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z" />
+                                        <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                                    </svg> ID
+                                </div>
+                            </HeaderTemplate>
+                        </GridColumn>
+
+                        <GridColumn Field=@nameof(PisoViewModel.PisoDescripcion)
+                                    HeaderText="Piso (Nivel)"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Left"
+                                    EditType="EditType.DefaultEdit"
+                                    EditorSettings="@CustomerEditParams"
+                                    ValidationRules="@(new Syncfusion.Blazor.Grids.ValidationRules{ Required = true })"
+                                    Width="150">
+                            <HeaderTemplate>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-steps" viewBox="0 0 16 16">
+                                        <path d="M.5 0a.5.5 0 0 1 .5.5v15a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 .5 0zM2 1.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z" />
+                                    </svg> Piso (Nivel)
+                                </div>
+                            </HeaderTemplate>
+                            <Template>
+                                @{
+                                    var pisoNivel = (context as PisoViewModel).PisoDescripcion;
+                                }
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-bar-chart-steps" viewBox="0 0 16 16">
+                                    <path d="M.5 0a.5.5 0 0 1 .5.5v15a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 .5 0zM2 1.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z" />
+                                </svg>  @pisoNivel
+                            </Template>
+                            <EditTemplate>
+                                @{
+                                    var pisoNivel = (context as PisoViewModel);
+                                    //onkeypress = "return /^[a-zA-Z.áéíóúÁÉÍÓÚ ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+
+                                    <SfAutoComplete ID="Data___PisonivelDescripcion"
+                                                    TValue="string"
+                                                    TItem="PisoViewModel"
+                                                    Placeholder="Piso (Nivel)"
+                                                    FloatLabelType="FloatLabelType.Always"
+                                                    ShowClearButton="true"
+                                                    ShowPopupButton="true"
+                                                    AllowFiltering="true"
+                                                    EnableVirtualization="false"
+                                                    IgnoreCase="true"
+                                                    Highlight="true"
+                                                    Autofill="true"
+                                                    MinLength="1"
+                                                    IgnoreAccent="true"
+                                                    SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.Ascending"
+                                                    FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                    SuggestionCount="1000"
+                                                    @bind-Value="@(pisoNivel.PisoDescripcion)"
+                                                    DataSource="@oResponse.Data"
+                                                    OnInput="@((e) => pisoNivel.PisoDescripcion = e.Value.ToString())"
+                                                    ValidateOnInput="false"
+                                                    PopupHeight="500px" PopupWidth="300px">
+                                        <AutoCompleteFieldSettings Text="PisoDescripcion" Value="PisoDescripcion" />
+                                    </SfAutoComplete>
+                                    <ValidationMessage For="() => (pisoNivel.PisoDescripcion)" />
+                                }
+                            </EditTemplate>
+                        </GridColumn>
+
+                        <GridColumn Field=@nameof(PisoViewModel.PisoStatus)
+                                    HeaderText="Estatus"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    EditType="EditType.BooleanEdit"
+                                    DisplayAsCheckBox="true"
+                                    EditorSettings="@(EditModeSelection == true ? VerifiedEditParams : VerifiedAddParams)"
+                                    DefaultValue="true"
+                                    Type="Syncfusion.Blazor.Grids.ColumnType.Boolean"
+                                    Width="50">
+                            <HeaderTemplate>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flag-fill" viewBox="0 0 16 16">
+                                        <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001" />
+                                    </svg> Estatus
+                                </div>
+                            </HeaderTemplate>
+                            <Template>
+                                @{
+                                    var pisoNivelViewModel = context as PisoViewModel;
+                                }
+                                <SfCheckBox Label="@(pisoNivelViewModel.PisoStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
+                                    @bind-Checked="@pisoNivelViewModel.PisoStatus"
+                                    @onchange="@(() => EnableDisableByCheckBox(pisoNivelViewModel.IdPiso, pisoNivelViewModel.PisoStatus))" /><!--pisoNivelViewModel.PisoStatus.Value-->
+                            </Template>
+                        </GridColumn>
+
+                        <GridColumn HeaderText="Acciones" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center" AutoFit="false" Width="50px">
+                            <GridCommandColumns>
+                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-edit", CssClass = "e-primary e-round", IsPrimary=true })" />
+                                @*<GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete", CssClass = "e-danger e-round" })" /> *@
+                                <GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-update", CssClass = "e-success" })" />
+                                <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-cancel-icon", CssClass = "e-warning" })" />
+                                @* <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-eye", CssClass="e-info" })" Title="Ver detalles" /> *@
+                            </GridCommandColumns>
+                        </GridColumn>
+
+                    </GridColumns>
+                    <GridAggregates>
+                        <GridAggregate>
+                            <GridAggregateColumns>
+                                @*<GridAggregateColumn Field="Freight" Type="AggregateType.Sum" Format="C2">
+                            <FooterTemplate>
+                            @{
+                            var aggregate = (context as AggregateTemplateContext);
+                            <div>
+                            <p>Sum: @aggregate.Sum</p>
+                            </div>
+                            }
+                            </FooterTemplate>
+                            </GridAggregateColumn>*@
+                                <GridAggregateColumn Field="@nameof(PisoViewModel.PisoStatus)" Type="AggregateType.TrueCount">
+                                    <FooterTemplate>
+                                        @{
+                                            var aggregate = (context as AggregateTemplateContext);
+                                            <div>
+                                                <b>Habilitados: @aggregate.TrueCount</b>
+                                            </div>
+                                        }
+                                    </FooterTemplate>
+                                </GridAggregateColumn>
+                            </GridAggregateColumns>
+                        </GridAggregate>
+                        <GridAggregate>
+                            <GridAggregateColumns>
+                                @*<GridAggregateColumn Field="Freight" Type="AggregateType.Average" Format="C2">
+                            <FooterTemplate>
+                            @{
+                            var aggregate = (context as AggregateTemplateContext);
+                            <div>
+                            <p>Average: @aggregate.Average</p>
+                            </div>
+                            }
+                            </FooterTemplate>
+                            </GridAggregateColumn>*@
+                                <GridAggregateColumn Field="@nameof(PisoViewModel.PisoStatus)" Type="AggregateType.FalseCount">
+                                    <FooterTemplate>
+                                        @{
+                                            var aggregate = (context as AggregateTemplateContext);
+                                            <div>
+                                                <b>Deshabilitados: @aggregate.FalseCount</b>
+                                            </div>
+                                        }
+                                    </FooterTemplate>
+                                </GridAggregateColumn>
+                            </GridAggregateColumns>
+                        </GridAggregate>
+                    </GridAggregates>
+                </SfGrid>
+            </div>
+        </div>
+    </div>
+
+    <SfToast @ref="@ToastObj" />
+
+    @* TEXTO DE BLAZOR 
+        foreach(var piso in oResponse.Data)
     {
         <div>@piso.IdPiso</div>
         <div>@piso.PisoDescripcion</div>
@@ -25,28 +305,487 @@
             <GridColumn Field=@nameof(PisoViewModel.PisoDescripcion) HeaderText="Descripción Piso" Width="300"></GridColumn>
            
         </GridColumns>
-    </SfGrid>
+    </SfGrid> *@
 }
 else
 {
-    <div>Cargando...</div>
+    <SfSpinner Type="SpinnerType.Bootstrap" Size="50" Label="Cargando..." Visible="true" CssClass="e-spin-overlay" />
+    @* TEXTO CREADO <div>Cargando...</div> *@
 }
 
-<form method="get">
-    <p>Descripci&#243n Piso  <input type="text" name="descripcion" size="200px"></p>
-    <p>
-        Status:
-        <input type="radio" name="st" value="A"> Activo
-        <input type="radio" name="st" value="I"> Inactivo
-    </p>
-</form>
 
 @code
 {
-    public Response<List<PisoViewModel>>? oResponse = new Response<List<PisoViewModel>>();
+    // TEXTO CREADO POR OSAL
+    // public Response<List<PisoViewModel>>? oResponse = new Response<List<PisoViewModel>>();
 
-    protected override async Task OnInitializedAsync()
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     oResponse = await servicioPiso.GetAllDataAsync(false);
+    // }
+    public Response<List<PisoViewModel>>? oResponse = new();
+    SfGrid<PisoViewModel> Grid = new();
+    Response<object>? oRespuesta = new();
+    SfToast ToastObj = new();
+
+    public bool EditModeSelection { get; set; }
+    public int GridRowHeight = 40;
+
+    public List<PisoViewModel>? MultiSelect { get; set; }
+    public List<int>? SelectedRowIndexes { get; set; }
+    public int[]? TotalValue { get; set; }
+    public string? SelectedValue;
+
+    public IEditorSettings CustomerEditParams = new StringEditCellParams { Params = new TextBoxModel() { EnableRtl = false, Readonly = false, ShowClearButton = true, Multiline = true } };
+    public IEditorSettings VerifiedAddParams = new BooleanEditCellParams { Params = new CheckBoxModel<bool>() { Label = "Estatus (Habilitado/Deshabilitado)", Disabled = true, LabelPosition = Syncfusion.Blazor.Buttons.LabelPosition.After } };
+    public IEditorSettings VerifiedEditParams = new BooleanEditCellParams { Params = new CheckBoxModel<bool>() { Label = "Estatus (Habilitado/Deshabilitado)", Disabled = false, LabelPosition = Syncfusion.Blazor.Buttons.LabelPosition.After } };
+
+    protected override async Task OnInitializedAsync() => oResponse = await servicioPiso.GetAllDataAsync(false);
+
+    public async Task ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
     {
-        oResponse = await servicioPiso.GetAllDataAsync(false);
+        //if (args.Item.Id == "Grid_add")
+        //{
+        //    var response = await servicioPiso.EnableDisableDataById(MultiSelect.Last().IdPisoNivel, false);
+        //    oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+        //}
+        //else if (args.Item.Id == "Grid_edit")
+        //{
+        //    EditModeSelection = false;
+        //}
+        if (args.Item.Id == "Grid_enable")
+        {
+            await EnableDisableByMultiSelect(true);
+        }
+        else if (args.Item.Id == "Grid_disable")
+        {
+            await EnableDisableByMultiSelect(false);
+        }
+        else if (args.Item.Id == "Grid_pdfexport")
+        {
+            PdfExportProperties ExportProperties = new PdfExportProperties();
+            ExportProperties.FileName = "Pisos (Niveles).pdf";
+            ExportProperties.PageSize = PdfPageSize.Letter;
+            ExportProperties.ExportType = Syncfusion.Blazor.Grids.ExportType.AllPages;
+            ExportProperties.PageOrientation = Syncfusion.Blazor.Grids.PageOrientation.Portrait;
+            ExportProperties.IsRepeatHeader = true;
+            ExportProperties.DisableAutoFitWidth = false;
+            ExportProperties.IncludeHiddenColumn = false;
+            ExportProperties.IncludeTemplateColumn = true;
+            await this.Grid.ExportToPdfAsync(ExportProperties);
+        }
+        else if (args.Item.Id == "Grid_excelexport")
+        {
+            ExcelExportProperties ExportProperties = new ExcelExportProperties();
+            ExportProperties.FileName = "Pisos (Niveles).xlsx";
+            ExportProperties.ExportType = Syncfusion.Blazor.Grids.ExportType.AllPages;
+            ExportProperties.IncludeHiddenColumn = true;
+            ExportProperties.IncludeTemplateColumn = true;
+            await this.Grid.ExportToExcelAsync(ExportProperties);
+        }
+        else if (args.Item.Id == "Grid_csvexport")
+        {
+            await this.Grid.ExportToCsvAsync();
+        }
+        else if (args.Item.Id == "small")
+        {
+            GridRowHeight = 20;
+        }
+        else if (args.Item.Id == "medium")
+        {
+            GridRowHeight = 40;
+        }
+        else if (args.Item.Id == "big")
+        {
+            GridRowHeight = 60;
+        }
     }
+
+    public void ExcelQueryCellInfoHandler(ExcelQueryCellInfoEventArgs<PisoViewModel> args)
+    {
+        if (args.Column.Field == "PisoStatus")
+            args.Cell.Value = args.Data.PisoStatus == true ? "Habilitado" : "Deshabilitado";
+    }
+
+    public void PdfQueryCellInfoHandler(PdfQueryCellInfoEventArgs<PisoViewModel> args)
+    {
+        if (args.Column.Field == "PisoStatus")
+            args.Cell.Value = args.Data.PisoStatus == true ? "Habilitado" : "Deshabilitado";
+    }
+
+    public void ExportCompleteHandler(object args)
+    {
+        ToastObj.ShowAsync(
+            new ToastModel
+                {
+                    Title = "Exportación exitosa",
+                    Content = "Se exportó el archivo correctamente.",
+                    CssClass = "e-toast-success",
+                    Icon = "e-success e-check-box", // e-meeting
+                    Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeOut } },
+                    Timeout = 3000,
+                    ShowCloseButton = true,
+                    ProgressDirection = ProgressDirection.LTR,
+                    ShowProgressBar = true,
+                    NewestOnTop = true,
+                    Position = new ToastPosition { X = "Right", Y = "Top" }
+                });
+    }
+
+    private async Task OnActionBeginHandler(Syncfusion.Blazor.Grids.ActionEventArgs<PisoViewModel> args)
+    {
+        if (args.RequestType == Syncfusion.Blazor.Grids.Action.BeginEdit)
+        {
+            // Triggers before editing operation starts
+            EditModeSelection = true;
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Add)
+        {
+            // Triggers before add operation starts
+            EditModeSelection = false;
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Cancel)
+        {
+            // Triggers before cancel operation starts
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Save)
+        {
+            // Triggers before save operation starts
+            if (args.Action == "Add")
+            {
+                var response = await servicioPiso.AddDataAsync(args.Data);
+                oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registro Agregado",
+                            Content = args.Data.PisoDescripcion,
+                            CssClass = "e-toast-success",
+                            Icon = "e-success e-check-box", // e-meeting
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeOut } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+            }
+            else if (args.Action == "Edit")
+            {
+                var response = await servicioPiso.EditDataAsync(args.Data);
+                oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registro Editado",
+                            Content = args.Data.PisoDescripcion,
+                            CssClass = "e-toast-success",
+                            Icon = "e-annotation-edit", // e-meeting
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeIn } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+            }
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Delete)
+        {
+            // Triggers before delete operation starts
+            var response = await servicioPiso.EnableDisableDataById(args.RowData.IdPiso, false);
+            oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+            await ToastObj.ShowAsync(
+                new ToastModel
+                    {
+                        Title = "Registro Deshabilitado",
+                        Content = args.Data.PisoDescripcion,
+                        CssClass = "e-toast-danger",
+                        Icon = "e-circle-remove", // e-meeting
+                        Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeZoomIn } },
+                        Timeout = 3000,
+                        ShowCloseButton = true,
+                        ProgressDirection = ProgressDirection.LTR,
+                        ShowProgressBar = true,
+                        NewestOnTop = true,
+                        Position = new ToastPosition { X = "Right", Y = "Top" }
+                    });
+        }
+    }
+
+    private async Task OnActionCompleteHandler(Syncfusion.Blazor.Grids.ActionEventArgs<PisoViewModel> args)
+    {
+        if (args.RequestType == Syncfusion.Blazor.Grids.Action.BeginEdit)
+        {
+            // Triggers once editing operation completes
+            args.PreventRender = false;
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Add)
+        {
+            // Triggers once add operation completes
+            args.PreventRender = false;
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Cancel)
+        {
+            // Triggers once cancel operation completes
+            oResponse = await servicioPiso.GetAllDataAsync(false); //to fetch the updated data from db to Grid
+            await PersistSelection();
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Save)
+        {
+            // Triggers once save operation completes
+            if (args.Action == "Edit")
+            {
+            }
+
+            oResponse = await servicioPiso.GetAllDataAsync(false);
+            await PersistSelection();
+            StateHasChanged();
+
+            if (args.Action == "Add")
+            {
+                await (Grid.TotalItemCount % Grid.PageSettings.PageSize == 0 ?
+                        Grid.GoToPageAsync(Grid.TotalItemCount / Grid.PageSettings.PageSize) :
+                        Grid.GoToPageAsync((Grid.TotalItemCount / Grid.PageSettings.PageSize) + 1));
+
+                await (Grid.TotalItemCount % Grid.PageSettings.PageSize == 0 ?
+                        Grid.SelectRowAsync(Grid.PageSettings.PageSize - 1) :
+                        Grid.SelectRowAsync((Grid.TotalItemCount % Grid.PageSettings.PageSize) - 1));
+            }
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Delete)
+        {
+            // Triggers once delete operation completes
+            oResponse = await servicioPiso.GetAllDataAsync(false);
+            await PersistSelection();
+        }
+    }
+
+    private async Task EnableDisableByCheckBox(int id, bool isActivate)
+    {
+        try
+        {
+            var response = await servicioPiso.EnableDisableDataById(id, isActivate);
+            oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+
+            if (MultiSelect != null && isActivate)
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registro Habilitado",
+                            Content = MultiSelect.Last().PisoDescripcion,
+                            CssClass = "e-toast-success",
+                            Icon = "e-circle-check",
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.ZoomIn } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+            else if (MultiSelect != null && !isActivate)
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registro Deshabilitado",
+                            Content = MultiSelect.Last().PisoDescripcion,
+                            CssClass = "e-toast-danger",
+                            Icon = "e-circle-remove",
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.ZoomOut } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            oResponse = await servicioPiso.GetAllDataAsync(false);
+            await PersistSelection();
+        }
+    }
+
+    public async Task EnableDisableByMultiSelect(bool isActivate)
+    {
+        try
+        {
+            string reg = string.Empty;
+
+            if (MultiSelect != null)
+                foreach (var item in MultiSelect)
+                {
+                    var response = await servicioPiso.EnableDisableDataById(item.IdPiso, isActivate);
+                    oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+                    reg += "<b>" + item.IdPiso + "</b> " + item.PisoDescripcion + "<br>";
+                }
+
+            if (MultiSelect != null && isActivate)
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registros Habilitados",
+                            Content = reg,
+                            CssClass = "e-toast-success",
+                            Icon = "e-circle-check",
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.ZoomIn } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+            else if (MultiSelect != null && !isActivate)
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registros Deshabilitados",
+                            Content = reg,
+                            CssClass = "e-toast-danger",
+                            Icon = "e-circle-remove",
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.ZoomOut } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            oResponse = await servicioPiso.GetAllDataAsync(false);
+            await PersistSelection();
+        }
+    }
+
+    public async Task PersistSelection() => await (TotalValue != null && TotalValue.Length > 0 ? Grid.SelectRowsAsync(TotalValue) : Grid.SelectRowAsync(0));
+
+    public async Task GetSelectedRecords(RowSelectEventArgs<PisoViewModel> args)
+    {
+        //MultiSelect = null;
+
+        MultiSelect = await this.Grid.GetSelectedRecordsAsync();
+
+        SelectedRowIndexes = await this.Grid.GetSelectedRowIndexesAsync();
+        TotalValue = SelectedRowIndexes.ToArray();
+        SelectedValue = "";
+        if (TotalValue.Length > 0 && SelectedRowIndexes.Count > 0)
+            foreach (var data in TotalValue)
+            {
+                SelectedValue = SelectedValue + " " + data;
+            }
+    }
+
+    public async Task GetDeselectedRecords(RowDeselectEventArgs<PisoViewModel> args)
+    {
+        MultiSelect = await this.Grid.GetSelectedRecordsAsync();
+
+        SelectedRowIndexes = await this.Grid.GetSelectedRowIndexesAsync();
+        TotalValue = SelectedRowIndexes.ToArray();
+        SelectedValue = "";
+        if (TotalValue.Length > 0 && SelectedRowIndexes.Count > 0)
+            foreach (var data in TotalValue)
+            {
+                SelectedValue = SelectedValue + " " + data;
+            }
+    }
+
+    public void OnCommandClicked(CommandClickEventArgs<PisoViewModel> args)
+    {
+        //if (args.CommandColumn.ButtonOption.Content == "Detalles")
+        //    args.RowData;
+        //Console.WriteLine(args.RowData.IdPisoNivel);
+    }
+
+    // public class Columns
+    // {
+    //     public string? Id { get; set; }
+    //     public string? Name { get; set; }
+    // }
+    // private List<Columns> columns = new List<Columns>()
+    // {
+    //     new Columns(){ Id = "ID", Name = "ID" },
+    //     new Columns(){ Id = "Nombre Oficial", Name = "Nombre Oficial" },
+    //     new Columns(){ Id = "Nombre Alias", Name = "Nombre Alias" },
+    //     new Columns(){ Id = "Estatus", Name = "Estatus" }
+    // };
+
+    // public class CIndex
+    // {
+    //     public string? Id { get; set; }
+    //     public string? Index { get; set; }
+    // }
+    // private List<CIndex> indexes = new()
+    // {
+    //     new CIndex(){ Id = "1", Index= "1" },
+    //     new CIndex(){ Id = "2", Index= "2" },
+    //     new CIndex(){ Id = "3", Index= "3" },
+    //     new CIndex(){ Id = "4", Index= "4" }
+    // };
+
+    //private string eventName = string.Empty;
+
+    //void OnTextFocus()
+    //{
+    //    eventName = "Focus";
+    //}
+
+    //void OnTextFocusOut()
+    //{
+    //    eventName = "Focusout";
+    //}
+
+    //private RenderFragment RenderChipItem(string text)
+    //{
+    //    RenderFragment chipItem = b =>
+    //    {
+    //        b.OpenComponent<ChipItem>(0);
+    //        b.AddAttribute(1, "Text", text);
+    //        b.CloseComponent();
+    //    };
+    //    return chipItem;
+    //}
+
+    //public void OnChipHover(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+    //{
+    //    // Do something here on chips hover.
+    //}
+
+    //public string Header { get; set; }
+    //public string ButtonText { get; set; }
+    //public string GetHeader(PisoNivelViewModel Value)
+    //{
+    //    if (Value.EdiNombreAlias == null)
+    //    {
+    //        ButtonText = "Insert";
+    //        return "Insert New Order";
+    //    }
+    //    else
+    //    {
+    //        ButtonText = "Save Changes";
+    //        return "Edit Record Details of " + Value.EdiNombreAlias.ToString();
+    //    }
+    //}
+    //public async Task Cancel()
+    //{
+    //    await Grid.CloseEditAsync();     //Cancel editing action
+    //}
+    //public async Task Save()
+    //{
+    //    await Grid.EndEditAsync();       //Save the edited/added data to Grid
+    //}
 }
