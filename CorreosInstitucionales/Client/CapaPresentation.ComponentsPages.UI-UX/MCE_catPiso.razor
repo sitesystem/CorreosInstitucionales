@@ -309,8 +309,8 @@
 }
 else
 {
-    <SfSpinner Type="SpinnerType.Bootstrap" Size="50" Label="Cargando..." Visible="true" CssClass="e-spin-overlay" />
-    @* TEXTO CREADO <div>Cargando...</div> *@
+    @* <SfSpinner Type="SpinnerType.Bootstrap" Size="50" Label="Cargando..." Visible="true" CssClass="e-spin-overlay" /> *@
+    <div>Cargando...</div>
 }
 
 
@@ -403,8 +403,8 @@ else
 
     public void ExcelQueryCellInfoHandler(ExcelQueryCellInfoEventArgs<PisoViewModel> args)
     {
-        if (args.Column.Field == "PisoStatus")
-            args.Cell.Value = args.Data.PisoStatus == true ? "Habilitado" : "Deshabilitado";
+        // if (args.Column.Field == "PisoStatus")
+        //     args.Cell.Value = args.Data.PisoStatus == true ? "Habilitado" : "Deshabilitado";
     }
 
     public void PdfQueryCellInfoHandler(PdfQueryCellInfoEventArgs<PisoViewModel> args)
