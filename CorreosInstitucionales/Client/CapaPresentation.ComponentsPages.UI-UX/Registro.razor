@@ -5,7 +5,7 @@
 
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksService;
-
+@using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
 @using System;
 @using System.Globalization;
@@ -16,7 +16,8 @@
 @inject ICarrera servicioCarrera
 @inject IUsuario servicioUsuario
 @inject ILink servicioLink
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JS
+@inject HttpClient Http
 
 <style> 
     <!-- estilos de insert -->
@@ -83,14 +84,6 @@
     .fluent-dark .row.material {
         display: none;
     }
-    <!-- * rojo 
-    .is-required:after {
-        content: '*';
-        margin-left: 3px;
-        color: red;
-        font-weight: bold;
-        font-size: 20px;
-    }-->
     <!-- dropdownlist filtering    -->
     .control-wrapper {
         width: 250px;
@@ -394,15 +387,8 @@
     </div>
 
     
-    @* <div class="row">
-        <ReCaptcha SiteKey="@_siteKey" OnSuccess="OnSuccess" OnExpired="OnExpired"/>
-        <span>@_ReCaptchaMsg</span>
-    </div> *@
     <!-- Captcha -->
-
-    @* <input type="text" name="toke" id="token" value="@recaptchaResponse" /> *@
-    <div id="recaptcha" class="g-recaptcha" data-sitekey="6Ld0YAkpAAAAAExADS4hr3ZCw0f6P3NdzJ64d8cg"></div>
-
+    
     <!-- bton -->
    
             <!-- es true -->
@@ -410,39 +396,29 @@
             <div class="button-section">
                 <div id="button-control">
                     <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
 
-                            <div class="g-recaptcha" data-sitekey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL"></div>
-
-                            <button type="submit" class="btn btn-outline-primary g-recaptcha" onclick="@Registrar"
-                                    data-sitekey="@sitekey"
-                                    data-callback='onSubmit'
-                                    data-action='submit'>
-                                Enviar
-                            </button>
-                        </div>
-                        </div>
+                        <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                     </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+
+                        <button type="submit" class="btn btn-outline-primary" disabled="@DisablePostButton"> Enviar </button>
+
+                      </div>
+                </div>
                 </div>
             </div>
-        </div>
-    
-        <div class="row">
-           <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                <SfMessage Severity="MessageSeverity.Error" Variant="MessageVariant.Filled">Llene el captcha.</SfMessage>
-           </div>
-        </div>
+        </div>           
   
-    @* <script src="/js/recaptchaInterop.js"></script> *@
 </EditForm>
 
 
 
 @code
-{
-    // varibles de toggle
-    private bool egresado = false;
+{    
 
     //varible fecha
     int year = DateTime.Parse(DateTime.Now.ToString()).Year;   
@@ -469,12 +445,30 @@
 
     public async Task Registrar()
     {
-        Console.WriteLine("alta exitosa");
-        oUsuario.UsuIdRol=2;
-        oUsuario.UsuNumeroEmpleado=null;
-        oUsuario.UsuExtension=null;
-        oUsuario.UsuIdTipoPersonal=1;
-        await servicioUsuario.AddDataAsync(oUsuario);
+        if (ValidReCAPTCHA)
+        {
+            var response = await reCAPTCHAComponent.GetResponseAsync();
+
+            try
+            {
+                ServerVerificatiing = true;
+                StateHasChanged();
+                await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+                Console.WriteLine("alta exitosa");
+                oUsuario.UsuIdRol=2;
+                oUsuario.UsuNumeroEmpleado=null;
+                oUsuario.UsuExtension=null;
+                oUsuario.UsuIdTipoPersonal=1;
+                await servicioUsuario.AddDataAsync(oUsuario);
+            }
+            catch (HttpRequestException e)
+            {
+                await JS.InvokeAsync<object>("alert", e.Message);
+                ServerVerificatiing = false;
+                StateHasChanged();
+            }
+        }
+
 
     }
     //Lista de carreras
@@ -522,6 +516,16 @@
 
     // Captcha
 
-    public string sitekey="6Ld0YAkpAAAAAExADS4hr3ZCw0f6P3NdzJ64d8cg";
+    private ReCAPTCHA reCAPTCHAComponent;
+
+    private bool ValidReCAPTCHA = false;
+
+    private bool ServerVerificatiing = false;
+
+    private bool DisablePostButton => !ValidReCAPTCHA || ServerVerificatiing;
+
+    private void OnSuccess() => ValidReCAPTCHA = true;
+
+    private void OnExpired() => ValidReCAPTCHA = false;
     
 }       
