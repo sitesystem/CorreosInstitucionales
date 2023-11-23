@@ -1,34 +1,34 @@
-﻿@page "/Edificio"
+﻿@page "/Escuela"
 
 @attribute [Authorize]
 
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificiosService;
-@inject IEdificio servicioEdificio
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEscuelasService;
+@inject IEscuela servicioEscuela
+
 
 <SfBreadcrumb EnableActiveItemNavigation="true" EnableNavigation="false">
     <BreadcrumbItems>
         <BreadcrumbItem Text="Módulo de Catálogos" IconCss="e-icons e-settings" Disabled="true" />
-        <BreadcrumbItem Text="Catálogo de Edificios" IconCss="e-icons e-page-column-two" Disabled="true" />
+        <BreadcrumbItem Text="Catálogo de Escuela" IconCss="e-icons e-page-column-two" Disabled="true" />
     </BreadcrumbItems>
 </SfBreadcrumb>
 
 <h3 style="font-variant: small-caps;">
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-buildings-fill" viewBox="0 0 20 20">
         <path d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V.5ZM2 11h1v1H2v-1Zm2 0h1v1H4v-1Zm-1 2v1H2v-1h1Zm1 0h1v1H4v-1Zm9-10v1h-1V3h1ZM8 5h1v1H8V5Zm1 2v1H8V7h1ZM8 9h1v1H8V9Zm2 0h1v1h-1V9Zm-1 2v1H8v-1h1Zm1 0h1v1h-1v-1Zm3-2v1h-1V9h1Zm-1 2h1v1h-1v-1Zm-2-4h1v1h-1V7Zm3 0v1h-1V7h1Zm-2-2v1h-1V5h1Zm1 0h1v1h-1V5Z" />
-    </svg> Catálogo de Edificios
+    </svg> Catálogo de Escuela
 </h3>
 
 <style type="text/css"></style>
 
-
-@if (oResponse != null && oResponse.Data != null)
+@if(oResponse != null && oResponse.Data != null)
 {
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-md-12">
-                <SfGrid ID="Grid" @ref="Grid" EnablePersistence="false" TValue="EdificioViewModel" DataSource="@oResponse.Data" GridLines="Syncfusion.Blazor.Grids.GridLine.Both"
+                <SfGrid ID="Grid" @ref="Grid" EnablePersistence="false" TValue="EscuelaViewModel" DataSource="@oResponse.Data" GridLines="Syncfusion.Blazor.Grids.GridLine.Both"
                         AllowSorting="true" AllowFiltering="true" AllowTextWrap="true"
                         AllowResizing="true" AllowPaging="true" AllowSelection="true"
                         AllowGrouping="true" AllowReordering="true"
@@ -59,26 +59,26 @@
                                                                  "Edit", "Delete", "Save", "Cancel",
                                                                  "PdfExport", "ExcelExport", "CsvExport",
                                                                  "FirstPage", "PrevPage","LastPage", "NextPage"})">
-                    <GridGroupSettings ShowGroupedColumn="true" ShowDropArea="true" />
-                    <GridEvents ExcelQueryCellInfoEvent="ExcelQueryCellInfoHandler"
-                                PdfQueryCellInfoEvent="PdfQueryCellInfoHandler"
-                                ExportComplete="ExportCompleteHandler"
-                                OnToolbarClick="ToolbarClick"
-                                TValue="EdificioViewModel"
-                                OnActionBegin="OnActionBeginHandler"
-                                OnActionComplete="OnActionCompleteHandler"
-                                RowSelected="GetSelectedRecords"
-                                RowDeselected="GetDeselectedRecords"
-                                CommandClicked="OnCommandClicked" />
-                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Excel" />
-                    <GridSelectionSettings Type="Syncfusion.Blazor.Grids.SelectionType.Multiple"
-                                           PersistSelection="true"
-                                           Mode="Syncfusion.Blazor.Grids.SelectionMode.Both"
-                                           CheckboxMode="CheckboxSelectionType.ResetOnRowClick"
-                                           CheckboxOnly="false"
-                                           EnableToggle="false"
-                                           EnableSimpleMultiRowSelection="true" />
-                    <GridPageSettings PageCount="5" PageSize="10" PageSizes="@(new object[] { 5, 10, 25, 50, 100, "All" })" />
+                        <GridGroupSettings ShowGroupedColumn="true" ShowDropArea="true" />
+                        <GridEvents ExcelQueryCellInfoEvent="ExcelQueryCellInfoHandler"
+                            PdfQueryCellInfoEvent="PdfQueryCellInfoHandler"
+                            ExportComplete="ExportCompleteHandler"
+                            OnToolbarClick="ToolbarClick"
+                            TValue="EscuelaViewModel"
+                            OnActionBegin="OnActionBeginHandler"
+                            OnActionComplete="OnActionCompleteHandler"
+                            RowSelected="GetSelectedRecords"
+                            RowDeselected="GetDeselectedRecords"
+                            CommandClicked="OnCommandClicked" />
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Excel" />
+                        <GridSelectionSettings Type="Syncfusion.Blazor.Grids.SelectionType.Multiple"
+                            PersistSelection="true"
+                            Mode="Syncfusion.Blazor.Grids.SelectionMode.Both"
+                            CheckboxMode="CheckboxSelectionType.ResetOnRowClick"
+                            CheckboxOnly="false"
+                            EnableToggle="false"
+                            EnableSimpleMultiRowSelection="true" />
+                        <GridPageSettings PageCount="5" PageSize="10" PageSizes="@(new object[] { 5, 10, 25, 50, 100, "All" })" />
                     @if (!EditModeSelection)
                     {
                         <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true"
@@ -105,8 +105,7 @@
                                     TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
                                     Width="30">
                         </GridColumn>
-
-                        <GridColumn Field=@nameof(EdificioViewModel.IdEdificio)
+                        <GridColumn Field=@nameof(EscuelaViewModel.IdEscuela)
                                     HeaderText="ID"
                                     HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
                                     TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
@@ -124,8 +123,26 @@
                             </HeaderTemplate>
                         </GridColumn>
 
-                        <GridColumn Field=@nameof(EdificioViewModel.EdiNombreOficial)
-                                    HeaderText="Nombre Oficial"
+                        <GridColumn Field=@nameof(EscuelaViewModel.EscNoEscuela)
+                                    HeaderText="Numero Escuela"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    IsPrimaryKey="true"
+                                    Visible="true"
+                                    IsIdentity="true"
+                                    Width="50">
+                            <HeaderTemplate>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
+                                        <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z" />
+                                        <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                                    </svg> Numero Escuela
+                                </div>
+                            </HeaderTemplate>
+                        </GridColumn>
+
+                        <GridColumn Field=@nameof(EscuelaViewModel.EscNombreLargo)
+                                    HeaderText="Nombre Largo"
                                     HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
                                     TextAlign="Syncfusion.Blazor.Grids.TextAlign.Left"
                                     EditType="EditType.DefaultEdit"
@@ -136,27 +153,27 @@
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-fill" viewBox="0 0 16 16">
                                         <path d="M3 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3v-3.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V16h3a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H3Zm1 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Z" />
-                                    </svg> Nombre Oficial del Edificio
+                                    </svg> Nombre Oficial de la Escuela
                                 </div>
                             </HeaderTemplate>
                             <Template>
                                 @{
-                                    var edificio = (context as EdificioViewModel).EdiNombreOficial;
+                                    var escuela = (context as EscuelaViewModel).EscNombreLargo;
                                 }
                                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
                                     <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z" />
                                     <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V1Zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3V1Z" />
-                                </svg> @edificio
+                                </svg> @escuela
                             </Template>
                             <EditTemplate>
                                 @{
-                                    var edificio = (context as EdificioViewModel);
+                                    var escuela = (context as EscuelaViewModel);
                                     // onkeypress="return /^[^\d]+$/.test(String.fromCharCode(event.keyCode || event.which));"
 
-                                    <SfAutoComplete ID="Data___EdiNombreOficial"
+                                    <SfAutoComplete ID="Data___EscNombreLargo"
                                                     TValue="string"
-                                                    TItem="EdificioViewModel"
-                                                    Placeholder="Nombre Oficial del Edificio"
+                                                    TItem="EscuelaViewModel"
+                                                    Placeholder="Nombre Oficial de la Escuela"
                                                     FloatLabelType="FloatLabelType.Always"
                                                     ShowClearButton="true"
                                                     ShowPopupButton="true"
@@ -170,19 +187,18 @@
                                                     SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.Ascending"
                                                     FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
                                                     SuggestionCount="1000"
-                                    @bind-Value="@(edificio.EdiNombreOficial)"
+                                    @bind-Value="@(escuela.EscNombreLargo)"
                                                     DataSource="@oResponse.Data"
-                                                    OnInput="@((e) => edificio.EdiNombreOficial = e.Value.ToString())"
+                                                    OnInput="@((e) => escuela.EscNombreLargo = e.Value.ToString())"
                                                     ValidateOnInput="true"
                                                     PopupHeight="500px" PopupWidth="500px">
-                                        <AutoCompleteFieldSettings Text="EdiNombreOficial" Value="EdiNombreOficial" />
+                                        <AutoCompleteFieldSettings Text="EscNombreLargo" Value="EscNombreLargo" />
                                     </SfAutoComplete>
-                                    <ValidationMessage For="() => (edificio.EdiNombreOficial)" />
+                                    <ValidationMessage For="() => (escuela.EscNombreLargo)" />
                                 }
                             </EditTemplate>
                         </GridColumn>
-
-                        <GridColumn Field=@nameof(EdificioViewModel.EdiNombreAlias)
+                        <GridColumn Field=@nameof(EscuelaViewModel.EscNombreCorto)
                                     HeaderText="Nombre Alias"
                                     HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
                                     TextAlign="Syncfusion.Blazor.Grids.TextAlign.Left"
@@ -195,21 +211,21 @@
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-fill" viewBox="0 0 16 16">
                                         <path d="M3 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3v-3.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V16h3a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H3Zm1 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Z" />
-                                    </svg> Nombre Alias del Edificio
+                                    </svg> Nombre Alias de la Escuela
                                 </div>
                             </HeaderTemplate>
                             <Template>
                                 @{
-                                    var edificio = (context as EdificioViewModel).EdiNombreAlias;
+                                    var escuela = (context as EscuelaViewModel).EscNombreCorto;
                                 }
                                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
                                     <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z" />
                                     <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V1Zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3V1Z" />
-                                </svg> @edificio
+                                </svg> @escuela
                             </Template>
                             <EditTemplate>
                                 @{
-                                    var edificio = (context as EdificioViewModel);
+                                    var escuela = (context as EscuelaViewModel);
 
                                     // <SfTextBox Placeholder="Nombre Alias del Edificio"
                                     //            FloatLabelType="FloatLabelType.Always"
@@ -221,9 +237,9 @@
 
                                     // onkeypress="return /^[^\d]+$/.test(String.fromCharCode(event.keyCode || event.which));"
 
-                                    <SfAutoComplete ID="Data___EdiNombreAlias"
+                                    <SfAutoComplete ID="Data___EscNombreAlias"
                                                     TValue="string"
-                                                    TItem="EdificioViewModel"
+                                                    TItem="EscuelaViewModel"
                                                     Placeholder="Nombre Alias del Edificio"
                                                     FloatLabelType="FloatLabelType.Always"
                                                     ShowClearButton="true"
@@ -238,18 +254,18 @@
                                                     SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.Ascending"
                                                     FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
                                                     SuggestionCount="1000"
-                                    @bind-Value="@(edificio.EdiNombreAlias)"
+                                    @bind-Value="@(escuela.EscNombreCorto)"
                                                     DataSource="@oResponse.Data"
-                                                    OnInput="@((e) => edificio.EdiNombreAlias = e.Value.ToString())"
+                                                    OnInput="@((e) => escuela.EscNombreCorto = e.Value.ToString())"
                                                     ValidateOnInput="true"
                                                     PopupHeight="500px" PopupWidth="300px">
-                                        <AutoCompleteFieldSettings Text="EdiNombreAlias" Value="EdiNombreAlias" />
+                                        <AutoCompleteFieldSettings Text="EscNombreCorto" Value="EscNombreCorto" />
                                     </SfAutoComplete>
                                 }
                             </EditTemplate>
                         </GridColumn>
 
-                        <GridColumn Field=@nameof(EdificioViewModel.EdiStatus)
+                        @* <GridColumn Field=@nameof(EscuelaViewModel.EscStatus)
                                     HeaderText="Estatus"
                                     HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
                                     TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
@@ -268,13 +284,13 @@
                             </HeaderTemplate>
                             <Template>
                                 @{
-                                    var ediViewModel = (context as EdificioViewModel);
+                                    var escViewModel = (context as EscuelaViewModel);
                                 }
-                                <SfCheckBox Label="@(ediViewModel.EdiStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
-                                @bind-Checked="@ediViewModel.EdiStatus"
-                                @onchange="@(() => EnableDisableByCheckBox(ediViewModel.IdEdificio, ediViewModel.EdiStatus))" />
+                                <SfCheckBox Label="@(escViewModel.EscStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
+                                @bind-Checked = "@escViewModel.EscStatus"
+                                @onchange="@(()=> EnableDisableByCheckBox(escViewModel.IdEscuela, escViewModel.EscStatus))"></SfCheckBox>
                             </Template>
-                        </GridColumn>
+                        </GridColumn> *@
 
                         <GridColumn HeaderText="Acciones" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center" AutoFit="false" Width="50px">
                             <GridCommandColumns>
@@ -299,7 +315,7 @@
                             }
                             </FooterTemplate>
                             </GridAggregateColumn>*@
-                                <GridAggregateColumn Field="@nameof(EdificioViewModel.EdiStatus)" Type="AggregateType.TrueCount">
+                                <GridAggregateColumn Field="@nameof(EscuelaViewModel.EscStatus)" Type="AggregateType.TrueCount">
                                     <FooterTemplate>
                                         @{
                                             var aggregate = (context as AggregateTemplateContext);
@@ -323,7 +339,7 @@
                             }
                             </FooterTemplate>
                             </GridAggregateColumn>*@
-                                <GridAggregateColumn Field="@nameof(EdificioViewModel.EdiStatus)" Type="AggregateType.FalseCount">
+                                <GridAggregateColumn Field="@nameof(EscuelaViewModel.EscStatus)" Type="AggregateType.FalseCount">
                                     <FooterTemplate>
                                         @{
                                             var aggregate = (context as AggregateTemplateContext);
@@ -340,7 +356,6 @@
             </div>
         </div>
     </div>
-
     <SfToast @ref="@ToastObj" />
 
     @*<div class="col-lg-12 control-section toast-default-section">
@@ -371,15 +386,15 @@ else
 
 @code
 {
-    public Response<List<EdificioViewModel>>? oResponse = new();
-    SfGrid<EdificioViewModel> Grid = new();
+    public Response<List<EscuelaViewModel>>? oResponse = new();
+    SfGrid<EscuelaViewModel> Grid = new();
     Response<object>? oRespuesta = new();
     SfToast ToastObj = new();
 
     public bool EditModeSelection { get; set; }
     public int GridRowHeight = 40;
 
-    public List<EdificioViewModel>? MultiSelect { get; set; }
+    public List<EscuelaViewModel>? MultiSelect { get; set; }
     public List<int>? SelectedRowIndexes { get; set; }
     public int[]? TotalValue { get; set; }
     public string? SelectedValue;
@@ -388,7 +403,7 @@ else
     public IEditorSettings VerifiedAddParams = new BooleanEditCellParams { Params = new CheckBoxModel<bool>() { Label = "Estatus (Habilitado/Deshabilitado)", Disabled = true, LabelPosition = Syncfusion.Blazor.Buttons.LabelPosition.After } };
     public IEditorSettings VerifiedEditParams = new BooleanEditCellParams { Params = new CheckBoxModel<bool>() { Label = "Estatus (Habilitado/Deshabilitado)", Disabled = false, LabelPosition = Syncfusion.Blazor.Buttons.LabelPosition.After } };
 
-    protected override async Task OnInitializedAsync() => oResponse = await servicioEdificio.GetAllDataAsync(false);
+    protected override async Task OnInitializedAsync() => oResponse = await servicioEscuela.GetAllDataAsync(false);
 
     public async Task ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
     {
@@ -412,7 +427,7 @@ else
         else if (args.Item.Id == "Grid_pdfexport")
         {
             PdfExportProperties ExportProperties = new PdfExportProperties();
-            ExportProperties.FileName = "Edificios.pdf";
+            ExportProperties.FileName = "Escuelas.pdf";
             ExportProperties.PageSize = PdfPageSize.Letter;
             ExportProperties.ExportType = Syncfusion.Blazor.Grids.ExportType.AllPages;
             ExportProperties.PageOrientation = Syncfusion.Blazor.Grids.PageOrientation.Portrait;
@@ -425,7 +440,7 @@ else
         else if (args.Item.Id == "Grid_excelexport")
         {
             ExcelExportProperties ExportProperties = new ExcelExportProperties();
-            ExportProperties.FileName = "Edificios.xlsx";
+            ExportProperties.FileName = "Escuelas.xlsx";
             ExportProperties.ExportType = Syncfusion.Blazor.Grids.ExportType.AllPages;
             ExportProperties.IncludeHiddenColumn = true;
             ExportProperties.IncludeTemplateColumn = true;
@@ -449,16 +464,16 @@ else
         }
     }
 
-    public void ExcelQueryCellInfoHandler(ExcelQueryCellInfoEventArgs<EdificioViewModel> args)
+    public void ExcelQueryCellInfoHandler(ExcelQueryCellInfoEventArgs<EscuelaViewModel> args)
     {
-        if (args.Column.Field == "EdiStatus")
-            args.Cell.Value = args.Data.EdiStatus == true ? "Habilitado" : "Deshabilitado";
+        if (args.Column.Field == "EscStatus")
+            args.Cell.Value = args.Data.EscStatus == true ? "Habilitado" : "Deshabilitado";
     }
 
-    public void PdfQueryCellInfoHandler(PdfQueryCellInfoEventArgs<EdificioViewModel> args)
+    public void PdfQueryCellInfoHandler(PdfQueryCellInfoEventArgs<EscuelaViewModel> args)
     {
-        if (args.Column.Field == "EdiStatus")
-            args.Cell.Value = args.Data.EdiStatus == true ? "Habilitado" : "Deshabilitado";
+        if (args.Column.Field == "EscStatus")
+            args.Cell.Value = args.Data.EscStatus == true ? "Habilitado" : "Deshabilitado";
     }
 
     public void ExportCompleteHandler(object args)
@@ -480,7 +495,7 @@ else
                 });
     }
 
-    private async Task OnActionBeginHandler(Syncfusion.Blazor.Grids.ActionEventArgs<EdificioViewModel> args)
+    private async Task OnActionBeginHandler(Syncfusion.Blazor.Grids.ActionEventArgs<EscuelaViewModel> args)
     {
         if (args.RequestType == Syncfusion.Blazor.Grids.Action.BeginEdit)
         {
@@ -501,13 +516,13 @@ else
             // Triggers before save operation starts
             if (args.Action == "Add")
             {
-                var response = await servicioEdificio.AddDataAsync(args.Data);
+                var response = await servicioEscuela.AddDataAsync(args.Data);
                 oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
                 await ToastObj.ShowAsync(
                     new ToastModel
                         {
                             Title = "Registro Agregado",
-                            Content = args.Data.EdiNombreOficial + " (" + args.Data.EdiNombreAlias + ")",
+                            Content = args.Data.EscNombreLargo + " (" + args.Data.EscNombreCorto + ")",
                             CssClass = "e-toast-success",
                             Icon = "e-success e-check-box", // e-meeting
                             Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeOut } },
@@ -521,13 +536,13 @@ else
             }
             else if (args.Action == "Edit")
             {
-                var response = await servicioEdificio.EditDataAsync(args.Data);
+                var response = await servicioEscuela.EditDataAsync(args.Data);
                 oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
                 await ToastObj.ShowAsync(
                     new ToastModel
                         {
                             Title = "Registro Editado",
-                            Content = args.Data.EdiNombreOficial + " (" + args.Data.EdiNombreAlias + ")",
+                            Content = args.Data.EscNombreLargo + " (" + args.Data.EscNombreCorto + ")",
                             CssClass = "e-toast-success",
                             Icon = "e-annotation-edit", // e-meeting
                             Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeIn } },
@@ -543,13 +558,13 @@ else
         else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Delete)
         {
             // Triggers before delete operation starts
-            var response = await servicioEdificio.EnableDisableDataById(args.RowData.IdEdificio, false);
+            var response = await servicioEscuela.EnableDisableDataById(args.RowData.IdEscuela, false);
             oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
             await ToastObj.ShowAsync(
                 new ToastModel
                     {
                         Title = "Registro Deshabilitado",
-                        Content = args.Data.EdiNombreOficial + " (" + args.Data.EdiNombreAlias + ")",
+                        Content = args.Data.EscNombreLargo + " (" + args.Data.EscNombreCorto + ")",
                         CssClass = "e-toast-danger",
                         Icon = "e-circle-remove", // e-meeting
                         Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeZoomIn } },
@@ -563,7 +578,7 @@ else
         }
     }
 
-    private async Task OnActionCompleteHandler(Syncfusion.Blazor.Grids.ActionEventArgs<EdificioViewModel> args)
+    private async Task OnActionCompleteHandler(Syncfusion.Blazor.Grids.ActionEventArgs<EscuelaViewModel> args)
     {
         if (args.RequestType == Syncfusion.Blazor.Grids.Action.BeginEdit)
         {
@@ -578,7 +593,7 @@ else
         else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Cancel)
         {
             // Triggers once cancel operation completes
-            oResponse = await servicioEdificio.GetAllDataAsync(false); //to fetch the updated data from db to Grid
+            oResponse = await servicioEscuela.GetAllDataAsync(false); //to fetch the updated data from db to Grid
             await PersistSelection();
         }
         else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Save)
@@ -588,7 +603,7 @@ else
             {
             }
 
-            oResponse = await servicioEdificio.GetAllDataAsync(false); //to fetch the updated data from db to Grid
+            oResponse = await servicioEscuela.GetAllDataAsync(false); //to fetch the updated data from db to Grid
             await PersistSelection();
             StateHasChanged();
 
@@ -606,7 +621,7 @@ else
         else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Delete)
         {
             // Triggers once delete operation completes
-            oResponse = await servicioEdificio.GetAllDataAsync(false);
+            oResponse = await servicioEscuela.GetAllDataAsync(false);
             await PersistSelection();
         }
     }
@@ -615,7 +630,7 @@ else
     {
         try
         {
-            var response = await servicioEdificio.EnableDisableDataById(id, isActivate);
+            var response = await servicioEscuela.EnableDisableDataById(id, isActivate);
             oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
 
             if (MultiSelect != null && isActivate)
@@ -623,7 +638,7 @@ else
                     new ToastModel
                         {
                             Title = "Registro Habilitado",
-                            Content = MultiSelect.Last().EdiNombreOficial + " (" + MultiSelect.Last().EdiNombreAlias + ")",
+                            Content = MultiSelect.Last().EscNombreLargo + " (" + MultiSelect.Last().EscNombreCorto + ")",
                             CssClass = "e-toast-success",
                             Icon = "e-circle-check",
                             Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.ZoomIn } },
@@ -639,7 +654,7 @@ else
                     new ToastModel
                         {
                             Title = "Registro Deshabilitado",
-                            Content = MultiSelect.Last().EdiNombreOficial + " (" + MultiSelect.Last().EdiNombreAlias + ")",
+                            Content = MultiSelect.Last().EscNombreLargo + " (" + MultiSelect.Last().EscNombreCorto + ")",
                             CssClass = "e-toast-danger",
                             Icon = "e-circle-remove",
                             Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.ZoomOut } },
@@ -657,7 +672,7 @@ else
         }
         finally
         {
-            oResponse = await servicioEdificio.GetAllDataAsync(false);
+            oResponse = await servicioEscuela.GetAllDataAsync(false);
             await PersistSelection();
         }
     }
@@ -671,9 +686,9 @@ else
             if (MultiSelect != null)
                 foreach (var item in MultiSelect)
                 {
-                    var response = await servicioEdificio.EnableDisableDataById(item.IdEdificio, isActivate);
+                    var response = await servicioEscuela.EnableDisableDataById(item.IdEscuela, isActivate);
                     oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
-                    reg += "<b>" + item.IdEdificio + "</b> " + item.EdiNombreOficial + " (" + item.EdiNombreAlias + ")<br>";
+                    reg += "<b>" + item.IdEscuela + "</b> " + item.EscNombreLargo + " (" + item.EscNombreCorto + ")<br>";
                 }
 
             if (MultiSelect != null && isActivate)
@@ -716,14 +731,14 @@ else
         finally
         {
             StateHasChanged();
-            oResponse = await servicioEdificio.GetAllDataAsync(false);
+            oResponse = await servicioEscuela.GetAllDataAsync(false);
             await PersistSelection();
         }
     }
 
     public async Task PersistSelection() => await (TotalValue != null && TotalValue.Length > 0 ? Grid.SelectRowsAsync(TotalValue) : Grid.SelectRowAsync(0));
 
-    public async Task GetSelectedRecords(RowSelectEventArgs<EdificioViewModel> args)
+    public async Task GetSelectedRecords(RowSelectEventArgs<EscuelaViewModel> args)
     {
         //MultiSelect = null;
 
@@ -739,7 +754,7 @@ else
             }
     }
 
-    public async Task GetDeselectedRecords(RowDeselectEventArgs<EdificioViewModel> args)
+    public async Task GetDeselectedRecords(RowDeselectEventArgs<EscuelaViewModel> args)
     {
         MultiSelect = await this.Grid.GetSelectedRecordsAsync();
 
@@ -753,7 +768,7 @@ else
             }
     }
 
-    public void OnCommandClicked(CommandClickEventArgs<EdificioViewModel> args)
+    public void OnCommandClicked(CommandClickEventArgs<EscuelaViewModel> args)
     {
         //if (args.CommandColumn.ButtonOption.Content == "Detalles")
         //    args.RowData;
@@ -767,10 +782,12 @@ else
     }
     private List<Columns> columns = new List<Columns>()
     {
-        new Columns(){ Id = "ID", Name = "ID" },
-        new Columns(){ Id = "Nombre Oficial", Name = "Nombre Oficial" },
-        new Columns(){ Id = "Nombre Alias", Name = "Nombre Alias" },
-        new Columns(){ Id = "Estatus", Name = "Estatus" }
+        new Columns(){ Id = "ID", Name = "ID"},
+        new Columns(){ Id = "Numero Escuela", Name = "Numero Escuela"},
+        new Columns(){ Id = "Nombre Largo", Name = "Nombre Largo"},
+        new Columns(){ Id = "Nombre Corto", Name = "Nombre Corto"},
+        // logo
+        new Columns(){ Id = "Estatus", Name = "Estatus"}
     };
 
     public class CIndex
@@ -838,4 +855,3 @@ else
     //    await Grid.EndEditAsync();       //Save the edited/added data to Grid
     //}
 }
-
