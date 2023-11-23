@@ -35,9 +35,6 @@ builder.Services.AddScoped<ITipoPersonal, RTipoPersonal>();
 builder.Services.AddScoped<IUsuario, RUsuario>();
 builder.Services.AddScoped<ILink, RLink>();
 
-
-
-
 builder.Services.AddSyncfusionBlazor(options => { options.EnableRtl = false; options.Animation = GlobalAnimationMode.Enable; /*options.IgnoreScriptIsolation = true;*/ });
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjcwMzY4OUAzMjMzMmUzMDJlMzBUZHd6Sy8rUkNGSDAvQzNibGRkaXJhVmtZT0MrWlVrTmkvRFFFWW45bFBZPQ==");
 

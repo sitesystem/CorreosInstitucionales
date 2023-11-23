@@ -1,5 +1,11 @@
 ﻿@page "/"
 
+@using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA
+
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
@@ -7,3 +13,43 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+<ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+<button @onclick="OnClickPost" disabled="@DisablePostButton">POST</button>
+
+@code
+{
+    private ReCAPTCHA reCAPTCHAComponent;
+
+    private bool ValidReCAPTCHA = false;
+
+    private bool ServerVerificatiing = false;
+
+    private bool DisablePostButton => !ValidReCAPTCHA || ServerVerificatiing;
+
+    private void OnSuccess() => ValidReCAPTCHA = true;
+
+    private void OnExpired() => ValidReCAPTCHA = false;
+
+    private async Task OnClickPost()
+    {
+        if (ValidReCAPTCHA)
+        {
+            var response = await reCAPTCHAComponent.GetResponseAsync();
+
+            try
+            {
+                ServerVerificatiing = true;
+                StateHasChanged();
+                await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+                Navigation.NavigateTo("/valid");
+            }
+            catch (HttpRequestException e)
+            {
+                await JS.InvokeAsync<object>("alert", e.Message);
+                ServerVerificatiing = false;
+                StateHasChanged();
+            }
+        }
+    }
+}

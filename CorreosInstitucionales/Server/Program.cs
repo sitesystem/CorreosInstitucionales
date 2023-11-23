@@ -1,3 +1,4 @@
+using CorreosInstitucionales.Server.CapaDataAccess;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.OpenApi.Models;
 
@@ -7,6 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+// Inyección de Dependencias
+//public void ConfigureServices(IServiceCollection services)
+//{
+//    services.Configure<reCAPTCHAVerificationOptions>(Configuration.GetSection("reCAPTCHA"));
+//    services.AddHttpClient();
+//    services.AddMvc();
+//}
+
+//builder.Services.Configure<reCAPTCHAVerificationOptions>(Configuration.GetSection("reCAPTCHA"));
 
 // Habilitar Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -64,7 +75,6 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 
 app.MapRazorPages();
 app.MapControllers();

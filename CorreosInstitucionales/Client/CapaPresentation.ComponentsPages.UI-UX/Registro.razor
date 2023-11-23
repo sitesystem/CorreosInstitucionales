@@ -18,11 +18,6 @@
 @inject ILink servicioLink
 @inject IJSRuntime JSRuntime
 
-@* <head>
-     <script src="https://www.google.com/recaptcha/api.js" async defer></script>     
-    
-
-</head> *@
 <style> 
     <!-- estilos de insert -->
     .content-wrapper {
@@ -344,13 +339,9 @@
                         <SfNumericTextBox TValue="int?" Min=1936 Max="@year" Step=1 Placeholder="Año de egreso" FloatLabelType="@FloatLabelType.Auto" Format="####" @bind-Value="@oUsuario.UsuAñoEgreso" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" CssClass="mi-sf-textbox"></SfNumericTextBox>                    
                 </div>
             </div>
-
         </div>
     </div> <br />
 
-
-    
-  
     <div class="row">        
              <div class="control-wrapper-upload">
                 <p>Adjunte el CURP en formato PDF</p>
@@ -409,8 +400,8 @@
     </div> *@
     <!-- Captcha -->
 
-    @* <input type="text" name="toke" id="token" value="@recaptchaResponse" />
-    <div id="recaptcha" class="g-recaptcha" data-sitekey="6Ld0YAkpAAAAAExADS4hr3ZCw0f6P3NdzJ64d8cg" data-callback="RecaptchaCallback"></div> *@
+    @* <input type="text" name="toke" id="token" value="@recaptchaResponse" /> *@
+    <div id="recaptcha" class="g-recaptcha" data-sitekey="6Ld0YAkpAAAAAExADS4hr3ZCw0f6P3NdzJ64d8cg"></div>
 
     <!-- bton -->
    
@@ -421,6 +412,9 @@
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
                             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+
+                            <div class="g-recaptcha" data-sitekey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL"></div>
+
                             <button type="submit" class="btn btn-outline-primary g-recaptcha" onclick="@Registrar"
                                     data-sitekey="@sitekey"
                                     data-callback='onSubmit'
