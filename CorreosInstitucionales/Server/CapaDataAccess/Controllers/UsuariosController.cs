@@ -94,7 +94,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         UsuIdCarrera = model.UsuIdCarrera,
                         UsuFechaHoraAlta = model.UsuFechaHoraAlta,
                         UsuStatus = model.UsuStatus,                                                
-                        UsuIdTipoPersonalNavigation = null
+                        //UsuIdTipoPersonalNavigation = null
                     };
                     await db.MceTbUsuarios.AddAsync(oUsuario);
                     await db.SaveChangesAsync();

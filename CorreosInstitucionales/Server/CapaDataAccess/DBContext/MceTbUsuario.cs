@@ -152,16 +152,4 @@ public partial class MceTbUsuario
     /// </summary>
     [Column("usuStatus")]
     public bool? UsuStatus { get; set; }
-
-    [ForeignKey("UsuIdCarrera")]
-    [InverseProperty("MceTbUsuarios")]
-    public virtual MceCatCarrera? UsuIdCarreraNavigation { get; set; }
-
-    [ForeignKey("UsuIdRol")]
-    [InverseProperty("MceTbUsuarios")]
-    public virtual MceCatRole? UsuIdRolNavigation { get; set; }
-
-    [ForeignKey("UsuIdTipoPersonal")]
-    [InverseProperty("MceTbUsuarios")]
-    public virtual MceCatTipoPersonal? UsuIdTipoPersonalNavigation { get; set; }
 }

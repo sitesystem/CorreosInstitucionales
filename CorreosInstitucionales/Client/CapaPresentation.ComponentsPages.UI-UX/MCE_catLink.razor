@@ -137,6 +137,8 @@
                             </HeaderTemplate>
                         </GridColumn>
 
+                        
+
                         <GridColumn Field=@nameof(LinkViewModel.LinkNombre)
                                     HeaderText="Link"
                                     HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
@@ -192,6 +194,65 @@
                                         <AutoCompleteFieldSettings Text="LinkNombre" Value="LinkNombre" />
                                     </SfAutoComplete>
                                     <ValidationMessage For="() => (link.LinkNombre)" />
+                                }
+                            </EditTemplate>
+                        </GridColumn>
+
+                        <GridColumn Field=@nameof(LinkViewModel.LinkEnlace)
+                                    HeaderText="Link"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Left"
+                                    EditType="EditType.DefaultEdit"
+                                    EditorSettings="@CustomerEditParams"
+                                    ValidationRules="@(new Syncfusion.Blazor.Grids.ValidationRules{ Required = true })"
+                                    Width="150">
+                            <HeaderTemplate>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link" viewBox="0 0 16 16">
+                                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
+                                        <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6z" />
+                                    </svg> Enlace
+                                </div>
+                            </HeaderTemplate>
+                            <Template>
+                                @{
+                                    var link = (context as LinkViewModel).LinkEnlace;
+                                }
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z" />
+                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z" />
+                                </svg>  @link
+                            </Template>
+                            <EditTemplate>
+                                @{
+                                    var link = (context as LinkViewModel);
+                                    //onkeypress = "return /^[a-zA-Z.áéíóúÁÉÍÓÚ ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+
+                                    <SfAutoComplete ID="Data___LinkEnlace"
+                                                    TValue="string"
+                                                    TItem="LinkViewModel"
+                                                    Placeholder="Link"
+                                                    FloatLabelType="FloatLabelType.Always"
+                                                    ShowClearButton="true"
+                                                    ShowPopupButton="true"
+                                                    AllowFiltering="true"
+                                                    EnableVirtualization="false"
+                                                    IgnoreCase="true"
+                                                    Highlight="true"
+                                                    Autofill="true"
+                                                    MinLength="1"
+                                                    IgnoreAccent="true"
+                                                    SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.Ascending"
+                                                    FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                    SuggestionCount="1000"
+                                                    @bind-Value="@(link.LinkEnlace)"
+                                                    DataSource="@oResponse.Data"
+                                                    OnInput="@((e) => link.LinkEnlace = e.Value.ToString())"
+                                                    ValidateOnInput="false"
+                                                    PopupHeight="500px" PopupWidth="300px">
+                                        <AutoCompleteFieldSettings Text="LinkEnlace" Value="LinkEnlace" />
+                                    </SfAutoComplete>
+                                    <ValidationMessage For="() => (link.LinkEnlace)" />
                                 }
                             </EditTemplate>
                         </GridColumn>

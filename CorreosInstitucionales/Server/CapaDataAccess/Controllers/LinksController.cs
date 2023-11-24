@@ -73,6 +73,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     {
                         IdLink = model.IdLink,
                         LinkNombre = model.LinkNombre,
+                        LinkEnlace=model.LinkEnlace,
                         LinkStatus = true
                     };
                     await db.MceCatLinks.AddAsync(oLink);

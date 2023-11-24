@@ -21,6 +21,7 @@ public partial class MceCatTipoSolicitud
     [Column("tiposolDescripcion", TypeName = "text")]
     public string TiposolDescripcion { get; set; } = null!;
 
+    [Required]
     [Column("tiposolStatus")]
-    public bool TiposolStatus { get; set; }
+    public bool? TiposolStatus { get; set; }
 }
