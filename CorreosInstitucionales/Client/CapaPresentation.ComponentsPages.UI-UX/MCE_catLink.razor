@@ -190,7 +190,8 @@
                                                     DataSource="@oResponse.Data"
                                                     OnInput="@((e) => link.LinkNombre = e.Value.ToString())"
                                                     ValidateOnInput="false"
-                                                    PopupHeight="500px" PopupWidth="300px">
+                                                    PopupHeight="500px" PopupWidth="300px"
+                                                    Enabled="false">
                                         <AutoCompleteFieldSettings Text="LinkNombre" Value="LinkNombre" />
                                     </SfAutoComplete>
                                     <ValidationMessage For="() => (link.LinkNombre)" />

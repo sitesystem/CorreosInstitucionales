@@ -1,10 +1,11 @@
 ﻿@page "/Edificio"
 
-@attribute [Authorize]
+@* @attribute [Authorize] *@
 
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificiosService;
+
 @inject IEdificio servicioEdificio
 
 <SfBreadcrumb EnableActiveItemNavigation="true" EnableNavigation="false">

@@ -41,6 +41,16 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksServi
 
             return result;
         }
+        public async Task<Response<LinkViewModel>?> GetDataByNombreAsync(string nombre)
+        {
+            var result = await _httpClient.GetFromJsonAsync<Response<LinkViewModel>>(url + "filterByNombre/" + nombre,
+                 new JsonSerializerOptions()
+                 {
+                     PropertyNameCaseInsensitive = true
+                 });
+
+            return result;
+        }
 
         public async Task<HttpResponseMessage> AddDataAsync(LinkViewModel oLink)
         {

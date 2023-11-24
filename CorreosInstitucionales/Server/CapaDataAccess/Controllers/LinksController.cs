@@ -59,6 +59,27 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oResponse);
         }
+        [HttpGet("filterByNombre/{nombre}")]
+        public async Task<IActionResult> GetDataByNombre(string nombre)
+        {
+            Response<MceCatLink> oResponse = new();
+
+            try
+            {
+                using (DbCorreosInstUpiicsaContext db = new())
+                {
+                    var list = await db.MceCatLinks.Where(linkName => linkName.LinkNombre == nombre).FirstOrDefaultAsync();
+                    oResponse.Success = 1;
+                    oResponse.Data = list;
+                }
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddData(LinkViewModel model)
@@ -100,7 +121,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 MceCatLink? oLink = await db.MceCatLinks.FindAsync(model.IdLink);
                 if (oLink != null)
                 {
-                    oLink.LinkNombre = model.LinkNombre;
+                    //oLink.LinkNombre = model.LinkNombre; Deja comentado para no editar el nombre
+                    oLink.LinkEnlace = model.LinkEnlace;
                     oLink.LinkStatus = model.LinkStatus;
 
                     db.Entry(oLink).State = EntityState.Modified;

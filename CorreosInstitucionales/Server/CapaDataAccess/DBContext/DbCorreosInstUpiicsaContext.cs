@@ -106,7 +106,7 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
             entity.HasKey(e => e.IdUsuarioSolicitante).HasName("PK_ML_tbUsuariosSolicitantes");
 
             entity.Property(e => e.IdUsuarioSolicitante).HasComment("Descripcion del Usuario Solicitante");
-            entity.Property(e => e.UsuBoleta).HasComment("Numero de Boleta del Uusario Solicitante");
+            entity.Property(e => e.UsuBoletaAlumno).HasComment("Numero de Boleta del Uusario Solicitante");
             entity.Property(e => e.UsuContraseña).HasComment("Contraseña del Usuario Solicitante");
             entity.Property(e => e.UsuFechaHoraAlta).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.UsuIdTipoPersonal).HasComment("Tipo de Personal del Usuario Solicitante");
