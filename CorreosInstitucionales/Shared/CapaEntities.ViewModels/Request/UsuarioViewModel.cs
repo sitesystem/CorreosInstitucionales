@@ -81,6 +81,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuSemestre { get; set; }
 
         [Column("usuAñoEgreso")]
+        [Required]
         public int? UsuAñoEgreso { get; set; }
 
         /// <summary>
