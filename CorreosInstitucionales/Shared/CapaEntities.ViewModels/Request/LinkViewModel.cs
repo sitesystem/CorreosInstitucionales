@@ -17,6 +17,10 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         [StringLength(200)]
         public string LinkNombre { get; set; } = null!;
 
+        [Column("linkEnlace")]
+        [StringLength(200)]
+        public string LinkEnlace { get; set; } = null!;
+
         [Column("linkStatus")]
         public bool LinkStatus { get; set; }
     }

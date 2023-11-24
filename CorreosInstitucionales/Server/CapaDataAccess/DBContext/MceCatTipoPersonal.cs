@@ -23,7 +23,4 @@ public partial class MceCatTipoPersonal
     [Required]
     [Column("tipoperStatus")]
     public bool? TipoperStatus { get; set; }
-
-    [InverseProperty("UsuIdTipoPersonalNavigation")]
-    public virtual ICollection<MceTbUsuario> MceTbUsuarios { get; set; } = new List<MceTbUsuario>();
 }

@@ -91,8 +91,9 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
 
             entity.Property(e => e.IdTipoSolicitud).HasComment("ID del tipo de solicitud");
             entity.Property(e => e.TiposolDescripcion)
-                .HasDefaultValueSql("(N'-')")
+                .HasDefaultValueSql("('-')")
                 .HasComment("Descripcion del tipo de la solicitud");
+            entity.Property(e => e.TiposolStatus).HasDefaultValueSql("((1))");
         });
 
         modelBuilder.Entity<MceTbSolicitud>(entity =>
@@ -105,7 +106,7 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
             entity.HasKey(e => e.IdUsuarioSolicitante).HasName("PK_ML_tbUsuariosSolicitantes");
 
             entity.Property(e => e.IdUsuarioSolicitante).HasComment("Descripcion del Usuario Solicitante");
-            entity.Property(e => e.UsuBoleta).HasComment("Numero de Boleta del Uusario Solicitante");
+            entity.Property(e => e.UsuBoletaAlumno).HasComment("Numero de Boleta del Uusario Solicitante");
             entity.Property(e => e.UsuContraseña).HasComment("Contraseña del Usuario Solicitante");
             entity.Property(e => e.UsuFechaHoraAlta).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.UsuIdTipoPersonal).HasComment("Tipo de Personal del Usuario Solicitante");
@@ -119,12 +120,6 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
             entity.Property(e => e.UsuStatus)
                 .HasDefaultValueSql("((1))")
                 .HasComment("Activo / Inactivo");
-
-            entity.HasOne(d => d.UsuIdCarreraNavigation).WithMany(p => p.MceTbUsuarios).HasConstraintName("FK_MCE_tbUsuarios_MCE_catCarreras");
-
-            entity.HasOne(d => d.UsuIdRolNavigation).WithMany(p => p.MceTbUsuarios).HasConstraintName("FK_MCE_tbUsuarios_MCE_catRoles");
-
-            entity.HasOne(d => d.UsuIdTipoPersonalNavigation).WithMany(p => p.MceTbUsuarios).HasConstraintName("FK_MCE_tbUsuarios_MCE_catTipoPersonal");
         });
 
         OnModelCreatingPartial(modelBuilder);
