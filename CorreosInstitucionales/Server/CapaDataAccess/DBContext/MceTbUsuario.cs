@@ -16,6 +16,12 @@ public partial class MceTbUsuario
     public int IdUsuarioSolicitante { get; set; }
 
     /// <summary>
+    /// Tipo de Personal del Usuario Solicitante
+    /// </summary>
+    [Column("usuIdTipoPersonal")]
+    public int? UsuIdTipoPersonal { get; set; }
+
+    /// <summary>
     /// Nombre del Usuario Solicitante
     /// </summary>
     [Column("usuNombre")]
@@ -54,23 +60,31 @@ public partial class MceTbUsuario
     [Unicode(false)]
     public string? UsuArchivoCompInscripcion { get; set; }
 
-    [Column("usuNoCelularAnt")]
+    [Column("usuNoCelularAnterior")]
     [StringLength(20)]
     [Unicode(false)]
-    public string? UsuNoCelularAnt { get; set; }
+    public string? UsuNoCelularAnterior { get; set; }
 
     [Column("usuNoCelularNuevo")]
     [StringLength(20)]
     [Unicode(false)]
     public string? UsuNoCelularNuevo { get; set; }
 
+    [Column("usuIdCarrera")]
+    public int? UsuIdCarrera { get; set; }
+
     /// <summary>
     /// Numero de Boleta del Uusario Solicitante
     /// </summary>
-    [Column("usuBoleta")]
+    [Column("usuBoletaAlumno")]
     [StringLength(10)]
     [Unicode(false)]
-    public string? UsuBoleta { get; set; }
+    public string? UsuBoletaAlumno { get; set; }
+
+    [Column("usuBoletaMaestria")]
+    [StringLength(7)]
+    [Unicode(false)]
+    public string? UsuBoletaMaestria { get; set; }
 
     [Column("usuSemestre")]
     [StringLength(15)]
@@ -88,24 +102,28 @@ public partial class MceTbUsuario
     [Unicode(false)]
     public string? UsuNumeroEmpleado { get; set; }
 
-    [Column("usuIdRol")]
-    public int? UsuIdRol { get; set; }
+    [Column("usuIdAreaDepto")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? UsuIdAreaDepto { get; set; }
 
     [Column("usuExtension")]
     [StringLength(20)]
     [Unicode(false)]
     public string? UsuExtension { get; set; }
 
-    /// <summary>
-    /// Tipo de Personal del Usuario Solicitante
-    /// </summary>
-    [Column("usuIdTipoPersonal")]
-    public int? UsuIdTipoPersonal { get; set; }
+    [Column("usuIdRol")]
+    public int? UsuIdRol { get; set; }
 
-    [Column("usuCorreoPersonal")]
+    [Column("usuCorreoPersonalAnterior")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? UsuCorreoPersonal { get; set; }
+    public string? UsuCorreoPersonalAnterior { get; set; }
+
+    [Column("usuCorreoPersonalNuevo")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? UsuCorreoPersonalNuevo { get; set; }
 
     /// <summary>
     /// Contraseña del Usuario Solicitante
@@ -121,9 +139,6 @@ public partial class MceTbUsuario
     [Column("usuRecuperarContraseñas")]
     public bool? UsuRecuperarContraseñas { get; set; }
 
-    [Column("usuIdCarrera")]
-    public int? UsuIdCarrera { get; set; }
-
     [Column("usuCorreroInstitucional")]
     [StringLength(100)]
     [Unicode(false)]
@@ -134,34 +149,14 @@ public partial class MceTbUsuario
     [Unicode(false)]
     public string? UsuContraseñaInstitucional { get; set; }
 
-    [Column("usuFechaHoraAlta", TypeName = "datetime")]
-    public DateTime? UsuFechaHoraAlta { get; set; }
-
-    [Column("usuArchivoCapturaEscaneo")]
-    [StringLength(200)]
+    [Column("usuFechaHoraAlta")]
+    [StringLength(100)]
     [Unicode(false)]
-    public string? UsuArchivoCapturaEscaneo { get; set; }
-
-    [Column("usuArchivoCapturaError")]
-    [StringLength(200)]
-    [Unicode(false)]
-    public string? UsuArchivoCapturaError { get; set; }
+    public string? UsuFechaHoraAlta { get; set; }
 
     /// <summary>
     /// Activo / Inactivo
     /// </summary>
     [Column("usuStatus")]
     public bool? UsuStatus { get; set; }
-
-    [ForeignKey("UsuIdCarrera")]
-    [InverseProperty("MceTbUsuarios")]
-    public virtual MceCatCarrera? UsuIdCarreraNavigation { get; set; }
-
-    [ForeignKey("UsuIdRol")]
-    [InverseProperty("MceTbUsuarios")]
-    public virtual MceCatRole? UsuIdRolNavigation { get; set; }
-
-    [ForeignKey("UsuIdTipoPersonal")]
-    [InverseProperty("MceTbUsuarios")]
-    public virtual MceCatTipoPersonal? UsuIdTipoPersonalNavigation { get; set; }
 }

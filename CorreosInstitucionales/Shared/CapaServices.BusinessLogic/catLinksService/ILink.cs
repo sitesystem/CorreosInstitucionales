@@ -14,6 +14,8 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksServi
 
         public Task<Response<LinkViewModel>?> GetDataByIdAsync(int id);
 
+        public Task<Response<LinkViewModel>?> GetDataByNombreAsync(string nombre);
+
         public Task<HttpResponseMessage> AddDataAsync(LinkViewModel oLink);
 
         public Task<HttpResponseMessage> EditDataAsync(LinkViewModel oLink);

@@ -25,7 +25,4 @@ public partial class MceCatCarrera
     [Required]
     [Column("carrStatus")]
     public bool? CarrStatus { get; set; }
-
-    [InverseProperty("UsuIdCarreraNavigation")]
-    public virtual ICollection<MceTbUsuario> MceTbUsuarios { get; set; } = new List<MceTbUsuario>();
 }
