@@ -410,8 +410,8 @@
         </div>
 
     </div>
-    @* <button class="btn btn-outline-primary" onclick="@SendMail"> Enviar correo </button>
-    <span style="font-weight:bold;font-size:28px;color:#c00">@Message</span>          *@        
+    <button class="btn btn-outline-primary" onclick="@SendMail"> Enviar correo </button>
+    <span style="font-weight:bold;font-size:28px;color:#c00">@Message</span>                 
   
 </EditForm>
 
@@ -535,33 +535,43 @@
     private void OnExpired() => ValidReCAPTCHA = false;
 
     //correo
-    // private string Message { get; set; } ="";
+    private string Message { get; set; } ="";
 
-    // private void SendMail()
-    // {
-    //     try
-    //     {
-    //         using (MailMessage mail = new())
-    //         {
-    //             mail.From = new MailAddress("aronso.borj016@gmail.com");
-    //             mail.To.Add("oborjap16@gmail.com");
-    //             mail.Subject="Sending Mail Testing (Blazor)";
-    //             mail.Body = "<h1>This is mail body</h1>";
-    //             mail.IsBodyHtml = true;
+    private void SendMail()
+    {
+        try
+        {
+            string sender = "osacroti@gmail..com";
+            string clave = "jtxpdmqrnwgiwjxk";
+            string receiver = "oborjap16@gmail.com";
+            string server = "smtp.gmail.com";
+            int puerto = 465;
+            using (MailMessage mail = new())
+            {
+                mail.From = new MailAddress(sender); //   mail.From = new MailAddress("aronso.borj016@gmail.com");
+                mail.To.Add(new MailAddress(receiver));
+                mail.Subject="Sending Mail Testing (Blazor)";
+                mail.IsBodyHtml = true;
+                mail.Body = "<h1>This is mail body</h1>";
 
-    //             using(SmtpClient smtp = new SmtpClient("smtp.gmail.com", 465)) // Seguro: 465, No Seguro: 587
-    //             {
-    //                 smtp.Credentials = new System.Net.NetworkCredential("aronso.borj016@gmail.com", "Gamer5stalker");
-    //                 smtp.EnableSsl=true;
-    //                 smtp.Send(mail);
-    //                 Message = "Mail Sent";
-    //             }
-    //         }
-    //     }catch(Exception ex)
-    //     {
-    //         Message = ex.Message;
-    //     }
-    // }
+
+                using (SmtpClient smtp = new SmtpClient()) // Seguro: 465, No Seguro: 587 |||| using(SmtpClient smtp = new SmtpClient("smtp.gmail.com", 465)) || smtp.office365.com, puerto 25
+                {
+                    smtp.Host = server;
+                    smtp.Port = puerto;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new System.Net.NetworkCredential(sender,clave); //smtp.Credentials = new System.Net.NetworkCredential("eduardogonzalez.b22@gmail.com", "gmaillalo_05"); //smtp.Credentials = new System.Net.NetworkCredential("aronso.borj016@gmail.com", "Gamer5stalker");
+                    smtp.EnableSsl=true;
+                    smtp.Send(mail);
+                    Message = "Mail Sent";
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+            Message = ex.Message;
+        }
+    }
 
 
 }       
