@@ -12,6 +12,7 @@
 @using System.Threading;
 @using System.Text.Json;
 @using Newtonsoft.Json;
+@using System.Net.Mail;
 
 @inject ICarrera servicioCarrera
 @inject IUsuario servicioUsuario
@@ -409,14 +410,15 @@
         </div>
 
     </div>
-                 
+    @* <button class="btn btn-outline-primary" onclick="@SendMail"> Enviar correo </button>
+    <span style="font-weight:bold;font-size:28px;color:#c00">@Message</span>          *@        
   
 </EditForm>
 
 
 
 @code
-{    
+{
 
     //varible fecha
     int year = DateTime.Parse(DateTime.Now.ToString()).Year;   
@@ -424,7 +426,7 @@
     //metodos de API
 
     private UsuarioViewModel? oUsuario = new();
-    
+
     //variable que llamada a catalogo de links
     public Response<LinkViewModel>? oLinkCURP = new();
     public Response<LinkViewModel>? oLinkSAES = new();
@@ -463,6 +465,7 @@
                 oUsuario.UsuExtension=null;
                 oUsuario.UsuIdTipoPersonal = 1;
                 await servicioUsuario.AddDataAsync(oUsuario);
+                //SendMail();
             }
             catch (HttpRequestException e)
             {
@@ -496,7 +499,7 @@
         new Semestres() { Value = "9no semestre", Key = "9" },
         new Semestres() { Value = "10mo semestre", Key = "10" },
     };
-// Lista de tipos de academico
+    // Lista de tipos de academico
     public class Academicos
     {
         public string Value { get; set; }
@@ -508,7 +511,7 @@
         new Academicos() { Value = "Inscrito", Key = "1" },
         new Academicos() { Value = "Egresado", Key = "2" },
         new Academicos() { Value = "Postgrado", Key = "3" },
-        
+
     };
     //File upload
     SfUploader UploadObj;
@@ -530,5 +533,35 @@
     private void OnSuccess() => ValidReCAPTCHA = true;
 
     private void OnExpired() => ValidReCAPTCHA = false;
-    
+
+    //correo
+    // private string Message { get; set; } ="";
+
+    // private void SendMail()
+    // {
+    //     try
+    //     {
+    //         using (MailMessage mail = new())
+    //         {
+    //             mail.From = new MailAddress("aronso.borj016@gmail.com");
+    //             mail.To.Add("oborjap16@gmail.com");
+    //             mail.Subject="Sending Mail Testing (Blazor)";
+    //             mail.Body = "<h1>This is mail body</h1>";
+    //             mail.IsBodyHtml = true;
+
+    //             using(SmtpClient smtp = new SmtpClient("smtp.gmail.com", 465)) // Seguro: 465, No Seguro: 587
+    //             {
+    //                 smtp.Credentials = new System.Net.NetworkCredential("aronso.borj016@gmail.com", "Gamer5stalker");
+    //                 smtp.EnableSsl=true;
+    //                 smtp.Send(mail);
+    //                 Message = "Mail Sent";
+    //             }
+    //         }
+    //     }catch(Exception ex)
+    //     {
+    //         Message = ex.Message;
+    //     }
+    // }
+
+
 }       
