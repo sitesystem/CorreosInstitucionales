@@ -28,8 +28,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         [StringLength(100)]
         public string? EscLogo { get; set; }
 
-        [Required]
         [Column("escStatus")]
-        public bool? EscStatus { get; set; }
+        public bool EscStatus { get; set; }
     }
 }

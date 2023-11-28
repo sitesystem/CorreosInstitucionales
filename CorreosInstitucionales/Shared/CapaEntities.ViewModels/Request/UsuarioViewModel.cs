@@ -102,7 +102,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuNumeroEmpleado")]
         [StringLength(100)]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuNumeroEmpleado { get; set; }
 
 
@@ -111,7 +111,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuIdAreaDepto { get; set; }
 
         [Column("usuExtension")]
-        [StringLength(20)]       
+        [StringLength(20)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuExtension { get; set; }
 
         [Column("usuIdRol")]

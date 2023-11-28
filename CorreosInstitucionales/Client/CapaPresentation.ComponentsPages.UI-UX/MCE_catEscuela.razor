@@ -123,23 +123,7 @@
                             </HeaderTemplate>
                         </GridColumn>
 
-                        <GridColumn Field=@nameof(EscuelaViewModel.EscNoEscuela)
-                                    HeaderText="Numero Escuela"
-                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
-                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
-                                    IsPrimaryKey="true"
-                                    Visible="true"
-                                    IsIdentity="true"
-                                    Width="50">
-                            <HeaderTemplate>
-                                <div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
-                                        <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z" />
-                                        <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
-                                    </svg> Numero Escuela
-                                </div>
-                            </HeaderTemplate>
-                        </GridColumn>
+                        @* Numero de Escuela *@
 
                         <GridColumn Field=@nameof(EscuelaViewModel.EscNombreLargo)
                                     HeaderText="Nombre Largo"
@@ -265,7 +249,7 @@
                             </EditTemplate>
                         </GridColumn>
 
-                        @* <GridColumn Field=@nameof(EscuelaViewModel.EscStatus)
+                        <GridColumn Field=@nameof(EscuelaViewModel.EscStatus)
                                     HeaderText="Estatus"
                                     HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
                                     TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
@@ -288,14 +272,14 @@
                                 }
                                 <SfCheckBox Label="@(escViewModel.EscStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
                                 @bind-Checked = "@escViewModel.EscStatus"
-                                @onchange="@(()=> EnableDisableByCheckBox(escViewModel.IdEscuela, escViewModel.EscStatus))"></SfCheckBox>
+                                @onchange="@(()=> EnableDisableByCheckBox(escViewModel.IdEscuela, escViewModel.EscStatus))"/>
                             </Template>
-                        </GridColumn> *@
+                        </GridColumn>
 
                         <GridColumn HeaderText="Acciones" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center" AutoFit="false" Width="50px">
                             <GridCommandColumns>
                                 <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-edit", CssClass = "e-primary e-round", IsPrimary=true })" />
-                                @* <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete", CssClass = "e-danger e-round" })" />
+                                @* <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete", CssClass = "e-danger e-round" })" /> *@
                                 <GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-update", CssClass = "e-success" })" />
                                 <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-cancel-icon", CssClass = "e-warning" })" />
                                 @* <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-eye", CssClass="e-info" })" Title="Ver detalles" /> *@

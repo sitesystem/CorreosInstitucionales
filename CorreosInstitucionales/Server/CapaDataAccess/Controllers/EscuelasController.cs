@@ -125,7 +125,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPut("editByIdStatus/{id}/{isActivate}")]
-        public IActionResult EnableDisableDataById(int id, bool isActivate)
+        public async Task<IActionResult> EnableDisableDataById(int id, bool isActivate)
         {
             Response<object> oRespuesta = new();
 
@@ -137,8 +137,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 if (oEscuela != null)
                 {
                     oEscuela.EscStatus = isActivate;
-                    db.Entry(oEscuela).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oEscuela).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
                 oRespuesta.Success = 1;
             }
