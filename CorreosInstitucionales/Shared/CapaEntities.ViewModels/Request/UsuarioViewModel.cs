@@ -74,12 +74,14 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuNoCelularNuevo { get; set; }
 
         [Column("usuIdCarrera")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public int? UsuIdCarrera { get; set; }
 
         /// <summary>
         /// Numero de Boleta del Uusario Solicitante
         /// </summary>
         [Column("usuBoletaAlumno")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         [StringLength(10, ErrorMessage = "La boleta introducida es menor a 10 digitos. Verifique su numeración que tenga 10 dígitos")]
         //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuBoletaAlumno { get; set; }
@@ -89,6 +91,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuBoletaMaestria { get; set; }
 
         [Column("usuSemestre")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         [StringLength(15)]
         //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuSemestre { get; set; }
@@ -123,6 +126,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuCorreoPersonalAnterior { get; set; }
 
         [Column("usuCorreoPersonalNuevo")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         [StringLength(100)]       
         public string? UsuCorreoPersonalNuevo { get; set; }
 
@@ -130,6 +134,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// Contraseña del Usuario Solicitante
         /// </summary>
         [Column("usuContraseña")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         [StringLength(300)]
         public string? UsuContraseña { get; set; }
 

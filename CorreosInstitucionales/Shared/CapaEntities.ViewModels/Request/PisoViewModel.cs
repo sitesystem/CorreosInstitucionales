@@ -15,9 +15,11 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("pisoDescripcion")]
         [StringLength(50)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string PisoDescripcion { get; set; } = null!;
 
         [Column("pisoStatus")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public bool PisoStatus { get; set; }
 
         //[InverseProperty("AreIdPisoNavigation")]

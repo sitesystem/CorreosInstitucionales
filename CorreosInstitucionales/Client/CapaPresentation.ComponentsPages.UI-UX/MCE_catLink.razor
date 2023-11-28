@@ -94,7 +94,7 @@
                     <GridPageSettings PageCount="5" PageSize="10" PageSizes="@(new object[] { 5, 10, 25, 50, 100, "All" })" />
                     @if (!EditModeSelection)
                     {
-                        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true"
+                        <GridEditSettings AllowAdding="false" AllowEditing="true" AllowDeleting="true"
                                           Mode="Syncfusion.Blazor.Grids.EditMode.Dialog"
                                           ShowDeleteConfirmDialog="false">
                             <Validator>
@@ -104,7 +104,7 @@
                     }
                     else
                     {
-                        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true"
+                        <GridEditSettings AllowAdding="false" AllowEditing="true" AllowDeleting="true"
                                           Mode="Syncfusion.Blazor.Grids.EditMode.Normal"
                                           ShowDeleteConfirmDialog="false">
                             <Validator>
@@ -191,7 +191,7 @@
                                                     OnInput="@((e) => link.LinkNombre = e.Value.ToString())"
                                                     ValidateOnInput="false"
                                                     PopupHeight="500px" PopupWidth="300px"
-                                                    Enabled="false">
+                                                    Enabled="false"> <!--no permite editar el campo-->
                                         <AutoCompleteFieldSettings Text="LinkNombre" Value="LinkNombre" />
                                     </SfAutoComplete>
                                     <ValidationMessage For="() => (link.LinkNombre)" />
