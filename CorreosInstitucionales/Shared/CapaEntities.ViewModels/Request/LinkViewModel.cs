@@ -18,6 +18,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string LinkNombre { get; set; } = null!;
 
         [Column("linkEnlace")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         [StringLength(200)]
         public string LinkEnlace { get; set; } = null!;
 

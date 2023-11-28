@@ -24,7 +24,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Required]
         [Column("carrStatus")]
-        public bool? CarrStatus { get; set; }
+        public bool CarrStatus { get; set; }
 
         //[JsonIgnore]
         //[InverseProperty("UsuIdCarreraNavigation")]

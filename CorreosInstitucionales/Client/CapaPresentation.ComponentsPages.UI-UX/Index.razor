@@ -1,10 +1,54 @@
 ﻿@page "/"
 
-@using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA
+@using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA;
+@using Syncfusion.Blazor.Navigations;
 
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject HttpClient Http
+
+<style>
+    .default-tab {
+        border: 1px solid #d7d7d7;
+    }
+    .default-tab .e-content .e-item {
+        padding: 10px;
+        text-align: justify;
+    }
+    .default-tab-control-section {
+        margin: 20px 20% 20px 20%;
+    }
+    @@media screen and (max-width: 480px) {
+        .default-tab-control-section {
+            margin: 20px 0 20px 0;
+        }
+    }
+    .bootstrap5 .default-tab,
+    .bootstrap5-dark .default-tab,
+    .bootstrap .default-tab,
+    .bootstrap-dark .default-tab,
+    .bootstrap4 .default-tab {
+        border: none;
+    }
+    .fluent .default-tab .e-content > .e-item.e-active,
+    .bootstrap5 .default-tab .e-content > .e-item.e-active,
+    .tailwind .default-tab .e-content > .e-item.e-active,
+    .material .default-tab .e-content > .e-item.e-active,
+    .bootstrap4 .default-tab .e-content > .e-item.e-active,
+    .bootstrap .default-tab .e-content > .e-item.e-active,
+    .fabric .default-tab .e-content > .e-item.e-active {
+        background: #FAF9F8;
+    }
+    .fluent-dark .default-tab .e-content > .e-item.e-active,
+    .bootstrap5-dark .default-tab .e-content > .e-item.e-active,
+    .tailwind-dark .default-tab .e-content > .e-item.e-active,
+    .material-dark .default-tab .e-content > .e-item.e-active,
+    .bootstrap-dark .default-tab .e-content > .e-item.e-active,
+    .fabric-dark .default-tab .e-content > .e-item.e-active,
+    .highcontrast .default-tab .e-content > .e-item.e-active {
+        background: #201F1E;
+    }
+</style>
 
 <PageTitle>Index</PageTitle>
 
@@ -16,6 +60,53 @@ Welcome to your new app.
 
 <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
 <button @onclick="OnClickPost" disabled="@DisablePostButton">POST</button>
+
+<div class="col-lg-12 control-section">   
+        <div class="default-tab-control-section">
+            <div class="row">
+                <div class="col-md-12">
+                <h5>Registro</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <SfTab CssClass="default-tab e-fill" >
+                        <TabAnimationSettings>
+                            <TabAnimationPrevious></TabAnimationPrevious>
+                            <TabAnimationNext></TabAnimationNext>
+                        </TabAnimationSettings>
+                        <TabItems>
+                            <TabItem>
+                                <ChildContent>
+                                    <TabHeader Text="Registro alumno inscrito"></TabHeader>
+                                </ChildContent>
+                                <ContentTemplate>
+                                    <Registro/>
+                                </ContentTemplate>
+                            </TabItem>
+                            <TabItem>
+                                <ChildContent>
+                                    <TabHeader Text="Marseille"></TabHeader>
+                                </ChildContent>
+                                <ContentTemplate>
+                                    Marseille, a port city in southern France, has been a crossroads of immigration and trade since its founding by the Greeks circa 600 B.C. At its heart is the Vieux-Port (Old Port), where fishmongers sell their catch along the boat-lined quay. Basilique Notre-Dame-de-la-Garde is a Romanesque-Byzantine church. Modern landmarks include Le Corbusier’s influential Cité Radieuse complex and Zaha Hadid’s CMA CGM Tower.
+                                </ContentTemplate>
+                            </TabItem>
+                            <TabItem>
+                                <ChildContent>
+                                    <TabHeader Text="Lyon"></TabHeader>
+                                </ChildContent>
+                                <ContentTemplate>
+                                    Lyon, the capital city in France’s Auvergne-Rhône-Alpes region, sits at the junction of the Rhône and Saône rivers. Its center reflects 2,000 years of history from the Roman Amphithéâtre des Trois Gaules, medieval and Renaissance architecture in Vieux (Old) Lyon, to the modern Confluence district on Presquîle peninsula. Traboules, covered passageways between buildings, connect Vieux Lyon and La Croix-Rousse hill.
+                                </ContentTemplate>
+                            </TabItem>
+                        </TabItems>
+                    </SfTab>
+                </div>
+            </div>
+            <br />
+        </div>
+</div>
 
 @code
 {

@@ -191,7 +191,7 @@
                                                     OnInput="@((e) => link.LinkNombre = e.Value.ToString())"
                                                     ValidateOnInput="false"
                                                     PopupHeight="500px" PopupWidth="300px"
-                                                    Enabled="false">
+                                                    Enabled="false"> <!--no permite editar el campo-->
                                         <AutoCompleteFieldSettings Text="LinkNombre" Value="LinkNombre" />
                                     </SfAutoComplete>
                                     <ValidationMessage For="() => (link.LinkNombre)" />
