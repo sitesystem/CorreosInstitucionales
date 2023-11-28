@@ -2,15 +2,25 @@
 
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+@using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksService;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
 @using Syncfusion.Blazor.RichTextEditor.Internal;
+@using System;
+@using System.Globalization;
+@using System.Threading;
+@using System.Text.Json;
+@using Newtonsoft.Json;
+@using System.Net.Mail;
 
 
 @inject IUsuario servicioUsuario;
 @inject ILink servicioLink;
+@inject IJSRuntime JS
+@inject HttpClient Http
 
-<script async src="https://www.google.com/recaptcha/api.js"></script>
+
+@* <script async src="https://www.google.com/recaptcha/api.js"></script> *@
 <script>
     // How this code snippet works:
     // This logic overwrites the default behavior of `grecaptcha.ready()` to
@@ -292,6 +302,13 @@
     </div>
     <!-- bton -->
 
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+
+            <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+        </div>
+
+    </div>
     <div class="control-section">
         <div class="button-section">
             <div id="button-control">
@@ -316,20 +333,48 @@
 
     public async Task RegistrarEmpleado()
     {
-        try
-        {
-            oUsuario.UsuIdRol = 2;
-            oUsuario.UsuIdTipoPersonal = 2;
-            oUsuario.UsuIdCarrera = null;
-            oUsuario.UsuAñoEgreso = null;
-            oUsuario.UsuBoletaAlumno = null;
-            oUsuario.UsuSemestre = null;
+        // try
+        // {
+        //     oUsuario.UsuIdRol = 2;
+        //     oUsuario.UsuIdTipoPersonal = 2;
+        //     oUsuario.UsuIdCarrera = null;
+        //     oUsuario.UsuAñoEgreso = null;
+        //     oUsuario.UsuBoletaAlumno = null;
+        //     oUsuario.UsuSemestre = null;
 
-            await servicioUsuario.AddDataAsync(oUsuario);
-        }
-        catch (Exception ex)
+        //     await servicioUsuario.AddDataAsync(oUsuario);
+        // }
+        // catch (Exception ex)
+        // {
+        //     Console.WriteLine("Error al registrar empleado: {ex.Message}");
+        // }
+
+        if (ValidReCAPTCHA)
         {
-            Console.WriteLine("Error al registrar empleado: {ex.Message}");
+            var response = await reCAPTCHAComponent.GetResponseAsync();
+
+            try
+            {
+                ServerVerificatiing = true;
+                StateHasChanged();
+                await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+                Console.WriteLine("alta exitosa");
+                oUsuario.UsuIdRol = 2;
+                oUsuario.UsuIdTipoPersonal = 2;
+                oUsuario.UsuIdCarrera = null;
+                oUsuario.UsuAñoEgreso = null;
+                oUsuario.UsuBoletaAlumno = null;
+                oUsuario.UsuSemestre = null;
+
+                await servicioUsuario.AddDataAsync(oUsuario);
+                //SendMail();
+            }
+            catch (HttpRequestException e)
+            {
+                await JS.InvokeAsync<object>("alert", e.Message);
+                ServerVerificatiing = false;
+                StateHasChanged();
+            }
         }
     }
     protected override async Task OnInitializedAsync()
@@ -342,4 +387,16 @@
     {
         args.PostRawFile = false;
     }
+
+    private ReCAPTCHA reCAPTCHAComponent;
+
+    private bool ValidReCAPTCHA = false;
+
+    private bool ServerVerificatiing = false;
+
+    private bool DisablePostButton => !ValidReCAPTCHA || ServerVerificatiing;
+
+    private void OnSuccess() => ValidReCAPTCHA = true;
+
+    private void OnExpired() => ValidReCAPTCHA = false;
 }
