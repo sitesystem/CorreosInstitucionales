@@ -188,7 +188,8 @@
                                                     DataSource="@oResponse.Data"
                                                     OnInput="@((e) => pisoNivel.PisoDescripcion = e.Value.ToString())"
                                                     ValidateOnInput="false"
-                                                    PopupHeight="500px" PopupWidth="300px">
+                                                    PopupHeight="500px" PopupWidth="300px"
+                                                    CssClass="mi-sf-textbox">
                                         <AutoCompleteFieldSettings Text="PisoDescripcion" Value="PisoDescripcion" />
                                     </SfAutoComplete>
                                     <ValidationMessage For="() => (pisoNivel.PisoDescripcion)" />

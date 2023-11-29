@@ -206,7 +206,8 @@ else
                                                     DataSource="@oResponse.Data"
                                                     OnInput="@((e) => carr.CarrClave = e.Value.ToString())"
                                                     ValidateOnInput="false"
-                                                    PopupHeight="500px" PopupWidth="300px">                                     
+                                                    PopupHeight="500px" PopupWidth="300px"
+                                                    CssClass="mi-sf-textbox">
                                         <AutoCompleteFieldSettings Text="CarrClave" Value="CarrClave" />
                                     </SfAutoComplete>
                                     <ValidationMessage For="() => (carr.CarrClave)" />
@@ -265,7 +266,8 @@ else
                                                     DataSource="@oResponse.Data"
                                                     OnInput="@((e) => carr.CarrNombre = e.Value.ToString())"
                                                     ValidateOnInput="false"
-                                                    PopupHeight="500px" PopupWidth="300px">
+                                                    PopupHeight="500px" PopupWidth="300px"
+                                                    CssClass="mi-sf-textbox">
                                         <AutoCompleteFieldSettings Text="CarrNombre" Value="CarrNombre" />
                                     </SfAutoComplete>
                                     <ValidationMessage For="() => (carr.CarrNombre)" />
