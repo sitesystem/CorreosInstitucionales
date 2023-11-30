@@ -17,6 +17,7 @@
 @inject IUsuario servicioUsuario;
 @inject ILink servicioLink;
 @inject IJSRuntime JS
+@inject NavigationManager Navigation
 @inject HttpClient Http
 
 <style>
@@ -304,7 +305,8 @@
                     </div>
 
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="Confirmar contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" CssClass="mi-sf-textbox" Width="300px"></SfTextBox>
+                        <SfTextBox Placeholder="Confirmar contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@confirmarContraseña" @onkeypress="ValidarContraseña" CssClass="mi-sf-textbox" Width="300px"></SfTextBox>
+                        <label hidden="@error_confirmarContraseña" style="color: red;">No coinciden las contraseñas.</label>
                     </div>
                 </div>
             </div>
@@ -328,11 +330,11 @@
     @* <div class="row" style="margin-top:10px ">
         
     </div> *@
-    <div class="mi-div">
+    <div>
         <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 captcha">
             <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
         </div>
-        <div class="boton">
+        <div>
             <button type="submit" class="btn btn-primary">Enviar</button>
         </div>
     </div>
@@ -360,7 +362,17 @@
     public LinkViewModel? linkCURP = new();
     SfUploader UploadObj;
 
-    
+    public string confirmarContraseña = string.Empty;
+    public bool error_confirmarContraseña = true;
+
+    public void ValidarContraseña()
+    {
+        if (oUsuario.UsuContraseña != confirmarContraseña)
+            error_confirmarContraseña = false;
+        else
+            error_confirmarContraseña = true;
+    }
+
     private ReCAPTCHA reCAPTCHAComponent;
     private bool ValidReCAPTCHA = false;
     private bool ServerVerificatiing = false;
@@ -390,6 +402,7 @@
                 oUsuario.UsuSemestre = null;
 
                 await servicioUsuario.AddDataAsync(oUsuario);
+                Navigation.NavigateTo("/valid");
                 //SendMail();
             }
             catch (HttpRequestException e)
