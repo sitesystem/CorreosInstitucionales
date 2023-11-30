@@ -96,7 +96,7 @@
         margin-bottom: 6px;
     }
     <!-- estilo bonton -->
-    #button-control {
+    /* #button-control {
         width: 100%;
         margin: 8% 0;
         text-align: center;
@@ -119,7 +119,7 @@
 
     #button-control .col-xs-12 {
         margin: 15px 0;
-    }
+    } */
 
     <!-- sombra -->
     .mi-sf-textbox {
@@ -183,21 +183,29 @@
         height: 2px;
         background-color: red;
     }        
-    
+    /* .mi-div{
+        position:relative;
+    }
+    .captcha{
+        position: absolute;
+        top: 50%;
+        right:50%;
+        transform:translate(50%, -50%);
+    }
+    .boton{
+        margin:0 auto;
+    } */
 </style>
 
-<h2>Resgistro Empleado</h2>
+<h3>Registro Empleado</h3>
 
 <EditForm Model="oUsuario" OnValidSubmit="RegistrarEmpleado">
 
     <DataAnnotationsValidator />
     <!-- Etiqueta flotante -->
 
-    <div class="card border-dark mb-3" style="margin-top:10px ">
-        @* <div class="card-header">
-            Datos Personales
-        </div> *@
-        <h5 class="card-header">Datos Personales</h5>
+    <div class="card border-dark mb-3" style="margin-top:20px ">
+        <b class="card-header" size="20px">Datos Personales</b>
         <div class="card-body">
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
@@ -255,7 +263,7 @@
             </div>
             <br />
             <div class="row">
-                <div class="control-wrapper-upload">
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                     <p>Adjunte el CURP en formato PDF</p>
                     <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
                         <UploaderEvents OnRemove="OnFileRemove"></UploaderEvents>
@@ -266,11 +274,8 @@
         </div>
     </div>
 
-    <div class="card border-dark mb-3" style="margin-top:10px ">
-        @* <div class="card-header">
-            <h5>Datos de Empleado</h5>
-        </div> *@
-        <h5 class="card-header">Datos Empleado</h5>
+    <div class="card border-dark mb-3" style="margin-top:20px ">
+        <b class="card-header" size="20px">Datos de Empleado</b>
         <div class="card-body">
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
@@ -284,11 +289,8 @@
             </div>
         </div>
     </div>
-    <div class="card border-dark mb-3" style="margin-top:10px ">
-            @* <div class="card-header">
-                <h5>Datos de cuenta</h5>
-            </div> *@
-            <h5 class="card-header">Datos de la Cuenta</h5>
+    <div class="card border-dark mb-3" style="margin-top:20px ">
+            <b class="card-header" size="20px">Datos de la cuenta</b>
             <div class="card-body">
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
@@ -308,11 +310,8 @@
             </div>
         </div>
 
-    <div class="card border-dark mb-3" style="margin-top:10px ">
-            @* <div class="card-header">
-                <h5>Correo Institucional</h5>
-            </div> *@
-            <h5 class="card-header">Correo Institucional</h5>
+    <div class="card border-dark mb-3" style="margin-top:20px ">
+            <b class="card-header" size="20px">Correo Institucional</b>
             <div class="card-body">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
@@ -326,14 +325,19 @@
         </div>
     <!-- bton -->
 
-    <div class="row" style="margin-top:10px ">
-        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-
+    @* <div class="row" style="margin-top:10px ">
+        
+    </div> *@
+    <div class="mi-div">
+        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 captcha">
             <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
         </div>
-
+        <div class="boton">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
     </div>
-    <div class="control-section">
+
+    @* <div class="control-section">
         <div class="button-section">
             <div id="button-control">
                 <div class="row">
@@ -345,7 +349,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> *@
+    
 </EditForm>
 
 
