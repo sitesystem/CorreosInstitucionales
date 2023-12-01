@@ -250,8 +250,9 @@
                     </a>
                 </div>
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <br />
                             <p>Adjunte el CURP en formato PDF</p>
-                            <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
+                    <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
                                 <UploaderEvents OnRemove="OnFileRemove"></UploaderEvents>
                                 <UploaderAsyncSettings SaveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Save" RemoveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Remove"></UploaderAsyncSettings>
                             </SfUploader>                      
@@ -373,10 +374,12 @@
                     <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="Confirmar contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" CssClass="mi-sf-textbox"></SfTextBox>
-      @*               @if(){
-
-                    } *@
+                    <SfTextBox Placeholder="Confirmar contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@contra2" OnInput="(e => contra2 = e.Value.ToString())" CssClass="mi-sf-textbox" @onkeyup="@CompararCadenas"></SfTextBox>
+                    @if (bandcontra)
+                    {
+                        <br />
+                        <SfMessage Severity="MessageSeverity.Error">Contraseñas diferentes</SfMessage>
+                    }
                 </div>
             </div>
             <div class="row">
@@ -439,6 +442,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine();
+
         oCarrera = await servicioCarrera.GetAllDataAsync(false);
         // oLink = await servicioLink.GetAllDataAsync(false);
         // oLink = await servicioLink.GetDataByIdAsync(1);
@@ -462,8 +467,8 @@
             {
                 ServerVerificatiing = true;
                 StateHasChanged();
-                await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
-                Console.WriteLine("alta exitosa");
+                // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+                // Console.WriteLine("alta exitosa");
                 oUsuario.UsuIdRol=2;
                 oUsuario.UsuNumeroEmpleado=null;
                 oUsuario.UsuExtension=null;
@@ -532,7 +537,8 @@
 
     private bool ServerVerificatiing = false;
 
-    private bool DisablePostButton => !ValidReCAPTCHA || ServerVerificatiing;
+    // private bool DisablePostButton => (!ValidReCAPTCHA || ServerVerificatiing) && bandcontra;
+    private bool DisablePostButton => !ValidReCAPTCHA || bandcontra;
 
     private void OnSuccess() => ValidReCAPTCHA = true;
 
@@ -576,6 +582,23 @@
             Message = ex.Message;
         }
     }
+    // COMPARAR CADENAS DE SFTEXTBOX   
+    private string contra2;
+    public bool bandcontra = true;
 
+    private void CompararCadenas()
+    {
+        string c1 = oUsuario.UsuContraseña;
 
-}       
+        Console.WriteLine(c1);
+        Console.WriteLine(contra2);
+        
+        if (string.Equals(c1, contra2, StringComparison.Ordinal))  //Console.WriteLine("Las contraseñas son iguales.");
+            bandcontra = false;
+        else    //Console.WriteLine("Las contraseñas son diferentes.");
+            bandcontra = true;
+
+        Console.WriteLine(bandcontra);
+        Console.WriteLine(DisablePostButton);
+    }
+}
