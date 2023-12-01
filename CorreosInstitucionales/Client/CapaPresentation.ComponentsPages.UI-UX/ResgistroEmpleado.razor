@@ -214,7 +214,7 @@
                     @bind-Value="@oUsuario.UsuNombre" IsRequired="true"
                                OnInput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                               CssClass="mi-sf-textbox" Width="300px">
+                               CssClass="mi-sf-textbox">
                     </SfTextBox>
                     <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
                 </div>
@@ -223,7 +223,7 @@
                     @bind-Value="@oUsuario.UsuPrimerApellido"
                                OnInput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                               CssClass="mi-sf-textbox" Width="300px"></SfTextBox>
+                               CssClass="mi-sf-textbox"></SfTextBox>
                     <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
@@ -231,14 +231,14 @@
                     @bind-Value="@oUsuario.UsuSegundoApellido"
                                OnInput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                               Width="300px"></SfTextBox>
+                               ></SfTextBox>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                     <SfTextBox Placeholder="No. Celular" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNoCelularNuevo"
                                onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                               CssClass="mi-sf-textbox" Width="300px"></SfTextBox>
+                               CssClass="mi-sf-textbox" ></SfTextBox>
                     <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
                 </div>
             </div>
@@ -247,7 +247,7 @@
                     <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCurp"
                                OnInput="@((e) => oUsuario.UsuCurp = e.Value.ToString().ToUpper())"
                                onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                               CssClass="mi-sf-textbox" Width="300px"></SfTextBox>
+                               CssClass="mi-sf-textbox" ></SfTextBox>
                     <ValidationMessage For="@(() => oUsuario.UsuCurp)" />
                 </div>
             </div>
@@ -280,11 +280,11 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="Num Empleado" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNumeroEmpleado" CssClass="mi-sf-textbox" Width="300px"></SfTextBox>
+                    <SfTextBox Placeholder="Num Empleado" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNumeroEmpleado" CssClass="mi-sf-textbox"></SfTextBox>
                     <ValidationMessage For="@(() => oUsuario.UsuNumeroEmpleado)" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="Extensión" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuExtension" CssClass="mi-sf-textbox" Width="300px"></SfTextBox>
+                    <SfTextBox Placeholder="Extensión" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuExtension" CssClass="mi-sf-textbox" ></SfTextBox>
                     <ValidationMessage For="@(() => oUsuario.UsuExtension)" />
                 </div>
             </div>
@@ -295,18 +295,22 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="Correo Personal" Type="Syncfusion.Blazor.Inputs.InputType.Email" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreoPersonalNuevo" CssClass="mi-sf-textbox" Width="300px"></SfTextBox>
+                        <SfTextBox Placeholder="Correo Personal" Type="Syncfusion.Blazor.Inputs.InputType.Email" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreoPersonalNuevo" CssClass="mi-sf-textbox"></SfTextBox>
                         <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalNuevo)" />
                     </div>
 
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="Contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuContraseña" Width="300px"></SfTextBox>
+                    <SfTextBox Placeholder="Contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuContraseña" CssClass="mi-sf-textbox"></SfTextBox>
                         <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
                     </div>
 
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="Confirmar contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@confirmarContraseña" @onkeypress="ValidarContraseña" CssClass="mi-sf-textbox" Width="300px"></SfTextBox>
-                        <label hidden="@error_confirmarContraseña" style="color: red;">No coinciden las contraseñas.</label>
+                        <SfTextBox Placeholder="Confirmar contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@contraseña2" OnInput="(e => contraseña2 = e.Value.ToString())" CssClass="mi-sf-textbox" @onkeyup="@CompararCadenas"></SfTextBox>
+                        @if (banderaContraseña)
+                        {
+                            <br />
+                            <SfMessage Severity="MessageSeverity.Error">Contraseñas diferentes</SfMessage>
+                        }
                     </div>
                 </div>
             </div>
@@ -317,12 +321,12 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                    <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreroInstitucional" Width="300px"></SfTextBox>
+                    <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreroInstitucional"></SfTextBox>
                 </div>
                 </div>
             </div>
             <div class="card-footer">
-                <p>En caso de contar con uno.</p>
+                <small class="text-body-secondary">En caso de contar con uno.</small>
             </div>
         </div>
     <!-- bton -->
@@ -335,7 +339,7 @@
             <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
         </div>
         <div>
-            <button type="submit" class="btn btn-primary">Enviar</button>
+            <button type="submit" class="btn btn-primary" disabled="@DisablePostButton">Enviar</button>
         </div>
     </div>
 
@@ -362,21 +366,40 @@
     public LinkViewModel? linkCURP = new();
     SfUploader UploadObj;
 
-    public string confirmarContraseña = string.Empty;
-    public bool error_confirmarContraseña = true;
+    // public string confirmarContraseña = string.Empty;
+    // public bool error_confirmarContraseña = true;
 
-    public void ValidarContraseña()
+    // public void ValidarContraseña()
+    // {
+    //     if (oUsuario.UsuContraseña != confirmarContraseña)
+    //         error_confirmarContraseña = false;
+    //     else
+    //         error_confirmarContraseña = true;
+    // }
+
+    private string contraseña2;
+    public bool banderaContraseña = true;
+
+    private void CompararCadenas()
     {
-        if (oUsuario.UsuContraseña != confirmarContraseña)
-            error_confirmarContraseña = false;
-        else
-            error_confirmarContraseña = true;
+        string c1 = oUsuario.UsuContraseña;
+
+        Console.WriteLine(c1);
+        Console.WriteLine(contraseña2);
+
+        if (string.Equals(c1, contraseña2, StringComparison.Ordinal))  //Console.WriteLine("Las contraseñas son iguales.");
+            banderaContraseña = false;
+        else    //Console.WriteLine("Las contraseñas son diferentes.");
+            banderaContraseña = true;
+
+        Console.WriteLine(banderaContraseña);
+        Console.WriteLine(DisablePostButton);
     }
 
     private ReCAPTCHA reCAPTCHAComponent;
     private bool ValidReCAPTCHA = false;
     private bool ServerVerificatiing = false;
-    private bool DisablePostButton => !ValidReCAPTCHA || ServerVerificatiing;
+    private bool DisablePostButton => !ValidReCAPTCHA || banderaContraseña;
     private void OnSuccess() => ValidReCAPTCHA = true;
     private void OnExpired() => ValidReCAPTCHA = false;
 
@@ -392,8 +415,8 @@
             {
                 ServerVerificatiing = true;
                 StateHasChanged();
-                await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
-                Console.WriteLine("alta exitosa");
+                // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+                // Console.WriteLine("alta exitosa");
                 oUsuario.UsuIdRol = 2;
                 oUsuario.UsuIdTipoPersonal = 2;
                 oUsuario.UsuIdCarrera = null;
@@ -402,7 +425,7 @@
                 oUsuario.UsuSemestre = null;
 
                 await servicioUsuario.AddDataAsync(oUsuario);
-                Navigation.NavigateTo("/valid");
+                /* Navigation.NavigateTo("/valid") */;
                 //SendMail();
             }
             catch (HttpRequestException e)
