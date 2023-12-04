@@ -1,0 +1,663 @@
+﻿@page "/Registro"
+
+@attribute [Authorize]
+
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksService;
+@using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
+@using System;
+@using System.Globalization;
+@using System.Threading;
+@using System.Text.Json;
+@using Newtonsoft.Json;
+@using System.Net.Mail;
+
+@inject ICarrera servicioCarrera
+@inject IUsuario servicioUsuario
+@inject ILink servicioLink
+@inject IJSRuntime JS
+@inject HttpClient Http
+
+<style> 
+    <!-- estilos de insert -->
+    .content-wrapper {
+        width: 90%;
+        margin: 0 auto;
+        min-width: 85px;
+    }
+
+    b.example-label {
+        font-size: 14px;
+    }
+
+    .content-wrapper div.row {
+        padding: 15px 0px;
+    }
+
+    .small-textbox {
+        padding-top: 5px;
+    }
+
+    .tailwind .small-textbox,
+    .tailwind-dark .small-textbox {
+        padding-top: 3px;
+    }
+
+    .e-bigger .small-textbox {
+        padding-top: 10px;
+    }
+
+    .tailwind .e-bigger .small-textbox,
+    .tailwind-dark .e-bigger .small-textbox {
+        padding-top: 1px;
+    }
+
+    @@media only screen and (max-width: 480px) {
+        .content-wrapper {
+            width: 92%;
+        }
+
+        .col-xs-6,
+        .col-xs-4,
+        .col-xs-12 {
+            padding: 10px 5px;
+            width: 100%;
+        }
+
+        .content-wrapper div.row {
+            padding: 0px;
+        }
+    }
+
+    .fabric .row.material,
+    .bootstrap .row.material,
+    .bootstrap4 .row.material,
+    .bootstrap5 .row.material,
+    .highcontrast .row.material,
+    .tailwind .row.material,
+    .fluent .row.material,
+    .fabric-dark .row.material,
+    .bootstrap-dark .row.material,
+    .bootstrap5-dark .row.material,
+    .tailwind-dark .row.material,
+    .fluent-dark .row.material {
+        display: none;
+    }
+    <!-- dropdownlist filtering    -->
+    .control-wrapper {
+        width: 250px;
+        margin: auto;
+    }
+
+    .example-label {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+    <!-- estilo bonton-->
+    #button-control {
+        width: 100%;
+        margin: 8% 0;
+        text-align: center;
+    }
+
+    #button-control .e-btn {
+        float: left;
+    }
+
+    @@media only screen and (max-width: 500px) {
+        #button-control {
+            margin-left: -3%;
+        }
+    }
+
+    .button-section {
+        width: 80%;
+        margin: auto;
+    }
+
+    #button-control .col-xs-12 {
+        margin: 15px 0;
+    }
+    <!-- estilo file upload-- >
+    .control-section {
+        min-height: 370px;
+    }
+
+    .control-wrapper-upload {
+        max-width: 350px;
+        margin: 0 auto;
+        padding: 50px 0px 0px;
+    }
+    <!-- toggle button -->
+    .e-switch-wrapper
+    {
+        font-size: 20px;
+        width: 80px;
+        height: 30px;
+    }
+    <!-- estilo de mensaje -->
+    .msg-content {
+        font-size: 80px;
+    }
+
+    .msg-custom-section .content-section {
+        margin: 0 auto;
+        max-width: 400px;
+        padding-top: 10px;
+    }
+
+    .msg-custom-section .e-message {
+        margin: 10px 0;
+    }
+
+    .msg-custom-section .e-message.rounded {
+        border-radius: 5px;
+    }
+
+    .msg-custom-section .e-message.square {
+        border-radius: 1px;
+    }
+
+    SfMessage {
+        margin-top: 100px;
+        margin-right: 25px;
+        margin-bottom: 100px;
+        margin-left: 25px;
+    }
+       
+    .mi-sf-textbox::after {
+        content: ' ';
+        position: absolute;
+        left: 0;
+        bottom: -3px;
+        width: 100%;
+        height: 2px;
+        background-color: red;
+    }
+    
+</style>
+
+
+
+<h3 style="font-variant: small-caps;">    
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-backpack3" viewBox="0 0 18 18">
+        <path d="M4.04 7.43a4 4 0 0 1 7.92 0 .5.5 0 1 1-.99.14 3 3 0 0 0-5.94 0 .5.5 0 1 1-.99-.14M4 9.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm1 .5v3h6v-3h-1v.5a.5.5 0 0 1-1 0V10z" />
+        <path d="M6 2.341V2a2 2 0 1 1 4 0v.341c.465.165.904.385 1.308.653l.416-1.247a1 1 0 0 1 1.748-.284l.77 1.027a1 1 0 0 1 .15.917l-.803 2.407C13.854 6.49 14 7.229 14 8v5.5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5V8c0-.771.146-1.509.41-2.186l-.802-2.407a1 1 0 0 1 .15-.917l.77-1.027a1 1 0 0 1 1.748.284l.416 1.247A5.978 5.978 0 0 1 6 2.34ZM7 2v.083a6.04 6.04 0 0 1 2 0V2a1 1 0 1 0-2 0m5.941 2.595.502-1.505-.77-1.027-.532 1.595c.297.284.566.598.8.937ZM3.86 3.658l-.532-1.595-.77 1.027.502 1.505c.234-.339.502-.653.8-.937ZM8 3a5 5 0 0 0-5 5v5.5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5V8a5 5 0 0 0-5-5" />
+    </svg> Estudiantes inscritos
+</h3>
+
+@if (oCarrera != null && oCarrera.Data != null)
+{
+    <EditForm Model="@oUsuario" OnValidSubmit="@Registrar">
+    
+        <DataAnnotationsValidator />
+
+        <div class="card">
+            <div class="card-header">
+                <b class="example-label" size="20px">Datos personales</b>
+            </div>
+            <div class="card-body">
+                <!-- Etiqueta flotante -->
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <SfTextBox Placeholder="Nombre(s)"
+                                   Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                   FloatLabelType="@FloatLabelType.Auto"                       
+                                   @bind-Value="@oUsuario.UsuNombre"
+                                   OnInput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
+                                   onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                                   CssClass="mi-sf-textbox">
+                        </SfTextBox>
+                        <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <SfTextBox Placeholder="Primer Apellido" FloatLabelType="@FloatLabelType.Auto" 
+                                        @bind-Value="@oUsuario.UsuPrimerApellido"
+                                        OnInput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
+                                        onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                                        CssClass="mi-sf-textbox"></SfTextBox>
+                        <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <SfTextBox Placeholder="Segundo Apellido" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuSegundoApellido" OnInput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
+                                   onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"></SfTextBox>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <SfTextBox Placeholder="No. Celular" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNoCelularNuevo"
+                                   onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" CssClass="mi-sf-textbox"></SfTextBox>
+                             <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4"> <!-- <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">-->
+                    
+                            <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCurp" OnInput="@((e) => oUsuario.UsuCurp = e.Value.ToString().ToUpper())"
+                                   onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" CssClass="mi-sf-textbox"></SfTextBox>
+                            <ValidationMessage For="@(() => oUsuario.UsuCurp)" /> <br />
+                        <a href="@linkCURP.LinkEnlace" target="_blank">
+                            <br />
+                            ¿Olvidaste tu CURP? <br />
+                            Da click aquí para consultarlo.
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
+                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+                            </svg>
+                        </a>
+                    </div>
+                        <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                            <br />
+                                <p>Adjunte el CURP en formato PDF</p>
+                        <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
+                                    <UploaderEvents OnRemove="OnFileRemove"></UploaderEvents>
+                                    <UploaderAsyncSettings SaveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Save" RemoveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Remove"></UploaderAsyncSettings>
+                                </SfUploader>                      
+                        </div>        
+                </div>
+
+            </div>
+        </div> <br />
+
+        <div class="card">
+            <div class="card-header">
+                <b class="example-label">Datos Académicos</b>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <SfTextBox Placeholder="Boleta"
+                                   FloatLabelType="@FloatLabelType.Auto"
+                        @bind-Value="@oUsuario.UsuBoletaAlumno"
+                                   CssClass="mi-sf-textbox">
+                        </SfTextBox>
+                        <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumno)" />
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <SfDropDownList ID="Data___UsuIdCarrera"
+                                        TValue="int?"
+                                        TItem="CarreraViewModel"
+                                        Placeholder="Carrera"
+                                        FloatLabelType="FloatLabelType.Auto"
+                                        ShowClearButton="true"
+                                        EnableVirtualization="false"
+                                        IgnoreCase="true"
+                                        DataSource="@oCarrera.Data"
+                                        @bind-Value="@oUsuario.UsuIdCarrera"
+                                        CssClass="mi-sf-textbox"
+                                        Enabled="true"
+                                        Readonly="false"
+                                        AllowFiltering="true"
+                                        FilterBarPlaceholder="Selecciona una opción"
+                                        IgnoreAccent="true"
+                                        FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                        SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.None">
+                            <DropDownListFieldSettings Value="IdCarrera" Text="CarrNombre" />
+                        </SfDropDownList>
+                        <ValidationMessage For="@(() => oUsuario.UsuIdCarrera)" />
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <SfDropDownList ID="Data___UsuSemestre"
+                                        TValue="string"
+                                        TItem="Semestres"
+                                        Placeholder="Semestre"
+                                        FloatLabelType="FloatLabelType.Auto"
+                                        AllowFiltering="true"
+                                        DataSource="@Semestre"
+                                        @bind-Value="@oUsuario.UsuSemestre"
+                                        CssClass="mi-sf-textbox">
+                            <DropDownListFieldSettings Value="Key" Text="Value" />
+                        </SfDropDownList>
+                        <ValidationMessage For="@(() => oUsuario.UsuSemestre)" />
+                    </div>
+                </div>
+                <div class="row">        
+
+                        <div class="control-wrapper-upload">
+                            <p>Adjunte el comprobante de inscripción en PDF</p>
+                        <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
+                                <UploaderEvents OnRemove="OnFileRemove"></UploaderEvents>
+                                <UploaderAsyncSettings SaveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Save" RemoveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Remove"></UploaderAsyncSettings>
+                            </SfUploader>
+                                 <a href="@linkSAES.LinkEnlace" target="_blank">
+                                            Consulta TU COMPROBANTE DE INSCRIPCIÓN
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
+                                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+                                            </svg>
+                               </a>
+                         </div>                             
+                </div> <br />
+
+            </div>
+        </div> <br />
+
+        <div class="card">
+            <div class="card-header">
+                <b class="example-label">Datos de la cuenta</b>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <SfTextBox Placeholder="Correo Personal"
+                                   Type="Syncfusion.Blazor.Inputs.InputType.Email"
+                                   FloatLabelType="@FloatLabelType.Auto"
+                                   @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva"
+                                   CssClass="mi-sf-textbox">
+                        </SfTextBox>
+                        <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <SfTextBox Placeholder="Contraseña"
+                                   Type="Syncfusion.Blazor.Inputs.InputType.Password"
+                                   FloatLabelType="@FloatLabelType.Auto"
+                                   @bind-Value="@oUsuario.UsuContraseña"
+                                   CssClass="mi-sf-textbox">
+                        </SfTextBox>
+                        <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                        <SfTextBox Placeholder="Confirmar contraseña"
+                                   Type="Syncfusion.Blazor.Inputs.InputType.Password"
+                                   FloatLabelType="@FloatLabelType.Auto"
+                                   @bind-Value="@contra2"
+                                   OnInput="(e => contra2 = e.Value.ToString())"
+                                   CssClass="mi-sf-textbox"
+                                   @onkeyup="@CompararCadenas">
+                        </SfTextBox>
+                        <br />
+                        <SfMessage Severity="MessageSeverity.Error"
+                                   Visible="@bandcontra"
+                                   ShowIcon="true"
+                                   ShowCloseIcon="false">
+                                   Ingresa las contraseñas y verifica que coincidan.
+                        </SfMessage>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                        <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta"></SfTextBox>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <br />
+
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+                        <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+                        <SfProgressButton Content="@Content"
+                                          EnableProgress="true"
+                                          IsPrimary="true"
+                                          CssClass="e-success e-block mt-4 mb-2"
+                                          IconCss="e-icons e-send"
+                                          Duration="1000"
+                                          Disabled="@DisablePostButton">
+                            <ProgressButtonSpinSettings Position="SpinPosition.Right" />
+                            <ProgressButtonAnimationSettings Effect="Syncfusion.Blazor.SplitButtons.AnimationEffect.None" Duration="60000" Easing="" />
+                            <ProgressButtonEvents OnBegin="Begin" Progressing="Progressing" OnEnd="End" />
+                        </SfProgressButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* <button class="btn btn-outline-primary" onclick="@SendMail"> Enviar correo </button>
+        <span style="font-weight:bold;font-size:28px;color:#c00">@Message</span>     *@             
+    </EditForm>
+    <hr />
+}
+else
+{
+    <SfSpinner Type="SpinnerType.Tailwind" Size="50" Label="Cargando..." Visible="true" CssClass="e-spin-overlay" />
+}
+
+@code
+{
+    public Response<object>? oRespuesta = new();
+    public UsuarioViewModel? oUsuario = new()
+    {
+        // DATOS ID DEL USUARIO
+        IdUsuario = 0,
+        UsuIdRol = 2,                           // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
+        UsuIdTipoPersonal = 1,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
+        // DATOS PERSONALES
+        UsuNombre = "",                         // Nombre del Usuario Solicitante o Administrador
+        UsuPrimerApellido = "",                 // Primer Apellido del Usuario Solicitante o Administrador
+        UsuSegundoApellido = "",                // Segundo Apellido del Usuario Solicitante o Administrador
+        UsuCurp = "",                           // CURP con 18 caracteres como mínimo
+        UsuFileNameCurp = "",                   // Nombre del Archivo y extensión .pdf del CURP
+        UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
+        // UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
+        // DATOS ACADÉMICOS
+        // UsuBoletaAlumno = "0000000000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+        UsuBoletaMaestria = "0000000",          // Número de Boleta del Usuario (Alumno de Maestria)
+        // UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
+        // UsuSemestre = "1",                      // Semestre que cursa el Alumno Inscrito o de Maestria
+        UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
+        UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+        // DATOS LABORALES
+        UsuNumeroEmpleado = "0",                // Número del Empleado del Usuario (Administrador o Docente)
+        UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
+        UsuNoExtension = "0",                   // Número de Extensión del Empleado
+        // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
+        UsuCorreoPersonalCuentaAnterior = "",   // Correo Personal de la Cuenta Anterior
+        UsuCorreoPersonalCuentaNueva = "",      // Correo Personal de la Cuenta Nueva o Actual
+        UsuContraseña = "",                     // Contraseña en la PLataforma del Usuario Solicitante o Administrador
+        UsuRecuperarContraseña = false,         // Contraseña Temporal que se le proporciona al Usuario Solicitante
+        // DATOS DEL CORREO INSTITUCIONAL
+        UsuCorreoInstitucionalCuenta = "",      // Cuenta Correo Institucional IPN generada por DCyC
+        UsuCorreoInstitucionalContraseña = "",  // Contraseña del Correo Institucional IPN Generada por DCyC
+        // OTROS DATOS
+        // UsuFechaHoraAlta = DateTime.Parse(DateTime.Now.ToString()).Year; // Fecha y Hora de Alta del Usuario
+        UsuStatus = true,                       // Usuario (1 - Activo / 0 - Inactivo)
+        // DATOS FK NAVIGATION
+        UsuIdAreaDeptoNavigation = null,
+        UsuIdCarreraNavigation = null,
+        UsuIdRolNavigation = null,
+        UsuIdTipoPersonalNavigation = null
+    };
+
+    public int year = DateTime.Parse(DateTime.Now.ToString()).Year;
+    public string Content = "Enviar Registro";
+
+    // Variable que llamada a catalogo de links
+    public Response<LinkViewModel>? oLinkCURP = new();
+    public Response<LinkViewModel>? oLinkSAES = new();
+    public LinkViewModel? linkCURP = new();
+    public LinkViewModel? linkSAES = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        oCarrera = await servicioCarrera.GetAllDataAsync(false);
+        // link = oLink.Data.Where(link => link.IdLink.Equals(1)).FirstOrDefault();
+        oLinkCURP = await servicioLink.GetDataByNombreAsync("CURP");
+        linkCURP = oLinkCURP.Data;
+        oLinkSAES = await servicioLink.GetDataByNombreAsync("SAES UPIICSA");
+        linkSAES = oLinkSAES.Data;
+        // link = oLink.Data.Where(linkName => linkName.LinkNombre == nombre).FirstOrDefaultAsync();
+    }
+
+    public async Task Registrar()
+    {
+        if (ValidReCAPTCHA)
+        {
+            // var response = await reCAPTCHAComponent.GetResponseAsync();
+
+            try
+            {
+                // ServerVerificatiing = true;
+                // StateHasChanged();
+                // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+
+                Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
+                Console.WriteLine("UsuIdTipoPersonal: " + oUsuario.UsuIdTipoPersonal);
+                Console.WriteLine("UsuNombre: " + oUsuario.UsuNombre);
+                Console.WriteLine("UsuPrimerApellido: " + oUsuario.UsuPrimerApellido);
+                Console.WriteLine("UsuSegundoApellido: " + oUsuario.UsuSegundoApellido);
+                Console.WriteLine("UsuCurp: " + oUsuario.UsuCurp);
+                Console.WriteLine("UsuFileNameCurp: " + oUsuario.UsuFileNameCurp);
+                Console.WriteLine("UsuNoCelularAnterior: " + oUsuario.UsuNoCelularAnterior);
+                Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
+                Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
+                Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
+                Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
+                Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
+                Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
+                Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
+                Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
+                Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
+                Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
+                Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
+                Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
+                Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
+                Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
+                Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
+                Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
+                Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
+                Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
+
+                var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
+                oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
+
+                //SendMail();
+            }
+            catch (HttpRequestException e)
+            {
+                await JS.InvokeAsync<object>("alert", e.Message);
+                ServerVerificatiing = false;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private void OnInvalidSubmit()
+    {
+        // isValidAccount = true;
+    }
+
+    public void Begin(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args)
+    {
+        Content = "Enviar Registro";
+        // CssClass = "e-hide-spinner e-info";
+    }
+
+    public void Progressing(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args)
+    {
+        Content = "Enviando Registro...";
+    }
+
+    public void End(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args)
+    {
+        Content = "Enviar Registro";
+    }
+
+    //Lista de carreras
+    public Response<List<CarreraViewModel>>? oCarrera = new();
+
+    // Lista de semestres
+    public class Semestres
+    {
+        public string Value { get; set; }
+        public string Key { get; set; }
+    }
+
+    private List<Semestres> Semestre = new List<Semestres>
+    {
+        new Semestres() { Value = "1ro semestre", Key = "1" },
+        new Semestres() { Value = "2do semestre", Key = "2" },
+        new Semestres() { Value = "3ro semestre", Key = "3" },
+        new Semestres() { Value = "4to semestre", Key = "4" },
+        new Semestres() { Value = "5to semestre", Key = "5" },
+        new Semestres() { Value = "6to semestre", Key = "6" },
+        new Semestres() { Value = "7mo semestre", Key = "7" },
+        new Semestres() { Value = "8vo semestre", Key = "8" },
+        new Semestres() { Value = "9no semestre", Key = "9" },
+        new Semestres() { Value = "10mo semestre", Key = "10" },
+    };
+
+    //File upload
+    SfUploader UploadObj;
+    public void OnFileRemove(RemovingEventArgs args)
+    {
+        args.PostRawFile = false;
+    }
+
+    // Captcha
+
+    private ReCAPTCHA reCAPTCHAComponent;
+
+    private bool ValidReCAPTCHA = false;
+
+    private bool ServerVerificatiing = false;
+
+    // private bool DisablePostButton => (!ValidReCAPTCHA || ServerVerificatiing) && bandcontra;
+    private bool DisablePostButton => !ValidReCAPTCHA || bandcontra;
+
+    private void OnSuccess() => ValidReCAPTCHA = true;
+
+    private void OnExpired() => ValidReCAPTCHA = false;
+
+    // COMPARAR CADENAS DE SFTEXTBOX
+    private string contra2 = string.Empty;
+    public bool bandcontra = true;
+
+    private void CompararCadenas()
+    {
+        if (string.Equals(oUsuario.UsuContraseña, contra2, StringComparison.Ordinal))  //Console.WriteLine("Las contraseñas son iguales.");
+            bandcontra = false;
+        else    //Console.WriteLine("Las contraseñas son diferentes.");
+            bandcontra = true;
+    }
+
+    //correo
+    // private string Message { get; set; } ="";
+
+    // private void SendMail()
+    // {
+    //     try
+    //     {
+    //         string sender = "osacroti@gmail..com";
+    //         string clave = "jtxpdmqrnwgiwjxk";
+    //         string receiver = "oborjap16@gmail.com";
+    //         string server = "smtp.gmail.com";
+    //         int puerto = 465;
+    //         using (MailMessage mail = new())
+    //         {
+    //             mail.From = new MailAddress(sender); //   mail.From = new MailAddress("aronso.borj016@gmail.com");
+    //             mail.To.Add(new MailAddress(receiver));
+    //             mail.Subject="Sending Mail Testing (Blazor)";
+    //             mail.IsBodyHtml = true;
+    //             mail.Body = "<h1>This is mail body</h1>";
+
+
+    //             using (SmtpClient smtp = new SmtpClient()) // Seguro: 465, No Seguro: 587 |||| using(SmtpClient smtp = new SmtpClient("smtp.gmail.com", 465)) || smtp.office365.com, puerto 25
+    //             {
+    //                 smtp.Host = server;
+    //                 smtp.Port = puerto;
+    //                 smtp.UseDefaultCredentials = false;
+    //                 smtp.Credentials = new System.Net.NetworkCredential(sender,clave); //smtp.Credentials = new System.Net.NetworkCredential("eduardogonzalez.b22@gmail.com", "gmaillalo_05"); //smtp.Credentials = new System.Net.NetworkCredential("aronso.borj016@gmail.com", "Gamer5stalker");
+    //                 smtp.EnableSsl=true;
+    //                 smtp.Send(mail);
+    //                 Message = "Mail Sent";
+    //             }
+    //         }
+    //     }
+    //     catch(Exception ex)
+    //     {
+    //         Message = ex.Message;
+    //     }
+    // }
+}

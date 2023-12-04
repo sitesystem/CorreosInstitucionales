@@ -1,4 +1,4 @@
-﻿@page "/Registro"
+﻿@page "/RegistroMaestria"
 
 @attribute [Authorize]
 
@@ -181,13 +181,16 @@
     
 </style>
 
-<h3>Registro alumno</h3>
 
-<h3 style="font-variant: small-caps;">    
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-backpack3" viewBox="0 0 18 18">
-        <path d="M4.04 7.43a4 4 0 0 1 7.92 0 .5.5 0 1 1-.99.14 3 3 0 0 0-5.94 0 .5.5 0 1 1-.99-.14M4 9.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm1 .5v3h6v-3h-1v.5a.5.5 0 0 1-1 0V10z" />
-        <path d="M6 2.341V2a2 2 0 1 1 4 0v.341c.465.165.904.385 1.308.653l.416-1.247a1 1 0 0 1 1.748-.284l.77 1.027a1 1 0 0 1 .15.917l-.803 2.407C13.854 6.49 14 7.229 14 8v5.5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5V8c0-.771.146-1.509.41-2.186l-.802-2.407a1 1 0 0 1 .15-.917l.77-1.027a1 1 0 0 1 1.748.284l.416 1.247A5.978 5.978 0 0 1 6 2.34ZM7 2v.083a6.04 6.04 0 0 1 2 0V2a1 1 0 1 0-2 0m5.941 2.595.502-1.505-.77-1.027-.532 1.595c.297.284.566.598.8.937ZM3.86 3.658l-.532-1.595-.77 1.027.502 1.505c.234-.339.502-.653.8-.937ZM8 3a5 5 0 0 0-5 5v5.5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5V8a5 5 0 0 0-5-5" />
-    </svg> Estudiantes inscritos
+
+<h3 style="font-variant: small-caps;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eject-fill" viewBox="0 0 18 18">
+        <path d="M7.27 1.047a1 1 0 0 1 1.46 0l6.345 6.77c.6.638.146 1.683-.73 1.683H1.656C.78 9.5.326 8.455.926 7.816L7.27 1.047zM.5 11.5a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1z" />
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 18 18">
+        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z" />
+        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z" />
+    </svg> Maestría
 </h3>
 
 @if (oCarrera != null && oCarrera.Data != null)
@@ -242,9 +245,11 @@
                     
                             <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCurp" OnInput="@((e) => oUsuario.UsuCurp = e.Value.ToString().ToUpper())"
                                    onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" CssClass="mi-sf-textbox"></SfTextBox>
-                            <ValidationMessage For="@(() => oUsuario.UsuCurp)" /> <br />
+                            <ValidationMessage For="@(() => oUsuario.UsuCurp)" /> 
                         <a href="@linkCURP.LinkEnlace" target="_blank">
-                            Consulta CURP
+                            <br />
+                            ¿Olvidaste tu CURP? <br />
+                            Da click aquí para consultarlo.
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
                                 <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
@@ -273,7 +278,8 @@
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                         <SfTextBox Placeholder="Boleta"
                                    FloatLabelType="@FloatLabelType.Auto"
-                        @bind-Value="@oUsuario.UsuBoletaAlumno"
+                                   @bind-Value="@oUsuario.UsuBoletaMaestria"
+                                   onkeypress="return /^[B0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
                                    CssClass="mi-sf-textbox">
                         </SfTextBox>
                         <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumno)" />
@@ -316,27 +322,6 @@
                         <ValidationMessage For="@(() => oUsuario.UsuSemestre)" />
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfDropDownList ID="Data___UsutipoAcademico"
-                                        TValue="string"
-                                        TItem="Academicos"
-                                        Placeholder="Tipo de academico"
-                                        FloatLabelType="FloatLabelType.Auto"
-                                        AllowFiltering="true"
-                                        DataSource="@academico"                                    
-                                        CssClass="mi-sf-textbox">
-                            <DropDownListFieldSettings Value="Key" Text="Value" />
-                        </SfDropDownList>
-                    
-                    </div>
-
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">                    
-                        <SfNumericTextBox TValue="int?" Min=1936 Max="@year" Step=1 Placeholder="Año de egreso" FloatLabelType="@FloatLabelType.Auto" Format="####" @bind-Value="@oUsuario.UsuAñoEgreso" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" CssClass="mi-sf-textbox"></SfNumericTextBox>
-                        <ValidationMessage For="@(() => oUsuario.UsuAñoEgreso)" />
-                    </div>
-                </div>
                 <div class="row">        
 
                         <div class="control-wrapper-upload">
@@ -346,11 +331,11 @@
                                 <UploaderAsyncSettings SaveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Save" RemoveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Remove"></UploaderAsyncSettings>
                             </SfUploader>
                                  <a href="@linkSAES.LinkEnlace" target="_blank">
-                                            Consulta TU COMPROBANTE DE INSCRIPCIÓN
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
-                                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
-                                            </svg>
+                                    Consulta TU COMPROBANTE DE INSCRIPCIÓN
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
+                                        <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+                                    </svg>
                                </a>
                          </div>                             
                 </div> <br />
@@ -451,7 +436,7 @@ else
         // DATOS ID DEL USUARIO
         IdUsuario = 0,
         UsuIdRol = 2,                           // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-        UsuIdTipoPersonal = 1,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
+        UsuIdTipoPersonal = 3,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorario])
         // DATOS PERSONALES
         UsuNombre = "",                         // Nombre del Usuario Solicitante o Administrador
         UsuPrimerApellido = "",                 // Primer Apellido del Usuario Solicitante o Administrador
@@ -461,8 +446,8 @@ else
         UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
         // UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
         // DATOS ACADÉMICOS
-        // UsuBoletaAlumno = "0000000000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
-        UsuBoletaMaestria = "0000000",          // Número de Boleta del Usuario (Alumno de Maestria)
+        UsuBoletaAlumno = "0000000000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+        //  UsuBoletaMaestria = "0000000",           // Número de Boleta del Usuario (Alumno de Maestria)
         // UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
         // UsuSemestre = "1",                      // Semestre que cursa el Alumno Inscrito o de Maestria
         UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
@@ -605,20 +590,6 @@ else
         new Semestres() { Value = "8vo semestre", Key = "8" },
         new Semestres() { Value = "9no semestre", Key = "9" },
         new Semestres() { Value = "10mo semestre", Key = "10" },
-    };
-    // Lista de tipos de academico
-    public class Academicos
-    {
-        public string Value { get; set; }
-        public string Key { get; set; }
-    }
-
-    private List<Academicos> academico = new List<Academicos>
-    {
-        new Academicos() { Value = "Inscrito", Key = "1" },
-        new Academicos() { Value = "Egresado", Key = "2" },
-        new Academicos() { Value = "Postgrado", Key = "3" },
-
     };
 
     //File upload

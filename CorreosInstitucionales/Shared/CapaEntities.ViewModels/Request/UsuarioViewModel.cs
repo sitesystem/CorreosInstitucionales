@@ -83,7 +83,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuBoletaAlumno { get; set; }
 
         [Column("usuBoletaMaestria")]
-        [StringLength(7)]
+        [StringLength(7, ErrorMessage = "Boleta mayor a 7 dígitios. Verifique su boleta.")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuBoletaMaestria { get; set; }
 
