@@ -31,7 +31,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosSer
             return result;
         }
 
-        public async Task<Response<UsuarioViewModel>?> GetDataByAsync(int id)
+        public async Task<Response<UsuarioViewModel>?> GetDataByIdAsync(int id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<UsuarioViewModel>>(url + "filterById/" + id,
                  new JsonSerializerOptions()
@@ -41,17 +41,28 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosSer
 
             return result;
         }
+
         public async Task<HttpResponseMessage> AddDataAsync(UsuarioViewModel oUsuario)
         {
-            var json = JsonSerializer.Serialize(oUsuario);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(url, content);
+            // var json = JsonSerializer.Serialize(oUsuario);
+            // var content = new StringContent(json, Encoding.UTF8, "application/json");
+            // var response = await _httpClient.PostAsync(url, content);
+
+            var response = await _httpClient.PostAsJsonAsync(url, oUsuario,
+                new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
 
             return response;
         }
 
         public async Task<HttpResponseMessage> EditDataAsync(UsuarioViewModel oUsuario)
         {
+            // var json = JsonSerializer.Serialize(oUsuario);
+            // var content = new StringContent(json, Encoding.UTF8, "application/json");
+            // var response = await _httpClient.PutAsync(url, content);
+
             var response = await _httpClient.PutAsJsonAsync(url, oUsuario,
                  new JsonSerializerOptions()
                  {
@@ -71,6 +82,5 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosSer
 
             return response;
         }
-        
     }
 }

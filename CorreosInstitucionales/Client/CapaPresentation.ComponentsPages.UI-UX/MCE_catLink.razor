@@ -1,5 +1,7 @@
 ﻿@page "/Links"
 
+@attribute [Authorize]
+
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksService
@@ -281,7 +283,7 @@
                                 }
                                 <SfCheckBox Label="@(linkViewModel.LinkStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
                                             @bind-Checked="@linkViewModel.LinkStatus"
-                                            @onchange="@(() => EnableDisableByCheckBox(linkViewModel.IdLink, linkViewModel.LinkStatus))" /><!--pisoNivelViewModel.PisoStatus.Value-->
+                                            @onchange="@(() => EnableDisableByCheckBox(linkViewModel.IdLink, linkViewModel.LinkStatus.Value))" /><!--pisoNivelViewModel.PisoStatus.Value-->
                             </Template>
                         </GridColumn>
 

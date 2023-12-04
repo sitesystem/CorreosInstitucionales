@@ -20,7 +20,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("pisoStatus")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public bool PisoStatus { get; set; }
+        public bool? PisoStatus { get; set; }
 
         //[InverseProperty("AreIdPisoNavigation")]
         //public virtual ICollection<MceCatAreasDepto> MceCatAreasDeptos { get; set; } = new List<MceCatAreasDepto>();

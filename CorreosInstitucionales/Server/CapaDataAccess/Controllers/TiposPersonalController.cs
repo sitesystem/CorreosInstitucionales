@@ -1,14 +1,17 @@
-﻿using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class TiposPersonalController : Controller
     {
         [HttpGet("filterByStatus/{filterByStatus}")]
@@ -18,18 +21,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = new List<MceCatTipoPersonal>();
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = new List<MceCatTipoPersonal>();
 
-                    if (filterByStatus)
-                        list = await db.MceCatTipoPersonals.Where(e => e.TipoperStatus.Equals(filterByStatus)).ToListAsync();
-                    else
-                        list = await db.MceCatTipoPersonals.ToListAsync();
+                if (filterByStatus)
+                    list = await db.MceCatTipoPersonals.Where(tp => tp.TipoperStatus.Equals(filterByStatus)).ToListAsync();
+                else
+                    list = await db.MceCatTipoPersonals.ToListAsync();
 
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -46,12 +47,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = await db.MceCatTipoPersonals.FindAsync(id);
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = await db.MceCatTipoPersonals.FindAsync(id);
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -68,20 +67,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    MceCatTipoPersonal oTipoPersonal = new()
-                    {
-                        IdTipoPersonal = model.IdTipoPersonal,
-                        TipoperNombre = model.TipoperNombre,
-                        TipoperDescripcion = model.TipoperDescripcion,
-                        TipoperStatus = model.TipoperStatus
-                    };
-                    await db.MceCatTipoPersonals.AddAsync(oTipoPersonal);
-                    await db.SaveChangesAsync();
+                using DbCorreosInstUpiicsaContext db = new();
 
-                    oResponse.Success = 1;
-                }
+                MceCatTipoPersonal oTipoPersonal = new()
+                {
+                    IdTipoPersonal = model.IdTipoPersonal,
+                    TipoperNombre = model.TipoperNombre,
+                    TipoperDescripcion = model.TipoperDescripcion,
+                    TipoperStatus = true
+                };
+
+                await db.MceCatTipoPersonals.AddAsync(oTipoPersonal);
+                await db.SaveChangesAsync();
+
+                oResponse.Success = 1;
             }
             catch (Exception ex)
             {
@@ -99,7 +98,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceCatTipoPersonal? oTipoPersonal = db.MceCatTipoPersonals.Find(model.IdTipoPersonal);
+
+                MceCatTipoPersonal? oTipoPersonal = await db.MceCatTipoPersonals.FindAsync(model.IdTipoPersonal);
+
                 if (oTipoPersonal != null)
                 {
                     oTipoPersonal.TipoperNombre = model.TipoperNombre;
@@ -128,14 +129,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceCatTipoPersonal? oTipoPersonal = db.MceCatTipoPersonals.Find(id);
+
+                MceCatTipoPersonal? oTipoPersonal = await db.MceCatTipoPersonals.FindAsync(id);
                 //db.Remove(oPersona);
+
                 if (oTipoPersonal != null)
                 {
                     oTipoPersonal.TipoperStatus = isActivate;
                     db.Entry(oTipoPersonal).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                 }
+
                 oRespuesta.Success = 1;
             }
             catch (Exception ex)

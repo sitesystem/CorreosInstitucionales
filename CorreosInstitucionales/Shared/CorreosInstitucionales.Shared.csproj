@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CapaEntities.ViewModels\Common\" />
     <Folder Include="CapaEntities.ViewModels\Request\Login\" />
   </ItemGroup>
 </Project>

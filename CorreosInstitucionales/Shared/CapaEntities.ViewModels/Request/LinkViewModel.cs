@@ -14,15 +14,16 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public int IdLink { get; set; }
 
         [Column("linkNombre")]
-        [StringLength(200)]
+        [StringLength(50)]
         public string LinkNombre { get; set; } = null!;
 
         [Column("linkEnlace")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         [StringLength(200)]
-        public string LinkEnlace { get; set; } = null!;
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public string? LinkEnlace { get; set; } = null!;
 
+        [Required]
         [Column("linkStatus")]
-        public bool LinkStatus { get; set; }
+        public bool? LinkStatus { get; set; }
     }
 }

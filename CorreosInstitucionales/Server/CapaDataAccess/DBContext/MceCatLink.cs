@@ -12,6 +12,7 @@ public partial class MceCatLink
     [Key]
     public int IdLink { get; set; }
 
+    [Column("linkNombre")]
     [StringLength(50)]
     [Unicode(false)]
     public string? LinkNombre { get; set; }

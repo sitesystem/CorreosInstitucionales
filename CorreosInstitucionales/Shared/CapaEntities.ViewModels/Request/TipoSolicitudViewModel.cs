@@ -22,7 +22,11 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         [Column("tiposolDescripcion", TypeName = "text")]
         public string TiposolDescripcion { get; set; } = null!;
 
+        [Required]
         [Column("tiposolStatus")]
-        public bool TiposolStatus { get; set; }
+        public bool? TiposolStatus { get; set; }
+
+        //[InverseProperty("SolIdTipoSolicitudNavigation")]
+        //public virtual ICollection<MceTbSolicitudTicket> MceTbSolicitudTickets { get; set; } = new List<MceTbSolicitudTicket>();
     }
 }

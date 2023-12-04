@@ -14,7 +14,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public int IdEscuela { get; set; }
 
         [Column("escNoEscuela")]
-        public int? EscNoEscuela { get; set; }
+        [StringLength(10)]
+        public string? EscNoEscuela { get; set; }
 
         [Column("escNombreLargo")]
         [StringLength(150)]
@@ -28,6 +29,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         [StringLength(100)]
         public string? EscLogo { get; set; }
 
+        [Required]
         [Column("escStatus")]
         public bool EscStatus { get; set; }
     }

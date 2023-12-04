@@ -1,16 +1,18 @@
-﻿using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
-using CorreosInstitucionales.Shared.CapaTools;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+using CorreosInstitucionales.Shared.CapaTools;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class UsuariosController : ControllerBase
     {
         [HttpGet("filterByStatus/{filterByStatus}")]
@@ -20,18 +22,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = new List<MceTbUsuario>();
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = new List<MceTbUsuario>();
 
-                    if (filterByStatus)
-                        list = await db.MceTbUsuarios.Where(e => e.UsuStatus.Equals(filterByStatus)).ToListAsync();
-                    else
-                        list = await db.MceTbUsuarios.ToListAsync();
+                if (filterByStatus)
+                    list = await db.MceTbUsuarios.Where(u => u.UsuStatus.Equals(filterByStatus)).ToListAsync();
+                                            //   .OrderByDescending(x => x.Id)
+                                            //   .Skip((actualPage - 1) * Utilities.REGISTERSPERPAGE)
+                                            //   .Take(Utilities.REGISTERSPERPAGE)
+                                            //   .ToList();
+                else
+                    list = await db.MceTbUsuarios.ToListAsync();
 
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -48,12 +52,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = await db.MceTbUsuarios.FindAsync(id);
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = await db.MceTbUsuarios.FindAsync(id);
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -70,44 +72,56 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    MceTbUsuario oUsuario = new()
-                    {
-                        IdUsuarioSolicitante = model.IdUsuarioSolicitante,
-                        UsuIdTipoPersonal= model.UsuIdTipoPersonal,
-                        UsuNombre = model.UsuNombre,
-                        UsuPrimerApellido = model.UsuPrimerApellido,
-                        UsuSegundoApellido = model.UsuSegundoApellido,
-                        UsuCurp = model.UsuCurp,
-                        UsuFilenameCurp = model.UsuFilenameCurp,
-                        UsuArchivoCompInscripcion= model.UsuArchivoCompInscripcion,
-                        UsuNoCelularAnterior = null,
-                        UsuNoCelularNuevo = model.UsuNoCelularNuevo,
-                        UsuIdCarrera= model.UsuIdCarrera,   
-                        UsuBoletaAlumno = model.UsuBoletaAlumno,
-                        UsuBoletaMaestria= model.UsuBoletaMaestria,
-                        UsuSemestre=model.UsuSemestre,
-                        UsuAñoEgreso= model.UsuAñoEgreso,
-                        UsuNumeroEmpleado = model.UsuNumeroEmpleado,
-                        UsuIdAreaDepto= model.UsuIdAreaDepto,
-                        UsuExtension=model.UsuExtension,
-                        UsuIdRol=model.UsuIdRol,
-                        UsuCorreoPersonalAnterior=model.UsuCorreoPersonalAnterior,
-                        UsuCorreoPersonalNuevo = model.UsuCorreoPersonalNuevo,
-                        UsuContraseña = Encrypt.GetSHA256(model.UsuContraseña),
-                        UsuRecuperarContraseñas = model.UsuRecuperarContraseñas,                                               
-                        UsuCorreroInstitucional = model.UsuCorreroInstitucional,
-                        UsuContraseñaInstitucional = model.UsuContraseñaInstitucional,                        
-                        UsuFechaHoraAlta = model.UsuFechaHoraAlta,
-                        UsuStatus = model.UsuStatus,                                                
-                        //UsuIdTipoPersonalNavigation = null
-                    };
-                    await db.MceTbUsuarios.AddAsync(oUsuario);
-                    await db.SaveChangesAsync();
+                using DbCorreosInstUpiicsaContext db = new();
 
-                    oResponse.Success = 1;
-                }
+                MceTbUsuario oUsuario = new()
+                {
+                    // DATOS ID DEL USUARIO
+                    IdUsuario = model.IdUsuario,
+                    UsuIdRol = model.UsuIdRol,
+                    UsuIdTipoPersonal = model.UsuIdTipoPersonal,
+                    // UsuToken = Guid.NewGuid().ToString("D"),
+                    // DATOS PERSONALES
+                    UsuNombre = model.UsuNombre.ToUpper(),
+                    UsuPrimerApellido = model.UsuPrimerApellido.ToUpper(),
+                    UsuSegundoApellido = model.UsuSegundoApellido.ToUpper(),
+                    UsuCurp = model.UsuCurp.ToUpper(),
+                    UsuFileNameCurp = model.UsuFileNameCurp,
+                    UsuNoCelularAnterior = null,
+                    UsuNoCelularNuevo = model.UsuNoCelularNuevo,
+                    // DATOS ACADÉMICOS
+                    UsuBoletaAlumno = model.UsuBoletaAlumno,
+                    UsuBoletaMaestria = model.UsuBoletaMaestria,
+                    UsuIdCarrera = model.UsuIdCarrera,
+                    UsuSemestre = model.UsuSemestre,
+                    UsuAñoEgreso = model.UsuAñoEgreso,
+                    UsuFileNameComprobanteInscripcion = model.UsuFileNameComprobanteInscripcion,
+                    // DATOS LABORALES
+                    UsuNumeroEmpleado = model.UsuNumeroEmpleado,
+                    UsuIdAreaDepto = model.UsuIdAreaDepto,
+                    UsuNoExtension = model.UsuNoExtension,
+                    // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
+                    UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior,
+                    UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva,
+                    UsuContraseña = Encrypt.GetSHA256(model.UsuContraseña),
+                    UsuRecuperarContraseña = false,
+                    // DATOS DEL CORREO INSTITUCIONAL
+                    UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta,
+                    UsuCorreoInstitucionalContraseña = model.UsuCorreoInstitucionalContraseña,
+                    // OTROS DATOS
+                    UsuFechaHoraAlta = DateTime.UtcNow,
+                    UsuStatus = true,
+                    // DATOS FK NAVIGATION
+                    UsuIdAreaDeptoNavigation = null,
+                    UsuIdCarreraNavigation = null,
+                    UsuIdRolNavigation = null,
+                    UsuIdTipoPersonalNavigation = null
+                };
+
+                await db.MceTbUsuarios.AddAsync(oUsuario);
+                await db.SaveChangesAsync();
+
+                oResponse.Success = 1;
             }
             catch (Exception ex)
             {
@@ -125,29 +139,112 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceTbUsuario? oUsuario = db.MceTbUsuarios.Find(model.IdUsuarioSolicitante);
+
+                MceTbUsuario? oUsuario = await db.MceTbUsuarios.FindAsync(model.IdUsuario);
+
                 if (oUsuario != null)
                 {
-                    oUsuario.UsuNombre = model.UsuNombre;
-                    oUsuario.UsuPrimerApellido = model.UsuPrimerApellido;
-                    oUsuario.UsuSegundoApellido = model.UsuSegundoApellido;
-                    oUsuario.UsuCurp = model.UsuCurp;
-                    oUsuario.UsuFilenameCurp = model.UsuFilenameCurp;
-                    oUsuario.UsuNoCelularAnterior = null;
-                    oUsuario.UsuNoCelularNuevo = model.UsuNoCelularNuevo;
-                    oUsuario.UsuBoletaAlumno = model.UsuBoletaAlumno;
-                    oUsuario.UsuNumeroEmpleado = model.UsuNumeroEmpleado;
-                    oUsuario.UsuCorreoPersonalNuevo = model.UsuCorreoPersonalNuevo;
-                    oUsuario.UsuContraseña = model.UsuContraseña;
-                    oUsuario.UsuRecuperarContraseñas = model.UsuRecuperarContraseñas;
+                    // DATOS ID DEL USUARIO
+                    oUsuario.UsuIdRol = 2;
                     oUsuario.UsuIdTipoPersonal = model.UsuIdTipoPersonal;
-                    oUsuario.UsuIdRol = model.UsuIdRol;
-                    oUsuario.UsuCorreroInstitucional = model.UsuCorreroInstitucional;
-                    oUsuario.UsuContraseñaInstitucional = model.UsuContraseñaInstitucional;
+                    // oUsuario.UsuToken = Guid.NewGuid().ToString("D"),
+                    // DATOS PERSONALES
+                    oUsuario.UsuNombre = model.UsuNombre.ToUpper();
+                    oUsuario.UsuPrimerApellido = model.UsuPrimerApellido.ToUpper();
+                    oUsuario.UsuSegundoApellido = model.UsuSegundoApellido.ToUpper();
+                    oUsuario.UsuCurp = model.UsuCurp.ToUpper();
+                    oUsuario.UsuFileNameCurp = model.UsuFileNameCurp;
+                    oUsuario.UsuNoCelularAnterior = model.UsuNoCelularAnterior;
+                    oUsuario.UsuNoCelularNuevo = model.UsuNoCelularNuevo;
+                    // DATOS ACADÉMICOS
+                    oUsuario.UsuBoletaAlumno = model.UsuBoletaAlumno;
+                    oUsuario.UsuBoletaMaestria = model.UsuBoletaMaestria;
                     oUsuario.UsuIdCarrera = model.UsuIdCarrera;
-                    oUsuario.UsuFechaHoraAlta = model.UsuFechaHoraAlta;
-                    oUsuario.UsuStatus = model.UsuStatus;
+                    oUsuario.UsuSemestre = model.UsuSemestre;
+                    oUsuario.UsuAñoEgreso = model.UsuAñoEgreso;
+                    oUsuario.UsuFileNameComprobanteInscripcion = model.UsuFileNameComprobanteInscripcion;
+                    // DATOS LABORALES
+                    oUsuario.UsuNumeroEmpleado = model.UsuNumeroEmpleado;
+                    oUsuario.UsuIdAreaDepto = model.UsuIdAreaDepto;
+                    oUsuario.UsuNoExtension = model.UsuNoExtension;
+                    // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
+                    oUsuario.UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior;
+                    oUsuario.UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva;
+                    oUsuario.UsuContraseña = Encrypt.GetSHA256(model.UsuContraseña);
+                    oUsuario.UsuRecuperarContraseña = false;
+                    // DATOS DEL CORREO INSTITUCIONAL
+                    oUsuario.UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta;
+                    oUsuario.UsuCorreoInstitucionalContraseña = model.UsuCorreoInstitucionalContraseña;
+                    // OTROS DATOS
+                    // oUsuario.UsuFechaHoraAlta = DateTime.UtcNow;
+                    // oUsuario.UsuStatus = true;
+                    // DATOS FK NAVIGATION
+                    oUsuario.UsuIdAreaDeptoNavigation = null;
+                    oUsuario.UsuIdCarreraNavigation = null;
+                    oUsuario.UsuIdRolNavigation = null;
+                    oUsuario.UsuIdTipoPersonalNavigation = null;
 
+                    db.Entry(oUsuario).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
+
+                oRespuesta.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                oRespuesta.Message = ex.Message;
+            }
+
+            return Ok(oRespuesta);
+        }
+
+        [HttpPut("resetPassword/{correoPersonal}")]
+        public async Task<IActionResult> ResetPassword(string correoPersonal)
+        {
+            Response<object> oRespuesta = new();
+
+            try
+            {
+                using DbCorreosInstUpiicsaContext db = new();
+
+                MceTbUsuario? oUsuario = await db.MceTbUsuarios.Where(u => u.UsuCorreoPersonalCuentaNueva == correoPersonal).FirstOrDefaultAsync();
+
+                if (oUsuario != null)
+                {
+                    string tmpPassword = "123";
+
+                    oUsuario.UsuContraseña = Encrypt.GetSHA256(tmpPassword);
+                    oUsuario.UsuRecuperarContraseña = true;
+                    db.Entry(oUsuario).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+                    oRespuesta.Success = 1;
+                    oRespuesta.Message = "Se generó contraseña temporal enviada a su correo personal.";
+                }
+            }
+            catch (Exception ex)
+            {
+                oRespuesta.Message = ex.Message;
+            }
+
+            return Ok(oRespuesta);
+        }
+
+        [HttpPut("changePassword/{id}/{newPassword}")]
+        public async Task<IActionResult> ChangePassword(int id, string newPassword)
+        {
+            Response<object> oRespuesta = new();
+
+            try
+            {
+                using DbCorreosInstUpiicsaContext db = new();
+
+                MceTbUsuario? oUsuario = await db.MceTbUsuarios.FindAsync(id);
+
+                if (oUsuario != null)
+                {
+                    oUsuario.UsuContraseña = Encrypt.GetSHA256(newPassword);
+                    oUsuario.UsuRecuperarContraseña = false;
                     db.Entry(oUsuario).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                 }
@@ -171,14 +268,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceTbUsuario? oUsuario = db.MceTbUsuarios.Find(id);
+
+                MceTbUsuario? oUsuario = await db.MceTbUsuarios.FindAsync(id);
                 //db.Remove(oPersona);
+
                 if (oUsuario != null)
                 {
                     oUsuario.UsuStatus = isActivate;
                     db.Entry(oUsuario).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                 }
+
                 oRespuesta.Success = 1;
             }
             catch (Exception ex)

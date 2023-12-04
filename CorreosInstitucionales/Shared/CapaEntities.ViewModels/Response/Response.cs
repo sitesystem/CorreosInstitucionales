@@ -9,7 +9,9 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response
     public class Response<T>
     {
         public int Success { get; set; }
+
         public string Message { get; set; } = string.Empty;
+        
         public T? Data { get; set; }
         
         public Response()

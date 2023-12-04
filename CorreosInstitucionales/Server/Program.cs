@@ -1,6 +1,11 @@
-using CorreosInstitucionales.Server.CapaDataAccess;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
+
+using CorreosInstitucionales.Server.CapaDataAccess.LoginAuth;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,12 +57,71 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// Servicios CORS
+string? cors = "_cors";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: cors,
+        builder =>
+        {
+            builder.WithHeaders("*"); // POST
+            builder.WithOrigins("*").AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); // GET
+            builder.WithMethods("*"); // PUT DELETE
+        });
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("[Rol] Developer", policy => policy.RequireClaim("Rol", "1", "2"));
+    //options.AddPolicy("RequireManagerRole", policy => policy.RequireRole("Manager"));
+});
+
+// JWT (Jason Web Token)
+var appSettingsSection = builder.Configuration.GetSection("AppSettings");
+builder.Services.Configure<AppSettings>(appSettingsSection);
+
+var appSettings = appSettingsSection.Get<AppSettings>();
+//var key = Encoding.ASCII.GetBytes(appSettings.Secreto);
+var key = Encoding.UTF8.GetBytes(appSettings.Secreto);
+
+builder.Services.AddAuthentication(auth =>
+{
+    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = false, // Emisor
+        ValidateAudience = false, // Resource Server
+
+        //ValidAudience = builder.Configuration["AuthSettings:Audince"],
+        //ValidIssuer = builder.Configuration["AuthSettings:Issuer"],
+        //RequireExpirationTime = true,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+    };
+});
+
+// Dependency Injection (Inyectar e Implementar la Interfaz)
+builder.Services.AddScoped<ILoginService, RLoginService>();
+
+/******************************************************************************************************/
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    //app.UseDeveloperExceptionPage();
 }
 else
 {
@@ -69,12 +133,18 @@ else
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "serverWS v1"));
 
+app.UseCors(cors);
+
 app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Middlewares para gestionar la Authentication y la Authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();

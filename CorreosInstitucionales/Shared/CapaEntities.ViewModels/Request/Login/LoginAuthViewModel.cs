@@ -9,11 +9,11 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request.Login
 {
     public class LoginAuthViewModel
     {
-        [Required(ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         //[RegularExpression("^[A-Za-z0-9._%+-]*@ipn.mx$", ErrorMessage = "Formato Incorrecto.")]
-        public string UsuCorreo { get; set; } = null!;
+        public string UsuCorreoPersonal { get; set; } = null!;
 
-        [Required(ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string UsuContraseña { get; set; } = null!;
     }
 }

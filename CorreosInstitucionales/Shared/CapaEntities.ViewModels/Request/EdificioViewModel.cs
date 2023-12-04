@@ -14,8 +14,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public int IdEdificio { get; set; }
 
         [Column("ediNombreOficial")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         [StringLength(200)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string EdiNombreOficial { get; set; } = null!;
 
         [Column("ediNombreAlias")]       

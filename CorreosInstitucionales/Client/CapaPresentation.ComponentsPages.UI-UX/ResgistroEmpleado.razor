@@ -1,5 +1,7 @@
 ﻿@page "/RegistroEmpleado"
 
+@attribute [Authorize]
+
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 
@@ -284,8 +286,8 @@
                     <ValidationMessage For="@(() => oUsuario.UsuNumeroEmpleado)" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="Extensión" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuExtension" CssClass="mi-sf-textbox" ></SfTextBox>
-                    <ValidationMessage For="@(() => oUsuario.UsuExtension)" />
+                    <SfTextBox Placeholder="Extensión" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNoExtension" CssClass="mi-sf-textbox" ></SfTextBox>
+                    <ValidationMessage For="@(() => oUsuario.UsuNoExtension)" />
                 </div>
             </div>
         </div>
@@ -295,13 +297,13 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="Correo Personal" Type="Syncfusion.Blazor.Inputs.InputType.Email" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreoPersonalNuevo" CssClass="mi-sf-textbox"></SfTextBox>
-                        <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalNuevo)" />
+                        <SfTextBox Placeholder="Correo Personal" Type="Syncfusion.Blazor.Inputs.InputType.Email" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" CssClass="mi-sf-textbox"></SfTextBox>
+                        <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
                     </div>
 
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                     <SfTextBox Placeholder="Contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuContraseña" CssClass="mi-sf-textbox"></SfTextBox>
-                        <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
+                    <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
                     </div>
 
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
@@ -321,7 +323,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                    <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreroInstitucional"></SfTextBox>
+                    <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta"></SfTextBox>
                 </div>
                 </div>
             </div>

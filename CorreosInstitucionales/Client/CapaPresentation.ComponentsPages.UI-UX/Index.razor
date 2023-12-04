@@ -1,4 +1,6 @@
-﻿@page "/"
+﻿@page "/Index"
+
+@attribute [Authorize]
 
 @using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA;
 @using Syncfusion.Blazor.Navigations;
@@ -58,102 +60,66 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-<button @onclick="OnClickPost" disabled="@DisablePostButton">POST</button>
-
 <div class="col-lg-12 control-section">   
-        <div class="default-tab-control-section">
-            <div class="row">
-                <div class="col-md-12">
-                <h5>Registro</h5>
-                </div>
+    <div class="default-tab-control-section">
+        <div class="row">
+            <div class="col-md-12">
+            <h5>Registro</h5>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <SfTab CssClass="default-tab e-fill" >
-                        <TabAnimationSettings>
-                            <TabAnimationPrevious></TabAnimationPrevious>
-                            <TabAnimationNext></TabAnimationNext>
-                        </TabAnimationSettings>
-                        <TabItems>
-                            <TabItem>
-                                <ChildContent>
-                                    <TabHeader Text="Estudiante inscrito"></TabHeader>
-                                </ChildContent>
-                                <ContentTemplate>
-                                    <Registro/>
-                                </ContentTemplate>
-                            </TabItem>
-                            <TabItem>
-                                <ChildContent>
-                                    <TabHeader Text="Egresado"></TabHeader>
-                                </ChildContent>
-                                <ContentTemplate>
-                                <h3 style="font-variant: small-caps;">                                    
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 18 18">
-                                        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z" />
-                                        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z" />
-                                    </svg> Egresados
-                                </h3>
-                                </ContentTemplate>
-                            </TabItem>
-                            <TabItem>
-                                <ChildContent>
-                                    <TabHeader Text="Maestría"></TabHeader>
-                                </ChildContent>
-                                <ContentTemplate>
-                                <h3 style="font-variant: small-caps;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eject-fill" viewBox="0 0 18 18">
-                                        <path d="M7.27 1.047a1 1 0 0 1 1.46 0l6.345 6.77c.6.638.146 1.683-.73 1.683H1.656C.78 9.5.326 8.455.926 7.816L7.27 1.047zM.5 11.5a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1z" />
-                                    </svg>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 18 18">
-                                        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z" />
-                                        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z" />
-                                    </svg> Maestría
-                                </h3>
-                                </ContentTemplate>
-                            </TabItem>
-                        </TabItems>
-                    </SfTab>
-                </div>
-            </div>
-            <br />
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <SfTab CssClass="default-tab e-fill" >
+                    <TabAnimationSettings>
+                        <TabAnimationPrevious></TabAnimationPrevious>
+                        <TabAnimationNext></TabAnimationNext>
+                    </TabAnimationSettings>
+                    <TabItems>
+                        <TabItem>
+                            <ChildContent>
+                                <TabHeader Text="Estudiante inscrito"></TabHeader>
+                            </ChildContent>
+                            <ContentTemplate>
+                                <Registro/>
+                            </ContentTemplate>
+                        </TabItem>
+                        <TabItem>
+                            <ChildContent>
+                                <TabHeader Text="Egresado"></TabHeader>
+                            </ChildContent>
+                            <ContentTemplate>
+                            <h3 style="font-variant: small-caps;">                                    
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 18 18">
+                                    <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z" />
+                                    <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z" />
+                                </svg> Egresados
+                            </h3>
+                            </ContentTemplate>
+                        </TabItem>
+                        <TabItem>
+                            <ChildContent>
+                                <TabHeader Text="Maestría"></TabHeader>
+                            </ChildContent>
+                            <ContentTemplate>
+                            <h3 style="font-variant: small-caps;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eject-fill" viewBox="0 0 18 18">
+                                    <path d="M7.27 1.047a1 1 0 0 1 1.46 0l6.345 6.77c.6.638.146 1.683-.73 1.683H1.656C.78 9.5.326 8.455.926 7.816L7.27 1.047zM.5 11.5a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 18 18">
+                                    <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z" />
+                                    <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z" />
+                                </svg> Maestría
+                            </h3>
+                            </ContentTemplate>
+                        </TabItem>
+                    </TabItems>
+                </SfTab>
+            </div>
+        </div>
+        <br />
+    </div>
 </div>
 
 @code
 {
-    private ReCAPTCHA reCAPTCHAComponent;
-
-    private bool ValidReCAPTCHA = false;
-
-    private bool ServerVerificatiing = false;
-
-    private bool DisablePostButton => !ValidReCAPTCHA || ServerVerificatiing;
-
-    private void OnSuccess() => ValidReCAPTCHA = true;
-
-    private void OnExpired() => ValidReCAPTCHA = false;
-
-    private async Task OnClickPost()
-    {
-        if (ValidReCAPTCHA)
-        {
-            var response = await reCAPTCHAComponent.GetResponseAsync();
-
-            try
-            {
-                ServerVerificatiing = true;
-                StateHasChanged();
-                await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
-                Navigation.NavigateTo("/valid");
-            }
-            catch (HttpRequestException e)
-            {
-                await JS.InvokeAsync<object>("alert", e.Message);
-                ServerVerificatiing = false;
-                StateHasChanged();
-            }
-        }
-    }
 }

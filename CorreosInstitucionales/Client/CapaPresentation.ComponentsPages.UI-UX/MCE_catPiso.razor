@@ -1,4 +1,6 @@
-﻿@page "/Pisos"
+﻿@page "/PisosNiveles"
+
+@attribute [Authorize]
 
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
@@ -220,7 +222,7 @@
                                 }
                                 <SfCheckBox Label="@(pisoNivelViewModel.PisoStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
                                     @bind-Checked="@pisoNivelViewModel.PisoStatus"
-                                    @onchange="@(() => EnableDisableByCheckBox(pisoNivelViewModel.IdPiso, pisoNivelViewModel.PisoStatus))" /><!--pisoNivelViewModel.PisoStatus.Value-->
+                                    @onchange="@(() => EnableDisableByCheckBox(pisoNivelViewModel.IdPiso, pisoNivelViewModel.PisoStatus.Value))" /><!--pisoNivelViewModel.PisoStatus.Value-->
                             </Template>
                         </GridColumn>
 

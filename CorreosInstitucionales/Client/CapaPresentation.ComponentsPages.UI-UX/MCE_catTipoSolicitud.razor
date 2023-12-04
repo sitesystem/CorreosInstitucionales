@@ -1,4 +1,6 @@
-﻿@page "/TiposSolicitud"
+﻿@page "/TiposSolicitudTicket"
+
+@attribute [Authorize]
 
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
@@ -6,22 +8,7 @@
 
 @inject ITipoSolicitud servicioTipoSolicitud
 
-@* <h3>MCE_catTipoSolicitud</h3>
-
-@if (oResponse != null && oResponse.Data != null)
-{
-    foreach (var oTipoSolicitud in oResponse.Data)
-    {
-        <div>@oTipoSolicitud.IdTipoSolicitud</div>
-        <div>@oTipoSolicitud.TiposolDescripcion</div>
-        <div>@oTipoSolicitud.TiposolStatus</div>
-    }
-}
-else
-{
-    <div>Cargando...</div>
-} *@
-<PageTitle>Catálogo de tipo solicitud </PageTitle>
+<PageTitle>Catálogo de Tipos de Solicitud</PageTitle>
 
 <SfBreadcrumb EnableActiveItemNavigation="true" EnableNavigation="false">
     <BreadcrumbItems>
@@ -29,6 +16,7 @@ else
         <BreadcrumbItem Text="Catálogo de tipo solicitud" IconCss="e-icons e-resizer-1" Disabled="true" />
     </BreadcrumbItems>
 </SfBreadcrumb>
+
 <h3 style="font-variant: small-caps;">
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-link" viewBox="0 0 18 18">
         <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
@@ -37,7 +25,6 @@ else
 </h3>
 
 <style type="text/css">
-
 </style>
 
 @if (oResponse != null && oResponse.Data != null)
@@ -234,7 +221,7 @@ else
                                 }
                                 <SfCheckBox Label="@(TipoSolicitudViewModel.TiposolStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
                                             @bind-Checked="@TipoSolicitudViewModel.TiposolStatus"
-                                            @onchange="@(() => EnableDisableByCheckBox(TipoSolicitudViewModel.IdTipoSolicitud, TipoSolicitudViewModel.TiposolStatus))" /><!--pisoNivelViewModel.PisoStatus.Value-->
+                                            @onchange="@(() => EnableDisableByCheckBox(TipoSolicitudViewModel.IdTipoSolicitud, TipoSolicitudViewModel.TiposolStatus.Value))" /><!--pisoNivelViewModel.PisoStatus.Value-->
                             </Template>
                         </GridColumn>
 

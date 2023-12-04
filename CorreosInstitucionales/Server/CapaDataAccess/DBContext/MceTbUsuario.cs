@@ -10,16 +10,19 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 public partial class MceTbUsuario
 {
     /// <summary>
-    /// Descripcion del Usuario Solicitante
+    /// ID Único del Usuario Solicitante o Administrador
     /// </summary>
     [Key]
-    public int IdUsuarioSolicitante { get; set; }
+    public int IdUsuario { get; set; }
+
+    [Column("usuIdRol")]
+    public int UsuIdRol { get; set; }
 
     /// <summary>
     /// Tipo de Personal del Usuario Solicitante
     /// </summary>
     [Column("usuIdTipoPersonal")]
-    public int? UsuIdTipoPersonal { get; set; }
+    public int UsuIdTipoPersonal { get; set; }
 
     /// <summary>
     /// Nombre del Usuario Solicitante
@@ -27,7 +30,7 @@ public partial class MceTbUsuario
     [Column("usuNombre")]
     [StringLength(200)]
     [Unicode(false)]
-    public string? UsuNombre { get; set; }
+    public string UsuNombre { get; set; } = null!;
 
     /// <summary>
     /// Primer apellido del Usuario Solicitante
@@ -35,7 +38,7 @@ public partial class MceTbUsuario
     [Column("usuPrimerApellido")]
     [StringLength(150)]
     [Unicode(false)]
-    public string? UsuPrimerApellido { get; set; }
+    public string UsuPrimerApellido { get; set; } = null!;
 
     /// <summary>
     /// Segundo Apellido del Usuario Solicitante
@@ -48,17 +51,12 @@ public partial class MceTbUsuario
     [Column("usuCURP")]
     [StringLength(18)]
     [Unicode(false)]
-    public string? UsuCurp { get; set; }
+    public string UsuCurp { get; set; } = null!;
 
-    [Column("usuFilenameCURP")]
+    [Column("usuFileNameCURP")]
     [StringLength(200)]
     [Unicode(false)]
-    public string? UsuFilenameCurp { get; set; }
-
-    [Column("usuArchivoCompInscripcion")]
-    [StringLength(200)]
-    [Unicode(false)]
-    public string? UsuArchivoCompInscripcion { get; set; }
+    public string? UsuFileNameCurp { get; set; }
 
     [Column("usuNoCelularAnterior")]
     [StringLength(20)]
@@ -68,10 +66,7 @@ public partial class MceTbUsuario
     [Column("usuNoCelularNuevo")]
     [StringLength(20)]
     [Unicode(false)]
-    public string? UsuNoCelularNuevo { get; set; }
-
-    [Column("usuIdCarrera")]
-    public int? UsuIdCarrera { get; set; }
+    public string UsuNoCelularNuevo { get; set; } = null!;
 
     /// <summary>
     /// Numero de Boleta del Uusario Solicitante
@@ -86,6 +81,9 @@ public partial class MceTbUsuario
     [Unicode(false)]
     public string? UsuBoletaMaestria { get; set; }
 
+    [Column("usuIdCarrera")]
+    public int? UsuIdCarrera { get; set; }
+
     [Column("usuSemestre")]
     [StringLength(15)]
     [Unicode(false)]
@@ -93,6 +91,11 @@ public partial class MceTbUsuario
 
     [Column("usuAñoEgreso")]
     public int? UsuAñoEgreso { get; set; }
+
+    [Column("usuFileNameComprobanteInscripcion")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string? UsuFileNameComprobanteInscripcion { get; set; }
 
     /// <summary>
     /// Numero del Empleado del Usuario Solicitante
@@ -103,27 +106,22 @@ public partial class MceTbUsuario
     public string? UsuNumeroEmpleado { get; set; }
 
     [Column("usuIdAreaDepto")]
+    public int? UsuIdAreaDepto { get; set; }
+
+    [Column("usuNoExtension")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? UsuNoExtension { get; set; }
+
+    [Column("usuCorreoPersonalCuentaAnterior")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? UsuIdAreaDepto { get; set; }
+    public string? UsuCorreoPersonalCuentaAnterior { get; set; }
 
-    [Column("usuExtension")]
-    [StringLength(20)]
-    [Unicode(false)]
-    public string? UsuExtension { get; set; }
-
-    [Column("usuIdRol")]
-    public int? UsuIdRol { get; set; }
-
-    [Column("usuCorreoPersonalAnterior")]
+    [Column("usuCorreoPersonalCuentaNueva")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? UsuCorreoPersonalAnterior { get; set; }
-
-    [Column("usuCorreoPersonalNuevo")]
-    [StringLength(100)]
-    [Unicode(false)]
-    public string? UsuCorreoPersonalNuevo { get; set; }
+    public string UsuCorreoPersonalCuentaNueva { get; set; } = null!;
 
     /// <summary>
     /// Contraseña del Usuario Solicitante
@@ -131,32 +129,50 @@ public partial class MceTbUsuario
     [Column("usuContraseña")]
     [StringLength(300)]
     [Unicode(false)]
-    public string? UsuContraseña { get; set; }
+    public string UsuContraseña { get; set; } = null!;
 
     /// <summary>
     /// Contraseña Temporal que se le proporciona al Usuario Solicitante
     /// </summary>
-    [Column("usuRecuperarContraseñas")]
-    public bool? UsuRecuperarContraseñas { get; set; }
+    [Column("usuRecuperarContraseña")]
+    public bool? UsuRecuperarContraseña { get; set; }
 
-    [Column("usuCorreroInstitucional")]
+    [Column("usuCorreoInstitucionalCuenta")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? UsuCorreroInstitucional { get; set; }
+    public string? UsuCorreoInstitucionalCuenta { get; set; }
 
-    [Column("usuContraseñaInstitucional")]
-    [StringLength(300)]
-    [Unicode(false)]
-    public string? UsuContraseñaInstitucional { get; set; }
-
-    [Column("usuFechaHoraAlta")]
+    [Column("usuCorreoInstitucionalContraseña")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? UsuFechaHoraAlta { get; set; }
+    public string? UsuCorreoInstitucionalContraseña { get; set; }
+
+    [Column("usuFechaHoraAlta", TypeName = "datetime")]
+    public DateTime UsuFechaHoraAlta { get; set; }
 
     /// <summary>
     /// Activo / Inactivo
     /// </summary>
+    [Required]
     [Column("usuStatus")]
     public bool? UsuStatus { get; set; }
+
+    [InverseProperty("SolIdUsuarioNavigation")]
+    public virtual ICollection<MceTbSolicitudTicket> MceTbSolicitudTickets { get; set; } = new List<MceTbSolicitudTicket>();
+
+    [ForeignKey("UsuIdAreaDepto")]
+    [InverseProperty("MceTbUsuarios")]
+    public virtual MceCatAreasDepto? UsuIdAreaDeptoNavigation { get; set; }
+
+    [ForeignKey("UsuIdCarrera")]
+    [InverseProperty("MceTbUsuarios")]
+    public virtual MceCatCarrera? UsuIdCarreraNavigation { get; set; }
+
+    [ForeignKey("UsuIdRol")]
+    [InverseProperty("MceTbUsuarios")]
+    public virtual MceCatRole UsuIdRolNavigation { get; set; } = null!;
+
+    [ForeignKey("UsuIdTipoPersonal")]
+    [InverseProperty("MceTbUsuarios")]
+    public virtual MceCatTipoPersonal UsuIdTipoPersonalNavigation { get; set; } = null!;
 }

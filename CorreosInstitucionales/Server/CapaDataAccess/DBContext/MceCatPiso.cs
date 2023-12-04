@@ -18,8 +18,9 @@ public partial class MceCatPiso
     [Unicode(false)]
     public string PisoDescripcion { get; set; } = null!;
 
+    [Required]
     [Column("pisoStatus")]
-    public bool PisoStatus { get; set; }
+    public bool? PisoStatus { get; set; }
 
     [JsonIgnore]
     [InverseProperty("AreIdPisoNavigation")]

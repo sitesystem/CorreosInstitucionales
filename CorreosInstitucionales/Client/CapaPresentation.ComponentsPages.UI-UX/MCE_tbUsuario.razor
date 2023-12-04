@@ -1,5 +1,7 @@
 ﻿@page "/Usuarios"
 
+@attribute [Authorize]
+
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
@@ -11,12 +13,12 @@
 
 <SfGrid DataSource="@oResponse.Data" AllowPaging="true">
     <GridColumns>
-        <GridColumn Field=@nameof(UsuarioViewModel.IdUsuarioSolicitante) HeaderText="Id Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(UsuarioViewModel.IdUsuario) HeaderText="Id Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
         <GridColumn Field=@nameof(UsuarioViewModel.UsuNombre) HeaderText="Clave Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
         <GridColumn Field=@nameof(UsuarioViewModel.UsuPrimerApellido) HeaderText="Nombre Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
         <GridColumn Field=@nameof(UsuarioViewModel.UsuSegundoApellido) HeaderText="Nombre Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
         <GridColumn Field=@nameof(UsuarioViewModel.UsuCurp) HeaderText="Nombre Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
-        <GridColumn Field=@nameof(UsuarioViewModel.UsuFilenameCurp) HeaderText="Nombre Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(UsuarioViewModel.UsuFileNameCurp) HeaderText="Nombre Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
 
     </GridColumns>
 </SfGrid>

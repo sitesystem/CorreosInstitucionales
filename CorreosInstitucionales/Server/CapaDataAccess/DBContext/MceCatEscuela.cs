@@ -13,7 +13,9 @@ public partial class MceCatEscuela
     public int IdEscuela { get; set; }
 
     [Column("escNoEscuela")]
-    public int? EscNoEscuela { get; set; }
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? EscNoEscuela { get; set; }
 
     [Column("escNombreLargo")]
     [StringLength(150)]

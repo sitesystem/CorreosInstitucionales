@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
@@ -25,4 +26,8 @@ public partial class MceCatCarrera
     [Required]
     [Column("carrStatus")]
     public bool? CarrStatus { get; set; }
+
+    [JsonIgnore]
+    [InverseProperty("UsuIdCarreraNavigation")]
+    public virtual ICollection<MceTbUsuario> MceTbUsuarios { get; set; } = new List<MceTbUsuario>();
 }

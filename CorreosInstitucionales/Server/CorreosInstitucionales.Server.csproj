@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="CapaDataAccess\DBContext\" />
-    <Folder Include="CapaDataAccess\LoginAuth\" />
   </ItemGroup>
 
 

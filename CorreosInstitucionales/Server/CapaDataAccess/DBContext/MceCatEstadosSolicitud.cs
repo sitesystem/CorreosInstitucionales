@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
@@ -10,13 +11,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 public partial class MceCatEstadosSolicitud
 {
     [Key]
-    public int IdEstadosSolicitud { get; set; }
+    public int IdEstadoSolicitud { get; set; }
 
-    [Column("estsolNombre")]
-    [StringLength(30)]
+    [Column("edosolNombreEstado")]
+    [StringLength(50)]
     [Unicode(false)]
-    public string EstsolNombre { get; set; } = null!;
+    public string EdosolNombreEstado { get; set; } = null!;
 
-    [Column("estsolStatus")]
-    public bool EstsolStatus { get; set; }
+    [Column("edosolDescripcion", TypeName = "text")]
+    public string? EdosolDescripcion { get; set; }
+
+    [JsonIgnore]
+    [InverseProperty("SolIdEstadoSolicitudNavigation")]
+    public virtual ICollection<MceTbSolicitudTicket> MceTbSolicitudTickets { get; set; } = new List<MceTbSolicitudTicket>();
 }

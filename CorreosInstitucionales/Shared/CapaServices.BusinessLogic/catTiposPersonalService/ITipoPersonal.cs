@@ -12,7 +12,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPerso
     {
         public Task<Response<List<TipoPersonalViewModel>>?> GetAllDataAsync(bool filterByStatus);
 
-        public Task<Response<TipoPersonalViewModel>?> GetDataByAsync(int id);
+        public Task<Response<TipoPersonalViewModel>?> GetDataByIdAsync(int id);
 
         public Task<HttpResponseMessage> AddDataAsync(TipoPersonalViewModel oTipoPersonal);
 

@@ -1,14 +1,16 @@
-﻿using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class EdificiosController : Controller
     {
         [HttpGet("filterByStatus/{filterByStatus}")]
@@ -18,18 +20,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = new List<MceCatEdificio>();
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = new List<MceCatEdificio>();
 
-                    if (filterByStatus)
-                        list = await db.MceCatEdificios.Where(e => e.EdiStatus.Equals(filterByStatus)).ToListAsync();
-                    else
-                        list = await db.MceCatEdificios.ToListAsync();
+                if (filterByStatus)
+                    list = await db.MceCatEdificios.Where(e => e.EdiStatus.Equals(filterByStatus)).ToListAsync();
+                else
+                    list = await db.MceCatEdificios.ToListAsync();
 
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -46,12 +46,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = await db.MceCatEdificios.FindAsync(id);
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = await db.MceCatEdificios.FindAsync(id);
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -68,20 +66,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    MceCatEdificio oEdificio = new()
-                    {
-                        IdEdificio = model.IdEdificio,
-                        EdiNombreOficial = model.EdiNombreOficial,
-                        EdiNombreAlias = model.EdiNombreAlias,
-                        EdiStatus = true
-                    };
-                    await db.MceCatEdificios.AddAsync(oEdificio);
-                    await db.SaveChangesAsync();
+                using DbCorreosInstUpiicsaContext db = new();
 
-                    oResponse.Success = 1;
-                }
+                MceCatEdificio oEdificio = new()
+                {
+                    IdEdificio = model.IdEdificio,
+                    EdiNombreOficial = model.EdiNombreOficial,
+                    EdiNombreAlias = model.EdiNombreAlias,
+                    EdiStatus = true
+                };
+
+                await db.MceCatEdificios.AddAsync(oEdificio);
+                await db.SaveChangesAsync();
+
+                oResponse.Success = 1;
             }
             catch (Exception ex)
             {
@@ -92,22 +90,24 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditData(EdificioViewModel model)
+        public async Task<IActionResult> EditData(EdificioViewModel model)
         {
             Response<object> oRespuesta = new();
 
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceCatEdificio? oEdificio = db.MceCatEdificios.Find(model.IdEdificio);
+
+                MceCatEdificio? oEdificio = await db.MceCatEdificios.FindAsync(model.IdEdificio);
+
                 if (oEdificio != null)
                 {
                     oEdificio.EdiNombreOficial = model.EdiNombreOficial;
                     oEdificio.EdiNombreAlias = model.EdiNombreAlias;
                     oEdificio.EdiStatus = model.EdiStatus;
 
-                    db.Entry(oEdificio).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oEdificio).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
 
                 oRespuesta.Success = 1;
@@ -121,21 +121,24 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPut("editByIdStatus/{id}/{isActivate}")]
-        public IActionResult EnableDisableDataById(int id, bool isActivate)
+        public async Task<IActionResult> EnableDisableDataById(int id, bool isActivate)
         {
             Response<object> oRespuesta = new();
 
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceCatEdificio? oEdificio = db.MceCatEdificios.Find(id);
+
+                MceCatEdificio? oEdificio = await db.MceCatEdificios.FindAsync(id);
                 //db.Remove(oPersona);
+
                 if (oEdificio != null)
                 {
                     oEdificio.EdiStatus = isActivate;
-                    db.Entry(oEdificio).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oEdificio).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
+
                 oRespuesta.Success = 1;
             }
             catch (Exception ex)

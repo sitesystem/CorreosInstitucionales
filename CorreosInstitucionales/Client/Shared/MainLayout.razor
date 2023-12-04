@@ -1,5 +1,14 @@
-﻿@inherits LayoutComponentBase
+﻿@using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonalService
 
+@inherits LayoutComponentBase
+
+@inject AuthenticationStateProvider servicioAuthenticationStateProvider
+@inject NavigationManager navigationManager;
+@inject ILoginServices loginService
+@inject ITipoPersonal servicioTipoPersonal
 @inject IJSRuntime JSRuntime;
 
 <style>
@@ -38,26 +47,48 @@
 
                 <AppBarSpacer />
 
-                @* <AuthorizeView>
+                <AuthorizeView>
                     <Authorized>
-                        <div>Nombre: @context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value </div>
+
+                        <CultureSwitcher />
+                        <div class="theme-switcher">
+                            @* Theme switcher *@
+                            <SfDropDownList TItem="ThemeDetails" TValue="string" @bind-Value="themeName" DataSource="@Themes" Placeholder="Selecciona el Tema" EnableRtl="false">
+                                <DropDownListFieldSettings Text="Text" Value="ID"></DropDownListFieldSettings>
+                                <DropDownListEvents TItem="ThemeDetails" TValue="string" ValueChange="OnThemeChange"></DropDownListEvents>
+                            </SfDropDownList>
+                        </div>
+
                         <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
-                        <div>Email: @context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value </div>
-                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
-                        <div>Rol: @context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value</div>
+
+                        @{
+                            string? rol = context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value;
+                            string? tipoPersonal = string.Empty;
+                            if (oResponseTipoPersonal != null && oResponseTipoPersonal.Data != null)
+                                tipoPersonal = oResponseTipoPersonal.Data.TipoperNombre;
+                            string? name = context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value;
+                            string? email = context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
+                        }
+
+                        <SfDropDownButton Content="@name" IconCss="e-icons e-user" IconPosition="SplitButtonIconPosition.Left" EnableRtl="false">
+                            <DropDownButtonEvents ItemSelected="DropDownSelect"></DropDownButtonEvents>
+                            <DropDownMenuItems>
+                                <DropDownMenuItem Text="@tipoPersonal" IconCss="oi oi-badge" Disabled="true"></DropDownMenuItem>
+                                <DropDownMenuItem Text="@email" IconCss="oi oi-envelope-open" Disabled="true"></DropDownMenuItem>
+                                <DropDownMenuItem Id="Perfil" Text="Perfil" IconCss="oi oi-person"></DropDownMenuItem>
+                                <DropDownMenuItem Separator=true></DropDownMenuItem>
+                                <DropDownMenuItem Id="LogOut" Text="Cerrar Sesión" IconCss="oi oi-account-logout"></DropDownMenuItem>
+                            </DropDownMenuItems>
+                        </SfDropDownButton>
+
                     </Authorized>
-                </AuthorizeView> *@
-
-                <AppBarSpacer />
-
-                <CultureSwitcher />
-                <div class="theme-switcher">
-                    @* Theme switcher *@
-                    <SfDropDownList TItem="ThemeDetails" TValue="string" @bind-Value="themeName" DataSource="@Themes" Placeholder="Selecciona el Tema" EnableRtl="false">
-                        <DropDownListFieldSettings Text="Text" Value="ID"></DropDownListFieldSettings>
-                        <DropDownListEvents TItem="ThemeDetails" TValue="string" ValueChange="OnThemeChange"></DropDownListEvents>
-                    </SfDropDownList>
-                </div>
+                    <NotAuthorized>
+                        <p>No Autorizado</p>
+                    </NotAuthorized>
+                    <Authorizing>
+                        <p>Autorizando...</p>
+                    </Authorizing>
+                </AuthorizeView>
 
             </SfAppBar>
         </div>
@@ -109,5 +140,39 @@
     private void CollapseSidebar()
     {
         sidebarCollapse = !sidebarCollapse;
+    }
+
+    public Response<TipoPersonalViewModel>? oResponseTipoPersonal = new();
+
+    private string? authMessage;
+    private List<Claim> claims = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await servicioAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            authMessage = $"{user.Claims.FirstOrDefault(c => c.Type == "Name")?.Value} is authenticated.";
+            claims = user.Claims.ToList();
+            var tipoPersonal = user.Claims.FirstOrDefault(c => c.Type == "TipoPersonal")?.Value;
+            oResponseTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(int.Parse(tipoPersonal));
+        }
+        else
+            authMessage = "The user is NOT authenticated.";
+    }
+
+    private async Task DropDownSelect(MenuEventArgs args)
+    {
+        if (args.Item.Id == "Perfil")
+        {
+            navigationManager.NavigateTo("/Perfil");
+        }
+        else if (args.Item.Id == "LogOut")
+        {
+            await loginService.Logout();
+            navigationManager.NavigateTo("/");
+        }
     }
 }

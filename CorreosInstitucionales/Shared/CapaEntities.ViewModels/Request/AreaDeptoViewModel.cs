@@ -14,6 +14,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public int IdAreaDepto { get; set; }
 
         [Column("areNombre", TypeName = "text")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? AreNombre { get; set; }
 
         [Column("areExtension")]
@@ -21,24 +22,35 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? AreExtension { get; set; }
 
         [Column("areIdEdificio")]
-        public int? AreIdEdificio { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public int AreIdEdificio { get; set; }
 
         [Column("areIdPiso")]
-        public int? AreIdPiso { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public int AreIdPiso { get; set; }
 
         [Column("areTitular")]
         [StringLength(300)]
         public string? AreTitular { get; set; }
 
+        [Required]
         [Column("areStatus")]
         public bool? AreStatus { get; set; }
 
         [ForeignKey("AreIdEdificio")]
         [InverseProperty("MceCatAreasDeptos")]
-        public virtual EdificioViewModel? AreIdEdificioNavigation { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public virtual EdificioViewModel? AreIdEdificioNavigation { get; set; } = null!;
 
         [ForeignKey("AreIdPiso")]
         [InverseProperty("MceCatAreasDeptos")]
-        public virtual PisoViewModel? AreIdPisoNavigation { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public virtual PisoViewModel? AreIdPisoNavigation { get; set; } = null!;
+
+        //[InverseProperty("ExtIdAreaDeptoNavigation")]
+        //public virtual ICollection<MceCatExtensione> MceCatExtensiones { get; set; } = new List<MceCatExtensione>();
+
+        //[InverseProperty("UsuIdAreaDeptoNavigation")]
+        //public virtual ICollection<MceTbUsuario> MceTbUsuarios { get; set; } = new List<MceTbUsuario>();
     }
 }

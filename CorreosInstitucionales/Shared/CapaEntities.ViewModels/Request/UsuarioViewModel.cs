@@ -10,27 +10,31 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 {
     public class UsuarioViewModel
     {
-
+        /*******************************  DATOS ID DEL USUARIO  *******************************/
         /// <summary>
-        /// Descripcion del Usuario Solicitante
+        /// ID Único del Usuario Solicitante o Administrador
         /// </summary>
         [Key]
-        public int IdUsuarioSolicitante { get; set; }
+        public int IdUsuario { get; set; }
+
+        [Column("usuIdRol")]
+        public int UsuIdRol { get; set; }
 
         /// <summary>
         /// Tipo de Personal del Usuario Solicitante
         /// </summary>
         [Column("usuIdTipoPersonal")]
-        public int? UsuIdTipoPersonal { get; set; }
+        public int UsuIdTipoPersonal { get; set; }
 
+        /*******************************  DATOS PERSONALES  *******************************/
         /// <summary>
         /// Nombre del Usuario Solicitante
         /// </summary>
         [Column("usuNombre")]
         [StringLength(200)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        [RegularExpression("^[A-Z. ]*$", ErrorMessage = "Formato Incorrecto. Este campo rechaza acentos o caracteres especiales")] // NO ADMITE ACENTOS
-        public string? UsuNombre { get; set; }
+        [RegularExpression("^[A-Z. ]*$", ErrorMessage = "Formato Incorrecto. Este campo rechaza acentos o caracteres especiales.")] // NO ADMITE ACENTOS
+        public string UsuNombre { get; set; } = null!;
 
         /// <summary>
         /// Primer apellido del Usuario Solicitante
@@ -38,7 +42,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         [Column("usuPrimerApellido")]
         [StringLength(150)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string? UsuPrimerApellido { get; set; }
+        public string UsuPrimerApellido { get; set; } = null!;
 
         /// <summary>
         /// Segundo Apellido del Usuario Solicitante
@@ -48,58 +52,59 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string? UsuSegundoApellido { get; set; }
 
         [Column("usuCURP")]
-        [StringLength(18, ErrorMessage = "El CUPR introducido es mayor a 18 digitos. Verifique que el CURP tenga 18 digitos")]
-        [MinLength(18, ErrorMessage = "El CUPR introducido es menor a 18 digitos. Verifique que el CURP tenga 18 digitos")]
+        [StringLength(18, ErrorMessage = "El CURP introducido es mayor a 18 digitos. Verifique que el CURP tenga 18 digitos.")]
+        [MinLength(18, ErrorMessage = "El CURP introducido es menor a 18 digitos. Verifique que el CURP tenga 18 digitos.")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string? UsuCurp { get; set; }
+        public string UsuCurp { get; set; } = null!;
 
-        [Column("usuFilenameCURP")]
+        [Column("usuFileNameCURP")]
         [StringLength(200)]
-        public string? UsuFilenameCurp { get; set; }
+        public string? UsuFileNameCurp { get; set; }
 
-        [Column("usuArchivoCompInscripcion")]
-        [StringLength(200)]
-        public string? UsuArchivoCompInscripcion { get; set; }
-
-        [Column("usuNoCelularAnt")]
+        [Column("usuNoCelularAnterior")]
         [StringLength(20)]
-        //[MinLength(10, ErrorMessage = "Verifique su numeración que tenga al menos 10 dígitos")]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [MinLength(10, ErrorMessage = "Verifique su numeración que tenga al menos 10 dígitos")]
         public string? UsuNoCelularAnterior { get; set; }
 
         [Column("usuNoCelularNuevo")]
         [StringLength(20)]
-        [MinLength(10, ErrorMessage = "El CUPR introducido es menor a 10 digitos. Verifique su numeración que tenga al menos 10 dígitos")]
+        [MinLength(10, ErrorMessage = "El Número de Celular introducido es menor a 10 digitos. Verifique su numeración que tenga al menos 10 dígitos")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string? UsuNoCelularNuevo { get; set; }
+        public string UsuNoCelularNuevo { get; set; } = null!;
+
+        /*******************************  DATOS ACADÉMICOS  *******************************/
+        /// <summary>
+        /// Numero de Boleta del Uusario Solicitante
+        /// </summary>
+        [Column("usuBoletaAlumno")]
+        [StringLength(10)]
+        [MinLength(10, ErrorMessage = "La Boleta introducida es menor a 10 digitos. Verifique su numeración que tenga al menos 10 dígitos")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public string? UsuBoletaAlumno { get; set; }
+
+        [Column("usuBoletaMaestria")]
+        [StringLength(7)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public string? UsuBoletaMaestria { get; set; }
 
         [Column("usuIdCarrera")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public int? UsuIdCarrera { get; set; }
 
-        /// <summary>
-        /// Numero de Boleta del Uusario Solicitante
-        /// </summary>
-        [Column("usuBoletaAlumno")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        [StringLength(10, ErrorMessage = "La boleta introducida es menor a 10 digitos. Verifique su numeración que tenga 10 dígitos")]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string? UsuBoletaAlumno { get; set; }
-
-        [Column("usuBoletaMaestria")]
-        [StringLength(7)]        
-        public string? UsuBoletaMaestria { get; set; }
-
         [Column("usuSemestre")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         [StringLength(15)]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuSemestre { get; set; }
 
         [Column("usuAñoEgreso")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public int? UsuAñoEgreso { get; set; }
 
+        [Column("usuFileNameComprobanteInscripcion")]
+        [StringLength(200)]
+        public string? UsuFileNameComprobanteInscripcion { get; set; }
+
+        /*******************************  DATOS LABORALES  *******************************/
         /// <summary>
         /// Numero del Empleado del Usuario Solicitante
         /// </summary>
@@ -108,72 +113,78 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuNumeroEmpleado { get; set; }
 
-
         [Column("usuIdAreaDepto")]
-        [StringLength(100)]        
-        public string? UsuIdAreaDepto { get; set; }
-
-        [Column("usuExtension")]
-        [StringLength(20)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string? UsuExtension { get; set; }
+        public int? UsuIdAreaDepto { get; set; }
 
-        [Column("usuIdRol")]
-        public int? UsuIdRol { get; set; }
-
-        [Column("usuCorreoPersonalAnterior")]
-        [StringLength(100)]        
-        public string? UsuCorreoPersonalAnterior { get; set; }
-
-        [Column("usuCorreoPersonalNuevo")]
+        [Column("usuNoExtension")]
+        [StringLength(10)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        [StringLength(100)]       
-        public string? UsuCorreoPersonalNuevo { get; set; }
+        public string? UsuNoExtension { get; set; }
+
+        /*******************************  DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP  *******************************/
+        [Column("usuCorreoPersonalCuentaAnterior")]
+        [StringLength(100)]
+        public string? UsuCorreoPersonalCuentaAnterior { get; set; }
+
+        [Column("usuCorreoPersonalCuentaNueva")]
+        [StringLength(100)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public string UsuCorreoPersonalCuentaNueva { get; set; } = null!;
 
         /// <summary>
         /// Contraseña del Usuario Solicitante
         /// </summary>
         [Column("usuContraseña")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         [StringLength(300)]
-        public string? UsuContraseña { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public string UsuContraseña { get; set; } = null!;
 
         /// <summary>
         /// Contraseña Temporal que se le proporciona al Usuario Solicitante
         /// </summary>
-        [Column("usuRecuperarContraseñas")]
-        public bool? UsuRecuperarContraseñas { get; set; }
+        [Column("usuRecuperarContraseña")]
+        public bool? UsuRecuperarContraseña { get; set; }
 
-        [Column("usuCorreroInstitucional")]
+        /*******************************  DATOS DEL CORREO INSTITUCIONAL  *******************************/
+        [Column("usuCorreoInstitucionalCuenta")]
         [StringLength(100)]
-        public string? UsuCorreroInstitucional { get; set; }
+        public string? UsuCorreoInstitucionalCuenta { get; set; }
 
-        [Column("usuContraseñaInstitucional")]
-        [StringLength(300)]
-        public string? UsuContraseñaInstitucional { get; set; }
-
-        [Column("usuFechaHoraAlta")]
+        [Column("usuCorreoInstitucionalContraseña")]
         [StringLength(100)]
-        public string? UsuFechaHoraAlta { get; set; }
+        public string? UsuCorreoInstitucionalContraseña { get; set; }
+
+        /*******************************  OTROS DATOS  *******************************/
+        [Column("usuFechaHoraAlta", TypeName = "datetime")]
+        public DateTime UsuFechaHoraAlta { get; set; }
 
         /// <summary>
         /// Activo / Inactivo
         /// </summary>
+        [Required]
         [Column("usuStatus")]
         public bool? UsuStatus { get; set; }
-                      
+
+        /*******************************  DATOS FK NAVIGATION  *******************************/
+
+        //[InverseProperty("SolIdUsuarioNavigation")]
+        //public virtual ICollection<SolicitudViewModel> MceTbSolicitudTickets { get; set; } = new List<SolicitudViewModel>();
+
+        [ForeignKey("UsuIdAreaDepto")]
+        [InverseProperty("MceTbUsuarios")]
+        public virtual AreaDeptoViewModel? UsuIdAreaDeptoNavigation { get; set; }
+
         [ForeignKey("UsuIdCarrera")]
         [InverseProperty("MceTbUsuarios")]
         public virtual CarreraViewModel? UsuIdCarreraNavigation { get; set; }
 
         [ForeignKey("UsuIdRol")]
         [InverseProperty("MceTbUsuarios")]
-        public virtual RolViewModel? UsuIdRolNavigation { get; set; }
+        public virtual RolViewModel? UsuIdRolNavigation { get; set; } = null!;
 
         [ForeignKey("UsuIdTipoPersonal")]
         [InverseProperty("MceTbUsuarios")]
-        public virtual TipoPersonalViewModel? UsuIdTipoPersonalNavigation { get; set; }
+        public virtual TipoPersonalViewModel? UsuIdTipoPersonalNavigation { get; set; } = null!;
     }
 }
-
-

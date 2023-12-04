@@ -34,7 +34,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPerso
             return result;
         }
 
-        public async Task<Response<TipoPersonalViewModel>?> GetDataByAsync(int id)
+        public async Task<Response<TipoPersonalViewModel>?> GetDataByIdAsync(int id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<TipoPersonalViewModel>>(url + "filterById/" + id,
                  new JsonSerializerOptions()

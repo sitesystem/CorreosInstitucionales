@@ -1,13 +1,16 @@
-﻿using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class LinksController : ControllerBase
     {
         [HttpGet("filterByStatus/{filterByStatus}")]
@@ -17,18 +20,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = new List<MceCatLink>();
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = new List<MceCatLink>();
 
-                    if (filterByStatus)
-                        list = await db.MceCatLinks.Where(e => e.LinkStatus.Equals(filterByStatus)).ToListAsync();
-                    else
-                        list = await db.MceCatLinks.ToListAsync();
+                if (filterByStatus)
+                    list = await db.MceCatLinks.Where(l => l.LinkStatus.Equals(filterByStatus)).ToListAsync();
+                else
+                    list = await db.MceCatLinks.ToListAsync();
 
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -45,12 +46,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = await db.MceCatLinks.FindAsync(id);
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = await db.MceCatLinks.FindAsync(id);
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -59,6 +58,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oResponse);
         }
+
         [HttpGet("filterByNombre/{nombre}")]
         public async Task<IActionResult> GetDataByNombre(string nombre)
         {
@@ -66,12 +66,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = await db.MceCatLinks.Where(linkName => linkName.LinkNombre == nombre).FirstOrDefaultAsync();
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = await db.MceCatLinks.Where(linkName => linkName.LinkNombre == nombre).FirstOrDefaultAsync();
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -88,20 +86,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    MceCatLink oLink = new()
-                    {
-                        IdLink = model.IdLink,
-                        LinkNombre = model.LinkNombre,
-                        LinkEnlace=model.LinkEnlace,
-                        LinkStatus = true
-                    };
-                    await db.MceCatLinks.AddAsync(oLink);
-                    await db.SaveChangesAsync();
+                using DbCorreosInstUpiicsaContext db = new();
 
-                    oResponse.Success = 1;
-                }
+                MceCatLink oLink = new()
+                {
+                    IdLink = model.IdLink,
+                    LinkNombre = model.LinkNombre,
+                    LinkEnlace = model.LinkEnlace,
+                    LinkStatus = true
+                };
+
+                await db.MceCatLinks.AddAsync(oLink);
+                await db.SaveChangesAsync();
+
+                oResponse.Success = 1;
             }
             catch (Exception ex)
             {
@@ -110,6 +108,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oResponse);
         }
+
         [HttpPut]
         public async Task<IActionResult> EditData(LinkViewModel model)
         {
@@ -118,10 +117,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
+
                 MceCatLink? oLink = await db.MceCatLinks.FindAsync(model.IdLink);
+
                 if (oLink != null)
                 {
-                    //oLink.LinkNombre = model.LinkNombre; Deja comentado para no editar el nombre
+                    // oLink.LinkNombre = model.LinkNombre; Deja comentado para no editar el nombre
                     oLink.LinkEnlace = model.LinkEnlace;
                     oLink.LinkStatus = model.LinkStatus;
 
@@ -147,14 +148,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceCatLink? oLink = db.MceCatLinks.Find(id);
+
+                MceCatLink? oLink = await db.MceCatLinks.FindAsync(id);
                 //db.Remove(oPersona);
+
                 if (oLink != null)
                 {
                     oLink.LinkStatus = isActivate;
                     db.Entry(oLink).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                 }
+
                 oRespuesta.Success = 1;
             }
             catch (Exception ex)
@@ -164,6 +168,5 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oRespuesta);
         }
-
     }
 }

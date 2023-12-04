@@ -1,14 +1,17 @@
-﻿using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class EscuelasController : Controller
     {
         [HttpGet("filterByStatus/{filterByStatus}")]
@@ -18,18 +21,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = new List<MceCatEscuela>();
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = new List<MceCatEscuela>();
 
-                    if (filterByStatus)
-                        list = await db.MceCatEscuelas.Where(e => e.EscStatus.Equals(filterByStatus)).ToListAsync();
-                    else
-                        list = await db.MceCatEscuelas.ToListAsync();
+                if (filterByStatus)
+                    list = await db.MceCatEscuelas.Where(e => e.EscStatus.Equals(filterByStatus)).ToListAsync();
+                else
+                    list = await db.MceCatEscuelas.ToListAsync();
 
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -46,12 +47,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    var list = await db.MceCatEscuelas.FindAsync(id);
-                    oResponse.Success = 1;
-                    oResponse.Data = list;
-                }
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = await db.MceCatEscuelas.FindAsync(id);
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
@@ -68,22 +67,22 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                using (DbCorreosInstUpiicsaContext db = new())
-                {
-                    MceCatEscuela oEscuela = new()
-                    {
-                        IdEscuela = model.IdEscuela,
-                        EscNoEscuela = model.EscNoEscuela,
-                        EscNombreLargo = model.EscNombreLargo,
-                        EscNombreCorto = model.EscNombreCorto,
-                        EscLogo = model.EscLogo,
-                        EscStatus = true
-                    };
-                    await db.MceCatEscuelas.AddAsync(oEscuela);
-                    await db.SaveChangesAsync();
+                using DbCorreosInstUpiicsaContext db = new();
 
-                    oResponse.Success = 1;
-                }
+                MceCatEscuela oEscuela = new()
+                {
+                    IdEscuela = model.IdEscuela,
+                    EscNoEscuela = model.EscNoEscuela,
+                    EscNombreLargo = model.EscNombreLargo,
+                    EscNombreCorto = model.EscNombreCorto,
+                    EscLogo = model.EscLogo,
+                    EscStatus = true
+                };
+
+                await db.MceCatEscuelas.AddAsync(oEscuela);
+                await db.SaveChangesAsync();
+
+                oResponse.Success = 1;
             }
             catch (Exception ex)
             {
@@ -94,14 +93,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditData(EscuelaViewModel model)
+        public async Task<IActionResult> EditData(EscuelaViewModel model)
         {
             Response<object> oRespuesta = new();
 
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceCatEscuela? oEscuela = db.MceCatEscuelas.Find(model.IdEscuela);
+
+                MceCatEscuela? oEscuela = await db.MceCatEscuelas.FindAsync(model.IdEscuela);
+
                 if (oEscuela != null)
                 {
                     oEscuela.EscNoEscuela = model.EscNoEscuela;
@@ -110,8 +111,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     oEscuela.EscLogo = model.EscLogo;
                     oEscuela.EscStatus = model.EscStatus;
 
-                    db.Entry(oEscuela).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    db.SaveChanges();
+                    db.Entry(oEscuela).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                 }
 
                 oRespuesta.Success = 1;
@@ -132,14 +133,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                MceCatEscuela? oEscuela = db.MceCatEscuelas.Find(id);
+
+                MceCatEscuela? oEscuela = await db.MceCatEscuelas.FindAsync(id);
                 //db.Remove(oPersona);
+
                 if (oEscuela != null)
                 {
                     oEscuela.EscStatus = isActivate;
                     db.Entry(oEscuela).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                 }
+
                 oRespuesta.Success = 1;
             }
             catch (Exception ex)

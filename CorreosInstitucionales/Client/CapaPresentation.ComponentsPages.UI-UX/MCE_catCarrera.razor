@@ -6,8 +6,7 @@
 @using Syncfusion.Blazor.Grids;
 
 @inject ICarrera servicioCarrera
-@* 
-<h3>MCE_catCarrera</h3> *@
+
 <PageTitle>Catálogo de Carreras </PageTitle>
 
 <SfBreadcrumb EnableActiveItemNavigation="true" EnableNavigation="false">
@@ -298,7 +297,7 @@ else
                                 }
                                 <SfCheckBox Label="@(CarreraViewModel.CarrStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
                                             @bind-Checked="@CarreraViewModel.CarrStatus"
-                                            @onchange="@(() => EnableDisableByCheckBox(CarreraViewModel.IdCarrera,CarreraViewModel.CarrStatus))" /><!--pisoNivelViewModel.PisoStatus.Value-->
+                                            @onchange="@(() => EnableDisableByCheckBox(CarreraViewModel.IdCarrera, CarreraViewModel.CarrStatus.Value))" /><!--pisoNivelViewModel.PisoStatus.Value-->
                             </Template>
                         </GridColumn>
 

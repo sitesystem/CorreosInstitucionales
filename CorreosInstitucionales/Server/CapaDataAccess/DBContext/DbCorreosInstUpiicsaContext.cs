@@ -25,6 +25,8 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
 
     public virtual DbSet<MceCatEstadosSolicitud> MceCatEstadosSolicituds { get; set; }
 
+    public virtual DbSet<MceCatExtensione> MceCatExtensiones { get; set; }
+
     public virtual DbSet<MceCatLink> MceCatLinks { get; set; }
 
     public virtual DbSet<MceCatPiso> MceCatPisos { get; set; }
@@ -35,7 +37,7 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
 
     public virtual DbSet<MceCatTipoSolicitud> MceCatTipoSolicituds { get; set; }
 
-    public virtual DbSet<MceTbSolicitud> MceTbSolicituds { get; set; }
+    public virtual DbSet<MceTbSolicitudTicket> MceTbSolicitudTickets { get; set; }
 
     public virtual DbSet<MceTbUsuario> MceTbUsuarios { get; set; }
 
@@ -53,13 +55,18 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
             entity.Property(e => e.AreIdPiso).HasDefaultValueSql("((1))");
             entity.Property(e => e.AreStatus).HasDefaultValueSql("((1))");
 
-            entity.HasOne(d => d.AreIdEdificioNavigation).WithMany(p => p.MceCatAreasDeptos).HasConstraintName("FK_MCE_catAreasDeptos_MCE_catEdificios");
+            entity.HasOne(d => d.AreIdEdificioNavigation).WithMany(p => p.MceCatAreasDeptos)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MCE_catAreasDeptos_MCE_catEdificios");
 
-            entity.HasOne(d => d.AreIdPisoNavigation).WithMany(p => p.MceCatAreasDeptos).HasConstraintName("FK_MCE_catAreasDeptos_MCE_catPisos");
+            entity.HasOne(d => d.AreIdPisoNavigation).WithMany(p => p.MceCatAreasDeptos)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MCE_catAreasDeptos_MCE_catPisos");
         });
 
         modelBuilder.Entity<MceCatCarrera>(entity =>
         {
+            entity.Property(e => e.CarrClave).HasDefaultValueSql("('-')");
             entity.Property(e => e.CarrStatus).HasDefaultValueSql("((1))");
         });
 
@@ -70,12 +77,32 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
 
         modelBuilder.Entity<MceCatEscuela>(entity =>
         {
+            entity.Property(e => e.EscNoEscuela).HasDefaultValueSql("('-')");
             entity.Property(e => e.EscStatus).HasDefaultValueSql("((1))");
+        });
+
+        modelBuilder.Entity<MceCatEstadosSolicitud>(entity =>
+        {
+            entity.Property(e => e.EdosolNombreEstado).HasDefaultValueSql("('-')");
+        });
+
+        modelBuilder.Entity<MceCatExtensione>(entity =>
+        {
+            entity.Property(e => e.ExtIdAreaDepto).HasDefaultValueSql("((1))");
+            entity.Property(e => e.ExtNoExtension).HasDefaultValueSql("((0))");
+            entity.Property(e => e.ExtStatus).HasDefaultValueSql("((1))");
+
+            entity.HasOne(d => d.ExtIdAreaDeptoNavigation).WithMany(p => p.MceCatExtensiones).HasConstraintName("FK_MCE_catExtensiones_MCE_catAreasDeptos");
         });
 
         modelBuilder.Entity<MceCatLink>(entity =>
         {
             entity.Property(e => e.LinkStatus).HasDefaultValueSql("((1))");
+        });
+
+        modelBuilder.Entity<MceCatPiso>(entity =>
+        {
+            entity.Property(e => e.PisoStatus).HasDefaultValueSql("((1))");
         });
 
         modelBuilder.Entity<MceCatTipoPersonal>(entity =>
@@ -96,30 +123,59 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
             entity.Property(e => e.TiposolStatus).HasDefaultValueSql("((1))");
         });
 
-        modelBuilder.Entity<MceTbSolicitud>(entity =>
+        modelBuilder.Entity<MceTbSolicitudTicket>(entity =>
         {
-            entity.Property(e => e.IdSolicitud).ValueGeneratedNever();
+            entity.HasKey(e => e.IdSolicitudTicket).HasName("PK_MCE_tbSolicitud");
+
+            entity.Property(e => e.SolFechaHoraCreacion).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.SolIdEstadoSolicitudNavigation).WithMany(p => p.MceTbSolicitudTickets)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MCE_tbSolicitudTicket_MCE_catEstadosSolicitud");
+
+            entity.HasOne(d => d.SolIdTipoSolicitudNavigation).WithMany(p => p.MceTbSolicitudTickets)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MCE_tbSolicitudTicket_MCE_catTipoSolicitud");
+
+            entity.HasOne(d => d.SolIdUsuarioNavigation).WithMany(p => p.MceTbSolicitudTickets)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MCE_tbSolicitudTicket_MCE_tbUsuarios");
         });
 
         modelBuilder.Entity<MceTbUsuario>(entity =>
         {
-            entity.HasKey(e => e.IdUsuarioSolicitante).HasName("PK_ML_tbUsuariosSolicitantes");
+            entity.HasKey(e => e.IdUsuario).HasName("PK_ML_tbUsuariosSolicitantes");
 
-            entity.Property(e => e.IdUsuarioSolicitante).HasComment("Descripcion del Usuario Solicitante");
+            entity.Property(e => e.IdUsuario).HasComment("ID Único del Usuario Solicitante o Administrador");
             entity.Property(e => e.UsuBoletaAlumno).HasComment("Numero de Boleta del Uusario Solicitante");
             entity.Property(e => e.UsuContraseña).HasComment("Contraseña del Usuario Solicitante");
             entity.Property(e => e.UsuFechaHoraAlta).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.UsuIdRol).HasDefaultValueSql("((2))");
             entity.Property(e => e.UsuIdTipoPersonal).HasComment("Tipo de Personal del Usuario Solicitante");
             entity.Property(e => e.UsuNombre).HasComment("Nombre del Usuario Solicitante");
             entity.Property(e => e.UsuNumeroEmpleado).HasComment("Numero del Empleado del Usuario Solicitante");
             entity.Property(e => e.UsuPrimerApellido)
                 .HasDefaultValueSql("('-')")
                 .HasComment("Primer apellido del Usuario Solicitante");
-            entity.Property(e => e.UsuRecuperarContraseñas).HasComment("Contraseña Temporal que se le proporciona al Usuario Solicitante");
+            entity.Property(e => e.UsuRecuperarContraseña)
+                .HasDefaultValueSql("((0))")
+                .HasComment("Contraseña Temporal que se le proporciona al Usuario Solicitante");
             entity.Property(e => e.UsuSegundoApellido).HasComment("Segundo Apellido del Usuario Solicitante");
             entity.Property(e => e.UsuStatus)
                 .HasDefaultValueSql("((1))")
                 .HasComment("Activo / Inactivo");
+
+            entity.HasOne(d => d.UsuIdAreaDeptoNavigation).WithMany(p => p.MceTbUsuarios).HasConstraintName("FK_MCE_tbUsuarios_MCE_catAreasDeptos");
+
+            entity.HasOne(d => d.UsuIdCarreraNavigation).WithMany(p => p.MceTbUsuarios).HasConstraintName("FK_MCE_tbUsuarios_MCE_catCarreras");
+
+            entity.HasOne(d => d.UsuIdRolNavigation).WithMany(p => p.MceTbUsuarios)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MCE_tbUsuarios_MCE_catRoles");
+
+            entity.HasOne(d => d.UsuIdTipoPersonalNavigation).WithMany(p => p.MceTbUsuarios)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MCE_tbUsuarios_MCE_catTipoPersonal");
         });
 
         OnModelCreatingPartial(modelBuilder);
