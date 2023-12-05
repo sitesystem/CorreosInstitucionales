@@ -1,4 +1,4 @@
-﻿@page "/RegistroAdministrativo"
+﻿@page "/RegistroHonorario"
 
 @attribute [Authorize]
 
@@ -163,7 +163,12 @@
     }        
 </style>
 
-<h3>Registro Empleado</h3>
+<h3>
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-briefcase" viewBox="0 0 18 18" style="margin-left: 20px">
+        <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5m1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0M1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5"/>
+    </svg>
+    Honorario
+</h3>
 
 <EditForm Model="oUsuario" OnValidSubmit="RegistrarEmpleado">
 
@@ -342,7 +347,7 @@
             // DATOS ID DEL USUARIO
             IdUsuario = 0,
             UsuIdRol = 2,                           // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-            UsuIdTipoPersonal = 4,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
+            UsuIdTipoPersonal = 6,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
             // DATOS PERSONALES
             UsuNombre = "",                         // Nombre del Usuario Solicitante o Administrador
             UsuPrimerApellido = "",                 // Primer Apellido del Usuario Solicitante o Administrador
@@ -427,52 +432,22 @@
 
         if (ValidReCAPTCHA)
         {
-            //var response = await reCAPTCHAComponent.GetResponseAsync();
+            var response = await reCAPTCHAComponent.GetResponseAsync();
 
             try
             {
-                //ServerVerificatiing = true;
-                //StateHasChanged();
+                ServerVerificatiing = true;
+                StateHasChanged();
                 // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
                 // Console.WriteLine("alta exitosa");
-                // oUsuario.UsuIdRol = 2;
-                // oUsuario.UsuIdTipoPersonal = 2;
-                // oUsuario.UsuIdCarrera = null;
-                // oUsuario.UsuAñoEgreso = null;
-                // oUsuario.UsuBoletaAlumno = null;
-                // oUsuario.UsuSemestre = null;
-                Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
-                Console.WriteLine("UsuIdTipoPersonal: " + oUsuario.UsuIdTipoPersonal);
-                Console.WriteLine("UsuNombre: " + oUsuario.UsuNombre);
-                Console.WriteLine("UsuPrimerApellido: " + oUsuario.UsuPrimerApellido);
-                Console.WriteLine("UsuSegundoApellido: " + oUsuario.UsuSegundoApellido);
-                Console.WriteLine("UsuCurp: " + oUsuario.UsuCurp);
-                Console.WriteLine("UsuFileNameCurp: " + oUsuario.UsuFileNameCurp);
-                Console.WriteLine("UsuNoCelularAnterior: " + oUsuario.UsuNoCelularAnterior);
-                Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
-                Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
-                Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
-                Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
-                Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
-                Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
-                Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
-                Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
-                Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
-                Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
-                Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
-                Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
-                Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
-                Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
-                Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
-                Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
-                Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
-                Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
+                oUsuario.UsuIdRol = 2;
+                oUsuario.UsuIdTipoPersonal = 2;
+                oUsuario.UsuIdCarrera = null;
+                oUsuario.UsuAñoEgreso = null;
+                oUsuario.UsuBoletaAlumno = null;
+                oUsuario.UsuSemestre = null;
 
-                var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
-                oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
-
-
-               // await servicioUsuario.AddDataAsync(oUsuario);
+                await servicioUsuario.AddDataAsync(oUsuario);
                 /* Navigation.NavigateTo("/valid") */;
                 //SendMail();
             }
