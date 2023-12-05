@@ -439,7 +439,7 @@ else
         // DATOS ID DEL USUARIO
         IdUsuario = 0,
         UsuIdRol = 2,                           // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-        UsuIdTipoPersonal = 1,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
+        UsuIdTipoPersonal = 2,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
         // DATOS PERSONALES
         UsuNombre = "",                         // Nombre del Usuario Solicitante o Administrador
         UsuPrimerApellido = "",                 // Primer Apellido del Usuario Solicitante o Administrador
@@ -453,7 +453,7 @@ else
         UsuBoletaMaestria = "0000000",          // Número de Boleta del Usuario (Alumno de Maestria)
         // UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
         // UsuSemestre = "1",                      // Semestre que cursa el Alumno Inscrito o de Maestria
-        UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
+        //UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
         UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
         // DATOS LABORALES
         UsuNumeroEmpleado = "0",                // Número del Empleado del Usuario (Administrador o Docente)
@@ -639,14 +639,14 @@ else
     // {
     //     try
     //     {
-    //         string sender = "osacroti@gmail..com";
-    //         string clave = "jtxpdmqrnwgiwjxk";
-    //         string receiver = "oborjap16@gmail.com";
+    //         string sender = "@gmail..com";
+    //         string clave = "";
+    //         string receiver = "@gmail.com";
     //         string server = "smtp.gmail.com";
     //         int puerto = 465;
     //         using (MailMessage mail = new())
     //         {
-    //             mail.From = new MailAddress(sender); //   mail.From = new MailAddress("aronso.borj016@gmail.com");
+    //             mail.From = new MailAddress(sender); //   mail.From = new MailAddress("@gmail.com");
     //             mail.To.Add(new MailAddress(receiver));
     //             mail.Subject="Sending Mail Testing (Blazor)";
     //             mail.IsBodyHtml = true;
@@ -658,7 +658,7 @@ else
     //                 smtp.Host = server;
     //                 smtp.Port = puerto;
     //                 smtp.UseDefaultCredentials = false;
-    //                 smtp.Credentials = new System.Net.NetworkCredential(sender,clave); //smtp.Credentials = new System.Net.NetworkCredential("eduardogonzalez.b22@gmail.com", "gmaillalo_05"); //smtp.Credentials = new System.Net.NetworkCredential("aronso.borj016@gmail.com", "Gamer5stalker");
+    //                 smtp.Credentials = new System.Net.NetworkCredential(sender,clave); //smtp.Credentials = new System.Net.NetworkCredential("eduardogonzalez.b22@gmail.com", "gmaillalo_05"); 
     //                 smtp.EnableSsl=true;
     //                 smtp.Send(mail);
     //                 Message = "Mail Sent";

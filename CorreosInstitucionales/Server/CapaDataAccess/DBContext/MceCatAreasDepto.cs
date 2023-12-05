@@ -46,7 +46,7 @@ public partial class MceCatAreasDepto
 
     [JsonIgnore]
     [InverseProperty("ExtIdAreaDeptoNavigation")]
-    public virtual ICollection<MceCatExtensione> MceCatExtensiones { get; set; } = new List<MceCatExtensione>();
+    public virtual ICollection<MceCatExtension> MceCatExtensiones { get; set; } = new List<MceCatExtension>();
 
     [JsonIgnore]
     [InverseProperty("UsuIdAreaDeptoNavigation")]

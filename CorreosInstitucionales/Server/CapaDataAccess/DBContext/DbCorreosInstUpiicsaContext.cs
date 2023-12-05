@@ -25,7 +25,7 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
 
     public virtual DbSet<MceCatEstadosSolicitud> MceCatEstadosSolicituds { get; set; }
 
-    public virtual DbSet<MceCatExtensione> MceCatExtensiones { get; set; }
+    public virtual DbSet<MceCatExtension> MceCatExtensiones { get; set; }
 
     public virtual DbSet<MceCatLink> MceCatLinks { get; set; }
 
@@ -86,7 +86,7 @@ public partial class DbCorreosInstUpiicsaContext : DbContext
             entity.Property(e => e.EdosolNombreEstado).HasDefaultValueSql("('-')");
         });
 
-        modelBuilder.Entity<MceCatExtensione>(entity =>
+        modelBuilder.Entity<MceCatExtension>(entity =>
         {
             entity.Property(e => e.ExtIdAreaDepto).HasDefaultValueSql("((1))");
             entity.Property(e => e.ExtNoExtension).HasDefaultValueSql("((0))");

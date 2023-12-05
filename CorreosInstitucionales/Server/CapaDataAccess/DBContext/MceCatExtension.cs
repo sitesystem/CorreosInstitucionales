@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
 [Table("MCE_catExtensiones")]
-public partial class MceCatExtensione
+public partial class MceCatExtension
 {
     [Key]
     public int IdExtension { get; set; }
