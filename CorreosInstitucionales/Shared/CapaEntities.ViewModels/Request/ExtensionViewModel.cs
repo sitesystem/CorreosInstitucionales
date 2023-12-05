@@ -22,7 +22,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Required]
         [Column("extStatus")]
-        public bool? ExtStatus { get; set; }
+        public bool ExtStatus { get; set; }
 
         [ForeignKey("ExtIdAreaDepto")]
         [InverseProperty("MceCatExtensiones")]
