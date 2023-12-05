@@ -16,6 +16,7 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonalService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitudService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptosService;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -40,6 +41,7 @@ builder.Services.AddScoped<ILink, RLink>();
 builder.Services.AddScoped<IPiso, RPiso>();
 builder.Services.AddScoped<ITipoPersonal, RTipoPersonal>();
 builder.Services.AddScoped<ITipoSolicitud, RTipoSolicitud>();
+builder.Services.AddScoped<IAreaDepto, RAreaDepto>();
 
 // Inyección de Dependencias - Módulo de Registro
 builder.Services.AddScoped<IUsuario, RUsuario>();
