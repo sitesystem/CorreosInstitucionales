@@ -61,52 +61,7 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<div class="col-lg-12 control-section">   
-    <div class="default-tab-control-section">
-        <div class="row">
-            <div class="col-md-12">
-            <h5>Registro</h5>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <SfTab CssClass="default-tab e-fill" >
-                    <TabAnimationSettings>
-                        <TabAnimationPrevious></TabAnimationPrevious>
-                        <TabAnimationNext></TabAnimationNext>
-                    </TabAnimationSettings>
-                    <TabItems>
-                        <TabItem>
-                            <ChildContent>
-                                <TabHeader Text="Estudiante inscrito"></TabHeader>
-                            </ChildContent>
-                            <ContentTemplate>
-                                <Registro/>
-                            </ContentTemplate>
-                        </TabItem>
-                        <TabItem>
-                            <ChildContent>
-                                <TabHeader Text="Egresado"></TabHeader>
-                            </ChildContent>
-                            <ContentTemplate>
-                                 <RegistroEgresado/>
-                            </ContentTemplate>
-                        </TabItem>
-                        <TabItem>
-                            <ChildContent>
-                                <TabHeader Text="Maestría"></TabHeader>
-                            </ChildContent>
-                            <ContentTemplate>
-                            <RegistroMaestria/>
-                            </ContentTemplate>
-                        </TabItem>
-                    </TabItems>
-                </SfTab>
-            </div>
-        </div>
-        <br />
-    </div>
-</div>
+
 
 @code
 {

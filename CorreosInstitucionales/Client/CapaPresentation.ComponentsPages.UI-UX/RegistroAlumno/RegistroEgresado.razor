@@ -1,6 +1,6 @@
 ﻿@page "/RegistroEgresado"
 
-@attribute [Authorize]
+@attribute [AllowAnonymous]
 
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
@@ -304,27 +304,11 @@
                         <ValidationMessage For="@(() => oUsuario.UsuIdCarrera)" />
                     </div>
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfDropDownList ID="Data___UsuSemestre"
-                                        TValue="string"
-                                        TItem="Semestres"
-                                        Placeholder="Semestre"
-                                        FloatLabelType="FloatLabelType.Auto"
-                                        AllowFiltering="true"
-                                        DataSource="@Semestre"
-                                        @bind-Value="@oUsuario.UsuSemestre"
-                                        CssClass="mi-sf-textbox">
-                            <DropDownListFieldSettings Value="Key" Text="Value" />
-                        </SfDropDownList>
-                        <ValidationMessage For="@(() => oUsuario.UsuSemestre)" />
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">                    
                         <SfNumericTextBox TValue="int?" Min=1936 Max="@year" Step=1 Placeholder="Año de egreso" FloatLabelType="@FloatLabelType.Auto" Format="####" @bind-Value="@oUsuario.UsuAñoEgreso" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" CssClass="mi-sf-textbox"></SfNumericTextBox>
                         <ValidationMessage For="@(() => oUsuario.UsuAñoEgreso)" />
                     </div>
                 </div>
+
                 <div class="row">        
 
                         <div class="control-wrapper-upload">
@@ -381,7 +365,7 @@
                         </SfTextBox>
                         <br />
                         <SfMessage Severity="MessageSeverity.Error"
-                                   Visible="@bandcontra"
+                                   Visible="@BanderaCompararContraseña"
                                    ShowIcon="true"
                                    ShowCloseIcon="false">
                                    Ingresa las contraseñas y verifica que coincidan.
@@ -452,7 +436,7 @@ else
         // UsuBoletaAlumno = "0000000000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
         UsuBoletaMaestria = "0000000",          // Número de Boleta del Usuario (Alumno de Maestria)
         // UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
-        // UsuSemestre = "1",                      // Semestre que cursa el Alumno Inscrito o de Maestria
+        UsuSemestre = "1",                      // Semestre que cursa el Alumno Inscrito o de Maestria
         //UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
         UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
         // DATOS LABORALES
@@ -614,7 +598,7 @@ else
     private bool ServerVerificatiing = false;
 
     // private bool DisablePostButton => (!ValidReCAPTCHA || ServerVerificatiing) && bandcontra;
-    private bool DisablePostButton => !ValidReCAPTCHA || bandcontra;
+    private bool DisablePostButton => !ValidReCAPTCHA || BanderaCompararContraseña;
 
     private void OnSuccess() => ValidReCAPTCHA = true;
 
@@ -622,14 +606,14 @@ else
 
     // COMPARAR CADENAS DE SFTEXTBOX
     private string contra2 = string.Empty;
-    public bool bandcontra = true;
+    public bool BanderaCompararContraseña = true;
 
     private void CompararCadenas()
     {
         if (string.Equals(oUsuario.UsuContraseña, contra2, StringComparison.Ordinal))  //Console.WriteLine("Las contraseñas son iguales.");
-            bandcontra = false;
+            BanderaCompararContraseña = false;
         else    //Console.WriteLine("Las contraseñas son diferentes.");
-            bandcontra = true;
+            BanderaCompararContraseña = true;
     }
 
     //correo

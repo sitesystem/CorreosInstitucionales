@@ -78,13 +78,15 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuBoletaAlumno")]
         [StringLength(10, ErrorMessage = "La Boleta introducida es mayor a 10 digitos. Verifique su numeración que tenga al menos 10 dígitos")]
-        [MinLength(10, ErrorMessage = "La Boleta introducida es menor a 10 digitos. Verifique su numeración que tenga al menos 10 dígitos")]
+        [MinLength(10, ErrorMessage = "La boleta introducida es menor a 10 digitos. Verifique su numeración que tenga al menos 10 dígitos")]
         [RegularExpression("^\\d{4}60\\d{4}$", ErrorMessage = "Boleta invalida.")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuBoletaAlumno { get; set; }
 
         [Column("usuBoletaMaestria")]
         [StringLength(7, ErrorMessage = "Boleta mayor a 7 dígitios. Verifique su boleta.")]
+        [MinLength(7, ErrorMessage = "La boleta es menor a 7 digitos. Verifique su boleta")]
+        [RegularExpression("^B\\d{6}$", ErrorMessage = "Boleta invalida.")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuBoletaMaestria { get; set; }
 

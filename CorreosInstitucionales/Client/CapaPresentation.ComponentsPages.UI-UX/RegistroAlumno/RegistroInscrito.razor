@@ -1,6 +1,6 @@
 ﻿@page "/RegistroInscrito"
 
-@attribute [Authorize]
+@attribute [AllowAnonymous]
 
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
@@ -374,7 +374,7 @@
                         </SfTextBox>
                         <br />
                         <SfMessage Severity="MessageSeverity.Error"
-                                   Visible="@bandcontra"
+                                   Visible="@BanderaCompararContraseña"
                                    ShowIcon="true"
                                    ShowCloseIcon="false">
                                    Ingresa las contraseñas y verifica que coincidan.
@@ -604,7 +604,7 @@ else
     private bool ServerVerificatiing = false;
 
     // private bool DisablePostButton => (!ValidReCAPTCHA || ServerVerificatiing) && bandcontra;
-    private bool DisablePostButton => !ValidReCAPTCHA || bandcontra;
+    private bool DisablePostButton => !ValidReCAPTCHA || BanderaCompararContraseña;
 
     private void OnSuccess() => ValidReCAPTCHA = true;
 
@@ -612,14 +612,14 @@ else
 
     // COMPARAR CADENAS DE SFTEXTBOX
     private string contra2 = string.Empty;
-    public bool bandcontra = true;
+    public bool BanderaCompararContraseña = true;
 
     private void CompararCadenas()
     {
         if (string.Equals(oUsuario.UsuContraseña, contra2, StringComparison.Ordinal))  //Console.WriteLine("Las contraseñas son iguales.");
-            bandcontra = false;
+            BanderaCompararContraseña = false;
         else    //Console.WriteLine("Las contraseñas son diferentes.");
-            bandcontra = true;
+            BanderaCompararContraseña = true;
     }
 
     //correo

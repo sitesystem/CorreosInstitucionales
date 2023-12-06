@@ -19,9 +19,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 var list = new List<MceCatExtension>();
 
                 if (filterByStatus)
-                    list = await db.MceCatExtensiones.Where(e => e.ExtStatus.Equals(filterByStatus)).ToListAsync();
+                    list = await db.MceCatExtensiones.Where(e => e.ExtStatus.Equals(filterByStatus))
+                                                     .Include(e => e.ExtIdAreaDeptoNavigation)
+                                                     .ToListAsync();
                 else
-                    list = await db.MceCatExtensiones.ToListAsync();
+                    list = await db.MceCatExtensiones.Include(e => e.ExtIdAreaDeptoNavigation).ToListAsync();
 
                 oResponse.Success = 1;
                 oResponse.Data = list;

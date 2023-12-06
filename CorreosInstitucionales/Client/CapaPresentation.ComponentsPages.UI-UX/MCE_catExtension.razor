@@ -1,12 +1,14 @@
 ﻿@page "/Extensiones"
-@attribute [Authorize]
-
-@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
-@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptosService
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catExtensionService
-@using Syncfusion.Blazor.Grids
+
 
 @inject IExtension servicioExtension
+@inject IAreaDepto servicioAreaDepto
+
+
 <PageTitle>Catálogo de Extensiones </PageTitle>
 
 <SfBreadcrumb EnableActiveItemNavigation="true" EnableNavigation="false">
@@ -20,7 +22,9 @@
         <path d="M.5 0a.5.5 0 0 1 .5.5v15a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 .5 0zM2 1.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z" />
     </svg> Catálogo de Extensiones
 </h3>
+
 <style type="text/css"></style>
+
 
 @if (oResponse != null && oResponse.Data != null)
 {
@@ -134,8 +138,10 @@
                             </HeaderTemplate>
                         </GridColumn>
 
+
+
                         <GridColumn Field=@nameof(ExtensionViewModel.ExtNoExtension)
-                                    HeaderText="Número de extensión"
+                                    HeaderText="Numero de extension"
                                     HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
                                     TextAlign="Syncfusion.Blazor.Grids.TextAlign.Left"
                                     EditType="EditType.DefaultEdit"
@@ -144,17 +150,19 @@
                                     Width="150">
                             <HeaderTemplate>
                                 <div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-steps" viewBox="0 0 16 16">
-                                        <path d="M.5 0a.5.5 0 0 1 .5.5v15a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 .5 0zM2 1.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z" />
-                                    </svg> Número de extensión
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 16 16">
+                                        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z" />
+                                        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z" />
+                                    </svg> Numero Extension
                                 </div>
                             </HeaderTemplate>
                             <Template>
                                 @{
                                     var extension = (context as ExtensionViewModel).ExtNoExtension;
                                 }
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-bar-chart-steps" viewBox="0 0 16 16">
-                                    <path d="M.5 0a.5.5 0 0 1 .5.5v15a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 .5 0zM2 1.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mortarboard" viewBox="0 0 16 16">
+                                    <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5ZM8 8.46 1.758 5.965 8 3.052l6.242 2.913z" />
+                                    <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466zm-.068 1.873.22-.748 3.496 1.311a.5.5 0 0 0 .352 0l3.496-1.311.22.748L8 12.46l-3.892-1.556Z" />
                                 </svg>  @extension
                             </Template>
                             <EditTemplate>
@@ -162,10 +170,10 @@
                                     var extension = (context as ExtensionViewModel);
                                     //onkeypress = "return /^[a-zA-Z.áéíóúÁÉÍÓÚ ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
 
-                                    <SfAutoComplete ID="Data___NumeroExtension"
+                                    <SfAutoComplete ID="Data___NoExtension"
                                                     TValue="string"
                                                     TItem="ExtensionViewModel"
-                                                    Placeholder="Número de Extensión"
+                                                    Placeholder="Numero Extension"
                                                     FloatLabelType="FloatLabelType.Always"
                                                     ShowClearButton="true"
                                                     ShowPopupButton="true"
@@ -192,6 +200,99 @@
                             </EditTemplate>
                         </GridColumn>
 
+                       @*  <GridForeignColumn Field=@nameof(ExtensionViewModel.ExtIdAreaDepto)
+                                           TValue="AreaDeptoViewModel"
+                                           HeaderText="Area del departamento"
+                                           HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                           ForeignDataSource="@oAreaDepto.Data"
+                                           ForeignKeyField="IdAreaDepto"
+                                           ForeignKeyValue="AreNombre"
+                                           TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
+                                           ValidationRules="@(new Syncfusion.Blazor.Grids.ValidationRules { Required = true } )"
+                                           EditType="EditType.DropDownEdit"
+                                           AllowFiltering="true"
+                                           Width="100px">
+                            <HeaderTemplate>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-fill" viewBox="0 0 16 16">
+                                        <path d="M3 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3v-3.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V16h3a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H3Zm1 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Z" />
+                                    </svg> Area Departamento
+                                </div>
+                            </HeaderTemplate>
+                            <Template>
+                                @{
+                                    var foreignKey = (context as AreaDeptoViewModel)?.AreIdEdificioNavigation;
+                                    var areNombre = "";
+                                    var areTitular = "";
+
+                                    if (foreignKey != null)
+                                    {
+                                        areNombre = foreignKey.AreNombre;
+                                        areTitular = " (" + foreignKey.AreTitular + ")";
+                                    }
+                                }
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
+                                    <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z" />
+                                    <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V1Zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3V1Z" />
+                                </svg> @areNombre<br />@areTitular
+                            </Template>
+
+                            <EditTemplate>
+                                @{
+                                    <SfDropDownList ID="Data___AreExtensionNavigation"
+                                                    TValue="int"
+                                                    TItem="AreaDeptoViewModel"
+                                                    Placeholder="Edificio"
+                                                    FloatLabelType="FloatLabelType.Always"
+                                                    ShowClearButton="true"
+                                                    EnableVirtualization="false"
+                                                    IgnoreCase="true"
+                                                    @bind-Value="@((context as AreaDeptoViewModel).AreExtension)"
+                                                    DataSource="@oAreaDepto.Data"
+                                                    Enabled="true"
+                                                    Readonly="false"
+                                                    CssClass="e-multi-column"
+                                                    AllowFiltering="true"
+                                                    FilterBarPlaceholder="Selecciona una opción (Buscar por Nombre Oficial del Edificio)"
+                                                    IgnoreAccent="true"
+                                                    FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                    SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.None"
+                                                    PopupHeight="300" PopupWidth="600">
+                                        <DropDownListFieldSettings Value="IdEdificio" Text="EdiNombreOficial" />
+                                        <DropDownListTemplates TItem="AreaDeptoViewModel">
+                                            <HeaderTemplate>
+                                                <table>
+                                                    <thead class="m-0">
+                                                        <tr>
+                                                            <th>Nombre del area</th>
+                                                            <th>Nombre del titular</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </HeaderTemplate>
+                                            <ItemTemplate Context="itemContext">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered align-middle text-wrap text-center m-0" style="line-height: 1.5;">
+                                                        <tbody>
+                                                            <tr class="align-middle m-0">
+                                                                <td class="m-0">
+                                                                    @((itemContext as AreaDeptoViewModel).AreNombre)
+                                                                </td>
+                                                                <td class="m-0">
+                                                                    @((itemContext as AreaDeptoViewModel).AreTitular)
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </ItemTemplate>
+                                        </DropDownListTemplates>
+                                    </SfDropDownList>
+                                    <ValidationMessage For="() => ((context as AreaDeptoViewModel).AreExtension)" />
+                                }
+                            </EditTemplate>
+                        </GridForeignColumn> *@
+
                         <GridColumn Field=@nameof(ExtensionViewModel.ExtStatus)
                                     HeaderText="Estatus"
                                     HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
@@ -211,11 +312,11 @@
                             </HeaderTemplate>
                             <Template>
                                 @{
-                                    var extensionNivelViewModel = context as ExtensionViewModel;
+                                    var ExtensionViewModel = context as ExtensionViewModel;
                                 }
-                                <SfCheckBox Label="@(extensionNivelViewModel.ExtStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
-                                            @bind-Checked="@extensionNivelViewModel.ExtStatus"
-                                            @onchange="@(() => EnableDisableByCheckBox(extensionNivelViewModel.IdExtension, extensionNivelViewModel.ExtStatus))" /><!--pisoNivelViewModel.PisoStatus.Value-->
+                                <SfCheckBox Label="@(ExtensionViewModel.ExtStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
+                                            @bind-Checked="@ExtensionViewModel.ExtStatus"
+                                            @onchange="@(() => EnableDisableByCheckBox(ExtensionViewModel.IdExtension, ExtensionViewModel.ExtStatus))" /><!--pisoNivelViewModel.PisoStatus.Value-->
                             </Template>
                         </GridColumn>
 
@@ -285,16 +386,23 @@
         </div>
     </div>
 
-    <SfToast @ref="@ToastObj" />  
+    <SfToast @ref="@ToastObj" />
 }
 else
 {
     <SfSpinner Type="SpinnerType.Tailwind" Size="50" Label="Cargando..." Visible="true" CssClass="e-spin-overlay" />
 }
 
-@code {
 
+@code {
+    // public Response<List<ExtensionViewModel>>? oResponse = new();
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     oResponse = await servicioExtension.GetAllDataAsync(false);
+    // }
     public Response<List<ExtensionViewModel>>? oResponse = new();
+    public Response<List<AreaDeptoViewModel>>? oAreaDepto = new();
     SfGrid<ExtensionViewModel> Grid = new();
     Response<object>? oRespuesta = new();
     SfToast ToastObj = new();
@@ -311,13 +419,16 @@ else
     public IEditorSettings VerifiedAddParams = new BooleanEditCellParams { Params = new CheckBoxModel<bool>() { Label = "Estatus (Habilitado/Deshabilitado)", Disabled = true, LabelPosition = Syncfusion.Blazor.Buttons.LabelPosition.After } };
     public IEditorSettings VerifiedEditParams = new BooleanEditCellParams { Params = new CheckBoxModel<bool>() { Label = "Estatus (Habilitado/Deshabilitado)", Disabled = false, LabelPosition = Syncfusion.Blazor.Buttons.LabelPosition.After } };
 
-    protected override async Task OnInitializedAsync() => oResponse = await servicioExtension.GetAllDataAsync(false);
+    protected override async Task OnInitializedAsync() {
+        oResponse = await servicioExtension.GetAllDataAsync(false);
+        oAreaDepto = await servicioAreaDepto.GetAllDataAsync(false);
+    }
 
     public async Task ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
     {
         //if (args.Item.Id == "Grid_add")
         //{
-        //    var response = await servicioExtension.EnableDisableDataById(MultiSelect.Last().IdExtension, false);
+        //    var response = await servicioExtension.EnableDisableDataById(MultiSelect.Last().IdPisoNivel, false);
         //    oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
         //}
         //else if (args.Item.Id == "Grid_edit")
@@ -375,7 +486,7 @@ else
     public void ExcelQueryCellInfoHandler(ExcelQueryCellInfoEventArgs<ExtensionViewModel> args)
     {
         if (args.Column.Field == "ExtStatus")
-            args.Cell.Value = args.Data.ExtStatus == true ? "Habilitado" : "Deshabilitado"; // Operación Ternario para Condicionales
+            args.Cell.Value = args.Data.ExtStatus == true ? "Habilitado" : "Deshabilitado";
     }
 
     public void PdfQueryCellInfoHandler(PdfQueryCellInfoEventArgs<ExtensionViewModel> args)
@@ -596,7 +707,7 @@ else
                 {
                     var response = await servicioExtension.EnableDisableDataById(item.IdExtension, isActivate);
                     oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
-                    reg += "<b>" + item.IdExtension + "</b> " + item.ExtNoExtension + "<br>";
+                    reg += "<b>" + item.IdExtension + "</b> " + item.ExtIdAreaDepto + "<br>";
                 }
 
             if (MultiSelect != null && isActivate)
@@ -679,84 +790,7 @@ else
     {
         //if (args.CommandColumn.ButtonOption.Content == "Detalles")
         //    args.RowData;
-        //Console.WriteLine(args.RowData.IdExtension);
+        //Console.WriteLine(args.RowData.IdPisoNivel);
     }
 
-    // public class Columns
-    // {
-    //     public string? Id { get; set; }
-    //     public string? Name { get; set; }
-    // }
-    // private List<Columns> columns = new List<Columns>()
-    // {
-    //     new Columns(){ Id = "ID", Name = "ID" },
-    //     new Columns(){ Id = "Nombre Oficial", Name = "Nombre Oficial" },
-    //     new Columns(){ Id = "Nombre Alias", Name = "Nombre Alias" },
-    //     new Columns(){ Id = "Estatus", Name = "Estatus" }
-    // };
-
-    // public class CIndex
-    // {
-    //     public string? Id { get; set; }
-    //     public string? Index { get; set; }
-    // }
-    // private List<CIndex> indexes = new()
-    // {
-    //     new CIndex(){ Id = "1", Index= "1" },
-    //     new CIndex(){ Id = "2", Index= "2" },
-    //     new CIndex(){ Id = "3", Index= "3" },
-    //     new CIndex(){ Id = "4", Index= "4" }
-    // };
-
-    //private string eventName = string.Empty;
-
-    //void OnTextFocus()
-    //{
-    //    eventName = "Focus";
-    //}
-
-    //void OnTextFocusOut()
-    //{
-    //    eventName = "Focusout";
-    //}
-
-    //private RenderFragment RenderChipItem(string text)
-    //{
-    //    RenderFragment chipItem = b =>
-    //    {
-    //        b.OpenComponent<ChipItem>(0);
-    //        b.AddAttribute(1, "Text", text);
-    //        b.CloseComponent();
-    //    };
-    //    return chipItem;
-    //}
-
-    //public void OnChipHover(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
-    //{
-    //    // Do something here on chips hover.
-    //}
-
-    //public string Header { get; set; }
-    //public string ButtonText { get; set; }
-    //public string GetHeader(ExtensionNivelViewModel Value)
-    //{
-    //    if (Value.EdiNombreAlias == null)
-    //    {
-    //        ButtonText = "Insert";
-    //        return "Insert New Order";
-    //    }
-    //    else
-    //    {
-    //        ButtonText = "Save Changes";
-    //        return "Edit Record Details of " + Value.EdiNombreAlias.ToString();
-    //    }
-    //}
-    //public async Task Cancel()
-    //{
-    //    await Grid.CloseEditAsync();     //Cancel editing action
-    //}
-    //public async Task Save()
-    //{
-    //    await Grid.EndEditAsync();       //Save the edited/added data to Grid
-    //}
 }
