@@ -28,188 +28,197 @@
     </NotAuthorized>
 </AuthorizeView>
 
-<style type="text/css">
-</style>
+<style type="text/css"></style>
 
-<div class="container">
-    <div class="row mt-5">
 
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header pb-0">
-                    <div class="row">
-                        <div class="col-2 text-start">
-                            <div class="e-avatar e-avatar-small e-avatar-circle image">
-                                <img src="/ipn.png" alt="profile_pic">
+                            
+
+    <!-- creacion login-->
+    <div class="container">
+        <div class="row mt-5">
+
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="row">
+                            <div class="col-2 text-start">
+                                <div class="e-avatar e-avatar-small e-avatar-circle image">
+                                    <img src="/ipn.png" alt="profile_pic">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-8 text-center pb-0">
-                            <div style="font-variant:small-caps;"> Sistema Integral de TI</div>
-                        </div>
-                        <div class="col-2 text-end">
-                            <div class="e-avatar e-avatar-small e-avatar-circle image">
-                                <img src="/ipn.png" alt="profile_pic">
+                            <div class="col-8 text-center pb-0">
+                                <div style="font-variant:small-caps;"> Sistema Integral de TI</div>
+                            </div>
+                            <div class="col-2 text-end">
+                                <div class="e-avatar e-avatar-small e-avatar-circle image">
+                                    <img src="/ipn.png" alt="profile_pic">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <SfTab CssClass="e-fill" HeaderPlacement="HeaderPosition.Top">
-                        <TabAnimationSettings>
-                            <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
-                            <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
-                        </TabAnimationSettings>
-                        <TabItems>
-                            <TabItem>
-                                <ChildContent>
-                                    <TabHeader Text="Iniciar Sesión" IconCss="e-icons e-user" IconPosition="top"></TabHeader>
-                                </ChildContent>
-                                <ContentTemplate>
-                                    <div class="col-md-8 offset-md-2 p-5">
-                                        <EditForm Model="@login" OnValidSubmit="@IniciarSesion" OnInvalidSubmit="@OnInvalidSubmit">
+                    <div class="card-body">
+                        <SfTab CssClass="e-fill" HeaderPlacement="HeaderPosition.Top">
+                            <TabAnimationSettings>
+                                <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
+                                <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
+                            </TabAnimationSettings>
+                            <TabItems>
+                                <TabItem>
+                                    <ChildContent>
+                                        <TabHeader Text="Iniciar Sesión" IconCss="e-icons e-user" IconPosition="top"></TabHeader>
+                                    </ChildContent>
+                                    <ContentTemplate>
+                                        <div class="col-md-8 offset-md-2 p-5">
+                                            <EditForm Model="@login" OnValidSubmit="@IniciarSesion" OnInvalidSubmit="@OnInvalidSubmit">
 
-                                            <DataAnnotationsValidator />
+                                                <DataAnnotationsValidator />
 
-                                            <SfTextBox Placeholder="Correo Electrónico Personal"
-                                                       Type="Syncfusion.Blazor.Inputs.InputType.Text"
-                                                       @bind-Value="@login.UsuCorreoPersonal"
-                                                       FloatLabelType='@FloatLabelType.Auto'
-                                                       ShowClearButton="true"
-                                                       CssClass="mt-2"
-                                                       EnableRtl="false"
-                                                       Multiline="false"
-                                                       Readonly="false"
-                                                       Enabled="true" />
-                                            <ValidationMessage For="@(() => login.UsuCorreoPersonal)" />
+                                                <SfTextBox Placeholder="Correo Electrónico Personal"
+                                                            Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                            @bind-Value="@login.UsuCorreoPersonal"
+                                                            FloatLabelType='@FloatLabelType.Auto'
+                                                            ShowClearButton="true"
+                                                            CssClass="mt-2"
+                                                            EnableRtl="false"
+                                                            Multiline="false"
+                                                            Readonly="false"
+                                                            Enabled="true" />
+                                                <ValidationMessage For="@(() => login.UsuCorreoPersonal)" />
 
-                                            <SfTextBox Placeholder="Contraseña"
-                                                       Type="Syncfusion.Blazor.Inputs.InputType.Password"
-                                                       @bind-Value="@login.UsuContraseña"
-                                                       FloatLabelType='@FloatLabelType.Auto'
-                                                       ShowClearButton="true"
-                                                       CssClass="mt-5"
-                                                       EnableRtl="false"
-                                                       Multiline="false"
-                                                       Readonly="false"
-                                                       Enabled="true" />
-                                            <ValidationMessage For="@(() => login.UsuContraseña)" />
+                                                <SfTextBox Placeholder="Contraseña"
+                                                            Type="Syncfusion.Blazor.Inputs.InputType.Password"
+                                                            @bind-Value="@login.UsuContraseña"
+                                                            FloatLabelType='@FloatLabelType.Auto'
+                                                            ShowClearButton="true"
+                                                            CssClass="mt-5"
+                                                            EnableRtl="false"
+                                                            Multiline="false"
+                                                            Readonly="false"
+                                                            Enabled="true" />
+                                                <ValidationMessage For="@(() => login.UsuContraseña)" />
 
-                                            <SfProgressButton Content="@Content"
-                                                              EnableProgress="true"
-                                                              IsPrimary="true"
-                                                              CssClass="e-primary e-block mt-4 mb-2"
-                                                              Duration="1000">
-                                                <ProgressButtonSpinSettings Position="SpinPosition.Top" />
-                                                <ProgressButtonAnimationSettings Effect="Syncfusion.Blazor.SplitButtons.AnimationEffect.None" Duration="60000" Easing="" />
-                                                <ProgressButtonEvents OnBegin="Begin" Progressing="Progressing" OnEnd="End" />
-                                            </SfProgressButton>
+                                                <SfProgressButton Content="@Content"
+                                                                    EnableProgress="true"
+                                                                    IsPrimary="true"
+                                                                    CssClass="e-primary e-block mt-4 mb-2"
+                                                                    Duration="1000">
+                                                    <ProgressButtonSpinSettings Position="SpinPosition.Top" />
+                                                    <ProgressButtonAnimationSettings Effect="Syncfusion.Blazor.SplitButtons.AnimationEffect.None" Duration="60000" Easing="" />
+                                                    <ProgressButtonEvents OnBegin="Begin" Progressing="Progressing" OnEnd="End" />
+                                                </SfProgressButton>
 
-                                        </EditForm>
-                                        
-                                        <a href="@navigationManager.ToAbsoluteUri("/RegistroIndex")"
-                                           target="_blank" style="text-align:center">
-                                            Registrate dando click aquí.
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
-                                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
-                                            </svg>
-                                        </a>
-                                        <SfMessage ShowIcon="true"
-                                                   Closed="(() => { isValidAccount = !isValidAccount; })"
-                                                   ShowCloseIcon="true"
-                                                   Severity="MessageSeverity.Error"
-                                                   Variant="MessageVariant.Filled"
-                                                   Visible="@isValidAccount"
-                                                   ContentAlignment="HorizontalAlign.Center"
-                                                   CssClass="square">
-                                                   Correo y/o Contraseña no válidos.
-                                        </SfMessage>
-                                    </div>
-                                </ContentTemplate>
-                            </TabItem>
-                            <TabItem>
-                                <ChildContent>
-                                    <TabHeader Text="Recuperar Contraseña" IconCss="e-icons e-user" IconPosition="top"></TabHeader>
-                                </ChildContent>
-                                <ContentTemplate>
-                                    Marseille, a port city in southern France, has been a crossroads of immigration and trade since its founding by the Greeks circa 600 B.C. At its heart is the Vieux-Port (Old Port), where fishmongers sell their catch along the boat-lined quay. Basilique Notre-Dame-de-la-Garde is a Romanesque-Byzantine church. Modern landmarks include Le Corbusier’s influential Cité Radieuse complex and Zaha Hadid’s CMA CGM Tower.
-                                </ContentTemplate>
-                            </TabItem>
-                            <TabItem>
-                                <ChildContent>
-                                    <TabHeader Text="Registrarse" IconCss="e-icons e-user" IconPosition="top"></TabHeader>
-                                </ChildContent>
-                                <ContentTemplate>
-                                    Lyon, the capital city in France’s Auvergne-Rhône-Alpes region, sits at the junction of the Rhône and Saône rivers. Its center reflects 2,000 years of history from the Roman Amphithéâtre des Trois Gaules, medieval and Renaissance architecture in Vieux (Old) Lyon, to the modern Confluence district on Presquîle peninsula. Traboules, covered passageways between buildings, connect Vieux Lyon and La Croix-Rousse hill.
-                                </ContentTemplate>
-                            </TabItem>
-                        </TabItems>
-                    </SfTab>
+                                            </EditForm>
 
-                    @*
-                    <SfMessage ShowIcon="true"
-                    ShowCloseIcon="true"
-                    Severity="MessageSeverity.Warning"
-                    Variant="MessageVariant.Text"
-                    ContentAlignment="HorizontalAlign.Left"
-                    CssClass="e-msg-content rounded">
-                    Si aún no cuentas con un correo institucional del IPN, favor de llamar a una las siguientes extensiones: 70367, 70347, 70089.
-                    </SfMessage>
-                    *@
+                                            <NavLink class="nav-link" style="cursor: pointer;" href="RegistroIndex">
+                                                Registrate dando click aquí.
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
+                                                    <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+                                                </svg>
+                                            </NavLink>
 
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 20 20">
-                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-                        </svg>
-                        Si aún no cuentas con un correo institucional del IPN, favor de llamar a una las siguientes extensiones: <strong>70367, 70347, 70089.</strong>
+                                            <SfMessage ShowIcon="true"
+                                                        Closed="(() => { isValidAccount = !isValidAccount; })"
+                                                        ShowCloseIcon="true"
+                                                        Severity="MessageSeverity.Error"
+                                                        Variant="MessageVariant.Filled"
+                                                        Visible="@isValidAccount"
+                                                        ContentAlignment="HorizontalAlign.Center"
+                                                        CssClass="square">
+                                                Correo y/o Contraseña no válidos.
+                                            </SfMessage>
+                                        </div>
+                                    </ContentTemplate>
+                                </TabItem>
+                                <TabItem>
+                                    <ChildContent>
+                                        <TabHeader Text="Recuperar Contraseña" IconCss="e-icons e-user" IconPosition="top"></TabHeader>
+                                    </ChildContent>
+                                    <ContentTemplate>
+                                        Marseille, a port city in southern France, has been a crossroads of immigration and trade since its founding by the Greeks circa 600 B.C. At its heart is the Vieux-Port (Old Port), where fishmongers sell their catch along the boat-lined quay. Basilique Notre-Dame-de-la-Garde is a Romanesque-Byzantine church. Modern landmarks include Le Corbusier’s influential Cité Radieuse complex and Zaha Hadid’s CMA CGM Tower.
+                                    </ContentTemplate>
+                                </TabItem>
+                                <TabItem>
+                                    <ChildContent>
+                                        <TabHeader Text="Registrarse" IconCss="e-icons e-user" IconPosition="top"></TabHeader>
+                                    </ChildContent>
+                                    <ContentTemplate>
+                                        Lyon, the capital city in France’s Auvergne-Rhône-Alpes region, sits at the junction of the Rhône and Saône rivers. Its center reflects 2,000 years of history from the Roman Amphithéâtre des Trois Gaules, medieval and Renaissance architecture in Vieux (Old) Lyon, to the modern Confluence district on Presquîle peninsula. Traboules, covered passageways between buildings, connect Vieux Lyon and La Croix-Rousse hill.
+                                    </ContentTemplate>
+                                </TabItem>
+                            </TabItems>
+                        </SfTab>
+
+                        @*
+                        <SfMessage ShowIcon="true"
+                        ShowCloseIcon="true"
+                        Severity="MessageSeverity.Warning"
+                        Variant="MessageVariant.Text"
+                        ContentAlignment="HorizontalAlign.Left"
+                        CssClass="e-msg-content rounded">
+                        Si aún no cuentas con un correo institucional del IPN, favor de llamar a una las siguientes extensiones: 70367, 70347, 70089.
+                        </SfMessage>
+                        *@
+
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 20 20">
+                                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                            </svg>
+                            Si aún no cuentas con un correo institucional del IPN, favor de llamar a una las siguientes extensiones: <strong>70367, 70347, 70089.</strong>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer text-body-secondary card-subtitle">
-                    © UPIICSA 2023 vα 0.0.1
+                    <div class="card-footer text-body-secondary card-subtitle">
+                        © UPIICSA 2023 vα 0.0.1
+                    </div>
                 </div>
             </div>
-        </div>
 
-        @*
-        <div class="col-md-12">
-        <SfDashboardLayout CellSpacing="@(new double[]{ 10 ,10 })"
-        CellAspectRatio="2"
-        Columns="5"
-        ShowGridLines="true"
-        AllowResizing="true"
-        AllowFloating="false"
-        MediaQuery="max-width:800px"
-        DraggableHandle=""
-        AllowDragging="true">
-        <DashboardLayoutPanels>
-        <DashboardLayoutPanel Column="0" Row="0" SizeX="3" SizeY="4" MinSizeX="1" MinSizeY="1" MaxSizeX="3" MaxSizeY="4" AllowDragging="false">
-        <HeaderTemplate><div>SITI</div></HeaderTemplate>
-        <ContentTemplate>
+            @*
+            <div class="col-md-12">
+            <SfDashboardLayout CellSpacing="@(new double[]{ 10 ,10 })"
+            CellAspectRatio="2"
+            Columns="5"
+            ShowGridLines="true"
+            AllowResizing="true"
+            AllowFloating="false"
+            MediaQuery="max-width:800px"
+            DraggableHandle=""
+            AllowDragging="true">
+            <DashboardLayoutPanels>
+            <DashboardLayoutPanel Column="0" Row="0" SizeX="3" SizeY="4" MinSizeX="1" MinSizeY="1" MaxSizeX="3" MaxSizeY="4" AllowDragging="false">
+            <HeaderTemplate><div>SITI</div></HeaderTemplate>
+            <ContentTemplate>
 
-        </ContentTemplate>
-        </DashboardLayoutPanel>
-        <DashboardLayoutPanel Column="3" Row="0" SizeX="2" SizeY="2">
-        <HeaderTemplate><div>Instituto Politécnico Nacional</div></HeaderTemplate>
-        <ContentTemplate>
-        <div>
-        <img src="./ipn.png" alt="" class="col-md-4 rounded">
+            </ContentTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Column="3" Row="0" SizeX="2" SizeY="2">
+            <HeaderTemplate><div>Instituto Politécnico Nacional</div></HeaderTemplate>
+            <ContentTemplate>
+            <div>
+            <img src="./ipn.png" alt="" class="col-md-4 rounded">
+            </div>
+            </ContentTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Column="3" Row="2" SizeX="2" SizeY="2">
+            <HeaderTemplate><div>UPIICSA</div></HeaderTemplate>
+            <ContentTemplate>
+            <div>
+            <img src="./ipn.png" alt="" class="col-md-4 rounded" height="100" width="200">
+            </div>
+            </ContentTemplate>
+            </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+            </SfDashboardLayout>
+            </div>
+            *@
         </div>
-        </ContentTemplate>
-        </DashboardLayoutPanel>
-        <DashboardLayoutPanel Column="3" Row="2" SizeX="2" SizeY="2">
-        <HeaderTemplate><div>UPIICSA</div></HeaderTemplate>
-        <ContentTemplate>
-        <div>
-        <img src="./ipn.png" alt="" class="col-md-4 rounded" height="100" width="200">
-        </div>
-        </ContentTemplate>
-        </DashboardLayoutPanel>
-        </DashboardLayoutPanels>
-        </SfDashboardLayout>
-        </div>
-        *@
     </div>
-</div>
+    <!--fin de login-->
+
+
+
+                            
+
 
 @code
 {

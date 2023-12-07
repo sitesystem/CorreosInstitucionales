@@ -74,32 +74,10 @@
         }
 </style>
 
-<div class="container">
-    <div class="row mt-5">
-
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header pb-0">
-                    <div class="row">
-                        <div class="col-2 text-start">
-                            <div class="e-avatar e-avatar-small e-avatar-circle image">
-                                <img src="/ipn.png" alt="profile_pic">
-                            </div>
-                        </div>
-                        <div class="col-8 text-center pb-0">
-                            <div style="font-variant:small-caps;"> Registro</div>
-                        </div>
-                        <div class="col-2 text-end">
-                            <div class="e-avatar e-avatar-small e-avatar-circle image">
-                                <img src="/ipn.png" alt="profile_pic">
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="card-body">
                     <div class="col-lg-12 control-section">
                         <div class="nested-tab-control-section">
-                            <SfTab CssClass="nested-tabs">
+                             <SfTab CssClass="nested-tabs e-fill">
                                 <TabAnimationSettings>
                                     <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
                                     <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
@@ -107,7 +85,7 @@
                                 <TabItems>
                                     <TabItem>
                                         <ContentTemplate>
-                                            <SfTab CssClass="child-tabs">
+                                            <SfTab CssClass="child-tabs e-fill">
                                                 <TabAnimationSettings>
                                                     <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
                                                     <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
@@ -146,7 +124,7 @@
                                     </TabItem>
                                     <TabItem>
                                         <ContentTemplate>
-                                            <SfTab CssClass="child-tabs">
+                                            <SfTab CssClass="child-tabs e-fill">
                                                 <TabAnimationSettings>
                                                     <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
                                                     <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
@@ -191,13 +169,9 @@
 
                     
                 </div>
-                <div class="card-footer text-body-secondary card-subtitle">
+              @*   <div class="card-footer text-body-secondary card-subtitle">
                     © UPIICSA 2023 vα 0.0.1
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                </div> *@
 
 @code
 {

@@ -19,14 +19,14 @@
 <SfBreadcrumb EnableActiveItemNavigation="true" EnableNavigation="false">
     <BreadcrumbItems>
         <BreadcrumbItem Text="Módulo de Catálogos" IconCss="e-icons e-settings" Disabled="true" />
-        <BreadcrumbItem Text="Catálogo de Extensiones" IconCss="e-icons e-resizer-1" Disabled="true" />
+        <BreadcrumbItem Text="Catálogo de Extensiones" IconCss="e-icons export-pdf" Disabled="true" />
     </BreadcrumbItems>
 </SfBreadcrumb>
 
 <h3 style="font-variant: small-caps;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-bar-chart-steps" viewBox="0 0 18 18">
-        <path d="M.5 0a.5.5 0 0 1 .5.5v15a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 .5 0zM2 1.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z" />
-    </svg> Catálogo de Extensiones
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 18 18">
+        <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+    </svg>  Catálogo de Extensiones
 </h3>
 
 <style type="text/css">
@@ -178,20 +178,18 @@
                                     ValidationRules="@(new Syncfusion.Blazor.Grids.ValidationRules{ Required = true })"
                                     Width="150">
                             <HeaderTemplate>
-                                <div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 16 16">
-                                        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z" />
-                                        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z" />
-                                    </svg> Numero Extension
+                                <div>                                   
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                                      <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                                    </svg>  Número Extensión
                                 </div>
                             </HeaderTemplate>
                             <Template>
                                 @{
                                     var extension = (context as ExtensionViewModel).ExtNoExtension;
                                 }
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mortarboard" viewBox="0 0 16 16">
-                                    <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5ZM8 8.46 1.758 5.965 8 3.052l6.242 2.913z" />
-                                    <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466zm-.068 1.873.22-.748 3.496 1.311a.5.5 0 0 0 .352 0l3.496-1.311.22.748L8 12.46l-3.892-1.556Z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
+                                    <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
                                 </svg>  @extension
                             </Template>
                             <EditTemplate>
@@ -228,8 +226,8 @@
                                 }
                             </EditTemplate>
                         </GridColumn>
-
-                       @*  <GridForeignColumn Field=@nameof(ExtensionViewModel.ExtIdAreaDepto)
+                        <!-- empieza columna de llave foranea-->
+                        <GridForeignColumn Field=@nameof(ExtensionViewModel.ExtIdAreaDepto)
                                            TValue="AreaDeptoViewModel"
                                            HeaderText="Area del departamento"
                                            HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
@@ -250,7 +248,7 @@
                             </HeaderTemplate>
                             <Template>
                                 @{
-                                    var foreignKey = (context as AreaDeptoViewModel)?.AreIdEdificioNavigation;
+                                    var foreignKey = (context as ExtensionViewModel)?.ExtIdAreaDeptoNavigation;
                                     var areNombre = "";
                                     var areTitular = "";
 
@@ -268,26 +266,27 @@
 
                             <EditTemplate>
                                 @{
+                                    var areadepto = (context as ExtensionViewModel);
                                     <SfDropDownList ID="Data___AreExtensionNavigation"
                                                     TValue="int"
                                                     TItem="AreaDeptoViewModel"
-                                                    Placeholder="Edificio"
+                                                    Placeholder="Area Departamento"
                                                     FloatLabelType="FloatLabelType.Always"
                                                     ShowClearButton="true"
                                                     EnableVirtualization="false"
                                                     IgnoreCase="true"
-                                                    @bind-Value="@((context as AreaDeptoViewModel).AreExtension)"
+                                                    @bind-Value="@areadepto.ExtIdAreaDepto"
                                                     DataSource="@oAreaDepto.Data"
                                                     Enabled="true"
                                                     Readonly="false"
                                                     CssClass="e-multi-column"
                                                     AllowFiltering="true"
-                                                    FilterBarPlaceholder="Selecciona una opción (Buscar por Nombre Oficial del Edificio)"
+                                                    FilterBarPlaceholder="Selecciona una opción (Buscar por Nombre de area del departamento)"
                                                     IgnoreAccent="true"
                                                     FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
                                                     SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.None"
                                                     PopupHeight="300" PopupWidth="600">
-                                        <DropDownListFieldSettings Value="IdEdificio" Text="EdiNombreOficial" />
+                                        <DropDownListFieldSettings Value="IdAreaDepto" Text="AreNombre" />
                                         <DropDownListTemplates TItem="AreaDeptoViewModel">
                                             <HeaderTemplate>
                                                 <table>
@@ -317,11 +316,11 @@
                                             </ItemTemplate>
                                         </DropDownListTemplates>
                                     </SfDropDownList>
-                                    <ValidationMessage For="() => ((context as AreaDeptoViewModel).AreExtension)" />
+                                    <ValidationMessage For="@(() => areadepto.ExtIdAreaDepto)" />
                                 }
                             </EditTemplate>
-                        </GridForeignColumn> *@
-
+                        </GridForeignColumn>
+                        <!-- termina columna de llave foranea-->
                         <GridColumn Field=@nameof(ExtensionViewModel.ExtStatus)
                                     HeaderText="Estatus"
                                     HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"

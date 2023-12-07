@@ -18,7 +18,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         public string ExtNoExtension { get; set; } = null!;
 
         [Column("extIdAreaDepto")]
-        public int? ExtIdAreaDepto { get; set; }
+        public int ExtIdAreaDepto { get; set; }
 
         [Required]
         [Column("extStatus")]
