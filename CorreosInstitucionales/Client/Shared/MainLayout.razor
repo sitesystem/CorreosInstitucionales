@@ -11,6 +11,17 @@
 @inject ITipoPersonal servicioTipoPersonal
 @inject IJSRuntime JSRuntime;
 
+<AuthorizeView>
+    <Authorized>
+    </Authorized>
+    <NotAuthorized>
+        @{
+            if (context.User.Identity?.IsAuthenticated == true)
+                navigationManager.NavigateTo("/");
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
 <style>
     .control-container .e-appbar.custom-appbar {
         background: none;
@@ -160,7 +171,7 @@
             oResponseTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(int.Parse(tipoPersonal));
         }
         else
-            authMessage = "The user is NOT authenticated.";
+            navigationManager.NavigateTo("/");
     }
 
     private async Task DropDownSelect(MenuEventArgs args)

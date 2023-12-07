@@ -13,12 +13,14 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDepto
     public class RAreaDepto : IAreaDepto
     {
         private readonly HttpClient _httpClient;
-        //const string url = "https://localhost:7271/api/Edificios";
+        //const string url = "https://localhost:7271/api/AreasDeptos";
         const string url = "/api/AreasDeptos/";
+
         public RAreaDepto(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
+
         public async Task<Response<List<AreaDeptoViewModel>>?> GetAllDataAsync(bool filterByStatus)
         {
             var response = await _httpClient.GetAsync(url + "filterByStatus/" + filterByStatus);
@@ -32,7 +34,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDepto
             return result;
         }
 
-        public async Task<Response<AreaDeptoViewModel>?> GetDataByAsync(int id)
+        public async Task<Response<AreaDeptoViewModel>?> GetDataByIdAsync(int id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<AreaDeptoViewModel>>(url + "filterById/" + id,
                  new JsonSerializerOptions()
@@ -45,14 +47,25 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDepto
 
         public async Task<HttpResponseMessage> AddDataAsync(AreaDeptoViewModel oAreaDepto)
         {
-            var json = JsonSerializer.Serialize(oAreaDepto);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(url, content);
+            //var json = JsonSerializer.Serialize(oAreaDepto);
+            //var content = new StringContent(json, Encoding.UTF8, "application/json");
+            //var response = await _httpClient.PostAsync(url, content);
+
+            var response = await _httpClient.PutAsJsonAsync(url, oAreaDepto,
+                new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
             return response;
         }
 
         public async Task<HttpResponseMessage> EditDataAsync(AreaDeptoViewModel oAreaDepto)
         {
+            //var json = JsonSerializer.Serialize(oAreaDepto);
+            //var content = new StringContent(json, Encoding.UTF8, "application/json");
+            //var response = await _httpClient.PutAsync(url, content);
+
             var response = await _httpClient.PutAsJsonAsync(url, oAreaDepto,
                  new JsonSerializerOptions()
                  {

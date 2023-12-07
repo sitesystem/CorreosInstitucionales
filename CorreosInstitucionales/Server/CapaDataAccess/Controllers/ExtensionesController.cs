@@ -1,12 +1,18 @@
-﻿using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
-    public class ExtensionesController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    //[Authorize]
+    public class ExtensionesController : ControllerBase
     {
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllData(bool filterByStatus)
@@ -21,9 +27,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 if (filterByStatus)
                     list = await db.MceCatExtensiones.Where(e => e.ExtStatus.Equals(filterByStatus))
                                                      .Include(e => e.ExtIdAreaDeptoNavigation)
+                                                     .ThenInclude(a => a.AreIdEdificioNavigation)
+                                                     .Include(e => e.ExtIdAreaDeptoNavigation)
+                                                     .ThenInclude(a => a.AreIdPisoNavigation)
                                                      .ToListAsync();
                 else
-                    list = await db.MceCatExtensiones.Include(e => e.ExtIdAreaDeptoNavigation).ToListAsync();
+                    list = await db.MceCatExtensiones
+                                   .Include(e => e.ExtIdAreaDeptoNavigation)
+                                   .ThenInclude(a => a.AreIdEdificioNavigation)
+                                   .Include(e => e.ExtIdAreaDeptoNavigation)
+                                   .ThenInclude(a => a.AreIdPisoNavigation)
+                                   .ToListAsync();
 
                 oResponse.Success = 1;
                 oResponse.Data = list;
@@ -44,7 +58,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             try
             {
                 using DbCorreosInstUpiicsaContext db = new();
-                var list = await db.MceCatExtensiones.FindAsync(id);
+                var list = await db.MceCatExtensiones
+                                   .Include(e => e.ExtIdAreaDeptoNavigation)
+                                   .ThenInclude(a => a.AreIdEdificioNavigation)
+                                   .Include(e => e.ExtIdAreaDeptoNavigation)
+                                   .ThenInclude(a => a.AreIdPisoNavigation)
+                                   .FirstOrDefaultAsync(e => e.IdExtension == id);
+
                 oResponse.Success = 1;
                 oResponse.Data = list;
             }
@@ -70,7 +90,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     IdExtension = model.IdExtension,
                     ExtNoExtension = model.ExtNoExtension,
                     ExtIdAreaDepto = model.ExtIdAreaDepto,
-                    ExtStatus = true
+                    ExtStatus = model.ExtStatus,
+                    ExtIdAreaDeptoNavigation = null,
                 };
 
                 await db.MceCatExtensiones.AddAsync(oExtension);
@@ -145,6 +166,5 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             return Ok(oRespuesta);
         }
-
     }
 }

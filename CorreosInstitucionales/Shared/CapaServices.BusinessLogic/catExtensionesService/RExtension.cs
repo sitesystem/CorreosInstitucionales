@@ -13,7 +13,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catExtensionS
     public class RExtension : IExtension
     {
         private readonly HttpClient _httpClient;
-        //const string url = "https://localhost:7271/api/Edificios";
+        //const string url = "https://localhost:7271/api/Extensiones";
         const string url = "/api/Extensiones/";
 
         public RExtension(HttpClient httpClient)
@@ -44,16 +44,6 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catExtensionS
 
             return result;
         }
-        public async Task<Response<ExtensionViewModel>?> GetDataByNombreAsync(string nombre)
-        {
-            var result = await _httpClient.GetFromJsonAsync<Response<ExtensionViewModel>>(url + "filterByNombre/" + nombre,
-                 new JsonSerializerOptions()
-                 {
-                     PropertyNameCaseInsensitive = true
-                 });
-
-            return result;
-        }
 
         public async Task<HttpResponseMessage> AddDataAsync(ExtensionViewModel oExtension)
         {
@@ -61,7 +51,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catExtensionS
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(url, content);
 
-            //var response = await _httpClient.PostAsJsonAsync<PisoViewModel>(url, oEdificio,
+            //var response = await _httpClient.PostAsJsonAsync<ExtensionViewModel>(url, oExtension,
             //    new JsonSerializerOptions()
             //    {
             //        PropertyNameCaseInsensitive = true
@@ -72,7 +62,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catExtensionS
 
         public async Task<HttpResponseMessage> EditDataAsync(ExtensionViewModel oExtension)
         {
-            //var json = JsonSerializer.Serialize(oPiso);
+            //var json = JsonSerializer.Serialize(oExtension);
             //var content = new StringContent(json, Encoding.UTF8, "application/json");
             //var response = await _httpClient.PutAsync(url, content);
 
@@ -85,7 +75,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catExtensionS
             return response;
         }
 
-        public async Task<HttpResponseMessage> EnableDisableDataById(int id, bool isActivate)
+        public async Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate)
         {
             var response = await _httpClient.PutAsJsonAsync(url + "editByIdStatus/" + id + "/" + isActivate,
                 new JsonSerializerOptions()
@@ -95,6 +85,5 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catExtensionS
 
             return response;
         }
-
     }
 }
