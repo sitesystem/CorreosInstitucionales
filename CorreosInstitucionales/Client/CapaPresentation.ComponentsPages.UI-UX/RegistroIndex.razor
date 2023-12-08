@@ -74,10 +74,21 @@
     }
 </style>
 
-                <div class="card-body">
-                    <div class="col-lg-12 control-section">
-                        <div class="nested-tab-control-section">
-                             <SfTab OverflowMode="OverflowMode.Scrollable" CssClass="nested-tabs e-fill">
+<div class="card-body">
+    <div class="col-lg-12 control-section">
+        <div class="nested-tab-control-section">
+                <SfTab OverflowMode="OverflowMode.Scrollable" CssClass="nested-tabs e-fill">
+                <TabAnimationSettings>
+                    <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
+                    <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
+                </TabAnimationSettings>
+                <TabItems>
+                    <TabItem>
+                        <ChildContent>
+                            <TabHeader Text="Alumnos" IconCss="e-icons e-paste-text-only" IconPosition="left"></TabHeader>
+                        </ChildContent>
+                        <ContentTemplate>
+                            <SfTab CssClass="child-tabs e-fill">
                                 <TabAnimationSettings>
                                     <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
                                     <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
@@ -85,90 +96,79 @@
                                 <TabItems>
                                     <TabItem>
                                         <ChildContent>
-                                            <TabHeader Text="Alumnos" IconCss="e-icons e-paste-text-only" IconPosition="left"></TabHeader>
+                                            <TabHeader Text="Inscrito" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
                                         </ChildContent>
                                         <ContentTemplate>
-                                            <SfTab CssClass="child-tabs e-fill">
-                                                <TabAnimationSettings>
-                                                    <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
-                                                    <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
-                                                </TabAnimationSettings>
-                                                <TabItems>
-                                                    <TabItem>
-                                                        <ChildContent>
-                                                            <TabHeader Text="Inscrito" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
-                                                        </ChildContent>
-                                                        <ContentTemplate>
-                                                            <RegistroInscrito/>
-                                                        </ContentTemplate>
-                                                    </TabItem>
-                                                    <TabItem>
-                                                        <ChildContent>
-                                                            <TabHeader Text="Egresados" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
-                                                        </ChildContent>
-                                                        <ContentTemplate>
-                                                            <RegistroEgresado/>
-                                                        </ContentTemplate>
-                                                    </TabItem>
-                                                    <TabItem>
-                                                        <ChildContent>
-                                                            <TabHeader Text="Maestría" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
-                                                        </ChildContent>
-                                                        <ContentTemplate>
-                                                            <RegistroMaestria/>
-                                                        </ContentTemplate>
-                                                    </TabItem>
-                                                </TabItems>
-                                            </SfTab>
+                                            <RegistroInscrito/>
                                         </ContentTemplate>
                                     </TabItem>
                                     <TabItem>
                                         <ChildContent>
-                                            <TabHeader Text="Empleados" IconCss="e-icons e-redaction" IconPosition="left" />
+                                            <TabHeader Text="Egresados" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
                                         </ChildContent>
                                         <ContentTemplate>
-                                            <SfTab CssClass="child-tabs e-fill">
-                                                <TabAnimationSettings>
-                                                    <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
-                                                    <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
-                                                </TabAnimationSettings>
-                                                <TabItems>
-                                                    <TabItem>
-                                                        <ChildContent>
-                                                            <TabHeader Text="Administrativo"></TabHeader>
-                                                        </ChildContent>
-                                                        <ContentTemplate>
-                                                            <RegistroAdministrativo/>
-                                                        </ContentTemplate>
-                                                    </TabItem>
-                                                    <TabItem>
-                                                        <ChildContent>
-                                                            <TabHeader Text="Docente"></TabHeader>
-                                                        </ChildContent>
-                                                        <ContentTemplate>
-                                                            <RegistroDocente/>
-                                                        </ContentTemplate>
-                                                    </TabItem>
-                                                    <TabItem>
-                                                        <ChildContent>
-                                                            <TabHeader Text="Honorario"></TabHeader>
-                                                        </ChildContent>
-                                                        <ContentTemplate>
-                                                            <RegistroHonorario/>
-                                                        </ContentTemplate>
-                                                    </TabItem>
-                                                </TabItems>
-                                            </SfTab>
+                                            <RegistroEgresado/>
                                         </ContentTemplate>
                                     </TabItem>
-                                   
+                                    <TabItem>
+                                        <ChildContent>
+                                            <TabHeader Text="Maestría" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
+                                        </ChildContent>
+                                        <ContentTemplate>
+                                            <RegistroMaestria/>
+                                        </ContentTemplate>
+                                    </TabItem>
                                 </TabItems>
                             </SfTab>
-                        </div>
-                    </div>
+                        </ContentTemplate>
+                    </TabItem>
+                    <TabItem>
+                        <ChildContent>
+                            <TabHeader Text="Empleados" IconCss="e-icons e-redaction" IconPosition="left" />
+                        </ChildContent>
+                        <ContentTemplate>
+                            <SfTab CssClass="child-tabs e-fill">
+                                <TabAnimationSettings>
+                                    <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
+                                    <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
+                                </TabAnimationSettings>
+                                <TabItems>
+                                    <TabItem>
+                                        <ChildContent>
+                                            <TabHeader Text="Administrativo"></TabHeader>
+                                        </ChildContent>
+                                        <ContentTemplate>
+                                            <RegistroAdministrativo/>
+                                        </ContentTemplate>
+                                    </TabItem>
+                                    <TabItem>
+                                        <ChildContent>
+                                            <TabHeader Text="Docente"></TabHeader>
+                                        </ChildContent>
+                                        <ContentTemplate>
+                                            <RegistroDocente/>
+                                        </ContentTemplate>
+                                    </TabItem>
+                                    <TabItem>
+                                        <ChildContent>
+                                            <TabHeader Text="Honorario"></TabHeader>
+                                        </ChildContent>
+                                        <ContentTemplate>
+                                            <RegistroHonorario/>
+                                        </ContentTemplate>
+                                    </TabItem>
+                                </TabItems>
+                            </SfTab>
+                        </ContentTemplate>
+                    </TabItem>
+                                   
+                </TabItems>
+            </SfTab>
+        </div>
+    </div>
 
                     
-                </div>
+</div>
               @*   <div class="card-footer text-body-secondary card-subtitle">
                     © UPIICSA 2023 vα 0.0.1
                 </div> *@

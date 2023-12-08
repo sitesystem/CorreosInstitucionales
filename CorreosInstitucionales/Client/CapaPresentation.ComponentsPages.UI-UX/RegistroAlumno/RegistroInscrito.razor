@@ -233,7 +233,7 @@
 
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="No. Celular"
+                        <SfTextBox Placeholder="Número celular"
                                    FloatLabelType="@FloatLabelType.Auto"
                                    @bind-Value="@oUsuario.UsuNoCelularNuevo"
                                    onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
@@ -247,7 +247,7 @@
                         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4"> <!-- <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">-->
                     
                             <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCurp" OnInput="@((e) => oUsuario.UsuCurp = e.Value.ToString().ToUpper())"
-                                   onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" CssClass="mi-sf-textbox"></SfTextBox>
+                                   onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" CssClass="mi-sf-textbox" ShowClearButton="true"></SfTextBox>
                             <ValidationMessage For="@(() => oUsuario.UsuCurp)" /> <br />
                         <a href="@linkCURP.LinkEnlace" target="_blank">
                             <br />
@@ -281,8 +281,9 @@
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                         <SfTextBox Placeholder="Boleta"
                                    FloatLabelType="@FloatLabelType.Auto"
-                        @bind-Value="@oUsuario.UsuBoletaAlumno"
-                                   CssClass="mi-sf-textbox">
+                                   @bind-Value="@oUsuario.UsuBoletaAlumno"
+                                   CssClass="mi-sf-textbox"
+                                   ShowClearButton="true">
                         </SfTextBox>
                         <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumno)" />
                     </div>
@@ -315,6 +316,7 @@
                                         TItem="Semestres"
                                         Placeholder="Semestre"
                                         FloatLabelType="FloatLabelType.Auto"
+                                        ShowClearButton="true"
                                         AllowFiltering="true"
                                         DataSource="@Semestre"
                                         @bind-Value="@oUsuario.UsuSemestre"
@@ -356,7 +358,8 @@
                                    Type="Syncfusion.Blazor.Inputs.InputType.Email"
                                    FloatLabelType="@FloatLabelType.Auto"
                                    @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva"
-                                   CssClass="mi-sf-textbox">
+                                   CssClass="mi-sf-textbox"
+                                   ShowClearButton="true">
                         </SfTextBox>
                         <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
                     </div>
@@ -365,7 +368,8 @@
                                    Type="Syncfusion.Blazor.Inputs.InputType.Password"
                                    FloatLabelType="@FloatLabelType.Auto"
                                    @bind-Value="@oUsuario.UsuContraseña"
-                                   CssClass="mi-sf-textbox">
+                                   CssClass="mi-sf-textbox"
+                                   ShowClearButton="true">                            
                         </SfTextBox>
                         <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
                     </div>
@@ -376,6 +380,7 @@
                                    @bind-Value="@contra2"
                                    OnInput="(e => contra2 = e.Value.ToString())"
                                    CssClass="mi-sf-textbox"
+                                   ShowClearButton="true"
                                    @onkeyup="@CompararCadenas">
                         </SfTextBox>
                         <br />
@@ -389,7 +394,10 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                        <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta"></SfTextBox>
+                        <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" 
+                            FloatLabelType="@FloatLabelType.Auto" 
+                            @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta"
+                            ShowClearButton="true"></SfTextBox>
                     </div>
                 </div>
             </div>
