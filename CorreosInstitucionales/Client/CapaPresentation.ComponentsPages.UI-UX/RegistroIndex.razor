@@ -67,23 +67,26 @@
         display: flex;
     }
 
-        .nested-tabs.e-tab > .e-toolbar.e-tab-header .e-toolbar-items .e-toolbar-item {
-            display: flex;
-            flex: 1 1 auto;
-            text-align: center;
-        }
+    .nested-tabs.e-tab > .e-toolbar.e-tab-header .e-toolbar-items .e-toolbar-item {
+        display: flex;
+        flex: 1 1 auto;
+        text-align: center;
+    }
 </style>
 
                 <div class="card-body">
                     <div class="col-lg-12 control-section">
                         <div class="nested-tab-control-section">
-                             <SfTab CssClass="nested-tabs e-fill">
+                             <SfTab OverflowMode="OverflowMode.Scrollable" CssClass="nested-tabs e-fill">
                                 <TabAnimationSettings>
                                     <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
                                     <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
                                 </TabAnimationSettings>
                                 <TabItems>
                                     <TabItem>
+                                        <ChildContent>
+                                            <TabHeader Text="Alumnos" IconCss="e-icons e-paste-text-only" IconPosition="left"></TabHeader>
+                                        </ChildContent>
                                         <ContentTemplate>
                                             <SfTab CssClass="child-tabs e-fill">
                                                 <TabAnimationSettings>
@@ -93,7 +96,7 @@
                                                 <TabItems>
                                                     <TabItem>
                                                         <ChildContent>
-                                                            <TabHeader Text="Inscrito"></TabHeader>
+                                                            <TabHeader Text="Inscrito" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
                                                         </ChildContent>
                                                         <ContentTemplate>
                                                             <RegistroInscrito/>
@@ -101,7 +104,7 @@
                                                     </TabItem>
                                                     <TabItem>
                                                         <ChildContent>
-                                                            <TabHeader Text="Egresados"></TabHeader>
+                                                            <TabHeader Text="Egresados" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
                                                         </ChildContent>
                                                         <ContentTemplate>
                                                             <RegistroEgresado/>
@@ -109,7 +112,7 @@
                                                     </TabItem>
                                                     <TabItem>
                                                         <ChildContent>
-                                                            <TabHeader Text="Maestría"></TabHeader>
+                                                            <TabHeader Text="Maestría" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
                                                         </ChildContent>
                                                         <ContentTemplate>
                                                             <RegistroMaestria/>
@@ -118,11 +121,11 @@
                                                 </TabItems>
                                             </SfTab>
                                         </ContentTemplate>
-                                        <ChildContent>
-                                            <TabHeader Text="Alumnos"></TabHeader>
-                                        </ChildContent>
                                     </TabItem>
                                     <TabItem>
+                                        <ChildContent>
+                                            <TabHeader Text="Empleados" IconCss="e-icons e-redaction" IconPosition="left" />
+                                        </ChildContent>
                                         <ContentTemplate>
                                             <SfTab CssClass="child-tabs e-fill">
                                                 <TabAnimationSettings>
@@ -157,9 +160,6 @@
                                                 </TabItems>
                                             </SfTab>
                                         </ContentTemplate>
-                                        <ChildContent>
-                                            <TabHeader Text="Empleados"></TabHeader>
-                                        </ChildContent>
                                     </TabItem>
                                    
                                 </TabItems>

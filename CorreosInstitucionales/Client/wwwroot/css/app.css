@@ -181,3 +181,13 @@ a, .btn-link {
     height: 2px;
     background-color: red;
 }
+
+.e-float-input input:not(:valid):focus,
+.e-float-input input:valid:focus {
+    background-color: #fff3cd;
+}
+
+.e-tab .e-content {
+    color: #a78515;
+    font-size: 20px;
+}

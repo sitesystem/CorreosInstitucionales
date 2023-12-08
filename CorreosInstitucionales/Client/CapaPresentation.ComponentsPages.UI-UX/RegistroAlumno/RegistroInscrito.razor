@@ -178,10 +178,7 @@
         height: 2px;
         background-color: red;
     }
-    
 </style>
-
-
 
 <h3 style="font-variant: small-caps;">    
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-backpack3" viewBox="0 0 18 18">
@@ -210,31 +207,40 @@
                                    @bind-Value="@oUsuario.UsuNombre"
                                    OnInput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
                                    onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                                   CssClass="mi-sf-textbox">
-                        </SfTextBox>
+                                   CssClass="mi-sf-textbox"
+                                   ShowClearButton="true" />
                         <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
                     </div>
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="Primer Apellido" FloatLabelType="@FloatLabelType.Auto" 
-                                        @bind-Value="@oUsuario.UsuPrimerApellido"
-                                        OnInput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
-                                        onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                                        CssClass="mi-sf-textbox"></SfTextBox>
+                        <SfTextBox Placeholder="Primer Apellido"
+                                   FloatLabelType="@FloatLabelType.Auto" 
+                                   @bind-Value="@oUsuario.UsuPrimerApellido"
+                                   OnInput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
+                                   onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                                   CssClass="mi-sf-textbox"
+                                   ShowClearButton="true" />
                         <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
                     </div>
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="Segundo Apellido" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuSegundoApellido" OnInput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
-                                   onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"></SfTextBox>
+                        <SfTextBox Placeholder="Segundo Apellido"
+                                   FloatLabelType="@FloatLabelType.Auto"
+                                   @bind-Value="@oUsuario.UsuSegundoApellido"
+                                   OnInput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
+                                   onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                                   ShowClearButton="true" />
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="No. Celular" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNoCelularNuevo"
-                                   onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" CssClass="mi-sf-textbox"></SfTextBox>
-                             <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
+                        <SfTextBox Placeholder="No. Celular"
+                                   FloatLabelType="@FloatLabelType.Auto"
+                                   @bind-Value="@oUsuario.UsuNoCelularNuevo"
+                                   onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                                   CssClass="mi-sf-textbox"
+                                   ShowClearButton="true" />
+                        <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
                     </div>
-
                 </div>
                 <br />
                 <div class="row">
@@ -417,7 +423,6 @@
         @* <button class="btn btn-outline-primary" onclick="@SendMail"> Enviar correo </button>
         <span style="font-weight:bold;font-size:28px;color:#c00">@Message</span>     *@             
     </EditForm>
-    <hr />
 }
 else
 {
