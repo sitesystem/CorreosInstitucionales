@@ -1,10 +1,11 @@
 ﻿@page "/RegistroHonorario"
 
-@attribute [Authorize]
+@attribute [AllowAnonymous]
 
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.SendEmailService;
 @using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksService;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
@@ -18,8 +19,9 @@
 
 @inject IUsuario servicioUsuario;
 @inject ILink servicioLink;
-@inject IJSRuntime JS
-@inject NavigationManager Navigation
+@inject ISendEmail servicioSendEmail
+
+@inject IJSRuntime JSRuntime
 @inject HttpClient Http
 
 <style>
@@ -170,7 +172,7 @@
     Honorario
 </h3>
 
-<EditForm Model="oUsuario" OnValidSubmit="RegistrarEmpleado">
+<EditForm Model="@oUsuario" OnValidSubmit="@RegistrarEmpleado" OnInvalidSubmit="@ScrollToTop">
 
     <DataAnnotationsValidator />
     <!-- Etiqueta flotante -->
@@ -180,51 +182,76 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="Nombre(s)" Type="Syncfusion.Blazor.Inputs.InputType.Text" FloatLabelType="@FloatLabelType.Auto"
-                    @bind-Value="@oUsuario.UsuNombre" IsRequired="true"
+                    <SfTextBox ID="name"
+                               Placeholder="Nombre(s)"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuNombre" IsRequired="true"
                                OnInput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                               CssClass="mi-sf-textbox">
-                    </SfTextBox>
+                               CssClass="mi-sf-textbox"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "200" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true"
+                               ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="Primer Apellido" FloatLabelType="@FloatLabelType.Auto"
-                    @bind-Value="@oUsuario.UsuPrimerApellido"
+                    <SfTextBox 
+                        Placeholder="Primer Apellido"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuPrimerApellido"
                                OnInput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                               CssClass="mi-sf-textbox"></SfTextBox>
+                               CssClass="mi-sf-textbox"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "150" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true"
+                               ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="Segundo Apellido" FloatLabelType="@FloatLabelType.Auto"
-                    @bind-Value="@oUsuario.UsuSegundoApellido"
+                    <SfTextBox 
+                        Placeholder="Segundo Apellido"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuSegundoApellido"
                                OnInput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                               ></SfTextBox>
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "150" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="No. Celular" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNoCelularNuevo"
+                    <SfTextBox 
+                        Placeholder="Numero de Celular"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuNoCelularNuevo"
                                onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                               CssClass="mi-sf-textbox" ></SfTextBox>
+                               CssClass="mi-sf-textbox"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "10" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true"
+                               ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="CURP" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCurp"
+                    <SfTextBox
+                        Placeholder="CURP"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuCurp"
                                OnInput="@((e) => oUsuario.UsuCurp = e.Value.ToString().ToUpper())"
                                onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                               CssClass="mi-sf-textbox" ></SfTextBox>
+                               CssClass="mi-sf-textbox"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "18" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true"
+                               ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuCurp)" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                     <a href="@linkCURP.LinkNombre" target="_blank">
-                        Consulta aqui tu curp
+                        ¿Olvidaste tu Curp?
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
                             <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
@@ -235,7 +262,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                     <p>Adjunte el CURP en formato PDF</p>
-                    <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
+                    <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000 width="50%">
                         <UploaderEvents OnRemove="OnFileRemove"></UploaderEvents>
                         <UploaderAsyncSettings SaveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Save" RemoveUrl="https://blazor.syncfusion.com/services/production/api/FileUploader/Remove"></UploaderAsyncSettings>
                     </SfUploader>
@@ -249,79 +276,167 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="Num Empleado" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNumeroEmpleado" CssClass="mi-sf-textbox"></SfTextBox>
+                    <SfTextBox 
+                        Placeholder="Numero Empleado"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuNumeroEmpleado"
+                               CssClass="mi-sf-textbox"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "10" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                               ShowClearButton="true"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                               ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuNumeroEmpleado)" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="Extensión" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuNoExtension" CssClass="mi-sf-textbox" ></SfTextBox>
+                    <SfTextBox 
+                        Placeholder="Extensión"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuNoExtension"
+                               CssClass="mi-sf-textbox"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "10" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                               ShowClearButton="true"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                               ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuNoExtension)" />
                 </div>
             </div>
         </div>
     </div>
     <div class="card border-dark mb-3" style="margin-top:20px ">
-            <b class="card-header" size="20px">Datos de la cuenta</b>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="Correo Personal" Type="Syncfusion.Blazor.Inputs.InputType.Email" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" CssClass="mi-sf-textbox"></SfTextBox>
-                        <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
-                    </div>
+        <b class="card-header" size="20px">Datos de la cuenta</b>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <SfTextBox 
+                        Placeholder="Correo Personal"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Email"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva"
+                               CssClass="mi-sf-textbox"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true"
+                               ValidateOnInput="true" />
+                    <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
+                </div>
 
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox Placeholder="Contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuContraseña" CssClass="mi-sf-textbox"></SfTextBox>
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <SfTextBox 
+                        Placeholder="Contraseña"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Password"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuContraseña"
+                               CssClass="mi-sf-textbox"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true"
+                               ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
-                    </div>
+                </div>
 
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox Placeholder="Confirmar contraseña" Type="Syncfusion.Blazor.Inputs.InputType.Password" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@contraseña2" OnInput="(e => contraseña2 = e.Value.ToString())" CssClass="mi-sf-textbox" @onkeyup="@CompararCadenas"></SfTextBox>
-                        @if (banderaContraseña)
-                        {
-                            <br />
-                            <SfMessage Severity="MessageSeverity.Error">Contraseñas diferentes</SfMessage>
-                        }
-                    </div>
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <SfTextBox 
+                        Placeholder="Confirmar contraseña"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Password"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@contraseña2"
+                               OnInput="(e => contraseña2 = e.Value.ToString())"
+                               CssClass="mi-sf-textbox"
+                               @onkeyup="@CompararCadenas"
+                               ShowClearButton="true" />
+                    <br />
+                    <SfMessage Severity="MessageSeverity.Error"
+                               ShowCloseIcon="false"
+                               ShowIcon="true"
+                               Visible="@banderaContraseña">
+                        Ingresa las contraseñas y verifica que coincidan.
+                    </SfMessage>
                 </div>
             </div>
-        </div>
-
-    <div class="card border-dark mb-3" style="margin-top:20px ">
-            <b class="card-header" size="20px">Correo Institucional</b>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                    <SfTextBox Placeholder="Correo institucional (en caso de tenerlo)" FloatLabelType="@FloatLabelType.Auto" @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta"></SfTextBox>
-                </div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <small class="text-body-secondary">En caso de contar con uno.</small>
-            </div>
-        </div>
-    <!-- bton -->
-
-    @* <div class="row" style="margin-top:10px ">
-        
-    </div> *@
-    <div >
-        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 captcha">
-            <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-        </div>
-        @* <div>
-            <button type="submit" class="btn btn-primary" disabled="@DisablePostButton">Enviar</button>
-        </div> *@
-        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-            <SfProgressButton Content="Enviar" EnableProgress="true" CssClass="e-flat e-success" OnClick="@RegistrarEmpleado" Disabled="@DisablePostButton" style="height:50%; padding:10px; width:50%;">
-                <ProgressButtonSpinSettings Position="SpinPosition.Center"></ProgressButtonSpinSettings>
-                <ProgressButtonAnimationSettings Effect="Syncfusion.Blazor.SplitButtons.AnimationEffect.SlideRight"></ProgressButtonAnimationSettings>
-            </SfProgressButton>
         </div>
     </div>
+
+    <div class="card border-dark mb-3" style="margin-top:20px ">
+        <b class="card-header" size="20px">Correo Institucional</b>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                    <SfTextBox 
+                        Placeholder="Correo institucional"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                               ValidateOnInput="true" />
+                    <ValidationMessage For="@(() => oUsuario.UsuCorreoInstitucionalCuenta)" />
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <small class="text-body-secondary">En caso de contar con uno.</small>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 captcha">
+                    <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                    <button type="submit" class="btn btn-success mt-4 mb-2" disabled="@DisablePostButton">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
+                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                            <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5" />
+                        </svg>&nbsp;
+                        <span role="status">Enviar</span>
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true" hidden="@isSpinningHidden"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal *@
+    <SfDialog AllowDragging="true" @bind-Visible="@dialogVisible" IsModal="true" Width="500px" ShowCloseIcon="true" Target="#target" CloseOnEscape="true">
+        <DialogTemplates>
+            <Header>
+                Revisa y verifica tus Datos
+            </Header>
+            <Content>
+                <ValidationSummary />
+            </Content>
+        </DialogTemplates>
+        <DialogButtons>
+            <DialogButton Content="Aceptar" IsPrimary="true" OnClick="@(() => this.dialogVisible = false)" CssClass="e-block" />
+        </DialogButtons>
+        <DialogEvents OnOverlayModalClick="@(() => this.dialogVisible = false)" />
+        <DialogAnimationSettings Effect="DialogEffect.Zoom" />
+    </SfDialog>
 </EditForm>
 
 
 @code {
+    public Response<LinkViewModel>? oLinkCURP = new();
+    public LinkViewModel? linkCURP = new();
 
+    SfUploader UploadObj;
+
+    private string contraseña2;
+    public bool banderaContraseña = true;
+    private ReCAPTCHA reCAPTCHAComponent;
+    private bool ValidReCAPTCHA = false;
+    private bool ServerVerificatiing = false;
+    private bool DisablePostButton => !ValidReCAPTCHA || banderaContraseña;
+    private void OnSuccess() => ValidReCAPTCHA = true;
+    private void OnExpired() => ValidReCAPTCHA = false;
+
+    public string Content = "Enviar Registro";
+    public bool isSpinningHidden = true;
+
+    bool dialogVisible { get; set; } = false;
 
     public Response<object>? oRespuesta = new();
     private UsuarioViewModel? oUsuario = new()
@@ -365,25 +480,14 @@
             UsuIdCarreraNavigation = null,
             UsuIdRolNavigation = null,
             UsuIdTipoPersonalNavigation = null
-        };
+    };
 
-    public Response<LinkViewModel>? oLinkCURP = new();
-    public LinkViewModel? linkCURP = new();
-    SfUploader UploadObj;
-
-    // public string confirmarContraseña = string.Empty;
-    // public bool error_confirmarContraseña = true;
-
-    // public void ValidarContraseña()
-    // {
-    //     if (oUsuario.UsuContraseña != confirmarContraseña)
-    //         error_confirmarContraseña = false;
-    //     else
-    //         error_confirmarContraseña = true;
-    // }
-
-    private string contraseña2;
-    public bool banderaContraseña = true;
+    private async Task ScrollToTop()
+    {
+        await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
+        await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('name').focus()");
+        this.dialogVisible = true;
+    }
 
     private void CompararCadenas()
     {
@@ -401,52 +505,76 @@
         Console.WriteLine(DisablePostButton);
     }
 
-    private ReCAPTCHA reCAPTCHAComponent;
-    private bool ValidReCAPTCHA = false;
-    private bool ServerVerificatiing = false;
-    private bool DisablePostButton => !ValidReCAPTCHA || banderaContraseña;
-    private void OnSuccess() => ValidReCAPTCHA = true;
-    private void OnExpired() => ValidReCAPTCHA = false;
-
-
+    //Registro de un empleado
     public async Task RegistrarEmpleado()
     {
-
         if (ValidReCAPTCHA)
         {
-            var response = await reCAPTCHAComponent.GetResponseAsync();
-
             try
             {
-                ServerVerificatiing = true;
-                StateHasChanged();
-                // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
-                // Console.WriteLine("alta exitosa");
-                oUsuario.UsuIdRol = 2;
-                oUsuario.UsuIdTipoPersonal = 2;
-                oUsuario.UsuIdCarrera = null;
-                oUsuario.UsuAñoEgreso = null;
-                oUsuario.UsuBoletaAlumno = null;
-                oUsuario.UsuSemestre = null;
+                Content = "Enviando Registro...";
+                isSpinningHidden = false;
 
-                await servicioUsuario.AddDataAsync(oUsuario);
-                /* Navigation.NavigateTo("/valid") */;
-                //SendMail();
+                var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
+                oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
+
+                if (oRespuesta.Success == 1)
+                    await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
+                        {
+                            EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                            Subject = "REGISTRO EN SACI",
+                            Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
+                                           "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                        });
+                else
+                    await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
+                        {
+                            EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                            Subject = "ERROR DE REGISTRO EN SACI",
+                            Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
+                                             "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                        });
             }
             catch (HttpRequestException e)
             {
-                await JS.InvokeAsync<object>("alert", e.Message);
-                ServerVerificatiing = false;
-                StateHasChanged();
+                await JSRuntime.InvokeAsync<object>("alert", e.Message);
+            }
+            finally
+            {
+                Content = "Enviar Registro";
+                isSpinningHidden = true;
             }
         }
     }
+
+    private void OnInvalidSubmit()
+    {
+        // isValidAccount = true;
+    }
+
+    public void Begin(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args)
+    {
+        Content = "Enviar Registro";
+        // CssClass = "e-hide-spinner e-info";
+    }
+
+    public void Progressing(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args)
+    {
+        Content = "Enviando Registro...";
+    }
+
+    public void End(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args)
+    {
+        Content = "Enviar Registro";
+    }
+
     protected override async Task OnInitializedAsync()
     {
         oLinkCURP = await servicioLink.GetDataByNombreAsync("CURP");
         linkCURP = oLinkCURP.Data;
     }
-    //await servicioUsuario.AddDataAsync(oUsuario);
+
+    // Subir Archivo
     public void OnFileRemove(RemovingEventArgs args)
     {
         args.PostRawFile = false;
