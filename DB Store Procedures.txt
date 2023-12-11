@@ -1,0 +1,4 @@
+Microsoft SQL Server
+- Vaciar una Tabla
+-> USE db_CorreosInst_UPIICSA;
+-> DELETE FROM MCE_tbUsuarios DBCC CHECKIDENT ('MCE_tbUsuarios', RESEED, 0);

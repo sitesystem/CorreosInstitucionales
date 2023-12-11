@@ -6,7 +6,8 @@
         {
             services.AddAuthorizationCore(options =>
             {
-                options.AddPolicy("[Rol] Developer / Jefe de UDI / Administrador", rol => rol.RequireClaim("Rol", "1", "2", "3"));
+                options.AddPolicy("[Rol] Administrador", rol => rol.RequireClaim("Rol", "1"));
+                options.AddPolicy("[Rol] Usuario Solicitante", rol => rol.RequireClaim("Rol", "2"));
             });
 
             return services;

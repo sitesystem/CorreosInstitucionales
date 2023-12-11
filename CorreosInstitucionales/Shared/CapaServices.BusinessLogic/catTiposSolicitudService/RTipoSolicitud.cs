@@ -1,12 +1,13 @@
-﻿using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitudService
 {

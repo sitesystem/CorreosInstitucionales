@@ -184,7 +184,7 @@ a, .btn-link {
 
 .e-float-input input:not(:valid):focus,
 .e-float-input input:valid:focus {
-    background-color: #fff3cd;
+    background-color: #ffedb8;
 }
 
 .e-tab .e-content {

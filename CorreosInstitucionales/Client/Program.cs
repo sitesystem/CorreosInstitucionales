@@ -18,6 +18,7 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitud
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptosService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catExtensionService;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.SendEmailService;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -33,6 +34,9 @@ builder.Services.ConfigureAuthorizationPolicies();
 builder.Services.AddScoped<JwtAuthenticatorProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticatorProvider>(provider => provider.GetRequiredService<JwtAuthenticatorProvider>());
 builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider => provider.GetRequiredService<JwtAuthenticatorProvider>());
+
+// Inyección de Dependencias - Módulo de Send Email
+builder.Services.AddScoped<ISendEmail, RSendEmail>();
 
 // Inyección de Dependencias - Módulo de Catálogos
 builder.Services.AddScoped<ICarrera, RCarrera>();

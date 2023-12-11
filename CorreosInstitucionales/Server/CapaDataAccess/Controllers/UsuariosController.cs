@@ -109,7 +109,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta,
                     UsuCorreoInstitucionalContraseña = model.UsuCorreoInstitucionalContraseña,
                     // OTROS DATOS
-                    UsuFechaHoraAlta = DateTime.UtcNow,
+                    UsuFechaHoraAlta = DateTime.Now,
                     UsuStatus = true,
                     // DATOS FK NAVIGATION
                     UsuIdAreaDeptoNavigation = null,

@@ -32,8 +32,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuNombre")]
         [StringLength(200)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        [RegularExpression("^[A-Z. ]*$", ErrorMessage = "Formato Incorrecto. Este campo rechaza acentos o caracteres especiales.")] // NO ADMITE ACENTOS
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NOMBRE(S) requerido.")]
+        [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
         public string UsuNombre { get; set; } = null!;
 
         /// <summary>
@@ -41,7 +41,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuPrimerApellido")]
         [StringLength(150)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo PRIMER APELLIDO requerido.")]
+        [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
         public string UsuPrimerApellido { get; set; } = null!;
 
         /// <summary>
@@ -49,12 +50,13 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuSegundoApellido")]
         [StringLength(150)]
+        [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
         public string? UsuSegundoApellido { get; set; }
 
         [Column("usuCURP")]
-        [StringLength(18, ErrorMessage = "El CURP introducido es mayor a 18 digitos. Verifique que el CURP tenga 18 digitos.")]
-        [MinLength(18, ErrorMessage = "El CURP introducido es menor a 18 digitos. Verifique que el CURP tenga 18 digitos.")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [StringLength(18, ErrorMessage = "El CURP introducido debe ser máximo de 18 caracteres.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CURP requerido.")]
+        [MinLength(18, ErrorMessage = "El CURP introducido debe ser mínimo de 18 caracteres.")] 
         public string UsuCurp { get; set; } = null!;
 
         [Column("usuFileNameCURP")]
@@ -63,13 +65,13 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("usuNoCelularAnterior")]
         [StringLength(20)]
-        [MinLength(10, ErrorMessage = "Verifique su numeración que tenga al menos 10 dígitos")]
+        [MinLength(10, ErrorMessage = "Verifique el Número de Celular Anterior que tenga al menos 10 dígitos.")]
         public string? UsuNoCelularAnterior { get; set; }
 
         [Column("usuNoCelularNuevo")]
         [StringLength(20)]
-        [MinLength(10, ErrorMessage = "El Número de Celular introducido es menor a 10 digitos. Verifique su numeración que tenga al menos 10 dígitos")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NO. DE CELULAR requerido.")]
+        [MinLength(10, ErrorMessage = "El Número de Celular Actual debe ser mínimo de 10 dígitos.")] 
         public string UsuNoCelularNuevo { get; set; } = null!;
 
         /*******************************  DATOS ACADÉMICOS  *******************************/
@@ -77,30 +79,30 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// Numero de Boleta del Uusario Solicitante
         /// </summary>
         [Column("usuBoletaAlumno")]
-        [StringLength(10, ErrorMessage = "La Boleta introducida es mayor a 10 digitos. Verifique su numeración que tenga al menos 10 dígitos")]
-        [MinLength(10, ErrorMessage = "La boleta introducida es menor a 10 digitos. Verifique su numeración que tenga al menos 10 dígitos")]
-        [RegularExpression("^\\d{4}60\\d{4}$", ErrorMessage = "Boleta invalida.")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [StringLength(10, ErrorMessage = "La Boleta introducida debe ser máximo de 10 dígitos.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo BOLETA requerido.")]
+        [MinLength(10, ErrorMessage = "La Boleta introducida debe ser mínimo de 10 dígitos.")]
+        [RegularExpression("^\\d{4}60\\d{4}$", ErrorMessage = "Boleta Inválida (Formato: xxxx60xxxx).")]
         public string? UsuBoletaAlumno { get; set; }
 
         [Column("usuBoletaMaestria")]
-        [StringLength(7, ErrorMessage = "Boleta mayor a 7 dígitios. Verifique su boleta.")]
-        [MinLength(7, ErrorMessage = "La boleta es menor a 7 digitos. Verifique su boleta")]
-        [RegularExpression("^B\\d{6}$", ErrorMessage = "Boleta invalida.")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [StringLength(7, ErrorMessage = "La Boleta introducida debe ser máximo de 7 caracteres.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo BOLETA requerido.")]
+        [MinLength(7, ErrorMessage = "La Boleta introducida debe ser mínimo de 7 caracteres.")]
+        [RegularExpression("^B\\d{6}$", ErrorMessage = "Boleta Inválida (Formato: Bxxxxxx).")]
         public string? UsuBoletaMaestria { get; set; }
 
         [Column("usuIdCarrera")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CARRERA/LICENCIATURA requerido.")]
         public int? UsuIdCarrera { get; set; }
 
         [Column("usuSemestre")]
         [StringLength(15)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo SEMESTRE requerido.")]
         public string? UsuSemestre { get; set; }
 
         [Column("usuAñoEgreso")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo AÑO DE EGRESO requerido.")]
         public int? UsuAñoEgreso { get; set; }
 
         [Column("usuFileNameComprobanteInscripcion")]
@@ -113,16 +115,16 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuNumeroEmpleado")]
         [StringLength(100)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NO. DE EMPLEADO requerido.")]
         public string? UsuNumeroEmpleado { get; set; }
 
         [Column("usuIdAreaDepto")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo ÁREA/DEPARTAMENTO requerido.")]
         public int? UsuIdAreaDepto { get; set; }
 
         [Column("usuNoExtension")]
         [StringLength(10)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NO. DE EXTENSIÓN requerido.")]
         public string? UsuNoExtension { get; set; }
 
         /*******************************  DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP  *******************************/
@@ -132,7 +134,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 
         [Column("usuCorreoPersonalCuentaNueva")]
         [StringLength(100)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO ELECTRÓNICO PERSONAL requerido.")]
         public string UsuCorreoPersonalCuentaNueva { get; set; } = null!;
 
         /// <summary>
@@ -140,7 +142,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
         /// </summary>
         [Column("usuContraseña")]
         [StringLength(300)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CONTRASEÑA requerido.")]
         public string UsuContraseña { get; set; } = null!;
 
         /// <summary>

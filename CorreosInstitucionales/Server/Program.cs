@@ -6,6 +6,7 @@ using System.Text;
 
 using CorreosInstitucionales.Server.CapaDataAccess.LoginAuth;
 using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Common;
+using CorreosInstitucionales.Server.CapaDataAccess.SendEmail;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddRazorPages();
 //}
 
 //builder.Services.Configure<reCAPTCHAVerificationOptions>(Configuration.GetSection("reCAPTCHA"));
+
+builder.Services.AddScoped<ISendEmail, RSendEmail>();
 
 // Habilitar Swagger
 builder.Services.AddEndpointsApiExplorer();

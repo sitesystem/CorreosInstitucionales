@@ -26,6 +26,7 @@
     .control-container .e-appbar.custom-appbar {
         background: none;
         color: #fff;
+        font-size: 16px;
     }
 
     .control-container .e-btn.e-inherit {
@@ -47,19 +48,22 @@
     </div>
 
     <main>
-        <div class="top-row px-4 control-container" style="background-color:#48132E; color:white;">
-            <SfAppBar ColorMode="AppBarColor.Primary" Mode="AppBarMode.Regular" CssClass="custom-appbar">
+        <div class="top-row px-4 control-container" style="background-color:#3d0000; color:white;">
+            <SfAppBar IsSticky="true" ColorMode="AppBarColor.Primary" Mode="AppBarMode.Regular" CssClass="custom-appbar">
 
                 <SfButton CssClass="e-inherit" IconCss="e-icons e-menu" OnClick="CollapseSidebar" />
-                @* <a href="https://www.syncfusion.com/blazor-components" target="_blank" rel="noopener" role="link" aria-label="Syncfusion blazor components">
-                <div class="syncfusion-logo"></div>
-                </a> *@
-                <span style="font-variant: small-caps;">Plataforma de Correos Institucionales IPN</span>
+
+                <a href="https:www.syncfusion.com/blazor-components" target="_blank" rel="noopener" role="link" aria-label="Syncfusion blazor components">
+                    <div class="syncfusion-logo"></div>
+                </a>
+                <span style="font-variant: small-caps;">Sistema de Atención para Correos Institucionales IPN</span>
 
                 <AppBarSpacer />
 
                 <AuthorizeView>
                     <Authorized>
+
+                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
 
                         <CultureSwitcher />
                         <div class="theme-switcher">
@@ -70,8 +74,6 @@
                             </SfDropDownList>
                         </div>
 
-                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
-
                         @{
                             string? rol = context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value;
                             string? tipoPersonal = string.Empty;
@@ -80,6 +82,16 @@
                             string? name = context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value;
                             string? email = context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
                         }
+
+                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
+
+                        <span style="font-variant: small-caps;">@tipoPersonal</span>
+
+                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
+
+                        <span>@email</span>
+
+                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
 
                         <SfDropDownButton Content="@name" IconCss="e-icons e-user" IconPosition="SplitButtonIconPosition.Left" EnableRtl="false">
                             <DropDownButtonEvents ItemSelected="DropDownSelect"></DropDownButtonEvents>

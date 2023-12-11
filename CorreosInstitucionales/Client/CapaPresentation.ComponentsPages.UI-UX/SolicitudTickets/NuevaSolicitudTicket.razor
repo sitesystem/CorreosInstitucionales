@@ -1,0 +1,46 @@
+﻿@page "/NuevaSolicitudTicket"
+
+@attribute [Authorize(Policy = "[Rol] Usuario Solicitante")]
+
+<PageTitle>SITI | Nueva Solicitud de Ticket</PageTitle>
+
+<SfBreadcrumb EnableActiveItemNavigation="true" EnableNavigation="false">
+    <BreadcrumbItems>
+        <BreadcrumbItem Text="Módulo de Tickets" IconCss="e-icons e-bookmark" Disabled="true" />
+        <BreadcrumbItem Text="Nueva Solicitud de Ticket" IconCss="e-icons e-bookmark" Disabled="true" />
+    </BreadcrumbItems>
+</SfBreadcrumb>
+
+<h3 style="font-variant: small-caps;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-tag-fill" viewBox="0 0 16 16">
+        <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1H2zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+    </svg> Nueva Solicitud de Ticket
+</h3>
+
+<style type="text/css">
+
+</style>
+
+@if (true)
+{
+    <AuthorizeView>
+        <Authorized>
+            <p>Autorizado</p>
+        </Authorized>
+        <NotAuthorized>
+            <p>No Autorizado</p>
+        </NotAuthorized>
+        <Authorizing>
+            <p>Autorizando..</p>
+        </Authorizing>
+    </AuthorizeView>
+}
+else
+{
+    <SfSpinner Type="SpinnerType.Tailwind" Size="50" Label="Cargando..." Visible="true" CssClass="e-spin-overlay" />
+}
+
+@code
+{
+
+}
