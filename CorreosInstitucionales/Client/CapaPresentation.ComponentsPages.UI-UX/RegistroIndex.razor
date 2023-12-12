@@ -10,6 +10,8 @@
 
 @layout LoginLayout
 
+@inject NavigationManager navigationManager
+
 <PageTitle>Registro de Usuario</PageTitle>
 
 <style>
@@ -74,105 +76,113 @@
     }
 </style>
 
-<div class="card-body">
-    <div class="col-lg-12 control-section">
-        <div class="nested-tab-control-section">
-                <SfTab OverflowMode="OverflowMode.Scrollable" CssClass="nested-tabs e-fill">
-                <TabAnimationSettings>
-                    <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
-                    <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
-                </TabAnimationSettings>
-                <TabItems>
-                    <TabItem>
-                        <ChildContent>
-                            <TabHeader Text="Alumnos/Egresados" IconCss="e-icons e-paste-text-only" IconPosition="left"></TabHeader>
-                        </ChildContent>
-                        <ContentTemplate>
-                            <SfTab CssClass="child-tabs e-fill">
-                                <TabAnimationSettings>
-                                    <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
-                                    <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
-                                </TabAnimationSettings>
-                                <TabItems>
-                                    <TabItem>
-                                        <ChildContent>
-                                            <TabHeader Text="Inscrito" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
-                                        </ChildContent>
-                                        <ContentTemplate>
-                                            <RegistroInscrito/>
-                                        </ContentTemplate>
-                                    </TabItem>
-                                    <TabItem>
-                                        <ChildContent>
-                                            <TabHeader Text="Egresados" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
-                                        </ChildContent>
-                                        <ContentTemplate>
-                                            <RegistroEgresado/>
-                                        </ContentTemplate>
-                                    </TabItem>
-                                    <TabItem>
-                                        <ChildContent>
-                                            <TabHeader Text="Maestría" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
-                                        </ChildContent>
-                                        <ContentTemplate>
-                                            <RegistroMaestria/>
-                                        </ContentTemplate>
-                                    </TabItem>
-                                </TabItems>
-                            </SfTab>
-                        </ContentTemplate>
-                    </TabItem>
-                    <TabItem>
-                        <ChildContent>
-                            <TabHeader Text="Empleados" IconCss="e-icons e-redaction" IconPosition="left" />
-                        </ChildContent>
-                        <ContentTemplate>
-                            <SfTab CssClass="child-tabs e-fill">
-                                <TabAnimationSettings>
-                                    <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
-                                    <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
-                                </TabAnimationSettings>
-                                <TabItems>
-                                    <TabItem>
-                                        <ChildContent>
-                                            <TabHeader Text="Administrativo"></TabHeader>
-                                        </ChildContent>
-                                        <ContentTemplate>
-                                            <RegistroAdministrativo/>
-                                        </ContentTemplate>
-                                    </TabItem>
-                                    <TabItem>
-                                        <ChildContent>
-                                            <TabHeader Text="Docente"></TabHeader>
-                                        </ChildContent>
-                                        <ContentTemplate>
-                                            <RegistroDocente/>
-                                        </ContentTemplate>
-                                    </TabItem>
-                                    <TabItem>
-                                        <ChildContent>
-                                            <TabHeader Text="Honorario"></TabHeader>
-                                        </ChildContent>
-                                        <ContentTemplate>
-                                            <RegistroHonorario/>
-                                        </ContentTemplate>
-                                    </TabItem>
-                                </TabItems>
-                            </SfTab>
-                        </ContentTemplate>
-                    </TabItem>
-                                   
-                </TabItems>
-            </SfTab>
+<nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark" style="position: fixed; top: 0; width: 100%; z-index: 9999;">
+    <div class="container-fluid">
+        <a class="navbar" style="font-variant: small-caps; text-decoration:none; font-size:20px; color:white;">
+            <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.upiicsa.ipn.mx%2Fconocenos%2Fcomunicacion.html&psig=AOvVaw3p8-f3qlrYdi7NCdD21enF&ust=1702399727733000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOCSlqvrh4MDFQAAAAAdAAAAABAD" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+            Sistema de Atención de Correos Institucionales
+        </a>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-outline-light" @onclick="IniciarSesion">Iniciar Sesión</button>
+            <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.upiicsa.ipn.mx%2Fconocenos%2Fcomunicacion.html&psig=AOvVaw3p8-f3qlrYdi7NCdD21enF&ust=1702399727733000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOCSlqvrh4MDFQAAAAAdAAAAABAD" alt="Logo" width="30" height="24" class="rounded float-end">
         </div>
-    </div>
+    </div>    
+</nav>
+<body style="padding-top:60px;">
+    <div class="card-body">
+        <div class="col-lg-12 control-section">
+            <div class="nested-tab-control-section">
+                    <SfTab OverflowMode="OverflowMode.Scrollable" CssClass="nested-tabs e-fill">
+                    <TabAnimationSettings>
+                        <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
+                        <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
+                    </TabAnimationSettings>
+                    <TabItems>
+                        <TabItem>
+                            <ChildContent>
+                                <TabHeader Text="Alumnos/Egresados" IconCss="e-icons e-paste-text-only" IconPosition="left"></TabHeader>
+                            </ChildContent>
+                            <ContentTemplate>
+                                <SfTab CssClass="child-tabs e-fill">
+                                    <TabAnimationSettings>
+                                        <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
+                                        <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
+                                    </TabAnimationSettings>
+                                    <TabItems>
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Inscrito/Egresado" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
+                                            </ChildContent>
+                                            <ContentTemplate>
+                                                <RegistroInscrito/>
+                                            </ContentTemplate>
+                                        </TabItem>                                    
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Maestría" IconCss="e-icons e-user" IconPosition="Top"></TabHeader>
+                                            </ChildContent>
+                                            <ContentTemplate>
+                                                <RegistroMaestria/>
+                                            </ContentTemplate>
+                                        </TabItem>
+                                    </TabItems>
+                                </SfTab>
+                            </ContentTemplate>
+                        </TabItem>
+                        <TabItem>
+                            <ChildContent>
+                                <TabHeader Text="Empleados" IconCss="e-icons e-redaction" IconPosition="left" />
+                            </ChildContent>
+                            <ContentTemplate>
+                                <SfTab CssClass="child-tabs e-fill">
+                                    <TabAnimationSettings>
+                                        <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
+                                        <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
+                                    </TabAnimationSettings>
+                                    <TabItems>
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Administrativo"></TabHeader>
+                                            </ChildContent>
+                                            <ContentTemplate>
+                                                <RegistroAdministrativo/>
+                                            </ContentTemplate>
+                                        </TabItem>
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Docente"></TabHeader>
+                                            </ChildContent>
+                                            <ContentTemplate>
+                                                <RegistroDocente/>
+                                            </ContentTemplate>
+                                        </TabItem>
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Honorario"></TabHeader>
+                                            </ChildContent>
+                                            <ContentTemplate>
+                                                <RegistroHonorario/>
+                                            </ContentTemplate>
+                                        </TabItem>
+                                    </TabItems>
+                                </SfTab>
+                            </ContentTemplate>
+                        </TabItem>
+                                   
+                    </TabItems>
+                </SfTab>
+            </div>
+        </div>
 
                     
-</div>
-              @*   <div class="card-footer text-body-secondary card-subtitle">
-                    © UPIICSA 2023 vα 0.0.1
-                </div> *@
-
+    </div>
+                  @*   <div class="card-footer text-body-secondary card-subtitle">
+                        © UPIICSA 2023 vα 0.0.1
+                    </div> *@
+</body>
 @code
 {
+    private void IniciarSesion()=>navigationManager.NavigateTo("/");
+        
+    
 }
