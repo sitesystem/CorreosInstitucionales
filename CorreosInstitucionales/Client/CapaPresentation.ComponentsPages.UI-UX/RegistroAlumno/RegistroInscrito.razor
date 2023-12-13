@@ -363,7 +363,8 @@
                     </div>
                     @if (egresado==true)
                     {
-                        oUsuario.UsuSemestre = "1";
+                        oUsuario.UsuIdTipoPersonal = 2;
+                        oUsuario.UsuSemestre = "8";
                         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                             <SfNumericTextBox TValue="int?"
                                               Min=1936
@@ -379,7 +380,12 @@
                             <ValidationMessage For="@(() => oUsuario.UsuAñoEgreso)" />
                         </div>
                     }
-              
+                    else
+                    {
+                        oUsuario.UsuIdTipoPersonal = 1;
+                        oUsuario.UsuSemestre = "";
+                    }
+
                 </div>                
                 <div class="row">        
 
