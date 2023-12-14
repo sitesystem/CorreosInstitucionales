@@ -4,7 +4,11 @@
 @using System.Security.Claims;
 
 @using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request.Login
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.SendEmailService
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService
 
 @layout LoginLayout
 
@@ -12,6 +16,7 @@
 @inject NavigationManager navigationManager
 
 @inject ILoginServices loginService
+
 
 @attribute [AllowAnonymous]
 
@@ -151,7 +156,7 @@
                                                 <TabHeader Text="Recuperar Contraseña" IconCss="e-icons e-user" IconPosition="top"></TabHeader>
                                             </ChildContent>
                                             <ContentTemplate>
-                                                Marseille, a port city in southern France, has been a crossroads of immigration and trade since its founding by the Greeks circa 600 B.C. At its heart is the Vieux-Port (Old Port), where fishmongers sell their catch along the boat-lined quay. Basilique Notre-Dame-de-la-Garde is a Romanesque-Byzantine church. Modern landmarks include Le Corbusier’s influential Cité Radieuse complex and Zaha Hadid’s CMA CGM Tower.
+                                                    <RecuperaContraseña/>
                                             </ContentTemplate>
                                         </TabItem>
                                     </TabItems>
@@ -241,7 +246,8 @@
 @code
 {
     private LoginAuthViewModel login = new();
-    public string Content = "Iniciar Sesión";
+    public string Content = "Iniciar Sesión";    
+    
     private bool isValidAccount = false;
 
     private async Task IniciarSesion()
@@ -282,4 +288,6 @@
     {
         Content = "Iniciar Sesión";
     }
+
+   
 }

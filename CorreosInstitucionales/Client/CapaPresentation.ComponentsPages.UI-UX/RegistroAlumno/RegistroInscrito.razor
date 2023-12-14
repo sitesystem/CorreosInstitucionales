@@ -353,18 +353,20 @@
                     </div>         
                     <br />
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4" >
-                        
-                        <div style="position:relative">
-                                <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50px, -30px);">
-                                <label style="padding: 10px 50px 30px 0; font-variant: small-caps; font-size:16px;">Egresado</label>
-                                    <SfSwitch @bind-Checked="@egresado" OnLabel="SÍ" OffLabel="NO"></SfSwitch>
-                                </div>
-                        </div>
+                        <center>
+                            <table> 
+                                <br/>
+                                <span class="align-bottom">
+                                    <label  style="padding:1vh 1vw 1vh; font-variant: small-caps; font-size:16px;">Egresado</label>
+                                </span>
+                                <SfSwitch @bind-Checked="@egresado" OnLabel="SÍ" OffLabel="NO"></SfSwitch>
+                            </table>
+                        </center>
                     </div>
                     @if (egresado==true)
                     {
                         oUsuario.UsuIdTipoPersonal = 2;
-                        oUsuario.UsuSemestre = "8";
+                        oUsuario.UsuSemestre = "";
                         <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                             <SfNumericTextBox TValue="int?"
                                               Min=1936
@@ -383,7 +385,7 @@
                     else
                     {
                         oUsuario.UsuIdTipoPersonal = 1;
-                        oUsuario.UsuSemestre = "";
+                        oUsuario.UsuSemestre = "8";
                     }
 
                 </div>                
