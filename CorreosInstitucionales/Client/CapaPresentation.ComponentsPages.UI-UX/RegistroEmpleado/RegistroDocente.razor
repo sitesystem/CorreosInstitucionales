@@ -6,6 +6,7 @@
 @using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
 
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.SendEmailService;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptosService;
 @using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksService;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
@@ -16,7 +17,7 @@
 @using Newtonsoft.Json;
 @using System.Net.Mail;
 
-
+@inject IAreaDepto servicioAreaDepto;
 @inject IUsuario servicioUsuario;
 @inject ILink servicioLink;
 @inject ISendEmail servicioSendEmail;
@@ -294,6 +295,28 @@
                         Type="Syncfusion.Blazor.Inputs.InputType.Text"
                         ValidateOnInput="true" />
                 </div>
+                <div class="col-xs-4 col-lg-4 col-md-4">
+                    <SfDropDownList ID="Data___UsuIdAreaDepto"
+                                    TValue="int?"
+                                    TItem="AreaDeptoViewModel"
+                                    Placeholder="Area Departamento"
+                                    @bind-Value="@oUsuario.UsuIdAreaDepto"
+                                    DataSource="@oAreaDepto.Data"
+                                    AllowFiltering="true"
+                                    CssClass="mi-sf-textbox"
+                                    Enabled="true"
+                                    EnableVirtualization="false"
+                                    FilterBarPlaceholder="Selecciona una opción"
+                                    FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                    FloatLabelType="FloatLabelType.Auto"
+                                    IgnoreAccent="true"
+                                    IgnoreCase="true"
+                                    Readonly="false"
+                                    ShowClearButton="true"
+                                    SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.None">
+                        <DropDownListFieldSettings Value="IdAreaDepto" Text="areNombre" />
+                    </SfDropDownList>
+                </div>
             </div>
         </div>
     </div>
@@ -433,8 +456,8 @@
             UsuSegundoApellido = "",                // Segundo Apellido del Usuario Solicitante o Administrador
             UsuCurp = "",                           // CURP con 18 caracteres como mínimo
             UsuFileNameCurp = "",                   // Nombre del Archivo y extensión .pdf del CURP
-            //UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
-            UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
+            UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
+            //UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
             // DATOS ACADÉMICOS
             UsuBoletaAlumno = "0000000000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             UsuBoletaMaestria = "0000000",          // Número de Boleta del Usuario (Alumno de Maestria)
@@ -443,9 +466,9 @@
             UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
             // UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             // DATOS LABORALES
-            UsuNumeroEmpleado = "0",                // Número del Empleado del Usuario (Administrador o Docente)
+            UsuNumeroEmpleado = "",                // Número del Empleado del Usuario (Administrador o Docente)
             UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
-            UsuNoExtension = "0",                   // Número de Extensión del Empleado
+            UsuNoExtension = "",                   // Número de Extensión del Empleado
             // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
             UsuCorreoPersonalCuentaAnterior = "",   // Correo Personal de la Cuenta Anterior
             UsuCorreoPersonalCuentaNueva = "",      // Correo Personal de la Cuenta Nueva o Actual
@@ -462,7 +485,10 @@
             UsuIdCarreraNavigation = null,
             UsuIdRolNavigation = null,
             UsuIdTipoPersonalNavigation = null
-        };
+    };
+
+    public Response<List<AreaDeptoViewModel>>? oAreaDepto = new();
+
     private async Task ScrollToTop()
     {
         await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
@@ -551,6 +577,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        oAreaDepto = await servicioAreaDepto.GetAllDataAsync(false);
         oLinkCURP = await servicioLink.GetDataByNombreAsync("CURP");
         linkCURP = oLinkCURP.Data;
     }
