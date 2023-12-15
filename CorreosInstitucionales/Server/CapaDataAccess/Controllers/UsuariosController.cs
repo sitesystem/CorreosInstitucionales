@@ -218,9 +218,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     db.Entry(oUsuario).State = EntityState.Modified;
                     await db.SaveChangesAsync();
 
-                    oRespuesta.Success = 1;
                     oRespuesta.Message = "Se generó contraseña temporal enviada a su correo personal.";
                 }
+                else
+                    oRespuesta.Message = "No se encuentra el correo.";
+
+                oRespuesta.Success = 1;
             }
             catch (Exception ex)
             {

@@ -1,17 +1,19 @@
 > [!NOTE]
 > # PENDIENTES
-> ## Validar no registros duplicados por correo  y CURP
+> ## Validar restricción prohibitiva de registros duplicados por correo  y CURP.
 > ## Subir archivos al servidor.
-> ## Instalar disco duro al servidor
-> ## Subir aplicación al servidor
-> ## Crear tabla de usuarios
-> ## Catálogo de escuelas detalle 
+> ## Instalar disco duro al servidor.
+> ## Subir aplicación al servidor.
+> ## Crear tabla de usuarios.
+> ## Catálogo de escuelas detalle
 > 	* Campos incompletos
 > 	* Subida del logo
 > ## Si se deshabilita un estado de tipo personal entonces se deshabilita su registro.
 > 	*  EJEMPLO MAESTRÍA NO EXISTE EN UNA ESCUELA ENTONCES NO DEBE APARECER SU REGISTRO.
 > ## Cuando el tipo de solicitud cambie se deshabilite tambien se deshabilitará la opción solicitar solicitud.
-
+> ## Registros upload de archivos.
+> ## Registro empleados si pone la extensión en automático se pone el área o su inverso si pone el área en automático pone la extensión.
+> ## Poner galería en la foto estática del login.
 
 > [!IMPORTANT]
 > # EN PROCESO
@@ -19,16 +21,23 @@
 > 	* Cuando se registra.
 > 	* Cuando se recupera.
 > 	* Cuando se cuando se le atiende su correo institucional y contraseña.
-> ## Interfaz y funcionalidad de recuperación de correo
+> ## Interfaz y funcionalidad de recuperación de correo.
+
 
 
 > [!WARNING]
 > # EN PROCESO DE AUTORIZACIÓN :shipit:
-> ## Catálogo de areas departemento 
-> ## Catálogo de extensiones 
+> ## Catálogo de areas departemento. 
+> ## Catálogo de extensiones.
 > ## Validación el campo de boleta de egresados e inscritos. 
 > ## Revisar la validación de boleta de maestría. B y 6 numeros. 
- 
+> ## Catálogo de edificios
+> ## Catálogo de pisos
+> ## Catálogo de enlaces
+> ## Catálogo de carreras
+> ## Catálogo de tipos de solicitud
+> ## Catálogo de tipos de personal
+> ## Catálogo de datos de la escuela
 
 > [!TIP]
 > # TERMINADOS

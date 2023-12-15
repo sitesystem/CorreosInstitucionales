@@ -32,7 +32,7 @@
                                Multiline="false"
                                Readonly="false"
                                Enabled="true"
-                               onkeyup="@FullInput" />
+                               onkeyup="@FullInput"/>
                     <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
                 </div>
                 <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
@@ -105,7 +105,16 @@
 
     //Envio de mensaje
     public Response<object>? oRespuesta = new();
+
+    public class RecuperarContraseñaCorreo
+    {
+        public string? CorreoPersonal { get; set; }
+    }
+
+    public RecuperarContraseñaCorreo oRecuperarContraseñaCorreo = new();
     public UsuarioViewModel? oUsuario = new();
+
+
     public bool isSpinningHidden = true;
     public async Task RecuperarContraseña()
     {
@@ -146,7 +155,7 @@
                 // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
                 // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
 
-                Content = "Enviando Registro...";
+                Content = "Enviando solicitud...";
                 isSpinningHidden = false;
 
                 var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
@@ -156,9 +165,12 @@
                     await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
                         {
                             EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                            Subject = "REGISTRO EN SACI",
-                            Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                               "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                            Subject = "Correo de recuperación",
+                            Body = "Estimad@: " + 
+                            " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
+                                               "Se le ha asignado un token para su acceso que tendrá que cambiar al entrar al sistema, porque se elminará dicho token. <br><br>"+ 
+                                               "Por favor resguarde sus credenciales adecuadamente. <br><br>" +                                               
+                                               "<b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
                         });
                 else
                     await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
@@ -166,7 +178,8 @@
                             EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
                             Subject = "ERROR DE REGISTRO EN SACI",
                             Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                                 "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                                                 "Recuperación fracaso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"+
+                                                         "Si el problema persisite <b>Acudir a la Unidad Informática.</b><br>"
                         });
             }
             catch (HttpRequestException e)
@@ -177,7 +190,7 @@
             }
             finally
             {
-                Content = "Enviar Registro";
+                Content = "Enviar correo de recuperación";
                 isSpinningHidden = true;
             }
         }
