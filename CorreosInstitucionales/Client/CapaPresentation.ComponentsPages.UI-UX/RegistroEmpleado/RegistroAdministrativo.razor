@@ -302,7 +302,7 @@
                         ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuNoExtension)" />
                 </div>
-                <div class="col-xs-4 col-lg-4 col-md-4">
+               @*<div class="col-xs-4 col-lg-4 col-md-4">
                     <SfDropDownList ID="Data___UsuIdAreaDepto"
                                     TValue="int?"
                                     TItem="AreaDeptoViewModel"
@@ -322,8 +322,8 @@
                                     ShowClearButton="true"
                                     SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.None">
                         <DropDownListFieldSettings Value="IdAreaDepto" Text="areNombre" />
-                    </SfDropDownList>
-                </div>
+                        </SfDropDownList>
+                    </div>*@            
             </div>
         </div>
     </div>
@@ -478,10 +478,10 @@
             UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
             //UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
             // DATOS ACADÉMICOS
-            UsuBoletaAlumno = "0000000000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
-            UsuBoletaMaestria = "0000000",          // Número de Boleta del Usuario (Alumno de Maestria)
-            UsuIdCarrera = 0,                       // FK ID de la Carrera del Alumno
-            UsuSemestre = "0",                      // Semestre que cursa el Alumno Inscrito o de Maestria
+            UsuBoletaAlumno = "0000600000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+            UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
+            UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
+            UsuSemestre = "1",                      // Semestre que cursa el Alumno Inscrito o de Maestria
             UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
             // UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             // DATOS LABORALES
