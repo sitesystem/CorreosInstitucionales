@@ -13,13 +13,14 @@
 > ## Cuando el tipo de solicitud cambie se deshabilite tambien se deshabilitará la opción solicitar solicitud.
 
 
- 
 > [!IMPORTANT]
 > # EN PROCESO
 > ## Envio de correos 
 > 	* Cuando se registra.
 > 	* Cuando se recupera.
 > 	* Cuando se cuando se le atiende su correo institucional y contraseña.
+
+
 > [!WARNING]
 > # EN PROCESO DE AUTORIZACIÓN :shipit:
 > ## Catálogo de areas departemento 
