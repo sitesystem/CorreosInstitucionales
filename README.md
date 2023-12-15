@@ -19,6 +19,7 @@
 > 	* Cuando se registra.
 > 	* Cuando se recupera.
 > 	* Cuando se cuando se le atiende su correo institucional y contraseña.
+> ## Interfaz y funcionalidad de recuperación de correo
 
 
 > [!WARNING]
