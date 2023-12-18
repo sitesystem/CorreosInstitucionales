@@ -44,6 +44,17 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosSer
             return result;
         }
 
+        public async Task<Response<UsuarioViewModel>?> ValidateByEmailCURP(string correo, string curp)
+        {
+            var result = await _httpClient.GetFromJsonAsync<Response<UsuarioViewModel>>(url + "filterByEmailCURP/" + correo + "/" + curp,
+                 new JsonSerializerOptions()
+                 {
+                     PropertyNameCaseInsensitive = true
+                 });
+
+            return result;
+        }
+
         public async Task<HttpResponseMessage> AddDataAsync(UsuarioViewModel oUsuario)
         {
             // var json = JsonSerializer.Serialize(oUsuario);

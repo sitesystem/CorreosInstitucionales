@@ -12,6 +12,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosSer
     {
         public Task<Response<List<UsuarioViewModel>>?> GetAllDataAsync(bool filterByStatus);
         public Task<Response<UsuarioViewModel>?> GetDataByIdAsync(int id);
+        public Task<Response<UsuarioViewModel>?> ValidateByEmailCURP(string correo, string curp);
         public Task<HttpResponseMessage> AddDataAsync(UsuarioViewModel oUsuario);
         public Task<HttpResponseMessage> EditDataAsync(UsuarioViewModel oUsuario);
         public Task<HttpResponseMessage> ResetPassword(string correoPersonal);
