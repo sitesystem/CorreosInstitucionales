@@ -15,10 +15,12 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosSer
         private readonly HttpClient _httpClient;
         //const string url = "https://localhost:7271/api/Usuarios";
         const string url = "/api/Usuarios/";
+
         public RUsuario(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
+
         public async Task<Response<List<UsuarioViewModel>>?> GetAllDataAsync(bool filterByStatus)
         {
             var response = await _httpClient.GetAsync(url + "filterByStatus/" + filterByStatus);
@@ -64,6 +66,21 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosSer
             // var response = await _httpClient.PutAsync(url, content);
 
             var response = await _httpClient.PutAsJsonAsync(url, oUsuario,
+                 new JsonSerializerOptions()
+                 {
+                     PropertyNameCaseInsensitive = true
+                 });
+
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> ResetPassword(string correoPersonal)
+        {
+            // var json = JsonSerializer.Serialize(correoPersonal);
+            // var content = new StringContent(json, Encoding.UTF8, "application/json");
+            // var response = await _httpClient.PutAsync(url, content);
+
+            var response = await _httpClient.PutAsJsonAsync(url + "resetPassword/" + correoPersonal,
                  new JsonSerializerOptions()
                  {
                      PropertyNameCaseInsensitive = true

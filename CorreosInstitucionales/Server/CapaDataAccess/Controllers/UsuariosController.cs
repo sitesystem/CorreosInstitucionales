@@ -201,7 +201,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         [HttpPut("resetPassword/{correoPersonal}")]
         public async Task<IActionResult> ResetPassword(string correoPersonal)
         {
-            Response<object> oRespuesta = new();
+            Response<MceTbUsuario> oRespuesta = new();
 
             try
             {
@@ -211,19 +211,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 if (oUsuario != null)
                 {
-                    string tmpPassword = "123";
+                    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+                    string tmpPassword = new(Enumerable.Repeat(chars, 10).Select(s => s[new Random().Next(s.Length)]).ToArray());
 
                     oUsuario.UsuContraseña = Encrypt.GetSHA256(tmpPassword);
                     oUsuario.UsuRecuperarContraseña = true;
                     db.Entry(oUsuario).State = EntityState.Modified;
                     await db.SaveChangesAsync();
 
-                    oRespuesta.Message = "Se generó contraseña temporal enviada a su correo personal.";
+                    oRespuesta.Success = 1;
+                    oRespuesta.Message = $"Se generó una Contraseña Temporal: <b>{tmpPassword}</b>";
+                    oRespuesta.Data = oUsuario;
                 }
                 else
-                    oRespuesta.Message = "No se encuentra el correo.";
-
-                oRespuesta.Success = 1;
+                    oRespuesta.Message = "No se encuentró registrado el Correo Electrónico. Si el problema persisite acudir a la Unidad Informática (UDI).";
             }
             catch (Exception ex)
             {

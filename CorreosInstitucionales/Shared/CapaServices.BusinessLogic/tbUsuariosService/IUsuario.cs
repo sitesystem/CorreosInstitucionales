@@ -11,13 +11,10 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosSer
     public interface IUsuario
     {
         public Task<Response<List<UsuarioViewModel>>?> GetAllDataAsync(bool filterByStatus);
-
         public Task<Response<UsuarioViewModel>?> GetDataByIdAsync(int id);
-
         public Task<HttpResponseMessage> AddDataAsync(UsuarioViewModel oUsuario);
-
         public Task<HttpResponseMessage> EditDataAsync(UsuarioViewModel oUsuario);
-
+        public Task<HttpResponseMessage> ResetPassword(string correoPersonal);
         public Task<HttpResponseMessage> EnableDisableDataById(int id, bool isActivate);
     }
 }

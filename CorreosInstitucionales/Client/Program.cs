@@ -19,6 +19,7 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptosService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catExtensionService;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.SendEmailService;
+using Syncfusion.Blazor.Popups;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -52,6 +53,7 @@ builder.Services.AddScoped<IExtension, RExtension>();
 // Inyección de Dependencias - Módulo de Registro
 builder.Services.AddScoped<IUsuario, RUsuario>();
 
+builder.Services.AddScoped<SfDialogService>();
 builder.Services.AddSyncfusionBlazor(options => { options.EnableRtl = false; options.Animation = GlobalAnimationMode.Enable; /*options.IgnoreScriptIsolation = true;*/ });
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjcwMzY4OUAzMjMzMmUzMDJlMzBUZHd6Sy8rUkNGSDAvQzNibGRkaXJhVmtZT0MrWlVrTmkvRFFFWW45bFBZPQ==");
 
