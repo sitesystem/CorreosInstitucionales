@@ -65,6 +65,35 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return Ok(oResponse);
         }
 
+        [HttpGet("filterByNombre&CURP/{nombre}")]
+        public async Task<IActionResult> GetDataByNombre(string correo, string curp)
+        {
+            Response<MceTbUsuario> oResponse = new();
+
+            try
+            {
+                using DbCorreosInstUpiicsaContext db = new();
+                var list = await db.MceTbUsuarios.Where(vistaCorreo => vistaCorreo.UsuCorreoPersonalCuentaNueva == correo).FirstOrDefaultAsync();                
+                var list2 = await db.MceTbUsuarios.Where(vistaCurp => vistaCurp.UsuCurp == curp).FirstOrDefaultAsync();
+                if (list==null || list2==null)
+                {
+                    oResponse.Success = 0;
+                    oResponse.Data = list;
+                    oResponse.Data = list2;
+                }
+                else    
+                {
+                    oResponse.Success = 1;                    
+                }
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddData(UsuarioViewModel model)
         {

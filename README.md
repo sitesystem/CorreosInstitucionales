@@ -13,7 +13,7 @@
 > ## Cuando el tipo de solicitud cambie se deshabilite tambien se deshabilitará la opción solicitar solicitud.
 > ## Registros upload de archivos.
 > ## Registro empleados si pone la extensión en automático se pone el área o su inverso si pone el área en automático pone la extensión.
-> ## Poner galería en la foto estática del login.
+
 
 > [!IMPORTANT]
 > # EN PROCESO
@@ -21,8 +21,10 @@
 > 	* Cuando se registra.
 > 	* Cuando se recupera.
 > 	* Cuando se cuando se le atiende su correo institucional y contraseña.
-> ## Interfaz y funcionalidad de recuperación de correo.
-
+> ## Recuperación de correo.
+> 	* Interfaz 
+> 	* funcionalidad
+> ## Poner galería en la foto estática del login.
 
 
 > [!WARNING]
