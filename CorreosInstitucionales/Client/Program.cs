@@ -55,7 +55,7 @@ builder.Services.AddScoped<IUsuario, RUsuario>();
 
 builder.Services.AddScoped<SfDialogService>();
 builder.Services.AddSyncfusionBlazor(options => { options.EnableRtl = false; options.Animation = GlobalAnimationMode.Enable; /*options.IgnoreScriptIsolation = true;*/ });
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjcwMzY4OUAzMjMzMmUzMDJlMzBUZHd6Sy8rUkNGSDAvQzNibGRkaXJhVmtZT0MrWlVrTmkvRFFFWW45bFBZPQ==");
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mjk4NTE1NEAzMjM0MmUzMDJlMzBiYmFBNkJpaDhkYnNuV1M4bUF6bzMzdkVqeEliMzdGUzZHZEtVdGwrSDhBPQ=="); // Trial Developer
 
 // Register the Syncfusion locale service to localize Syncfusion Blazor components.
 builder.Services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));

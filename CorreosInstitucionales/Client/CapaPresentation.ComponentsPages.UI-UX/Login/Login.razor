@@ -1,6 +1,8 @@
 ﻿@page "/"
 @* @page "/{ErrorMessage}" *@
 
+@attribute [AllowAnonymous]
+
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims;
 
@@ -21,8 +23,6 @@
 @inject ILoginServices loginService
 @inject ISendEmail servicioSendEmail
 @inject IUsuario servicioUsuario
-
-@attribute [AllowAnonymous]
 
 <PageTitle>SACI | Inicio de Sesión</PageTitle>
 
@@ -118,18 +118,18 @@
     }
 </style>
 
-<!-- Encabezado fijo -->
+<!-- Encabezado de Página (Header Fixed-Top) -->
 <nav class="navbar bg-dark bg-body-tertiary fixed-top" style="border-bottom: 10px solid #3d0000;">
     <div class="container">
         <img src="/ipn.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-        <a class="navbar-brand" style="font-variant: small-caps; text-decoration:none; font-size:calc(10px + 0.390625vw); color:white;">
+        <a class="navbar-brand text-white" style="font-variant: small-caps; text-decoration:none; font-size:calc(10px + 0.390625vw);">
             SACI (Sistema para Atención de Correos Institucionales IPN)
         </a>
         <img src="/ipn.png" alt="Logo" width="30" height="24" class="rounded float-end">
     </div>
 </nav>
 
-<!-- Contenido principal -->
+<!-- Contenido Principal -->
 <div class="container">
     <div class="row align-items-center min-vh-100">
 
@@ -286,7 +286,7 @@
                 <div class="container">
                     <div class="row text-center">
                         <div class="col-md-12">
-                            ¿No tienes una cuenta?
+                            ¿No tienes una cuenta?&nbsp;
                             <button class="btn btn-success btn-sm" @onclick='(() => navigationManager.NavigateTo("/RegistroIndex"))'>
                                 Regístrate 
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
@@ -317,31 +317,31 @@
                 <CarouselItem>
                     <figure class="img-container">
                         <img src="https://live.staticflickr.com/4016/4533682406_36c07f363d_c.jpg" class="d-block w-100 rounded mx-auto img-fluid" alt="Sample image" style="height:100%;width:100%;">
-                        <figcaption class="img-caption"></figcaption>
+                        <figcaption class="img-caption">Golden Gate Bridge, San Francisco</figcaption>
                     </figure>
                 </CarouselItem>
                 <CarouselItem>
                     <figure class="img-container">
                         <img src="https://pbs.twimg.com/media/D2Wz_3lX4AAP02j.jpg" class="d-block w-100 rounded mx-auto img-fluid" alt="Sample image" style="height:100%;width:100%;">
-                        <figcaption class="img-caption"></figcaption>
+                        <figcaption class="img-caption">Spring Flower Trees</figcaption>
                     </figure>
                 </CarouselItem>
                 <CarouselItem>
                     <figure class="img-container">
                         <img src="https://media.licdn.com/dms/image/C561BAQFrL1h41M7EJg/company-background_1536_768/0/1583883741593?e=2147483647&v=beta&t=qVlCROptN-U8ctNI1vLY12_x1adzcYozlTh5WfMzftQ" class="d-block w-100 rounded mx-auto img-fluid" alt="Sample image" style="height:100%;width:100%;">
-                        <figcaption class="img-caption"></figcaption>
+                        <figcaption class="img-caption">Oddadalen Waterfalls, Norway</figcaption>
                     </figure>
                 </CarouselItem>
                 <CarouselItem>
                     <figure class="img-container">
                         <img src="https://s3.amazonaws.com/rytvmx/wpmedia/2022/10/10201207/clases-822x547.jpg" class="d-block w-100 rounded mx-auto img-fluid" alt="Sample image" style="height:100%;width:100%;">
-                        <figcaption class="img-caption"></figcaption>
+                        <figcaption class="img-caption">Anse Source d'Argent, Seychelles</figcaption>
                     </figure>
                 </CarouselItem>
                 <CarouselItem>
                     <figure class="img-container">
                         <img src="https://ntcd.mx/uploads/2017/03/21/nota-tecnologia-supera-ipn-expectativas-de-estudiantes-colombianas-del-programa-de-movilidad201721325.jpg" class="d-block w-100 rounded mx-auto img-fluid" alt="Sample image" style="height:100%;width:100%;">
-                        <figcaption class="img-caption"></figcaption>
+                        <figcaption class="img-caption">Stonehenge, England</figcaption>
                     </figure>
                 </CarouselItem>
             </SfCarousel>
@@ -351,7 +351,7 @@
     </div>
 </div>
 
-<!-- Pie de página fijo en la parte inferior -->
+<!-- Pie de Página (Footer Fixed-Bottom) -->
 <nav class="navbar bg-body-tertiary bg-dark fixed-bottom">
     <div class="container text-center">
         <a class="navbar-brand" style="text-decoration:none; font-size:calc(10px + 0.390625vw); color:white;">
