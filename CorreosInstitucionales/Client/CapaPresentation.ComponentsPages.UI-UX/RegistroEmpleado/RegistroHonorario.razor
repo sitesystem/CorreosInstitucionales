@@ -385,13 +385,13 @@
                     <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                 </div>
 
-                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6 d-grid gap-2">
                     <button type="submit" class="btn btn-success mt-4 mb-2" disabled="@DisablePostButton">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
                             <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
                             <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5" />
                         </svg>&nbsp;
-                        <span role="status">Enviar</span>
+                        <span role="status">@Content</span>
                         <span class="spinner-border spinner-border-sm" aria-hidden="true" hidden="@isSpinningHidden"></span>
                     </button>
                 </div>
@@ -451,19 +451,19 @@
             UsuSegundoApellido = "",                // Segundo Apellido del Usuario Solicitante o Administrador
             UsuCurp = "",                           // CURP con 18 caracteres como mínimo
             UsuFileNameCurp = "",                   // Nombre del Archivo y extensión .pdf del CURP
-            //UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
-            UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
+            UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
+            //UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
             // DATOS ACADÉMICOS
-            UsuBoletaAlumno = "0000000000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
-            UsuBoletaMaestria = "0000000",          // Número de Boleta del Usuario (Alumno de Maestria)
+            UsuBoletaAlumno = "0000600000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+            UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
             UsuIdCarrera = 0,                       // FK ID de la Carrera del Alumno
             UsuSemestre = "0",                      // Semestre que cursa el Alumno Inscrito o de Maestria
             UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
             // UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             // DATOS LABORALES
-            UsuNumeroEmpleado = "0",                // Número del Empleado del Usuario (Administrador o Docente)
+            //UsuNumeroEmpleado = "0",                // Número del Empleado del Usuario (Administrador o Docente)
             UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
-            UsuNoExtension = "0",                   // Número de Extensión del Empleado
+            //UsuNoExtension = "0",                   // Número de Extensión del Empleado
             // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
             UsuCorreoPersonalCuentaAnterior = "",   // Correo Personal de la Cuenta Anterior
             UsuCorreoPersonalCuentaNueva = "",      // Correo Personal de la Cuenta Nueva o Actual
@@ -520,20 +520,20 @@
 
                 if (oRespuesta.Success == 1)
                     await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
-                        {
+                    {
                             EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
                             Subject = "REGISTRO EN SACI",
                             Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
                                            "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
-                        });
+                    });
                 else
                     await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
-                        {
+                    {
                             EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
                             Subject = "ERROR DE REGISTRO EN SACI",
                             Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
                                              "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
-                        });
+                    });
             }
             catch (HttpRequestException e)
             {

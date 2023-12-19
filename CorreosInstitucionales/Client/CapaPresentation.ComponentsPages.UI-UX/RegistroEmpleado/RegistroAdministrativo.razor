@@ -17,9 +17,9 @@
 @using Newtonsoft.Json;
 @using System.Net.Mail;
 
-@inject IAreaDepto servicioAreaDepto;
-@inject IUsuario servicioUsuario;
-@inject ILink servicioLink;
+@inject IAreaDepto servicioAreaDepto
+@inject IUsuario servicioUsuario
+@inject ILink servicioLink
 @inject ISendEmail servicioSendEmail
 
 @inject IJSRuntime JSRuntime
@@ -172,7 +172,7 @@
     </svg> Administrativo
 </h3>
 
-<EditForm Model="@oUsuario" OnValidSubmit="@RegistrarEmpleado" OnInvalidSubmit="@ScrollToTop">
+<EditForm Model="@oUsuario" OnValidSubmit="@Registrar" OnInvalidSubmit="@ScrollToTop">
 
     <DataAnnotationsValidator />
     <!-- Etiqueta flotante -->
@@ -350,7 +350,7 @@
                         FloatLabelType="@FloatLabelType.Auto" 
                         @bind-Value="@oUsuario.UsuContraseña" 
                         CssClass="mi-sf-textbox"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "20" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
                         ShowClearButton="true"
                         ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
@@ -361,8 +361,8 @@
                             Placeholder="Confirmar contraseña" 
                             Type="Syncfusion.Blazor.Inputs.InputType.Password" 
                             FloatLabelType="@FloatLabelType.Auto" 
-                            @bind-Value="@contraseña2" 
-                            OnInput="(e => contraseña2 = e.Value.ToString())" 
+                            @bind-Value="@contra2" 
+                            OnInput="(e => contra2 = e.Value.ToString())" 
                             CssClass="mi-sf-textbox" 
                             @onkeyup="@CompararCadenas"
                             ShowClearButton="true" />
@@ -370,7 +370,7 @@
                         <SfMessage Severity="MessageSeverity.Error"
                                    ShowCloseIcon="false"
                                    ShowIcon="true"
-                                   Visible="@banderaContraseña">
+                                   Visible="@BanderaCompararContraseña">
                             Ingresa las contraseñas y verifica que coincidan.
                         </SfMessage>
                     </div>
@@ -407,9 +407,9 @@
                     <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                 </div>
             
-                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6 d-grid gap-2">
                     <button type="submit" class="btn btn-success mt-4 mb-2" disabled="@DisablePostButton">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
                             <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
                             <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5" />
                         </svg>&nbsp;
@@ -441,33 +441,22 @@
 
 
 @code {
-    public Response<LinkViewModel>? oLinkCURP = new();
-    public LinkViewModel? linkCURP = new();
-
-    SfUploader UploadObj;
-
-    private string contraseña2;
-    public bool banderaContraseña = true;
-    private ReCAPTCHA reCAPTCHAComponent;
-    private bool ValidReCAPTCHA = false;
-    private bool ServerVerificatiing = false;
-    private bool DisablePostButton => !ValidReCAPTCHA || banderaContraseña;
-    private void OnSuccess() => ValidReCAPTCHA = true;
-    private void OnExpired() => ValidReCAPTCHA = false;
-
-
-    public string Content = "Enviar Registro";
-    public bool isSpinningHidden = true;
-
     bool dialogVisible { get; set; } = false;
 
-    public Response<object>? oRespuesta = new();
-    private UsuarioViewModel? oUsuario = new()
+    private async Task ScrollToTop()
     {
+        await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
+        await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('name').focus()");
+        this.dialogVisible = true;
+    }
+
+    public Response<object>? oRespuesta = new();
+    public UsuarioViewModel? oUsuario = new()
+        {
             // DATOS ID DEL USUARIO
             IdUsuario = 0,
             UsuIdRol = 2,                           // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-            UsuIdTipoPersonal = 4,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
+            UsuIdTipoPersonal = 1,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
             // DATOS PERSONALES
             UsuNombre = "",                         // Nombre del Usuario Solicitante o Administrador
             UsuPrimerApellido = "",                 // Primer Apellido del Usuario Solicitante o Administrador
@@ -475,14 +464,14 @@
             UsuCurp = "",                           // CURP con 18 caracteres como mínimo
             UsuFileNameCurp = "",                   // Nombre del Archivo y extensión .pdf del CURP
             UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
-            //UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
+            // UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
             // DATOS ACADÉMICOS
             UsuBoletaAlumno = "0000600000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
             UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
             UsuSemestre = "1",                      // Semestre que cursa el Alumno Inscrito o de Maestria
             UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
-            // UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             // DATOS LABORALES
             //UsuNumeroEmpleado = "0",                // Número del Empleado del Usuario (Administrador o Docente)
             UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
@@ -503,40 +492,63 @@
             UsuIdCarreraNavigation = null,
             UsuIdRolNavigation = null,
             UsuIdTipoPersonalNavigation = null
-    };
+        };
 
-    public Response<List<AreaDeptoViewModel>>? oAreaDepto = new();
+    public int year = DateTime.Parse(DateTime.Now.ToString()).Year;
+    public string Content = "Enviar Registro";
+    public bool isSpinningHidden = true;
 
-    private async Task ScrollToTop()
+    // Variable que llamada a catalogo de links
+    public Response<LinkViewModel>? oLinkCURP = new();
+    public LinkViewModel? linkCURP = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
-        await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('name').focus()");
-        this.dialogVisible = true;
+        // link = oLink.Data.Where(link => link.IdLink.Equals(1)).FirstOrDefault();
+        oLinkCURP = await servicioLink.GetDataByNombreAsync("CURP");
+        linkCURP = oLinkCURP.Data;
+        // link = oLink.Data.Where(linkName => linkName.LinkNombre == nombre).FirstOrDefaultAsync();
     }
 
-    private void CompararCadenas()
-    {
-        string c1 = oUsuario.UsuContraseña;
-
-        Console.WriteLine(c1);
-        Console.WriteLine(contraseña2);
-
-        if (string.Equals(c1, contraseña2, StringComparison.Ordinal))  //Console.WriteLine("Las contraseñas son iguales.");
-            banderaContraseña = false;
-        else    //Console.WriteLine("Las contraseñas son diferentes.");
-            banderaContraseña = true;
-
-        Console.WriteLine(banderaContraseña);
-        Console.WriteLine(DisablePostButton);
-    }
-
-    //Registro de un empleado
-    public async Task RegistrarEmpleado()
+    public async Task Registrar()
     {
         if (ValidReCAPTCHA)
         {
+            // var response = await reCAPTCHAComponent.GetResponseAsync();
+
             try
             {
+                // ServerVerificatiing = true;
+                // StateHasChanged();
+                // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+
+                // Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
+                // Console.WriteLine("UsuIdTipoPersonal: " + oUsuario.UsuIdTipoPersonal);
+                // Console.WriteLine("UsuNombre: " + oUsuario.UsuNombre);
+                // Console.WriteLine("UsuPrimerApellido: " + oUsuario.UsuPrimerApellido);
+                // Console.WriteLine("UsuSegundoApellido: " + oUsuario.UsuSegundoApellido);
+                // Console.WriteLine("UsuCurp: " + oUsuario.UsuCurp);
+                // Console.WriteLine("UsuFileNameCurp: " + oUsuario.UsuFileNameCurp);
+                // Console.WriteLine("UsuNoCelularAnterior: " + oUsuario.UsuNoCelularAnterior);
+                // Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
+                // Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
+                // Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
+                // Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
+                // Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
+                // Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
+                // Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
+                // Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
+                // Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
+                // Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
+                // Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
+                // Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
+                // Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
+                // Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
+                // Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
+                // Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
+                // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
+                // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
+
                 Content = "Enviando Registro...";
                 isSpinningHidden = false;
 
@@ -545,24 +557,26 @@
 
                 if (oRespuesta.Success == 1)
                     await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
-                    {
+                        {
                             EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
                             Subject = "REGISTRO EN SACI",
                             Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
                                        "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
-                    });
+                        });
                 else
                     await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
-                    {
+                        {
                             EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
                             Subject = "ERROR DE REGISTRO EN SACI",
                             Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
                                          "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
-                    });
+                        });
             }
             catch (HttpRequestException e)
             {
                 await JSRuntime.InvokeAsync<object>("alert", e.Message);
+                // ServerVerificatiing = false;
+                // StateHasChanged();
             }
             finally
             {
@@ -593,16 +607,38 @@
         Content = "Enviar Registro";
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        oAreaDepto = await servicioAreaDepto.GetAllDataAsync(false);
-        oLinkCURP = await servicioLink.GetDataByNombreAsync("CURP");
-        linkCURP = oLinkCURP.Data;
-    }
 
-    // Subir Archivo
+    //File upload
+    SfUploader UploadObj;
     public void OnFileRemove(RemovingEventArgs args)
     {
         args.PostRawFile = false;
+    }
+
+    // Captcha
+
+    private ReCAPTCHA reCAPTCHAComponent;
+
+    private bool ValidReCAPTCHA = false;
+
+    private bool ServerVerificatiing = false;
+
+    // private bool DisablePostButton => (!ValidReCAPTCHA || ServerVerificatiing) && bandcontra;
+    private bool DisablePostButton => !ValidReCAPTCHA || BanderaCompararContraseña || !isSpinningHidden;
+
+    private void OnSuccess() => ValidReCAPTCHA = true;
+
+    private void OnExpired() => ValidReCAPTCHA = false;
+
+    // COMPARAR CADENAS DE SFTEXTBOX
+    private string contra2 = string.Empty;
+    public bool BanderaCompararContraseña = true;
+
+    private void CompararCadenas()
+    {
+        if (string.Equals(oUsuario.UsuContraseña, contra2, StringComparison.Ordinal))  //Console.WriteLine("Las contraseñas son iguales.");
+            BanderaCompararContraseña = false;
+        else    //Console.WriteLine("Las contraseñas son diferentes.");
+            BanderaCompararContraseña = true;
     }
 }
