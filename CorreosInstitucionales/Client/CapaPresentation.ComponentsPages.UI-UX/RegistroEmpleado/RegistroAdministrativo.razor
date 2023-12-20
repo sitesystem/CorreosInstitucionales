@@ -186,7 +186,7 @@
                         Placeholder="Nombre(s)" 
                         Type="Syncfusion.Blazor.Inputs.InputType.Text" 
                         FloatLabelType="@FloatLabelType.Auto"
-                        @bind-Value="@oUsuario.UsuNombre" IsRequired="true"
+                        @bind-Value="@oUsuario.UsuNombre"
                         OnInput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
                         onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
                         CssClass="mi-sf-textbox"
@@ -216,7 +216,9 @@
                         OnInput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
                         onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
                         HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "150" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                        ShowClearButton="true" />
+                        ShowClearButton="true"
+                               ValidateOnInput="true" />
+                        <ValidationMessage For="@(() => oUsuario.UsuSegundoApellido)" />
                 </div>
             </div>
             <div class="row">
@@ -437,6 +439,7 @@
         <DialogEvents OnOverlayModalClick="@(() => this.dialogVisible = false)" />
         <DialogAnimationSettings Effect="DialogEffect.Zoom" />
     </SfDialog>
+
 </EditForm>
 
 
@@ -456,7 +459,7 @@
             // DATOS ID DEL USUARIO
             IdUsuario = 0,
             UsuIdRol = 2,                           // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-            UsuIdTipoPersonal = 1,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
+            UsuIdTipoPersonal = 4,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
             // DATOS PERSONALES
             UsuNombre = "",                         // Nombre del Usuario Solicitante o Administrador
             UsuPrimerApellido = "",                 // Primer Apellido del Usuario Solicitante o Administrador
@@ -586,11 +589,6 @@
                 isSpinningHidden = true;
             }
         }
-    }
-
-    private void OnInvalidSubmit()
-    {
-        // isValidAccount = true;
     }
 
     public void Begin(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args)
