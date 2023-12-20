@@ -1,6 +1,5 @@
 > [!NOTE]
 > # PENDIENTES
-> ## Validar restricción prohibitiva de registros duplicados por correo  y CURP.
 > ## Subir archivos al servidor.
 > ## Instalar disco duro al servidor.
 > ## Subir aplicación al servidor.
@@ -13,6 +12,12 @@
 > ## Cuando el tipo de solicitud cambie se deshabilite tambien se deshabilitará la opción solicitar solicitud.
 > ## Registros upload de archivos.
 > ## Registro empleados si pone la extensión en automático se pone el área o su inverso si pone el área en automático pone la extensión.
+> ## Revisar el framework que sea gratuito y permita pasar a producción.
+> ## Diseño de la interfaz de perfil.
+> ## Diseño del login pueda cambiar por parte del administrador.
+> ## Aviso de politicas y privacidad como footer en registros.
+> ## Cambio de contraseña por un show message para todo el sistema si la bandera de recuperación de contraseña esta activa.
+> ## ¿Qué es? HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "10" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
 
 
 > [!IMPORTANT]
@@ -40,6 +45,7 @@
 > ## Catálogo de tipos de solicitud
 > ## Catálogo de tipos de personal
 > ## Catálogo de datos de la escuela
+> ## Validar restricción prohibitiva de registros duplicados por correo  y CURP.
 
 > [!TIP]
 > # TERMINADOS

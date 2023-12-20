@@ -386,6 +386,7 @@
                     {
                         oUsuario.UsuIdTipoPersonal = 1;
                         oUsuario.UsuSemestre = "8";
+                        oUsuario.UsuAñoEgreso = 0;
                     }
 
                 </div>                
@@ -521,6 +522,17 @@
         </SfDialog>
 
     </EditForm>
+
+    <SfMessage Closed="(() => { errorMsgVisible = !errorMsgVisible; })"
+               ContentAlignment="HorizontalAlign.Center"
+               CssClass="square"
+               Severity="MessageSeverity.Error"
+               ShowCloseIcon="true"
+               ShowIcon="true"
+               Variant="MessageVariant.Filled"
+               Visible="@errorMsgVisible">
+        @contentErrorMsg
+    </SfMessage>
 }
 else
 {
@@ -529,6 +541,8 @@ else
 
 @code
 {
+    private bool errorMsgVisible = false;
+    public string contentErrorMsg = string.Empty;
     bool dialogVisible { get; set; } = false;
 
     private async Task ScrollToTop()
@@ -539,6 +553,7 @@ else
     }
 
     public Response<object>? oRespuesta = new();
+    public Response<UsuarioViewModel>? oVerificacion = new();
     public UsuarioViewModel? oUsuario = new()
     {
         // DATOS ID DEL USUARIO
@@ -605,78 +620,100 @@ else
 
     public async Task Registrar()
     {
-        if (ValidReCAPTCHA)
+        try
         {
-            // var response = await reCAPTCHAComponent.GetResponseAsync();
-
-            try
+            var verificacion = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaNueva,oUsuario.UsuCurp);
+            if (verificacion?.Success==1)
             {
-                // ServerVerificatiing = true;
-                // StateHasChanged();
-                // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+                if (ValidReCAPTCHA)
+                {
+                    // var response = await reCAPTCHAComponent.GetResponseAsync();
 
-                // Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
-                // Console.WriteLine("UsuIdTipoPersonal: " + oUsuario.UsuIdTipoPersonal);
-                // Console.WriteLine("UsuNombre: " + oUsuario.UsuNombre);
-                // Console.WriteLine("UsuPrimerApellido: " + oUsuario.UsuPrimerApellido);
-                // Console.WriteLine("UsuSegundoApellido: " + oUsuario.UsuSegundoApellido);
-                // Console.WriteLine("UsuCurp: " + oUsuario.UsuCurp);
-                // Console.WriteLine("UsuFileNameCurp: " + oUsuario.UsuFileNameCurp);
-                // Console.WriteLine("UsuNoCelularAnterior: " + oUsuario.UsuNoCelularAnterior);
-                // Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
-                // Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
-                // Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
-                // Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
-                // Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
-                // Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
-                // Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
-                // Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
-                // Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
-                // Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
-                // Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
-                // Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
-                // Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
-                // Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
-                // Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
-                // Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
-                // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
-                // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
+                    try
+                    {
+                        // ServerVerificatiing = true;
+                        // StateHasChanged();
+                        // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
 
-                Content = "Enviando Registro...";
-                isSpinningHidden = false;
+                        // Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
+                        // Console.WriteLine("UsuIdTipoPersonal: " + oUsuario.UsuIdTipoPersonal);
+                        // Console.WriteLine("UsuNombre: " + oUsuario.UsuNombre);
+                        // Console.WriteLine("UsuPrimerApellido: " + oUsuario.UsuPrimerApellido);
+                        // Console.WriteLine("UsuSegundoApellido: " + oUsuario.UsuSegundoApellido);
+                        // Console.WriteLine("UsuCurp: " + oUsuario.UsuCurp);
+                        // Console.WriteLine("UsuFileNameCurp: " + oUsuario.UsuFileNameCurp);
+                        // Console.WriteLine("UsuNoCelularAnterior: " + oUsuario.UsuNoCelularAnterior);
+                        // Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
+                        // Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
+                        // Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
+                        // Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
+                        // Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
+                        // Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
+                        // Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
+                        // Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
+                        // Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
+                        // Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
+                        // Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
+                        // Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
+                        // Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
+                        // Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
+                        // Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
+                        // Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
+                        // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
+                        // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
 
-                var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
-                oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
+                        Content = "Enviando Registro...";
+                        isSpinningHidden = false;
 
-                if(oRespuesta.Success == 1)
-                    await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
-                          {
-                              EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                              Subject = "REGISTRO EN SACI",
-                              Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                   "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
-                          });
-                else
-                    await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
-                          {
-                              EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                              Subject = "ERROR DE REGISTRO EN SACI",
-                              Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                     "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
-                          });
+                        var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
+                        oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
+
+                        if(oRespuesta.Success == 1)
+                            await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
+                                    {
+                                        EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                                        Subject = "REGISTRO EN SACI",
+                                        Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
+                                            "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                                    });
+                        else
+                            await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
+                                    {
+                                        EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                                        Subject = "ERROR DE REGISTRO EN SACI",
+                                        Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
+                                                "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                                    });
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        await JSRuntime.InvokeAsync<object>("alert", e.Message);
+                        // ServerVerificatiing = false;
+                        // StateHasChanged();
+                    }
+                    finally
+                    {
+                        Content = "Enviar Registro";
+                        isSpinningHidden = true;
+                    }
+                }
             }
-            catch (HttpRequestException e)
+            else
             {
-                await JSRuntime.InvokeAsync<object>("alert", e.Message);
-                // ServerVerificatiing = false;
-                // StateHasChanged();
-            }
-            finally
-            {
-                Content = "Enviar Registro";
-                isSpinningHidden = true;
+                errorMsgVisible = true;
+                contentErrorMsg = "El correo o el curp ya están registrados por lo que no puede volverse a registrar con estos datos";
             }
         }
+        catch (HttpRequestException e)
+        {
+            await JSRuntime.InvokeAsync<object>("alert", e.Message);
+        }
+
+
+        //oVerificacion = verificacion.Data ;
+        //Content.ReadFromJsonAsync<Response<UsuarioViewModel>?>().Result;
+
+        
     }
 
     private void OnInvalidSubmit()
