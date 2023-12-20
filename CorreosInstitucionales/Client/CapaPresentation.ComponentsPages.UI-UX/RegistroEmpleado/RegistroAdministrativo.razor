@@ -281,7 +281,7 @@
                         FloatLabelType="@FloatLabelType.Auto" 
                         @bind-Value="@oUsuario.UsuNumeroEmpleado" 
                         CssClass="mi-sf-textbox"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "10" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                        
                         onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
                         ShowClearButton="true"
                         Type="Syncfusion.Blazor.Inputs.InputType.Text"
@@ -294,7 +294,7 @@
                         FloatLabelType="@FloatLabelType.Auto" 
                         @bind-Value="@oUsuario.UsuNoExtension" 
                         CssClass="mi-sf-textbox"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "10" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                        
                         onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
                         ShowClearButton="true"
                         Type="Syncfusion.Blazor.Inputs.InputType.Text"
@@ -522,39 +522,41 @@
                 // StateHasChanged();
                 // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
 
-                // Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
-                // Console.WriteLine("UsuIdTipoPersonal: " + oUsuario.UsuIdTipoPersonal);
-                // Console.WriteLine("UsuNombre: " + oUsuario.UsuNombre);
-                // Console.WriteLine("UsuPrimerApellido: " + oUsuario.UsuPrimerApellido);
-                // Console.WriteLine("UsuSegundoApellido: " + oUsuario.UsuSegundoApellido);
-                // Console.WriteLine("UsuCurp: " + oUsuario.UsuCurp);
-                // Console.WriteLine("UsuFileNameCurp: " + oUsuario.UsuFileNameCurp);
-                // Console.WriteLine("UsuNoCelularAnterior: " + oUsuario.UsuNoCelularAnterior);
-                // Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
-                // Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
-                // Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
-                // Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
-                // Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
-                // Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
-                // Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
-                // Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
-                // Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
-                // Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
-                // Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
-                // Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
-                // Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
-                // Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
-                // Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
-                // Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
-                // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
-                // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
+                Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
+                Console.WriteLine("UsuIdTipoPersonal: " + oUsuario.UsuIdTipoPersonal);
+                Console.WriteLine("UsuNombre: " + oUsuario.UsuNombre);
+                Console.WriteLine("UsuPrimerApellido: " + oUsuario.UsuPrimerApellido);
+                Console.WriteLine("UsuSegundoApellido: " + oUsuario.UsuSegundoApellido);
+                Console.WriteLine("UsuCurp: " + oUsuario.UsuCurp);
+                Console.WriteLine("UsuFileNameCurp: " + oUsuario.UsuFileNameCurp);
+                Console.WriteLine("UsuNoCelularAnterior: " + oUsuario.UsuNoCelularAnterior);
+                Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
+                Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
+                Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
+                Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
+                Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
+                Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
+                Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
+                Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
+                Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
+                Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
+                Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
+                Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
+                Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
+                Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
+                Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
+                Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
+                Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
+                Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
 
                 Content = "Enviando Registro...";
                 isSpinningHidden = false;
 
                 var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
                 oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
-
+                Console.WriteLine("Estatus    " + oRespuesta.Success + "\n");
+                Console.WriteLine("Mensaje    " + oRespuesta.Message + "\n");
+                Console.WriteLine("Datos    " + oRespuesta.Data + "\n");
                 if (oRespuesta.Success == 1)
                     await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
                         {
