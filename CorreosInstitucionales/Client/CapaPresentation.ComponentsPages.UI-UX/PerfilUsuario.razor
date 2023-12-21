@@ -1,0 +1,62 @@
+﻿@page "/PerfilUsuario"
+@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.RegistroAlumno
+@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.RegistroEmpleado
+
+<h3>Perfil Usuario</h3>
+<center>
+<div class="d-grid gap-2 d-md-block">
+    <button class="btn btn-primary " type="button" onclick="@ActivarFormulario">Modificar datos del perfil</button>
+</div>
+</center>
+
+@if (banderaFormulario==true)
+{
+        <h3>Modificación de Datos de perfil</h3>
+        @switch (tipousuario)
+        {
+            case 1:
+                Console.WriteLine("El tipo usuario es: Alumno inscrito");
+                <RegistroInscrito/>
+                break;
+        
+            case 2:
+                Console.WriteLine("El tipo usuario es: Alumno egresado");
+                <RegistroInscrito />
+                break;
+            case 3:
+                Console.WriteLine("El tipo usuario es: Maestría");
+                <RegistroMaestria />
+                break;
+            case 4:
+                Console.WriteLine("El tipo usuario es: Administrativo");
+                <RegistroAdministrativo/>
+                break;
+            case 5:
+                Console.WriteLine("El tipo usuario es: Docente");
+                <RegistroDocente/>
+                break;
+            case 6:
+                Console.WriteLine("El tipo usuario es: Honorarios");
+                <RegistroHonorario/>
+                break;
+            default: 
+            tipousuario=0;
+                break;
+        }
+}
+
+
+
+
+@code {
+    private int tipousuario=0;
+    public bool banderaFormulario = false;
+    public void ActivarFormulario()
+    {
+        if (banderaFormulario == false)
+            banderaFormulario = true;
+        else
+            banderaFormulario = false;
+
+    }
+}
