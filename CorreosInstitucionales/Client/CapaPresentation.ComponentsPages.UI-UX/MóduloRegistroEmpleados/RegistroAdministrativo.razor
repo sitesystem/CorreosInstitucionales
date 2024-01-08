@@ -2,28 +2,19 @@
 
 @attribute [AllowAnonymous]
 
-@using CorreosInstitucionales.Shared.CapaEntities.Request;
-@using CorreosInstitucionales.Shared.CapaEntities.Response;
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.SendEmailService;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptosService;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksService;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
 
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
-
-@using System;
-@using System.Globalization;
-@using System.Threading;
-@using System.Text.Json;
-@using Newtonsoft.Json;
-@using System.Net.Mail;
-
-@inject IAreaDeptoService servicioAreaDepto;
-@inject IUsuarioService servicioUsuario;
-@inject ILinkService servicioLink;
-@inject ISendEmailService servicioSendEmail
+@inject IAreaDepto servicioAreaDepto
+@inject IUsuario servicioUsuario
+@inject ILink servicioLink
+@inject ISendEmail servicioSendEmail
 
 @inject IJSRuntime JSRuntime
-@inject HttpClient Http
 
 <style>
     <!-- estilos de insert -->
@@ -141,13 +132,13 @@
         margin: 10px 0;
     }
 
-    .msg-custom-section .e-message.rounded {
-        border-radius: 5px;
-    }
+        .msg-custom-section .e-message.rounded {
+            border-radius: 5px;
+        }
 
-    .msg-custom-section .e-message.square {
-        border-radius: 1px;
-    }
+        .msg-custom-section .e-message.square {
+            border-radius: 1px;
+        }
 
     SfMessage {
         margin-top: 100px;
@@ -155,6 +146,7 @@
         margin-bottom: 100px;
         margin-left: 25px;
     }
+
     .mi-sf-textbox::after {
         content: ' ';
         position: absolute;
@@ -163,71 +155,64 @@
         width: 100%;
         height: 2px;
         background-color: red;
-    }        
+    }
 </style>
 
 <h3 style="margin-top:20px">
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-briefcase" viewBox="0 0 18 18" style="margin-left: 20px" >
-        <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5m1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0M1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5"/>
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-briefcase" viewBox="0 0 18 18" style="margin-left: 20px">
+        <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5m1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0M1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5" />
     </svg> Administrativo
 </h3>
 
-<EditForm Model="@oUsuario" OnValidSubmit="@RegistrarEmpleado" OnInvalidSubmit="@ScrollToTop">
-
+<EditForm Model="@oUsuario" OnValidSubmit="@Registrar" OnInvalidSubmit="@ScrollToTop">
     <DataAnnotationsValidator />
-    <!-- Etiqueta flotante -->
 
-    <div class="card border-dark mb-3" style="margin-top:20px ">
-        <b class="card-header" size="20px">Datos Personales</b>
+    <div class="card border-dark mb-3" style="margin-top: 20px">
+        <b class="card-header" size="20px"> Datos Personales</b>
         <div class="card-body">
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox ID="name" 
-                        Placeholder="Nombre(s)" 
-                        Type="Syncfusion.Blazor.Inputs.InputType.Text" 
+                    <SfTextBox ID="name"
+                        Placeholder="Nombre(s)"
+                        Type="Syncfusion.Blazor.Inputs.InputType.Text"
                         FloatLabelType="@FloatLabelType.Auto"
-                        @bind-Value="@oUsuario.UsuNombre" IsRequired="true"
+                        @bind-Value="@oUsuario.UsuNombre"
                         OnInput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
                         onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                        CssClass="mi-sf-textbox"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "200" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                        CssClass="mi-sf-textbox" 
                         ShowClearButton="true"
-                        ValidateOnInput="true" />
+                        ValidateOnInput="true"/>
                     <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox  
-                        Placeholder="Primer Apellido" 
+                    <SfTextBox Placeholder="Primer Apellido"
                         FloatLabelType="@FloatLabelType.Auto"
                         @bind-Value="@oUsuario.UsuPrimerApellido"
                         OnInput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
                         onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
                         CssClass="mi-sf-textbox"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "150" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
                         ShowClearButton="true"
                         ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox 
-                        Placeholder="Segundo Apellido" 
+                    <SfTextBox Placeholder="Segundo Apellido"
                         FloatLabelType="@FloatLabelType.Auto"
                         @bind-Value="@oUsuario.UsuSegundoApellido"
                         OnInput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
                         onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "150" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                        ShowClearButton="true" />
+                        ShowClearButton="true"
+                        ValidateOnInput="true" />
+                    <ValidationMessage For="@(() => oUsuario.UsuSegundoApellido)" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox 
-                        Placeholder="Numero de Celular" 
-                        FloatLabelType="@FloatLabelType.Auto" 
+                    <SfTextBox Placeholder="Numero de Celular"
+                        FloatLabelType="@FloatLabelType.Auto"
                         @bind-Value="@oUsuario.UsuNoCelularNuevo"
                         onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                        CssClass="mi-sf-textbox" 
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "10" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                        CssClass="mi-sf-textbox"
                         ShowClearButton="true"
                         ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
@@ -242,7 +227,6 @@
                         OnInput="@((e) => oUsuario.UsuCurp = e.Value.ToString().ToUpper())"
                         onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
                         CssClass="mi-sf-textbox"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "18" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
                         ShowClearButton="true"
                         ValidateOnInput="true" />
                     <ValidationMessage For="@(() => oUsuario.UsuCurp)" />
@@ -260,7 +244,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4" >
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                     <p>Adjunte el CURP en formato PDF</p>
                     <SfUploader @ref="UploadObj" AllowedExtensions=".pdf" MinFileSize=1 MaxFileSize=2000000>
                         <UploaderEvents OnRemove="OnFileRemove"></UploaderEvents>
@@ -270,199 +254,11 @@
             </div>
         </div>
     </div>
-
-    <div class="card border-dark mb-3" style="margin-top:20px ">
-        <b class="card-header" size="20px">Datos de Empleado</b>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox 
-                        Placeholder="Numero Empleado" 
-                        FloatLabelType="@FloatLabelType.Auto" 
-                        @bind-Value="@oUsuario.UsuNumeroEmpleado" 
-                        CssClass="mi-sf-textbox"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "10" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                        onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                        ShowClearButton="true"
-                        Type="Syncfusion.Blazor.Inputs.InputType.Text"
-                        ValidateOnInput="true" />
-                    <ValidationMessage For="@(() => oUsuario.UsuNumeroEmpleado)" />
-                </div>
-                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox 
-                        Placeholder="Extensión" 
-                        FloatLabelType="@FloatLabelType.Auto" 
-                        @bind-Value="@oUsuario.UsuNoExtension" 
-                        CssClass="mi-sf-textbox"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "10" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                        onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                        ShowClearButton="true"
-                        Type="Syncfusion.Blazor.Inputs.InputType.Text"
-                        ValidateOnInput="true" />
-                    <ValidationMessage For="@(() => oUsuario.UsuNoExtension)" />
-                </div>
-               @*<div class="col-xs-4 col-lg-4 col-md-4">
-                    <SfDropDownList ID="Data___UsuIdAreaDepto"
-                                    TValue="int?"
-                                    TItem="AreaDeptoViewModel"
-                                    Placeholder="Area Departamento"
-                                    @bind-Value="@oUsuario.UsuIdAreaDepto"
-                                    DataSource="@oAreaDepto.Data"
-                                    AllowFiltering="true"
-                                    CssClass="mi-sf-textbox"
-                                    Enabled="true"
-                                    EnableVirtualization="false"
-                                    FilterBarPlaceholder="Selecciona una opción"
-                                    FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
-                                    FloatLabelType="FloatLabelType.Auto"
-                                    IgnoreAccent="true"
-                                    IgnoreCase="true"
-                                    Readonly="false"
-                                    ShowClearButton="true"
-                                    SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.None">
-                        <DropDownListFieldSettings Value="IdAreaDepto" Text="areNombre" />
-                        </SfDropDownList>
-                    </div>*@            
-            </div>
-        </div>
-    </div>
-    <div class="card border-dark mb-3" style="margin-top:20px ">
-            <b class="card-header" size="20px">Datos de la cuenta</b>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox 
-                            Placeholder="Correo Personal" 
-                            Type="Syncfusion.Blazor.Inputs.InputType.Email" 
-                            FloatLabelType="@FloatLabelType.Auto" 
-                            @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" 
-                            CssClass="mi-sf-textbox" 
-                            HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                            ShowClearButton="true"
-                            ValidateOnInput="true" />
-                        <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
-                    </div>
-
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <SfTextBox 
-                        Placeholder="Contraseña" 
-                        Type="Syncfusion.Blazor.Inputs.InputType.Password" 
-                        FloatLabelType="@FloatLabelType.Auto" 
-                        @bind-Value="@oUsuario.UsuContraseña" 
-                        CssClass="mi-sf-textbox"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                        ShowClearButton="true"
-                        ValidateOnInput="true" />
-                    <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
-                    </div>
-
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <SfTextBox 
-                            Placeholder="Confirmar contraseña" 
-                            Type="Syncfusion.Blazor.Inputs.InputType.Password" 
-                            FloatLabelType="@FloatLabelType.Auto" 
-                            @bind-Value="@contraseña2" 
-                            OnInput="(e => contraseña2 = e.Value.ToString())" 
-                            CssClass="mi-sf-textbox" 
-                            @onkeyup="@CompararCadenas"
-                            ShowClearButton="true" />
-                        <br />
-                        <SfMessage Severity="MessageSeverity.Error"
-                                   ShowCloseIcon="false"
-                                   ShowIcon="true"
-                                   Visible="@banderaContraseña">
-                            Ingresa las contraseñas y verifica que coincidan.
-                        </SfMessage>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    <div class="card border-dark mb-3" style="margin-top:20px ">
-            <b class="card-header" size="20px">Correo Institucional</b>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                    <SfTextBox
-                        Placeholder="Correo institucional" 
-                        FloatLabelType="@FloatLabelType.Auto" 
-                        @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta"
-                        HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                        ShowClearButton="true"
-                        Type="Syncfusion.Blazor.Inputs.InputType.Text"
-                        ValidateOnInput="true" />
-                    <ValidationMessage For="@(() => oUsuario.UsuCorreoInstitucionalCuenta)" />
-                </div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <small class="text-body-secondary">En caso de contar con uno.</small>
-            </div>
-        </div>
-    
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 captcha">
-                    <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-                </div>
-            
-                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                    <button type="submit" class="btn btn-success mt-4 mb-2" disabled="@DisablePostButton">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
-                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
-                            <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5" />
-                        </svg>&nbsp;
-                        <span role="status">Enviar</span>
-                        <span class="spinner-border spinner-border-sm" aria-hidden="true" hidden="@isSpinningHidden"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @* Modal *@
-    <SfDialog AllowDragging="true" @bind-Visible="@dialogVisible" IsModal="true" Width="500px" ShowCloseIcon="true" Target="#target" CloseOnEscape="true">
-        <DialogTemplates>
-            <Header>
-                Revisa y verifica tus Datos
-            </Header>
-            <Content>
-                <ValidationSummary />
-            </Content>
-        </DialogTemplates>
-        <DialogButtons>
-            <DialogButton Content="Aceptar" IsPrimary="true" OnClick="@(() => this.dialogVisible = false)" CssClass="e-block" />
-        </DialogButtons>
-        <DialogEvents OnOverlayModalClick="@(() => this.dialogVisible = false)" />
-        <DialogAnimationSettings Effect="DialogEffect.Zoom" />
-    </SfDialog>
 </EditForm>
 
-
 @code {
-    public Response<RequestViewModel_Link>? oLinkCURP = new();
-    public RequestViewModel_Link? linkCURP = new();
-
-    SfUploader UploadObj;
-
-    private string contraseña2;
-    public bool banderaContraseña = true;
-    private ReCAPTCHA reCAPTCHAComponent;
-    private bool ValidReCAPTCHA = false;
-    private bool ServerVerificatiing = false;
-    private bool DisablePostButton => !ValidReCAPTCHA || banderaContraseña;
-    private void OnSuccess() => ValidReCAPTCHA = true;
-    private void OnExpired() => ValidReCAPTCHA = false;
-
-
-    public string Content = "Enviar Registro";
-    public bool isSpinningHidden = true;
-
-    bool dialogVisible { get; set; } = false;
-
     public Response<object>? oRespuesta = new();
-    private RequestDTO_Usuario? oUsuario = new()
+    public UsuarioViewModel? oUsuario = new()
     {
             // DATOS ID DEL USUARIO
             IdUsuario = 0,
@@ -475,14 +271,14 @@
             UsuCurp = "",                           // CURP con 18 caracteres como mínimo
             UsuFileNameCurp = "",                   // Nombre del Archivo y extensión .pdf del CURP
             UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
-            //UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
+            // UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
             // DATOS ACADÉMICOS
             UsuBoletaAlumno = "0000600000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
             UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
             UsuSemestre = "1",                      // Semestre que cursa el Alumno Inscrito o de Maestria
             UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
-            // UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             // DATOS LABORALES
             //UsuNumeroEmpleado = "0",                // Número del Empleado del Usuario (Administrador o Docente)
             UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
@@ -505,33 +301,27 @@
             UsuIdTipoPersonalNavigation = null
     };
 
-    public Response<List<RequestViewModel_AreaDepto>>? oAreaDepto = new();
-
-    private async Task ScrollToTop()
-    {
-        await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
-        await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('name').focus()");
-        this.dialogVisible = true;
-    }
+    public bool BanderaCompararContraseña = true;
+    private string contra2 = string.Empty;
 
     private void CompararCadenas()
     {
-        string c1 = oUsuario.UsuContraseña;
-
-        Console.WriteLine(c1);
-        Console.WriteLine(contraseña2);
-
-        if (string.Equals(c1, contraseña2, StringComparison.Ordinal))  //Console.WriteLine("Las contraseñas son iguales.");
-            banderaContraseña = false;
-        else    //Console.WriteLine("Las contraseñas son diferentes.");
-            banderaContraseña = true;
-
-        Console.WriteLine(banderaContraseña);
-        Console.WriteLine(DisablePostButton);
+        if (string.Equals(oUsuario.UsuContraseña, contra2, StringComparison.Ordinal))
+            BanderaCompararContraseña = false;
+        else
+            BanderaCompararContraseña = true;
     }
 
-    //Registro de un empleado
-    public async Task RegistrarEmpleado()
+    public string Content = "Enviar Registro";
+    public bool isSpinningHidden = true;
+    private ReCAPTCHA reCAPTCHAComponent;
+    private bool ValidReCAPTCHA =  false;
+    private bool ServerVerificatiing = false;
+    private bool DisablePostButton => !ValidReCAPTCHA || BanderaCompararContraseña || !isSpinningHidden;
+    private void OnSuccess() => ValidReCAPTCHA = true;
+    private void OnExpired() => ValidReCAPTCHA = false;
+
+    public async Task Registrar()
     {
         if (ValidReCAPTCHA)
         {
@@ -542,22 +332,24 @@
 
                 var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
                 oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
-
+                Console.WriteLine("Estatus    " + oRespuesta.Success + "\n");
+                Console.WriteLine("Mensaje    " + oRespuesta.Message + "\n");
+                Console.WriteLine("Datos    " + oRespuesta.Data + "\n");
                 if (oRespuesta.Success == 1)
-                    await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
+                    await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
                     {
                             EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
                             Subject = "REGISTRO EN SACI",
                             Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                       "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                                           "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
                     });
                 else
-                    await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
+                    await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
                     {
                             EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
                             Subject = "ERROR DE REGISTRO EN SACI",
                             Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                         "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                                             "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
                     });
             }
             catch (HttpRequestException e)
@@ -572,37 +364,26 @@
         }
     }
 
-    private void OnInvalidSubmit()
-    {
-        // isValidAccount = true;
+    bool dialogVisible { get; set; } = false;
+
+    private async Task ScrollToTop(){
+        await JSRuntime.InvokeVoidAsync("window.scrollTo",0,0);
+        await JSRuntime.InvokeVoidAsync("eval",$"document.getElementById('name').focus()");
+        this.dialogVisible = true;
     }
 
-    public void Begin(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args)
-    {
-        Content = "Enviar Registro";
-        // CssClass = "e-hide-spinner e-info";
-    }
-
-    public void Progressing(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args)
-    {
-        Content = "Enviando Registro...";
-    }
-
-    public void End(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args)
-    {
-        Content = "Enviar Registro";
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        oAreaDepto = await servicioAreaDepto.GetAllDataAsync(false);
-        oLinkCURP = await servicioLink.GetDataByNameAsync("CURP");
-        linkCURP = oLinkCURP.Data;
-    }
-
-    // Subir Archivo
+    SfUploader UploadObj;
     public void OnFileRemove(RemovingEventArgs args)
     {
         args.PostRawFile = false;
+    }
+
+    public Response<LinkViewModel>? oLinkCURP = new();
+    public LinkViewModel? linkCURP = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        oLinkCURP = await servicioLink.GetDataByNombreAsync("CURP");
+        linkCURP = oLinkCURP.Data;
     }
 }

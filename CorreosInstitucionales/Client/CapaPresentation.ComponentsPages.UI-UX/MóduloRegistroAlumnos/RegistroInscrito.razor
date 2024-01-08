@@ -2,17 +2,18 @@
 
 @attribute [AllowAnonymous]
 
-@using CorreosInstitucionales.Shared.CapaEntities.Request;
-@using CorreosInstitucionales.Shared.CapaEntities.Response;
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks;
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios;
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
+@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.SendEmailService
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksService;
+@using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
 
-@inject ICarreraService servicioCarrera
-@inject IUsuarioService servicioUsuario
-@inject ILinkService servicioLink
-@inject ISendEmailService servicioSendEmail
+@inject ICarrera servicioCarrera
+@inject IUsuario servicioUsuario
+@inject ILink servicioLink
+@inject ISendEmail servicioSendEmail
 
 @inject IJSRuntime JSRuntime
 @inject HttpClient Http
@@ -307,7 +308,7 @@
                     <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                         <SfDropDownList ID="Data___UsuIdCarrera"
                                         TValue="int?"
-                                        TItem="RequestViewModel_Carrera"
+                                        TItem="CarreraViewModel"
                                         Placeholder="Carrera"
                                         @bind-Value="@oUsuario.UsuIdCarrera"
                                         DataSource="@oCarrera.Data"
@@ -385,6 +386,7 @@
                     {
                         oUsuario.UsuIdTipoPersonal = 1;
                         oUsuario.UsuSemestre = "8";
+                        oUsuario.UsuAñoEgreso = 0;
                     }
 
                 </div>                
@@ -520,6 +522,17 @@
         </SfDialog>
 
     </EditForm>
+
+    <SfMessage Closed="(() => { errorMsgVisible = !errorMsgVisible; })"
+               ContentAlignment="HorizontalAlign.Center"
+               CssClass="square"
+               Severity="MessageSeverity.Error"
+               ShowCloseIcon="true"
+               ShowIcon="true"
+               Variant="MessageVariant.Filled"
+               Visible="@errorMsgVisible">
+        @contentErrorMsg
+    </SfMessage>
 }
 else
 {
@@ -528,6 +541,8 @@ else
 
 @code
 {
+    private bool errorMsgVisible = false;
+    public string contentErrorMsg = string.Empty;
     bool dialogVisible { get; set; } = false;
 
     private async Task ScrollToTop()
@@ -538,7 +553,8 @@ else
     }
 
     public Response<object>? oRespuesta = new();
-    public RequestDTO_Usuario? oUsuario = new()
+    public Response<UsuarioViewModel>? oVerificacion = new();
+    public UsuarioViewModel? oUsuario = new()
     {
         // DATOS ID DEL USUARIO
         IdUsuario = 0,
@@ -586,96 +602,118 @@ else
     public bool isSpinningHidden = true;
 
     // Variable que llamada a catalogo de links
-    public Response<RequestViewModel_Link>? oLinkCURP = new();
-    public Response<RequestViewModel_Link>? oLinkSAES = new();
-    public RequestViewModel_Link? linkCURP = new();
-    public RequestViewModel_Link? linkSAES = new();
+    public Response<LinkViewModel>? oLinkCURP = new();
+    public Response<LinkViewModel>? oLinkSAES = new();
+    public LinkViewModel? linkCURP = new();
+    public LinkViewModel? linkSAES = new();
 
     protected override async Task OnInitializedAsync()
     {
         oCarrera = await servicioCarrera.GetAllDataAsync(false);
         // link = oLink.Data.Where(link => link.IdLink.Equals(1)).FirstOrDefault();
-        oLinkCURP = await servicioLink.GetDataByNameAsync("CURP");
+        oLinkCURP = await servicioLink.GetDataByNombreAsync("CURP");
         linkCURP = oLinkCURP.Data;
-        oLinkSAES = await servicioLink.GetDataByNameAsync("SAES UPIICSA");
+        oLinkSAES = await servicioLink.GetDataByNombreAsync("SAES UPIICSA");
         linkSAES = oLinkSAES.Data;
         // link = oLink.Data.Where(linkName => linkName.LinkNombre == nombre).FirstOrDefaultAsync();
     }
 
     public async Task Registrar()
     {
-        if (ValidReCAPTCHA)
+        try
         {
-            // var response = await reCAPTCHAComponent.GetResponseAsync();
-
-            try
+            var verificacion = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaNueva,oUsuario.UsuCurp);
+            if (verificacion?.Success==1)
             {
-                // ServerVerificatiing = true;
-                // StateHasChanged();
-                // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+                if (ValidReCAPTCHA)
+                {
+                    // var response = await reCAPTCHAComponent.GetResponseAsync();
 
-                // Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
-                // Console.WriteLine("UsuIdTipoPersonal: " + oUsuario.UsuIdTipoPersonal);
-                // Console.WriteLine("UsuNombre: " + oUsuario.UsuNombre);
-                // Console.WriteLine("UsuPrimerApellido: " + oUsuario.UsuPrimerApellido);
-                // Console.WriteLine("UsuSegundoApellido: " + oUsuario.UsuSegundoApellido);
-                // Console.WriteLine("UsuCurp: " + oUsuario.UsuCurp);
-                // Console.WriteLine("UsuFileNameCurp: " + oUsuario.UsuFileNameCurp);
-                // Console.WriteLine("UsuNoCelularAnterior: " + oUsuario.UsuNoCelularAnterior);
-                // Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
-                // Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
-                // Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
-                // Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
-                // Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
-                // Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
-                // Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
-                // Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
-                // Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
-                // Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
-                // Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
-                // Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
-                // Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
-                // Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
-                // Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
-                // Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
-                // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
-                // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
+                    try
+                    {
+                        // ServerVerificatiing = true;
+                        // StateHasChanged();
+                        // await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
 
-                Content = "Enviando Registro...";
-                isSpinningHidden = false;
+                        // Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
+                        // Console.WriteLine("UsuIdTipoPersonal: " + oUsuario.UsuIdTipoPersonal);
+                        // Console.WriteLine("UsuNombre: " + oUsuario.UsuNombre);
+                        // Console.WriteLine("UsuPrimerApellido: " + oUsuario.UsuPrimerApellido);
+                        // Console.WriteLine("UsuSegundoApellido: " + oUsuario.UsuSegundoApellido);
+                        // Console.WriteLine("UsuCurp: " + oUsuario.UsuCurp);
+                        // Console.WriteLine("UsuFileNameCurp: " + oUsuario.UsuFileNameCurp);
+                        // Console.WriteLine("UsuNoCelularAnterior: " + oUsuario.UsuNoCelularAnterior);
+                        // Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
+                        // Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
+                        // Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
+                        // Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
+                        // Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
+                        // Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
+                        // Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
+                        // Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
+                        // Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
+                        // Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
+                        // Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
+                        // Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
+                        // Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
+                        // Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
+                        // Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
+                        // Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
+                        // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
+                        // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
 
-                var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
-                oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
+                        Content = "Enviando Registro...";
+                        isSpinningHidden = false;
 
-                if(oRespuesta.Success == 1)
-                    await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
-                          {
-                              EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                              Subject = "REGISTRO EN SACI",
-                              Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                   "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
-                          });
-                else
-                    await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
-                          {
-                              EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                              Subject = "ERROR DE REGISTRO EN SACI",
-                              Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                     "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
-                          });
+                        var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
+                        oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
+
+                        if(oRespuesta.Success == 1)
+                            await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
+                                    {
+                                        EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                                        Subject = "REGISTRO EN SACI",
+                                        Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
+                                            "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                                    });
+                        else
+                            await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
+                                    {
+                                        EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                                        Subject = "ERROR DE REGISTRO EN SACI",
+                                        Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
+                                                "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                                    });
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        await JSRuntime.InvokeAsync<object>("alert", e.Message);
+                        // ServerVerificatiing = false;
+                        // StateHasChanged();
+                    }
+                    finally
+                    {
+                        Content = "Enviar Registro";
+                        isSpinningHidden = true;
+                    }
+                }
             }
-            catch (HttpRequestException e)
+            else
             {
-                await JSRuntime.InvokeAsync<object>("alert", e.Message);
-                // ServerVerificatiing = false;
-                // StateHasChanged();
-            }
-            finally
-            {
-                Content = "Enviar Registro";
-                isSpinningHidden = true;
+                errorMsgVisible = true;
+                contentErrorMsg = "El correo o el curp ya están registrados por lo que no puede volverse a registrar con estos datos";
             }
         }
+        catch (HttpRequestException e)
+        {
+            await JSRuntime.InvokeAsync<object>("alert", e.Message);
+        }
+
+
+        //oVerificacion = verificacion.Data ;
+        //Content.ReadFromJsonAsync<Response<UsuarioViewModel>?>().Result;
+
+        
     }
 
     private void OnInvalidSubmit()
@@ -700,7 +738,7 @@ else
     }
 
     //Lista de carreras
-    public Response<List<RequestViewModel_Carrera>>? oCarrera = new();
+    public Response<List<CarreraViewModel>>? oCarrera = new();
 
     // Lista de semestres
     public class Semestres
