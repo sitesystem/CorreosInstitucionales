@@ -10,7 +10,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 public partial class MtTbSolicitudesTicket
 {
     /// <summary>
-    /// ID Único de la Solicitud
+    /// PK ID Único de la Solicitud
     /// </summary>
     [Key]
     public int IdSolicitudTicket { get; set; }

@@ -6,12 +6,25 @@
 -> Scaffold-DBContext "Server=localhost;Database=db_SITI;Trusted_Connection=True;TrustServerCertificate=True;" -Provider Microsoft.EntityFrameworkCore.SqlServer -OutputDir CapaDataAccess/DBContext -Tables tbUsuariosSolicitantes -Context DBContext -DataAnnotations -Force
 -> Scaffold-DBContext "Server=148.204.211.187;Database=db_SITI;User Id=sa;Password=Up11cs4@2023;TrustServerCertificate=True;" -Provider Microsoft.EntityFrameworkCore.SqlServer -OutputDir CapaDataAccess/DBContext -DataAnnotations -Force
 
--> Scaffold-DBContext "Server=148.204.211.135;Initial Catalog=db_CorreosInst_UPIICSA;User ID=correos_institucionales;Password=correos_institucionales_05;Trusted_Connection=False;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir CapaDataAccess/DBContext -DataAnnotations -Force
--> Scaffold-DBContext "Server=www.developers.upiicsa.ipn.mx;Database=db_CorreosInst_UPIICSA;User ID=correos_institucionales;Password=correos_institucionales_05;Trusted_Connection=False;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir CapaDataAccess/DBContext -DataAnnotations -Force
+-> Scaffold-DBContext "Server=148.204.211.135;Initial Catalog=db_CorreosInstitucionales_UPIICSA;User ID=correos_institucionales;Password=correos_institucionales_05;Trusted_Connection=False;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir CapaDataAccess/DBContext -DataAnnotations -Force
+-> Scaffold-DBContext "Server=www.developers.upiicsa.ipn.mx;Database=db_CorreosInstitucionales_UPIICSA;User ID=correos_institucionales;Password=correos_institucionales_05;Trusted_Connection=False;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir CapaDataAccess/DBContext -DataAnnotations -Force
 
 DBContext
 => optionsBuilder.UseSqlServer("Server=148.204.211.187;Database=db_SITI;User Id=sa;Password=Up11cs4@2023;TrustServerCertificate=True;");
 => optionsBuilder.UseSqlServer("Server=localhost;Database=db_SITI;Trusted_Connection=True;TrustServerCertificate=True;");
+
+
+ private readonly IConfiguration? _config;
+
+ public DbCorreosInstitucionalesUpiicsaContext()
+ {
+ }
+
+ public DbCorreosInstitucionalesUpiicsaContext(DbContextOptions<DbCorreosInstitucionalesUpiicsaContext> options, IConfiguration config)
+     : base(options)
+ {
+     _config = config;
+ }
 
 //=> optionsBuilder.UseSqlServer("Server=localhost;Database=db_CorreosInstitucionales_UPIICSA;Trusted_Connection=True;TrustServerCertificate=True;");
 //=> optionsBuilder.UseSqlServer(_config.GetConnectionString("SQLServer"));

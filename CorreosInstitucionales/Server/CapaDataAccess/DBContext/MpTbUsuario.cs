@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
@@ -23,13 +23,13 @@ public partial class MpTbUsuario
     public int UsuIdRol { get; set; }
 
     /// <summary>
-    /// FK ID del Tipo de Personal del Usuario Solicitante
+    /// FK ID del Tipo de Personal del Usuario Solicitante ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
     /// </summary>
     [Column("usuIdTipoPersonal")]
     public int UsuIdTipoPersonal { get; set; }
 
     /// <summary>
-    /// Nombre del Usuario
+    /// Nombre del Usuario Solicitante o Administrador
     /// </summary>
     [Column("usuNombre")]
     [StringLength(200)]
@@ -63,7 +63,7 @@ public partial class MpTbUsuario
     /// <summary>
     /// Nombre del Archivo PDF del CURP del Usuario
     /// </summary>
-    [Column("usuFileNameCurp")]
+    [Column("usuFileNameCURP")]
     [StringLength(200)]
     [Unicode(false)]
     public string? UsuFileNameCurp { get; set; }
@@ -110,7 +110,7 @@ public partial class MpTbUsuario
     /// Semestre que cursa
     /// </summary>
     [Column("usuSemestre")]
-    [StringLength(10)]
+    [StringLength(15)]
     [Unicode(false)]
     public string? UsuSemestre { get; set; }
 
@@ -205,8 +205,9 @@ public partial class MpTbUsuario
     /// <summary>
     /// Estatus { 0 = Inactivo, 1 = Activo }
     /// </summary>
+    [Required]
     [Column("usuStatus")]
-    public bool UsuStatus { get; set; }
+    public bool? UsuStatus { get; set; }
 
     [JsonIgnore]
     [InverseProperty("SolIdUsuarioNavigation")]

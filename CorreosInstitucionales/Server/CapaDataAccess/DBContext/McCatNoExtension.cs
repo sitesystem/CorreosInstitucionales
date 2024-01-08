@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
@@ -21,13 +21,13 @@ public partial class McCatNoExtension
     [Column("extNoExtension")]
     [StringLength(10)]
     [Unicode(false)]
-    public string? ExtNoExtension { get; set; }
+    public string ExtNoExtension { get; set; } = null!;
 
     /// <summary>
     /// FK ID del Área / Departamento
     /// </summary>
     [Column("extIdAreaDepto")]
-    public int ExtIdAreaDepto { get; set; }
+    public int? ExtIdAreaDepto { get; set; }
 
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
@@ -38,5 +38,5 @@ public partial class McCatNoExtension
 
     [ForeignKey("ExtIdAreaDepto")]
     [InverseProperty("McCatNoExtensions")]
-    public virtual McCatAreasDepto ExtIdAreaDeptoNavigation { get; set; } = null!;
+    public virtual McCatAreasDepto? ExtIdAreaDeptoNavigation { get; set; }
 }

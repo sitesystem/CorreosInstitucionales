@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
@@ -35,7 +35,7 @@ public partial class McCatEscuela
     /// Nombre Largo de la Escuela
     /// </summary>
     [Column("escNombreLargo")]
-    [StringLength(200)]
+    [StringLength(150)]
     [Unicode(false)]
     public string? EscNombreLargo { get; set; }
 

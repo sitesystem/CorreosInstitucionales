@@ -54,6 +54,8 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
     {
         modelBuilder.Entity<McCatAreasDepto>(entity =>
         {
+            entity.HasKey(e => e.IdAreaDepto).HasName("PK_MCE_catExtencionesAreas");
+
             entity.Property(e => e.IdAreaDepto).HasComment("PK ID Único del Área / Departamento");
             entity.Property(e => e.AreIdEdificio)
                 .HasDefaultValueSql("((1))")
@@ -79,8 +81,12 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
         modelBuilder.Entity<McCatCarrera>(entity =>
         {
+            entity.HasKey(e => e.IdCarrera).HasName("PK_MCE_catCarreras");
+
             entity.Property(e => e.IdCarrera).HasComment("PK ID Único de la Carrera");
-            entity.Property(e => e.CarrClave).HasComment("Clave de la Carrera / Licenciatura");
+            entity.Property(e => e.CarrClave)
+                .HasDefaultValueSql("('-')")
+                .HasComment("Clave de la Carrera / Licenciatura");
             entity.Property(e => e.CarrNombre).HasComment("Nombre de la Carrera / Licenciatura");
             entity.Property(e => e.CarrStatus)
                 .HasDefaultValueSql("((1))")
@@ -89,6 +95,8 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
         modelBuilder.Entity<McCatEdificio>(entity =>
         {
+            entity.HasKey(e => e.IdEdificio).HasName("PK_MCE_catEdificios");
+
             entity.Property(e => e.IdEdificio).HasComment("PK ID Único del Edificio");
             entity.Property(e => e.EdiNombreAlias).HasComment("Nombre Alias del Edificio");
             entity.Property(e => e.EdiNombreOficial).HasComment("Nombre Oficial del Edificio");
@@ -99,9 +107,13 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
         modelBuilder.Entity<McCatEscuela>(entity =>
         {
+            entity.HasKey(e => e.IdEscuela).HasName("PK_MCE_catEscuelas");
+
             entity.Property(e => e.IdEscuela).HasComment("PK ID Único de la Escuela");
             entity.Property(e => e.EscLogo).HasComment("Nombre de la Imágen del Logo");
-            entity.Property(e => e.EscNoEscuela).HasComment("Número de la Escuela");
+            entity.Property(e => e.EscNoEscuela)
+                .HasDefaultValueSql("('-')")
+                .HasComment("Número de la Escuela");
             entity.Property(e => e.EscNombreCorto).HasComment("Nombre Corto de la Escuela");
             entity.Property(e => e.EscNombreLargo).HasComment("Nombre Largo de la Escuela");
             entity.Property(e => e.EscStatus)
@@ -111,39 +123,49 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
         modelBuilder.Entity<McCatEstadosSolicitud>(entity =>
         {
+            entity.HasKey(e => e.IdEstadoSolicitud).HasName("PK_MCE_catEstadosSolicitud");
+
             entity.Property(e => e.IdEstadoSolicitud).HasComment("PK ID Único del Estado de la Solicitud");
             entity.Property(e => e.EdosolDescripcion).HasComment("Detalle del Estado de la Solicitud");
-            entity.Property(e => e.EdosolNombreEstado).HasComment("Estado de la Solicitud (1 - Levantado, 2 - Pendiente, 3 - En Proceso, 4 - Atendido)");
+            entity.Property(e => e.EdosolNombreEstado)
+                .HasDefaultValueSql("('-')")
+                .HasComment("Estado de la Solicitud (1 - Levantado, 2 - Pendiente, 3 - En Proceso, 4 - Atendido)");
         });
 
         modelBuilder.Entity<McCatLink>(entity =>
         {
+            entity.HasKey(e => e.IdLink).HasName("PK_MCE_catLinks");
+
             entity.Property(e => e.IdLink).HasComment("PK ID Único del Enlace Link");
-            entity.Property(e => e.LinkEnlace)
-                .HasDefaultValueSql("((1))")
-                .HasComment("Enlace o Link");
+            entity.Property(e => e.LinkEnlace).HasComment("Enlace o Link");
             entity.Property(e => e.LinkNombre).HasComment("Nombre del Enlace o Link");
-            entity.Property(e => e.LinkStatus).HasComment("Estado (1 = Activo, 0 = Inactivo)");
+            entity.Property(e => e.LinkStatus)
+                .HasDefaultValueSql("((1))")
+                .HasComment("Estado (1 = Activo, 0 = Inactivo)");
         });
 
         modelBuilder.Entity<McCatNoExtension>(entity =>
         {
+            entity.HasKey(e => e.IdExtension).HasName("PK_MCE_catExtensiones");
+
             entity.Property(e => e.IdExtension).HasComment("PK ID Único del Número de Extensión");
             entity.Property(e => e.ExtIdAreaDepto)
                 .HasDefaultValueSql("((1))")
                 .HasComment("FK ID del Área / Departamento");
-            entity.Property(e => e.ExtNoExtension).HasComment("Número de Extensión");
+            entity.Property(e => e.ExtNoExtension)
+                .HasDefaultValueSql("((0))")
+                .HasComment("Número de Extensión");
             entity.Property(e => e.ExtStatus)
                 .HasDefaultValueSql("((1))")
                 .HasComment("Estado (1 = Activo, 0 = Inactivo)");
 
-            entity.HasOne(d => d.ExtIdAreaDeptoNavigation).WithMany(p => p.McCatNoExtensions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MC_catNoExtension_MC_catAreasDeptos");
+            entity.HasOne(d => d.ExtIdAreaDeptoNavigation).WithMany(p => p.McCatNoExtensions).HasConstraintName("FK_MC_catNoExtension_MC_catAreasDeptos");
         });
 
         modelBuilder.Entity<McCatPiso>(entity =>
         {
+            entity.HasKey(e => e.IdPiso).HasName("PK_MCE_catPisos");
+
             entity.Property(e => e.IdPiso).HasComment("PK ID Único del Piso / Nivel");
             entity.Property(e => e.PisoDescripcion).HasComment("Nombre / Descripción del Piso");
             entity.Property(e => e.PisoStatus)
@@ -153,6 +175,8 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
         modelBuilder.Entity<McCatRole>(entity =>
         {
+            entity.HasKey(e => e.IdRol).HasName("PK_MCE_catRoles");
+
             entity.Property(e => e.IdRol).HasComment("PK ID Único del Rol");
             entity.Property(e => e.RolDescripcion).HasComment("Descripción detallada del Rol");
             entity.Property(e => e.RolNombre).HasComment("Nombre del Rol");
@@ -160,6 +184,8 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
         modelBuilder.Entity<McCatTiposPersonal>(entity =>
         {
+            entity.HasKey(e => e.IdTipoPersonal).HasName("PK_MC_TipoPersonal");
+
             entity.Property(e => e.IdTipoPersonal).HasComment("PK ID Único del Tipo de Personal");
             entity.Property(e => e.TipoperDescripcion).HasComment("Descripción detallada del Tipo de Personal");
             entity.Property(e => e.TipoperNombre).HasComment("Nombre del Tipo de Personal");
@@ -170,8 +196,12 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
         modelBuilder.Entity<McCatTiposSolicitud>(entity =>
         {
+            entity.HasKey(e => e.IdTipoSolicitud).HasName("PK_MC_catTipoSolicitud");
+
             entity.Property(e => e.IdTipoSolicitud).HasComment("PK ID Único del Tipo de Solicitud");
-            entity.Property(e => e.TiposolDescripcion).HasComment("Descripción breve del Tipo de Solicitud");
+            entity.Property(e => e.TiposolDescripcion)
+                .HasDefaultValueSql("('-')")
+                .HasComment("Descripción breve del Tipo de Solicitud");
             entity.Property(e => e.TiposolStatus)
                 .HasDefaultValueSql("((1))")
                 .HasComment("Estado (1 = Activo, 0 = Inactivo)");
@@ -179,7 +209,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
         modelBuilder.Entity<MpTbUsuario>(entity =>
         {
-            entity.HasKey(e => e.IdUsuario).HasName("PK_tbUsuarios");
+            entity.HasKey(e => e.IdUsuario).HasName("PK_ML_tbUsuariosSolicitantes");
 
             entity.Property(e => e.IdUsuario).HasComment("PK ID Único del Usuario Solicitante o Administrador");
             entity.Property(e => e.UsuAñoEgreso)
@@ -209,19 +239,25 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
                 .HasComment("FK ID Único del Rol { Administrador, Usuario Solicitante }");
             entity.Property(e => e.UsuIdTipoPersonal)
                 .HasDefaultValueSql("((1))")
-                .HasComment("FK ID del Tipo de Personal del Usuario Solicitante");
+                .HasComment("FK ID del Tipo de Personal del Usuario Solicitante ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])");
             entity.Property(e => e.UsuNoCelularAnterior).HasComment("Número Celular Anterior del Usuario");
             entity.Property(e => e.UsuNoCelularNuevo).HasComment("Número Celular Actual/Nuevo del Usuario");
             entity.Property(e => e.UsuNoExtension).HasComment("Número de Extensión del Área / Departamento");
-            entity.Property(e => e.UsuNombre).HasComment("Nombre del Usuario");
+            entity.Property(e => e.UsuNombre)
+                .HasDefaultValueSql("('-')")
+                .HasComment("Nombre del Usuario Solicitante o Administrador");
             entity.Property(e => e.UsuNumeroEmpleado).HasComment("Número de Empleado del Usuario { Administrativo, Docente }");
-            entity.Property(e => e.UsuPrimerApellido).HasComment("Primer Apellido del Usuario");
+            entity.Property(e => e.UsuPrimerApellido)
+                .HasDefaultValueSql("('-')")
+                .HasComment("Primer Apellido del Usuario");
             entity.Property(e => e.UsuRecuperarContraseña).HasComment("Bandera { 0 = Inicia Sesión, 1 = Pide cambiar contraseña temporal }");
             entity.Property(e => e.UsuSegundoApellido).HasComment("Segundo Apellido del Usuario");
             entity.Property(e => e.UsuSemestre)
                 .HasDefaultValueSql("((1))")
                 .HasComment("Semestre que cursa");
-            entity.Property(e => e.UsuStatus).HasComment("Estatus { 0 = Inactivo, 1 = Activo }");
+            entity.Property(e => e.UsuStatus)
+                .HasDefaultValueSql("((1))")
+                .HasComment("Estatus { 0 = Inactivo, 1 = Activo }");
 
             entity.HasOne(d => d.UsuIdAreaDeptoNavigation).WithMany(p => p.MpTbUsuarios)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -240,9 +276,9 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
         modelBuilder.Entity<MtTbSolicitudesTicket>(entity =>
         {
-            entity.HasKey(e => e.IdSolicitudTicket).HasName("PK_tbSolicitudesTickets");
+            entity.HasKey(e => e.IdSolicitudTicket).HasName("PK_MCE_tbSolicitud");
 
-            entity.Property(e => e.IdSolicitudTicket).HasComment("ID Único de la Solicitud");
+            entity.Property(e => e.IdSolicitudTicket).HasComment("PK ID Único de la Solicitud");
             entity.Property(e => e.SolCapturaCuentaBloqueada).HasComment("Nombre del Archivo PDF de la Captura de la Cuenta Bloqueada");
             entity.Property(e => e.SolCapturaError).HasComment("Nombre del Archivo PDF de la Captura del Error");
             entity.Property(e => e.SolCapturaEscaneoAntivirus).HasComment("Nombre del Archivo PDF de la Captura del Escaneo del Antivirus");

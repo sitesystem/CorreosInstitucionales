@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
@@ -34,6 +34,7 @@ public partial class McCatLink
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>
+    [Required]
     [Column("linkStatus")]
-    public bool LinkStatus { get; set; }
+    public bool? LinkStatus { get; set; }
 }
