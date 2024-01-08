@@ -1,5 +1,6 @@
 > [!NOTE]
 > # PENDIENTES
+> # Estudiar Radzen Blazor Studio
 > ## Subir archivos al servidor.
 > ## Instalar disco duro al servidor.
 > ## Crear tabla de usuarios.

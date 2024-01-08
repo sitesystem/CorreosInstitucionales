@@ -1,6 +1,6 @@
-﻿@* @page "/PerfilUsuario"
-@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.RegistroAlumno
-@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.RegistroEmpleado
+﻿@page "/PerfilUsuario"
+@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistroAlumnos
+@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistroEmpleados
 
 <h3>Perfil Usuario</h3>
 <center>
@@ -9,6 +9,7 @@
 </div>
 </center>
 
+
 @if (banderaFormulario==true)
 {
         <h3>Modificación de Datos de perfil</h3>
@@ -16,31 +17,30 @@
         {
             case 1:
                 Console.WriteLine("El tipo usuario es: Alumno inscrito");
-                <RegistroInscrito/>
-                break;
-        
+                
+                break;        
             case 2:
                 Console.WriteLine("El tipo usuario es: Alumno egresado");
-                <RegistroInscrito />
+                
                 break;
             case 3:
                 Console.WriteLine("El tipo usuario es: Maestría");
-                <RegistroMaestria />
+                
                 break;
             case 4:
                 Console.WriteLine("El tipo usuario es: Administrativo");
-                <RegistroAdministrativo/>
+                
                 break;
             case 5:
                 Console.WriteLine("El tipo usuario es: Docente");
-                <RegistroDocente/>
+                
                 break;
             case 6:
                 Console.WriteLine("El tipo usuario es: Honorarios");
-                <RegistroHonorario/>
+                
                 break;
             default: 
-            tipousuario=0;
+                tipousuario=0;
                 break;
         }
 }
@@ -57,4 +57,3 @@
             banderaFormulario = false;
     }
 }
- *@
