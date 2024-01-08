@@ -5,8 +5,8 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Navigations
 
-@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.RegistroAlumno
-@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.RegistroEmpleado
+@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistroAlumnos
+@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistroEmpleados
 
 @layout LoginLayout
 
@@ -114,7 +114,7 @@
 </style>
 
 <!-- Encabezado de Página (Header Fixed-Top) -->
-<nav class="navbar bg-dark bg-body-tertiary fixed-top" style="border-bottom: 10px solid #3d0000;">
+<nav class="navbar bg-dark bg-body-tertiary fixed-top" style="border-bottom: 10px solid #3d0000;" data-bs-theme="dark">
     <div class="container">
         <img src="https://onceninasyninos.tv/wp-content/uploads/2018/04/Banner-logos-ipn-e1523046221576.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top" style="width:6vw; height:6vh;">
         <a class="navbar-brand text-white" style="font-variant: small-caps; text-decoration:none; font-size:calc(10px + 0.390625vw);">
@@ -127,7 +127,9 @@
         </button>
     </div>
 </nav>
+
 <hr class="mb-4" />
+
 <!-- Contenido Principal -->
 <div class="container">
     <div class="row align-items-center min-vh-100">
@@ -139,10 +141,10 @@
                 </div>
             </div>
             <div class="mb-2">
-                <SfMessage Severity="MessageSeverity.Info" Variant="MessageVariant.Filled" ShowIcon="true" ShowCloseIcon="true" ContentAlignment="HorizontalAlign.Left" CssClass="rounded">
+                <SfMessage Severity="MessageSeverity.Info" Variant="MessageVariant.Filled" ShowIcon="true" ShowCloseIcon="true" ContentAlignment="Syncfusion.Blazor.HorizontalAlign.Left" CssClass="rounded">
                     <b>NOTA:</b> La creación de los Correos Institucionales  de los alumnos de nuevo ingreso tendrá un <strong>tiempo de espera de hasta 2 meses.</strong>
                 </SfMessage>
-                <SfMessage Severity="MessageSeverity.Error" Variant="MessageVariant.Filled" ShowIcon="true" ShowCloseIcon="true" ContentAlignment="HorizontalAlign.Left" CssClass="rounded">
+                <SfMessage Severity="MessageSeverity.Error" Variant="MessageVariant.Filled" ShowIcon="true" ShowCloseIcon="true" ContentAlignment="Syncfusion.Blazor.HorizontalAlign.Left" CssClass="rounded">
                     <b>NOTA:</b> Los campos subrayados de rojo son <strong>obligatorios.</strong>
                 </SfMessage>
                 @*
@@ -242,8 +244,9 @@
     </div>
 </div>
 <hr class="mt-5" />
+
 <!-- Pie de Página (Footer Fixed-Bottom) -->
-<nav class="navbar bg-body-tertiary bg-dark fixed-bottom">
+<nav class="navbar bg-body-tertiary bg-dark fixed-bottom" data-bs-theme="dark">
     <div class="container text-center">
         <a class="navbar-brand" style="text-decoration:none; font-size:calc(10px + 0.390625vw); color:white;">
             UPIICSA (Desarrollo de Sistemas de Información)

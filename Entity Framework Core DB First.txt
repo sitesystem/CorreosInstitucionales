@@ -12,3 +12,7 @@
 DBContext
 => optionsBuilder.UseSqlServer("Server=148.204.211.187;Database=db_SITI;User Id=sa;Password=Up11cs4@2023;TrustServerCertificate=True;");
 => optionsBuilder.UseSqlServer("Server=localhost;Database=db_SITI;Trusted_Connection=True;TrustServerCertificate=True;");
+
+//=> optionsBuilder.UseSqlServer("Server=localhost;Database=db_CorreosInstitucionales_UPIICSA;Trusted_Connection=True;TrustServerCertificate=True;");
+//=> optionsBuilder.UseSqlServer(_config.GetConnectionString("SQLServer"));
+//=> optionsBuilder.UseSqlServer(_config.GetSection("ConnectionStrings:SQLServer").Value);

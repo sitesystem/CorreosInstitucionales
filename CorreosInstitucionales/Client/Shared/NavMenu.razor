@@ -3,6 +3,7 @@
 @inject NavigationManager navigationManager;
 @inject ILoginServices loginService
 
+@*
 <div class="top-row ps-3 navbar navbar-dark" style="background-color: #3d0000;">
     <div class="container-fluid">
         <div class="e-avatar e-avatar-small e-avatar-circle image">
@@ -17,299 +18,84 @@
 
 <div class="@NavMenuCssClass nav-scrollable" style="background-color:#121416;">
     <nav class="flex-column">
-        @*************************** Dashboard (Panel de Control) ***************************@
-        <div class="nav-item px-3">
-            <NavLink class="nav-link module" href="/Index" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Panel de Control
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <span style="font-variant: small-caps; color:white; font-size:16px;">Módulos</span>
-        </div>
-        @* <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </div> *@
-
-        <AuthorizeView Policy="[Rol] Usuario Solicitante">
-            <Authorized>
-                @*************************** Módulo de Solicitudes (Tickets) ***************************@
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; background-color: #490A18; cursor: pointer; border: dotted 0.5px #fefefe;" @onclick="() => expandMenuTickets = !expandMenuTickets">
-                        <div class="col-sm-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-tags-fill" viewBox="0 0 16 16">
-                                <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
-                                <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043-7.457-7.457z" />
-                            </svg>
-                        </div>
-                        <div class="col-sm-10">
-                            Solicitudes (Tickets)
-                        </div>
-                        @if (expandMenuTickets)
-                        {
-                            <SfIcon Name="IconName.ChevronUpFill" Size="IconSize.Small"></SfIcon>
-                        }
-                        else if (!expandMenuTickets)
-                        {
-                            <SfIcon Name="IconName.ChevronDownFill" Size="IconSize.Small"></SfIcon>
-                        }
-                    </NavLink>
-                </div>
-                @if (expandMenuTickets)
-                {
-                    @*************************** Levantamiento del Nuevo Ticket ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="NuevaSolicitudTicket" @onclick="ToggleNavMenu">
-                            <div class="col-sm-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-tag-fill" viewBox="0 0 16 16">
-                                    <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1H2zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-10">
-                                Nueva Solicitud (Ticket)
-                            </div>
-                        </NavLink>
-                    </div>
-                    @*************************** Solicitudes (Ticket's) Pendientes ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="SeguimientoTickets" @onclick="ToggleNavMenu">
-                            <div class="col-sm-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-hourglass-split" viewBox="0 0 16 16">
-                                    <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-10">
-                                Seguimiento de Solicitudes (Tickets)
-                            </div>
-                        </NavLink>
-                    </div>
-                }
-            </Authorized>
-            <Authorizing>
-            </Authorizing>
-            <NotAuthorized>
-            </NotAuthorized>
-        </AuthorizeView>
-
-        <AuthorizeView Policy="[Rol] Administrador">
-            <Authorized>
-                @*************************** Módulo de Solicitudes (Tickets) ***************************@
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="SeguimientoTickets" style="line-height: 15px; font-variant: small-caps; background-color: #490A18; cursor: pointer; border: dotted 1px white;" Match="NavLinkMatch.All">
-                        <div class="col-sm-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-tags-fill" viewBox="0 0 16 16">
-                                <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
-                                <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043-7.457-7.457z" />
-                            </svg>
-                        </div>
-                        <div class="col-sm-10">
-                            Seguimiento de Solicitudes (Tickets)
-                        </div>
-                    </NavLink>
-                </div>
-                @*************************** Módulo de Catálogos ***************************@
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; background-color: #490A18; cursor: pointer; border: dotted 1px white;" @onclick="() => expandMenuCatálogos = !expandMenuCatálogos">
-                        <div class="col-sm-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
-                                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
-                            </svg>
-                        </div>
-                        <div class="col-sm-10">
-                            Catálogos
-                        </div>
-                        @if (expandMenuCatálogos)
-                        {
-                            <SfIcon Name="IconName.ChevronUpFill" Size="IconSize.Small"></SfIcon>
-                        }
-                        else if (!expandMenuCatálogos)
-                        {
-                            <SfIcon Name="IconName.ChevronDownFill" Size="IconSize.Small"></SfIcon>
-                        }
-                    </NavLink>
-                </div>
-                @if (expandMenuCatálogos)
-                {
-                    @*************************** catÁreasDeptos ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="AreasDeptos" @onclick="ToggleNavMenu">
-                            <div class="col-sm-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5v-1zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5v-1zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5v-1zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-1z" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-9">
-                                Áreas / Departamentos
-                            </div>
-                        </NavLink>
-                    </div>
-                    @*************************** catExtensiones ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="Extensiones" @onclick="ToggleNavMenu">
-                            <div class="col-sm-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-9">
-                                Números de Extensión
-                            </div>
-                        </NavLink>
-                    </div>
-                    @*************************** catEdificios ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="Edificios" @onclick="ToggleNavMenu">
-                            <div class="col-sm-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-buildings-fill" viewBox="0 0 16 16">
-                                    <path d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V.5ZM2 11h1v1H2v-1Zm2 0h1v1H4v-1Zm-1 2v1H2v-1h1Zm1 0h1v1H4v-1Zm9-10v1h-1V3h1ZM8 5h1v1H8V5Zm1 2v1H8V7h1ZM8 9h1v1H8V9Zm2 0h1v1h-1V9Zm-1 2v1H8v-1h1Zm1 0h1v1h-1v-1Zm3-2v1h-1V9h1Zm-1 2h1v1h-1v-1Zm-2-4h1v1h-1V7Zm3 0v1h-1V7h1Zm-2-2v1h-1V5h1Zm1 0h1v1h-1V5Z" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-9">
-                                Edificios
-                            </div>
-                        </NavLink>
-                    </div>
-                    @*************************** catPisosNiveles ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="PisosNiveles" @onclick="ToggleNavMenu">
-                            <div class="col-sm-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bar-chart-steps" viewBox="0 0 16 16">
-                                    <path d="M.5 0a.5.5 0 0 1 .5.5v15a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 .5 0zM2 1.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-9">
-                                Pisos (Niveles)
-                            </div>
-                        </NavLink>
-                    </div>
-                    @*************************** catLinks ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="Links" @onclick="ToggleNavMenu">
-                            <div class="col-sm-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
-                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z" />
-                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-9">
-                                Enlaces Web (Links)
-                            </div>
-                        </NavLink>
-                    </div>
-                    @*************************** catCarreras ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="Carreras" @onclick="ToggleNavMenu">
-                            <div class="col-sm-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 16 16">
-                                    <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z" />
-                                    <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-9">
-                                Carreras / Licenciaturas
-                            </div>
-                        </NavLink>
-                    </div>
-                    @*************************** catDatosEscuela ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="Escuela" @onclick="ToggleNavMenu">
-                            <div class="col-sm-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-building-fill" viewBox="0 0 16 16">
-                                    <path d="M3 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3v-3.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V16h3a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1zm1 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5M4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-9">
-                                Datos de la Escuela
-                            </div>
-                        </NavLink>
-                    </div>
-                    @*************************** catTiposSolicitudTicket ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="TiposSolicitudTicket" @onclick="ToggleNavMenu">
-                            <div class="col-sm-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard2-fill" viewBox="0 0 16 16">
-                                    <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z" />
-                                    <path d="M3.5 1h.585A1.498 1.498 0 0 0 4 1.5V2a1.5 1.5 0 0 0 1.5 1.5h5A1.5 1.5 0 0 0 12 2v-.5c0-.175-.03-.344-.085-.5h.585A1.5 1.5 0 0 1 14 2.5v12a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-12A1.5 1.5 0 0 1 3.5 1" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-9">
-                                Tipos de Solicitud
-                            </div>
-                        </NavLink>
-                    </div>
-                    @*************************** catTiposPersonal ***************************@
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; border: dotted 1px white;" href="TiposPersonal" @onclick="ToggleNavMenu">
-                            <div class="col-sm-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                </svg>
-                            </div>
-                            <div class="col-sm-9">
-                                Tipos de Personal
-                            </div>
-                        </NavLink>
-                    </div>
-
-                }
-                @*************************** tbUsuarios ***************************@
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Usuarios" style="line-height: 15px; font-variant: small-caps; background-color: #490A18; cursor: pointer; border: dotted 1px white;" Match="NavLinkMatch.All">
-                        <div class="col-sm-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-                                <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
-                            </svg>
-                        </div>
-                        <div class="col-sm-10">
-                            Usuarios Solicitantes
-                        </div>
-                    </NavLink>
-                </div>
-            </Authorized>
-            <Authorizing>
-            </Authorizing>
-            <NotAuthorized>
-            </NotAuthorized>
-        </AuthorizeView>
-
-        <hr style="color:white;" />
-        @*************************** Perfil ***************************@
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Perfil" style="line-height: 15px; font-variant: small-caps; background-color: #490A18; cursor: pointer; border: dotted 1px white;" Match="NavLinkMatch.All">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                </svg> &nbsp;&nbsp; Perfil
-            </NavLink>
-        </div>
-        @*************************** Cerrar Sesión (LogOut) ***************************@
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" style="line-height: 15px; font-variant: small-caps; background-color: #490A18; cursor: pointer; border: dotted 1px white;" @onclick="LogOut">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z" />
-                    <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z" />
-                </svg> &nbsp;&nbsp; Cerrar Sesión
-            </NavLink>
-        </div>
     </nav>
-</div>
+</div> *@
+
+<AuthorizeView Policy="[Rol] Usuario Solicitante">
+    <Authorized>
+        @*************************** Dashboard (Panel de Control) ***************************@
+        <RadzenPanelMenuItem Text="Panel de Control" Icon="home" Path="Index" />
+        <RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" />
+        @*************************** Módulo de Solicitudes (Tickets) ***************************@
+        <RadzenPanelMenuItem Text="Solicitudes (Tickets)" Icon="bookmarks">
+            @*************************** Levantamiento del Nuevo Ticket ***************************@
+            <RadzenPanelMenuItem Text="Nueva Solicitud (Ticket)" Icon="local_offer" Path="NuevaSolicitudTicket" class="rz-border-base-800" />
+            @*************************** Solicitudes (Ticket's) Pendientes y Atendidas ***************************@
+            <RadzenPanelMenuItem Text="Seguimiento de Solicitudes (Tickets)" Icon="bookmark" Path="/SeguimientoTickets" class="rz-border-base-800" />
+        </RadzenPanelMenuItem>
+    </Authorized>
+    <Authorizing>
+    </Authorizing>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Policy="[Rol] Administrador">
+    <Authorized>
+        @*************************** Dashboard (Panel de Control) ***************************@
+        <RadzenPanelMenuItem Text="Panel de Control" Icon="home" Path="Index" />
+        <RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" />
+        @*************************** Módulo de Solicitudes (Tickets) ***************************@
+        <RadzenPanelMenuItem Text="Solicitudes (Tickets)" Icon="bookmarks" class="">
+            @*************************** Solicitudes (Ticket's) Pendientes ***************************@
+            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" Path="SolicitudesPendientes" class="rz-border-base-800" />
+            @*************************** Solicitudes (Ticket's) Atendidas ***************************@
+            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" Path="SolicitudesAtendidas" class="rz-border-base-800" />
+        </RadzenPanelMenuItem>
+        @*************************** Módulo de Catálogos ***************************@
+        <RadzenPanelMenuItem Text="Catálogos" Icon="settings" class="">
+            @*************************** catÁreasDeptos ***************************@
+            <RadzenPanelMenuItem Text="Áreas / Departamentos" Icon="account_tree" Path="AreasDeptos" class="rz-border-base-800" />
+            @*************************** catExtensiones ***************************@
+            <RadzenPanelMenuItem Text="Números de Extensión" Icon="phone" Path="Extensiones" class="rz-border-base-800" />
+            @*************************** catEdificios ***************************@
+            <RadzenPanelMenuItem Text="Edificios" Icon="domain" Path="Edificios" class="rz-border-base-800" />
+            @*************************** catPisosNiveles ***************************@
+            <RadzenPanelMenuItem Text="Pisos (Niveles)" Icon="stairs" Path="PisosNiveles" class="rz-border-base-800" />
+            @*************************** catLinks ***************************@
+            <RadzenPanelMenuItem Text="Enlaces Web (Links)" Icon="insert_link" Path="Links" class="rz-border-base-800" />
+            @*************************** catCarreras ***************************@
+            <RadzenPanelMenuItem Text="Carreras / Licenciaturas" Icon="school" Path="Carreras" class="rz-border-base-800" />
+            @*************************** catDatosEscuela ***************************@
+            <RadzenPanelMenuItem Text="Datos de la Escuela" Icon="apartment" Path="Escuela" class="rz-border-base-800" />
+            @*************************** catTiposSolicitudTicket ***************************@
+            <RadzenPanelMenuItem Text="Tipos de Solicitud" Icon="assignment" Path="TiposSolicitudTicket" class="rz-border-base-800" />
+            @*************************** catTiposPersonal ***************************@
+            <RadzenPanelMenuItem Text="Tipos de Personal" Icon="supervisor_account" Path="TiposPersonal" class="rz-border-base-800" />
+        </RadzenPanelMenuItem>
+        @*************************** tbUsuarios ***************************@
+        <RadzenPanelMenuItem Text="Usuarios Solicitantes" Icon="people_alt" Path="Usuarios" />
+    </Authorized>
+    <Authorizing>
+    </Authorizing>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+<RadzenPanelMenuItem Text="" class="rz-background-color-base-900" />
+@*************************** Perfil ***************************@
+<RadzenPanelMenuItem Text="Perfil" Icon="account_circle" Path="Perfil" />
+@*************************** Cerrar Sesión (LogOut) ***************************@
+<RadzenPanelMenuItem Text="Cerrar Sesión" Icon="logout" Click="@LogOut" />
 
 @code
 {
-    private bool collapseNavMenu = true;
-    private bool expandMenuBlazor, expandMenuTickets = true, expandMenuAdmin, expandMenuCatálogos, expandMenuOtros;
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    // private bool collapseNavMenu = true;
+    // private bool expandMenuBlazor, expandMenuTickets = true, expandMenuAdmin, expandMenuCatálogos, expandMenuOtros;
+    // private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+    // private void ToggleNavMenu()
+    // {
+    //     collapseNavMenu = !collapseNavMenu;
+    // }
 
     private async Task LogOut()
     {

@@ -1,0 +1,31 @@
+﻿@page "/Usuarios"
+
+@attribute [Authorize]
+
+@using CorreosInstitucionales.Shared.CapaEntities.Request;
+@using CorreosInstitucionales.Shared.CapaEntities.Response;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
+
+<h3>MCE_tbUsuario</h3>
+
+@inject IUsuarioService servicioUsuario
+
+<SfGrid DataSource="@oResponse.Data" AllowPaging="true">
+    <GridColumns>
+        <GridColumn Field=@nameof(RequestDTO_Usuario.IdUsuario) HeaderText="Id Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(RequestDTO_Usuario.UsuNombre) HeaderText="Clave Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(RequestDTO_Usuario.UsuPrimerApellido) HeaderText="Nombre Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(RequestDTO_Usuario.UsuSegundoApellido) HeaderText="Nombre Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(RequestDTO_Usuario.UsuCurp) HeaderText="Nombre Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(RequestDTO_Usuario.UsuFileNameCurp) HeaderText="Nombre Carrera" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right" Width="120"></GridColumn>
+    </GridColumns>
+</SfGrid>
+
+@code {
+    public Response<List<RequestDTO_Usuario>>? oResponse = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        oResponse = await servicioUsuario.GetAllDataAsync(false);
+    }
+}

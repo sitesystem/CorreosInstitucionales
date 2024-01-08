@@ -7,24 +7,24 @@
 @using System.Security.Claims;
 
 @using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
-@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
-@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request.Login
-@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.SendEmailService
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService
+@using CorreosInstitucionales.Shared.CapaEntities.Request
+@using CorreosInstitucionales.Shared.CapaEntities.Response
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
 
 @layout LoginLayout
 
-@inject HttpClient httpClient
-@inject NavigationManager navigationManager
-@inject SfDialogService DialogService
+@inject DialogService DialogModalService
+@inject NotificationService NotificationService
 
 @inject IJSRuntime JSRuntime
 @inject ILoginServices loginService
-@inject ISendEmail servicioSendEmail
-@inject IUsuario servicioUsuario
+@inject ISendEmailService servicioSendEmail
+@inject IUsuarioService servicioUsuario
 
 <PageTitle>SACI | Inicio de Sesión</PageTitle>
+
+<RadzenComponents />
 
 <AuthorizeView>
     <Authorized>
@@ -38,27 +38,6 @@
 </AuthorizeView>
 
 <style type="text/css">
-    .default-carousel-section .carousel-sample {
-        margin: 0 auto 2em;
-        max-width: 500px;
-        height: 300px;
-    }
-
-    .default-carousel .e-carousel-items .e-carousel-item .img-container {
-        height: 100%;
-    }
-
-    .default-carousel .e-carousel-items .e-carousel-item .img-caption {
-        bottom: 5em;
-        color: #fff;
-        font-size: 12pt;
-        height: 2em;
-        position: relative;
-        padding: 0.3em 1em;
-        text-align: center;
-        width: 100%;
-    }
-
     .e-alert-dialog .e-footer-content {
         display: flex;
         justify-content: center;
@@ -119,19 +98,19 @@
 </style>
 
 <!-- Encabezado de Página (Header Fixed-Top) -->
-<nav class="navbar bg-dark bg-body-tertiary fixed-top" style="border-bottom: 10px solid #3d0000;">
+<nav class="navbar bg-dark bg-body-tertiary fixed-top" style="border-bottom: 10px solid #3d0000;" data-bs-theme="dark">
     <div class="container">
         <img src="/ipn.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-        <a class="navbar-brand text-white" style="font-variant: small-caps; text-decoration:none; font-size:calc(10px + 0.390625vw);">
+        <a class="navbar-brand text-white text-wrap" style="font-variant: small-caps; text-decoration:none; font-size:calc(10px + 0.390625vw);">
             SACI (Sistema para Atención de Correos Institucionales IPN)
         </a>
         <img src="/ipn.png" alt="Logo" width="30" height="24" class="rounded float-end">
     </div>
 </nav>
-
+<hr class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-m-10" />
 <!-- Contenido Principal -->
 <div class="container">
-    <div class="row align-items-center min-vh-100">
+    <div class="row align-items-center min-vh-100 gap-0">
 
         <!-- Formulario de login -->
         <div class="col-md-6 order-1">
@@ -140,146 +119,159 @@
                     <h5 style="font-variant: small-caps;">¡Bienvenid@@!</h5>
                 </div>
                 <div class="card-body">
-                    <SfTab CssClass="e-fill" HeaderPlacement="HeaderPosition.Top">
-                        <TabAnimationSettings>
-                            <TabAnimationPrevious Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationPrevious>
-                            <TabAnimationNext Effect=Syncfusion.Blazor.AnimationEffect.None></TabAnimationNext>
-                        </TabAnimationSettings>
-                        <TabEvents Selecting="CleanReset" />
-                        <TabItems>
-                            <TabItem>
-                                <ChildContent>
-                                    <TabHeader Text="Iniciar Sesión" IconCss="e-icons e-user" IconPosition="top" />
-                                </ChildContent>
-                                <ContentTemplate>
-                                    <EditForm Model="@login" OnValidSubmit="@IniciarSesion" OnInvalidSubmit="@OnInvalidSubmit">
 
-                                        <DataAnnotationsValidator />
+                    <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" @bind-SelectedIndex="@selectedIndex" Change=@(args => OnChange(args))>
+                        <Tabs>
+                            <RadzenTabsItem Text="Iniciar Sesión">
+                                <EditForm Model="@login" OnValidSubmit="@IniciarSesion" OnInvalidSubmit="@OnInvalidSubmit">
 
-                                        <SfTextBox ID="email"
-                                                   Placeholder="Correo Electrónico Personal"
-                                                   @bind-Value="@login.UsuCorreoPersonal"
-                                                   CssClass="mi-sf-textbox mt-5"
-                                                   Enabled="true"
-                                                   EnableRtl="false"
-                                                   FloatLabelType="@FloatLabelType.Auto"
-                                                   HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                                                   Multiline="false"
-                                                   Readonly="false"
-                                                   ShowClearButton="true"
-                                                   Type="Syncfusion.Blazor.Inputs.InputType.Text"
-                                                   ValidateOnInput="true" />
-                                        <ValidationMessage For="@(() => login.UsuCorreoPersonal)" />
+                                    <DataAnnotationsValidator />
 
-                                        <SfTextBox ID="password"
-                                                   Placeholder="Contraseña"
-                                                   @bind-Value="@login.UsuContraseña"
-                                                   CssClass="mi-sf-textbox mt-5"
-                                                   Enabled="true"
-                                                   EnableRtl="false"
-                                                   FloatLabelType="@FloatLabelType.Auto"
-                                                   HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "50" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                                                   Multiline="false"
-                                                   Readonly="false"
-                                                   ShowClearButton="true"
-                                                   Type="Syncfusion.Blazor.Inputs.InputType.Password"
-                                                   ValidateOnInput="true" />
-                                        <ValidationMessage For="@(() => login.UsuContraseña)" />
+                                    <RadzenFormField Text="Correo Electrónico Personal"
+                                                     Placeholder="Email"
+                                                     AllowClear="true"
+                                                     Variant="Variant.Outlined"
+                                                     Class="w-100 mt-3"
+                                                     MaxLength="100"
+                                                     Disabled="false">
+                                        <Start>
+                                            <RadzenIcon Icon="email" />
+                                        </Start>
+                                        <ChildContent>
+                                            <RadzenTextBox @bind-Value="@login.UsuCorreoPersonal" />
+                                        </ChildContent>
+                                        <Helper>
+                                            @* <RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">* required</RadzenText> *@
+                                        </Helper>
+                                    </RadzenFormField>
+                                    <ValidationMessage For="@(() => login.UsuCorreoPersonal)" />
 
-                                        <SfProgressButton Content="@contentLoginBtn"
-                                                          EnableProgress="true"
-                                                          IsPrimary="true"
-                                                          CssClass="e-primary e-block mt-5 mb-3"
-                                                          IconCss="oi oi-account-login"
-                                                          IconPosition="IconPosition.Left"
-                                                          Duration="1000">
-                                            <ProgressButtonSpinSettings Position="SpinPosition.Top" />
-                                            <ProgressButtonAnimationSettings Effect="Syncfusion.Blazor.SplitButtons.AnimationEffect.None" Duration="60000" Easing="" />
-                                            <ProgressButtonEvents OnBegin="Begin" Progressing="Progressing" OnEnd="End" />
-                                        </SfProgressButton>
+                                    <RadzenFormField Text="Contraseña"
+                                                     Placeholder="Password"
+                                                     AllowClear="true"
+                                                     Variant="Variant.Outlined"
+                                                     Class="w-100 mt-5"
+                                                     MaxLength="50"
+                                                     Disabled="false">
+                                        <Start>
+                                            <RadzenIcon Icon="vpn_key" />
+                                        </Start>
+                                        <ChildContent>
+                                            <RadzenTextBox @bind-Value="@login.UsuContraseña" Visible="@(!password)" />
+                                            <RadzenPassword @bind-Value="@login.UsuContraseña" Visible="@password" />
+                                        </ChildContent>
+                                        <End>
+                                            <RadzenButton Icon="@(password ? "visibility" : "visibility_off")"
+                                                          Click="TogglePassword"
+                                                          Variant="Variant.Text"
+                                                          Size="ButtonSize.Small"
+                                                          ButtonStyle="Radzen.ButtonStyle.Secondary"
+                                                          Shade="Shade.Dark" />
+                                        </End>
+                                        <Helper>
+                                            @* <RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">* required</RadzenText> *@
+                                        </Helper>
+                                    </RadzenFormField>
+                                    <ValidationMessage For="@(() => login.UsuContraseña)" />
 
-                                    </EditForm>
-                                </ContentTemplate>
-                            </TabItem>
-                            <TabItem>
-                                <ChildContent>
-                                    <TabHeader Text="Recuperar Contraseña" IconCss="e-icons e-refresh" IconPosition="top" />
-                                </ChildContent>
-                                <ContentTemplate>
-                                    <EditForm Model="@oRecuperarContraseñaCorreo" OnValidSubmit="@RecuperarContraseña" OnInvalidSubmit="@OnInvalidSubmit">
+                                    @*
+                                    <SfTextBox ID="email"
+                                               Placeholder="Correo Electrónico Personal"
+                                               @bind-Value="@login.UsuCorreoPersonal"
+                                               CssClass="mi-sf-textbox mt-5"
+                                               Enabled="true"
+                                               EnableRtl="false"
+                                               FloatLabelType="@FloatLabelType.Auto"
+                                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                                               Multiline="false"
+                                               Readonly="false"
+                                               ShowClearButton="true"
+                                               Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                               ValidateOnInput="true" />
+                                    <ValidationMessage For="@(() => login.UsuCorreoPersonal)" />
 
-                                        <DataAnnotationsValidator />
+                                    <SfTextBox ID="password"
+                                               Placeholder="Contraseña"
+                                               @bind-Value="@login.UsuContraseña"
+                                               CssClass="mi-sf-textbox mt-5"
+                                               Enabled="true"
+                                               EnableRtl="false"
+                                               FloatLabelType="@FloatLabelType.Auto"
+                                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "50" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                                               Multiline="false"
+                                               Readonly="false"
+                                               ShowClearButton="true"
+                                               Type="Syncfusion.Blazor.Inputs.InputType.Password"
+                                               ValidateOnInput="true" />
+                                    <ValidationMessage For="@(() => login.UsuContraseña)" />
+                                    *@
 
-                                        <SfTextBox ID="emailReset"
-                                                   Placeholder="Correo Electrónico Personal"
-                                                   @bind-Value="@oRecuperarContraseñaCorreo.CorreoElectronicoPersonal"
-                                                   CssClass="mi-sf-textbox mt-5"
-                                                   Enabled="true"
-                                                   EnableRtl="false"
-                                                   FloatLabelType="@FloatLabelType.Auto"
-                                                   HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                                                   Multiline="false"
-                                                   Readonly="false"
-                                                   ShowClearButton="true"
-                                                   Type="Syncfusion.Blazor.Inputs.InputType.Email"
-                                                   ValidateOnInput="true" />
-                                        <ValidationMessage For="@(() => oRecuperarContraseñaCorreo.CorreoElectronicoPersonal)" />
+                                    <RadzenButton Text="Iniciar Sesión"
+                                                  BusyText="Iniciando Sesión ..."
+                                                  ButtonStyle="Radzen.ButtonStyle.Secondary"
+                                                  ButtonType="Radzen.ButtonType.Submit"
+                                                  IsBusy="@busy"
+                                                  Icon="login"
+                                                  Class="w-100 mt-5 mb-3"
+                                                  Shade="Shade.Darker" />
+                                </EditForm>
+                            </RadzenTabsItem>
+                            <RadzenTabsItem Text="Recuperar Contraseña">
+                                <EditForm Model="@oRecuperarContraseñaCorreo" OnValidSubmit="@RecuperarContraseña" OnInvalidSubmit="@OnInvalidSubmit">
 
-                                        <div class="row">
-                                            <div class="col-md-12 mt-5">
-                                                <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-                                            </div>
-                                            <div class="col-md-12 d-grid gap-2 text-center">
-                                                <button type="submit" class="btn btn-success mt-5 mb-3" disabled="@DisablePostButton">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
-                                                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
-                                                        <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5" />
-                                                    </svg>&nbsp;
-                                                    <span role="status">@contentRecuperarContraseñaBtn</span>
-                                                    <span class="spinner-border spinner-border-sm" aria-hidden="true" hidden="@isSpinningHidden"></span>
-                                                </button>
-                                            </div>
+                                    <DataAnnotationsValidator />
+
+                                    <RadzenFormField Text="Correo Electrónico Personal"
+                                                     Placeholder="Email"
+                                                     AllowClear="true"
+                                                     Variant="Variant.Outlined"
+                                                     Class="w-100 mt-3"
+                                                     MaxLength="100"
+                                                     MinLength="0"
+                                                     Disabled="false">
+                                        <Start>
+                                            <RadzenIcon Icon="email" />
+                                        </Start>
+                                        <ChildContent>
+                                            <RadzenTextBox @bind-Value="@oRecuperarContraseñaCorreo.CorreoElectronicoPersonal" />
+                                        </ChildContent>
+                                        <Helper>
+                                            @* <RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">* required</RadzenText> *@
+                                        </Helper>
+                                    </RadzenFormField>
+
+                                    <div class="row">
+                                        <div class="col-md-12 mt-5">
+                                            <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                                         </div>
-                                    </EditForm>
-                                </ContentTemplate>
-                            </TabItem>
-                        </TabItems>
-                    </SfTab>
+                                        <div class="col-md-12 d-grid gap-2 text-center">
+                                            <button type="submit" class="btn btn-success mt-5 mb-3" disabled="@DisablePostButton">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
+                                                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                                                    <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5" />
+                                                </svg>&nbsp;
+                                                <span role="status">@contentRecuperarContraseñaBtn</span>
+                                                <span class="spinner-border spinner-border-sm" aria-hidden="true" hidden="@isSpinningHidden"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </EditForm>
+                            </RadzenTabsItem>
+                        </Tabs>
+                    </RadzenTabs>
 
-                    <SfMessage Closed="(() => { errorMsgVisible = !errorMsgVisible; })"
-                               ContentAlignment="HorizontalAlign.Center"
-                               CssClass="square"
-                               Severity="MessageSeverity.Error"
-                               ShowCloseIcon="true"
-                               ShowIcon="true"
-                               Variant="MessageVariant.Filled"
-                               Visible="@errorMsgVisible">
-                               @contentErrorMsg
-                    </SfMessage>
-
-                    @*
-                    <SfMessage ShowIcon="true"
-                    ShowCloseIcon="true"
-                    Severity="MessageSeverity.Warning"
-                    Variant="MessageVariant.Text"
-                    ContentAlignment="HorizontalAlign.Left"
-                    CssClass="e-msg-content rounded">
-                    Si aún no cuentas con un correo institucional del IPN, favor de llamar a una las siguientes extensiones: 70367, 70347, 70089.
-                    </SfMessage>
-                    
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 20 20">
-                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-                        </svg>
-                        Si aún no cuentas con un correo institucional del IPN, favor de llamar a una las siguientes extensiones: <strong>70367, 70347, 70089.</strong>
-                    </div>
-                    *@
+                    <RadzenAlert Variant="Variant.Filled"
+                                 AlertStyle="AlertStyle.Danger"
+                                 Size="AlertSize.Small"
+                                 Shade="Shade.Darker"
+                                 ShowIcon="true"
+                                 AllowClose="false"
+                                 @bind-Visible="@errorMsgVisible"
+                                 Title="Error"
+                                 class="text-center">
+                                 @contentErrorMsg
+                    </RadzenAlert>
                 </div>
-                <!--
-                <div class="card-footer text-body-secondary card-subtitle">
-                    © UPIICSA 2023 vα 0.0.1
-                </div>
-                -->
             </div>
 
             <div class="card col-md-8 offset-md-2 mb-2 pt-3 pb-3">
@@ -302,57 +294,61 @@
 
         <!-- Carrusel -->
         <div class="col-md-6 order-2">
-            <SfCarousel PartialVisible="false"
-                        Loop="true"
-                        AutoPlay="true"
-                        PauseOnHover="true"
-                        EnableTouchSwipe="true"
-                        SwipeMode="CarouselSwipeMode.Mouse & CarouselSwipeMode.Touch"
-                        AnimationEffect="CarouselAnimationEffect.Slide"
-                        ButtonsVisibility="CarouselButtonVisibility.VisibleOnHover"
-                        ShowIndicators="true"
-                        IndicatorsType="CarouselIndicatorsType.Default"
-                        ShowPlayButton="true"
-                        CssClass="default-carousel">
-                <CarouselItem>
-                    <figure class="img-container">
-                        <img src="https://live.staticflickr.com/4016/4533682406_36c07f363d_c.jpg" class="d-block w-100 rounded mx-auto img-fluid" alt="Sample image" style="height:100%;width:100%;">
-                        <figcaption class="img-caption">Golden Gate Bridge, San Francisco</figcaption>
-                    </figure>
-                </CarouselItem>
-                <CarouselItem>
-                    <figure class="img-container">
-                        <img src="https://pbs.twimg.com/media/D2Wz_3lX4AAP02j.jpg" class="d-block w-100 rounded mx-auto img-fluid" alt="Sample image" style="height:100%;width:100%;">
-                        <figcaption class="img-caption">Spring Flower Trees</figcaption>
-                    </figure>
-                </CarouselItem>
-                <CarouselItem>
-                    <figure class="img-container">
-                        <img src="https://media.licdn.com/dms/image/C561BAQFrL1h41M7EJg/company-background_1536_768/0/1583883741593?e=2147483647&v=beta&t=qVlCROptN-U8ctNI1vLY12_x1adzcYozlTh5WfMzftQ" class="d-block w-100 rounded mx-auto img-fluid" alt="Sample image" style="height:100%;width:100%;">
-                        <figcaption class="img-caption">Oddadalen Waterfalls, Norway</figcaption>
-                    </figure>
-                </CarouselItem>
-                <CarouselItem>
-                    <figure class="img-container">
-                        <img src="https://s3.amazonaws.com/rytvmx/wpmedia/2022/10/10201207/clases-822x547.jpg" class="d-block w-100 rounded mx-auto img-fluid" alt="Sample image" style="height:100%;width:100%;">
-                        <figcaption class="img-caption">Anse Source d'Argent, Seychelles</figcaption>
-                    </figure>
-                </CarouselItem>
-                <CarouselItem>
-                    <figure class="img-container">
-                        <img src="https://ntcd.mx/uploads/2017/03/21/nota-tecnologia-supera-ipn-expectativas-de-estudiantes-colombianas-del-programa-de-movilidad201721325.jpg" class="d-block w-100 rounded mx-auto img-fluid" alt="Sample image" style="height:100%;width:100%;">
-                        <figcaption class="img-caption">Stonehenge, England</figcaption>
-                    </figure>
-                </CarouselItem>
-            </SfCarousel>
 
-            <SfDialogProvider></SfDialogProvider>
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://live.staticflickr.com/4016/4533682406_36c07f363d_c.jpg" class="d-block w-100" alt="...">
+                        <div class="carousel-caption">
+                            <h5>First slide label</h5>
+                            <p>Some representative placeholder content for the first slide.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://pbs.twimg.com/media/D2Wz_3lX4AAP02j.jpg" class="d-block w-100" alt="...">
+                        <div class="carousel-caption">
+                            <h5>Second slide label</h5>
+                            <p>Some representative placeholder content for the second slide.</p>
+                        </div>
+
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://s3.amazonaws.com/rytvmx/wpmedia/2022/10/10201207/clases-822x547.jpg" class="d-block w-100" alt="...">
+                        <div class="carousel-caption">
+                            <h5>Third slide label</h5>
+                            <p>Some representative placeholder content for the third slide.</p>
+                        </div>
+
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://ntcd.mx/uploads/2017/03/21/nota-tecnologia-supera-ipn-expectativas-de-estudiantes-colombianas-del-programa-de-movilidad201721325.jpg" class="d-block w-100" alt="...">
+                        <div class="carousel-caption">
+                            <h5>Third slide label</h5>
+                            <p>Some representative placeholder content for the third slide.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
-
+<hr class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-m-10" />
 <!-- Pie de Página (Footer Fixed-Bottom) -->
-<nav class="navbar bg-body-tertiary bg-dark fixed-bottom">
+<nav class="navbar bg-body-tertiary bg-dark fixed-bottom" data-bs-theme="dark">
     <div class="container text-center">
         <a class="navbar-brand" style="text-decoration:none; font-size:calc(10px + 0.390625vw); color:white;">
             UPIICSA (Desarrollo de Sistemas de Información)
@@ -379,8 +375,8 @@
 
 @code
 {
-    private LoginAuthViewModel login = new();
-
+    private RequestDTO_LoginAuth login = new();
+    private bool busy;
     public string contentLoginBtn = "Iniciar Sesión";
     private bool errorMsgVisible = false;
     public string contentErrorMsg = string.Empty;
@@ -392,20 +388,32 @@
 
     private async Task IniciarSesion()
     {
-        HttpResponseMessage loginResponse = await httpClient.PostAsJsonAsync<LoginAuthViewModel>("/api/Login/login", login);
-
-        if (loginResponse.IsSuccessStatusCode)
+        try
         {
-            errorMsgVisible = false;
+            busy = true;
+            HttpResponseMessage loginResponse = await httpClient.PostAsJsonAsync<RequestDTO_LoginAuth>("/api/LoginAuth/login", login);
 
-            await loginService.Login(loginResponse.Content.ReadAsStringAsync().Result);
+            if (loginResponse.IsSuccessStatusCode)
+            {
+                errorMsgVisible = false;
 
-            navigationManager.NavigateTo("/Index");
+                await loginService.Login(loginResponse.Content.ReadAsStringAsync().Result);
+
+                navigationManager.NavigateTo("/Index");
+            }
+            else
+            {
+                errorMsgVisible = true;
+                contentErrorMsg = "Correo y/o Contraseña no son correctos.";
+            }
         }
-        else
+        catch(Exception ex)
         {
-            errorMsgVisible = true;
-            contentErrorMsg = "Correo y/o Contraseña no son correctos.";
+            contentErrorMsg = ex.Message;
+        }
+        finally
+        {
+            busy = false;
         }
     }
 
@@ -415,24 +423,25 @@
         contentErrorMsg = "Correo y/o Contraseña no válidos.";
     }
 
-    private void CleanReset(SelectingEventArgs args)
+    string passwordValue = "password";
+    bool password = true;
+
+    void TogglePassword()
     {
-        if(args.IsSwiped || args.IsInteracted)
-        {
-            errorMsgVisible = false;
-            contentErrorMsg = "";
-            ValidReCAPTCHA = false;
-            oRecuperarContraseñaCorreo.CorreoElectronicoPersonal = "";
-            login.UsuCorreoPersonal = "";
-            login.UsuContraseña = "";
-        }
+        password = !password;
     }
 
-    public void Begin(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args) => contentLoginBtn = "Iniciar Sesión";
+    public int selectedIndex = 0;
 
-    public void Progressing(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args) => contentLoginBtn = "Iniciando Sesión...";
-
-    public void End(Syncfusion.Blazor.SplitButtons.ProgressEventArgs args) => contentLoginBtn = "Iniciar Sesión";
+    void OnChange(int index)
+    {
+        errorMsgVisible = false;
+        contentErrorMsg = "";
+        ValidReCAPTCHA = false;
+        oRecuperarContraseñaCorreo.CorreoElectronicoPersonal = "";
+        login.UsuCorreoPersonal = "";
+        login.UsuContraseña = "";
+    }
 
     //Captcha
     private ReCAPTCHA reCAPTCHAComponent;
@@ -446,7 +455,7 @@
 
     //Envio de mensaje
     public RecuperarContraseñaCorreo oRecuperarContraseñaCorreo = new();
-    public Response<UsuarioViewModel>? oRespuesta = new();
+    public Response<RequestDTO_Usuario>? oRespuesta = new();
     public string contentRecuperarContraseñaBtn = "Recuperar Contraseña";
     public bool isSpinningHidden = true;
 
@@ -468,13 +477,13 @@
                 isSpinningHidden = false;
 
                 var respuesta = await servicioUsuario.ResetPassword(oRecuperarContraseñaCorreo.CorreoElectronicoPersonal);
-                oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<UsuarioViewModel>>().Result;
+                oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<RequestDTO_Usuario>>().Result;
 
                 errorMsgVisible = false;
 
                 if (oRespuesta.Success == 1)
                 {
-                    await servicioSendEmail.SendEmailAsync(new SendEmailViewModel()
+                    await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
                         {
                             EmailTo = oRecuperarContraseñaCorreo.CorreoElectronicoPersonal,
                             Subject = "SACI RECUPERACIÓN DE CONTRASEÑA",
@@ -485,34 +494,41 @@
                                    "<b>SACI (Sistema para Atención de Correos Institucionales IPN)</b>"
                         });
 
-                    await DialogService.AlertAsync(null, " ", new DialogOptions()
-                        {
-                            PrimaryButtonOptions = new DialogButtonOptions { Content = "Aceptar" },
-                            ChildContent =@<table class="Table text-center">
-                                <tbody style="line-height: 2.0;">
-                                    <tr>
-                                        <td class="data">
-                                            <span class="circle-border"><span class="e-icons e-check" style="font-size: 30px; color: green; font-weight:700;"></span></span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="data text-success" style="font-size: 25px;">
-                                            <b style="font-weight: 500 !important;">¡Recuperación de<br />Contraseña Exitosa!</b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="data">
-                                            <b>@oRespuesta.Data.UsuNombre @oRespuesta.Data.UsuPrimerApellido @oRespuesta.Data.UsuSegundoApellido</b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="data">
-                                            Se generó una Contraseña Temporal enviada a su correo personal.
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        });
+                    await DialogModalService.OpenAsync("Alerta", ds =>
+                            @<div>
+                                <table class="Table text-center">
+                                    <tbody style="line-height: 2.0;">
+                                        <tr>
+                                            <td class="data">
+                                                <span class="circle-border"><span class="e-icons e-check" style="font-size: 30px; color: green; font-weight:700;"></span></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="data text-success" style="font-size: 25px;">
+                                                <b style="font-weight: 500 !important;">¡Recuperación de<br />Contraseña Exitosa!</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="data">
+                                                <b>@oRespuesta.Data.UsuNombre @oRespuesta.Data.UsuPrimerApellido @oRespuesta.Data.UsuSegundoApellido</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="data">
+                                                Se generó una Contraseña Temporal enviada a su correo personal.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>, new Radzen.DialogOptions() {
+                                  CloseDialogOnOverlayClick = true,
+                                  Width = "Auto", Height = "Auto",
+                                  Resizable = true, Draggable = true,
+                                  CssClass = "custom-dialog-class",
+                                  WrapperCssClass = "custom-dialog-wrapper-class"
+                              });
+
+                    OnChange(1);
                 }
                 else
                 {
@@ -532,5 +548,24 @@
                 isSpinningHidden = true;
             }
         }
+    }
+
+    async Task ShowDialogWithCustomCssClasses()
+    {
+        await DialogModalService.OpenAsync("Dialog with custom CSS classes", ds =>
+            @<div>
+                This dialog has custom CSS classes.
+            </div>, new Radzen.DialogOptions()
+                  {
+                      CssClass = "custom-dialog-class",
+                      WrapperCssClass = "custom-dialog-wrapper-class"
+                  });
+    }
+
+    void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+
+        Console.WriteLine($"{message.Severity} notification");
     }
 }

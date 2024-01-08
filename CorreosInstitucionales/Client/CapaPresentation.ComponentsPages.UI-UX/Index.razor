@@ -2,13 +2,10 @@
 
 @attribute [Authorize]
 
-@using Syncfusion.Blazor.Charts
-@using Syncfusion.Blazor
-@using Syncfusion.Blazor.Layouts
-@using System.Timers
-
 @inject NavigationManager NavigationManager
 @inject NavigationManager Navigation
+
+@inject NotificationService NotificationService
 
 <style>
 	.e-dashboardlayout.e-control .e-panel .e-panel-container .e-panel-header {
@@ -213,6 +210,11 @@
 
 <AuthorizeView Policy="[Rol] Usuario Solicitante">
 	<Authorized>
+
+		<RadzenButton Text="Show info notification" Style="margin-bottom: 20px; width: 200px"
+                    ButtonStyle="ButtonStyle.Info"
+                    Click=@(args => ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Info Summary", Detail = "Info Detail", Duration = 4000 })) />
+
 		<SfLinearGauge Orientation="Syncfusion.Blazor.LinearGauge.Orientation.Horizontal" Width="70%">
 			<LinearGaugeAnnotations>
 				<LinearGaugeAnnotation AxisValue="5" ZIndex="1" X="-30" Y="-80">
@@ -478,6 +480,13 @@
 
 @code
 {
+	void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+
+        Console.WriteLine($"{message.Severity} notification");
+    }
+
 	SfDashboardLayout dashboardObject;
 	private Theme Theme { get; set; }
 	private double[] Spacing = new double[] { 15, 15 };

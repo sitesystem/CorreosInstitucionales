@@ -12,6 +12,13 @@
 @using CorreosInstitucionales.Client
 @using CorreosInstitucionales.Client.Shared
 
+@using Radzen
+@using Radzen.Blazor
+
+@inject AuthenticationStateProvider servicioAuthenticationStateProvider
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+
 @using Syncfusion.Blazor;
 @using Syncfusion.Blazor.BarcodeGenerator;  @* Sf *@
 @using Syncfusion.Blazor.Buttons;           @* SfButton, SfCheckBox, SfChip, SfFloating Action Button, SfRadioButton, SfSpeedDial, SfToogle Switch Button, SfIcon *@

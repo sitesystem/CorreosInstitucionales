@@ -1,15 +1,15 @@
 ﻿@using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
-@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request
-@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonalService
+@using CorreosInstitucionales.Shared.CapaEntities.Request
+@using CorreosInstitucionales.Shared.CapaEntities.Response
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal
 
 @inherits LayoutComponentBase
 
-@inject AuthenticationStateProvider servicioAuthenticationStateProvider
-@inject NavigationManager navigationManager;
 @inject ILoginServices loginService
-@inject ITipoPersonal servicioTipoPersonal
+@inject ITipoPersonalService servicioTipoPersonal
 @inject IJSRuntime JSRuntime;
+
+<RadzenComponents />
 
 <AuthorizeView>
     <Authorized>
@@ -42,6 +42,7 @@
     }
 </style>
 
+@*
 <div class="page">
     <div class="@sidebarCssClass">
         <NavMenu />
@@ -49,81 +50,134 @@
 
     <main>
         <div class="top-row px-4 control-container" style="background-color:#3d0000; color:white;">
-            <SfAppBar IsSticky="true" ColorMode="AppBarColor.Primary" Mode="AppBarMode.Regular" CssClass="custom-appbar">
-
-                <SfButton CssClass="e-inherit" IconCss="e-icons e-menu" OnClick="CollapseSidebar" />
-
-                <a href="https:www.syncfusion.com/blazor-components" target="_blank" rel="noopener" role="link" aria-label="Syncfusion blazor components">
-                    <div class="syncfusion-logo"></div>
-                </a>
-                <span style="font-variant: small-caps;">Sistema para Atención de Correos Institucionales IPN</span>
-
-                <AppBarSpacer />
-
-                <AuthorizeView>
-                    <Authorized>
-
-                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
-
-                        <CultureSwitcher />
-                        <div class="theme-switcher">
-                            @* Theme switcher *@
-                            <SfDropDownList TItem="ThemeDetails" TValue="string" @bind-Value="themeName" DataSource="@Themes" Placeholder="Selecciona el Tema" EnableRtl="false">
-                                <DropDownListFieldSettings Text="Text" Value="ID"></DropDownListFieldSettings>
-                                <DropDownListEvents TItem="ThemeDetails" TValue="string" ValueChange="OnThemeChange"></DropDownListEvents>
-                            </SfDropDownList>
-                        </div>
-
-                        @{
-                            string? rol = context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value;
-                            string? tipoPersonal = string.Empty;
-                            if (oResponseTipoPersonal != null && oResponseTipoPersonal.Data != null)
-                                tipoPersonal = oResponseTipoPersonal.Data.TipoperNombre;
-                            string? name = context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value;
-                            string? email = context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-                        }
-
-                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
-
-                        <span style="font-variant: small-caps;">@tipoPersonal</span>
-
-                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
-
-                        <span>@email</span>
-
-                        <AppBarSpacer /><AppBarSeparator /><AppBarSpacer />
-
-                        <SfDropDownButton Content="@name" IconCss="e-icons e-user" IconPosition="SplitButtonIconPosition.Left" EnableRtl="false">
-                            <DropDownButtonEvents ItemSelected="DropDownSelect"></DropDownButtonEvents>
-                            <DropDownMenuItems>
-                                <DropDownMenuItem Text="@tipoPersonal" IconCss="oi oi-badge" Disabled="true"></DropDownMenuItem>
-                                <DropDownMenuItem Text="@email" IconCss="oi oi-envelope-open" Disabled="true"></DropDownMenuItem>
-                                <DropDownMenuItem Id="Perfil" Text="Perfil" IconCss="oi oi-person"></DropDownMenuItem>
-                                <DropDownMenuItem Separator=true></DropDownMenuItem>
-                                <DropDownMenuItem Id="LogOut" Text="Cerrar Sesión" IconCss="oi oi-account-logout"></DropDownMenuItem>
-                            </DropDownMenuItems>
-                        </SfDropDownButton>
-
-                    </Authorized>
-                    <NotAuthorized>
-                        <p>No Autorizado</p>
-                    </NotAuthorized>
-                    <Authorizing>
-                        <p>Autorizando...</p>
-                    </Authorizing>
-                </AuthorizeView>
-
-            </SfAppBar>
         </div>
-
-        <article class="content px-4" style="background: url('../fondo.jpg') repeat center center fixed;">
-            @Body
-        </article>
     </main>
 </div>
+*@
+
+<RadzenLayout>
+    <RadzenHeader class="rz-background-color-info-darker rz-border-radius-0 rz-py-0">
+        <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
+            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" Class="rz-m-0" />
+            <AuthorizeView>
+                <Authorized>
+                    <RadzenImage Path="https://www.radzen.com/assets/radzen-logo-top-b2d6e9dcacf7d344bbab515b8748c5f4d702c6c5bfc349bd9ff9003016a3a6ee.svg"
+                                 Style="width: 8rem; border-radius: 5px;"
+                                 AlternateText="url image"
+                                 Class="rz-m-0 rz-p-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block" />
+                    
+                    <RadzenCard Variant="Variant.Filled" Class="rz-p-0">
+                        <RadzenProfileMenu Class="">
+                            <Template>
+                                <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
+                                    <RadzenStack Gap="0px">
+                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Body1"><b>SACI</b></RadzenText>
+                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Overline" class="rz-mb-0 rz-p-0" style="font-variant: small-caps;">
+                                            Sistema para Atención de Correos Institucionales IPN
+                                        </RadzenText>
+                                    </RadzenStack>
+                                </RadzenStack>
+                            </Template>
+                        </RadzenProfileMenu>
+                    </RadzenCard>
+
+                    @{
+                        string? rol = context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value;
+                        string? tipoPersonal = string.Empty;
+                        if (oResponseTipoPersonal != null && oResponseTipoPersonal.Data != null)
+                            tipoPersonal = oResponseTipoPersonal.Data.TipoperNombre;
+                        string? name = context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value;
+                        string? email = context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
+                    }
+
+                    <RadzenCard Variant="Variant.Filled" Class="rz-p-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
+                        <RadzenProfileMenu Class="">
+                            <Template>
+                                <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
+                                    <RadzenImage Path="./ipn.png" Style="width: 30px; height: 30px; border-radius: 50%;" Class="rz-m-0" />
+                                    <RadzenStack Gap="0px">
+                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Overline" class="rz-mb-0 rz-p-0">Personal:</RadzenText>
+                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Body1"><b>@tipoPersonal</b></RadzenText>
+                                    </RadzenStack>
+                                </RadzenStack>
+                            </Template>
+                        </RadzenProfileMenu>
+                    </RadzenCard>
+
+                    <RadzenCard Variant="Variant.Filled" Class="rz-p-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
+                        <RadzenProfileMenu Class="">
+                            <Template>
+                                <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
+                                    <RadzenGravatar Email="@email" />
+                                    <RadzenStack Gap="0px">
+                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Overline" class="rz-mb-0 rz-p-0">Correo Electrónico Personal</RadzenText>
+                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Body1"><b>@email</b></RadzenText>
+                                    </RadzenStack>
+                                </RadzenStack>
+                            </Template>
+                            <ChildContent>
+                                @* <RadzenProfileMenuItem Text="Perfil" Path="Pefil" Icon="person"></RadzenProfileMenuItem> *@
+                                <RadzenButton Variant="Variant.Text" Click="@LogOut" Text="Perfil" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="account_circle" class="d-block text-start" style="width: 100%" />
+                                <RadzenButton Variant="Variant.Text" Click="@LogOut" Text="Cerrar Sesión" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="logout" class="d-block text-start" style="width: 100%" />
+                            </ChildContent>
+                        </RadzenProfileMenu>
+                    </RadzenCard>
+                </Authorized>
+                <NotAuthorized>
+                    <p>No Autorizado</p>
+                </NotAuthorized>
+                <Authorizing>
+                    <p>Autorizando...</p>
+                </Authorizing>
+            </AuthorizeView>
+        </RadzenStack>
+    </RadzenHeader>
+
+    <!-- ... Contenido para pantallas pequeñas móviles -->
+    <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-background-color-base-900">
+        <RadzenSidebar @bind-Expanded="@sidebarExpanded" Responsive="false" Style="width: max-content" class="rz-background-color-base-900 rz-border-base-900">
+            <RadzenPanelMenu Multiple="false" ShowArrow="true">
+                <NavMenu />
+            </RadzenPanelMenu>
+        </RadzenSidebar>
+    </div>
+
+    <!-- ... Contenido para pantallas grandes ... -->
+    <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block rz-background-color-base-900">
+        <RadzenSidebar Responsive="false" Style="width: max-content" class="rz-background-color-base-900 rz-border-base-900">
+            <RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" Multiple="false" ShowArrow="true">
+                <NavMenu />
+            </RadzenPanelMenu>
+        </RadzenSidebar>
+    </div>
+
+    <RadzenBody style="background: url('../fondo.jpg') repeat center center fixed;">
+        <RadzenColumn Size="12">
+            <article class="content px-4" style="background: url('../fondo.jpg') repeat center center fixed;">
+                @Body
+            </article>
+        </RadzenColumn>
+    </RadzenBody>
+
+    <RadzenFooter class="rz-background-color-base-900 rz-border-base-900">
+    <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceAround" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
+        <RadzenText Text="UPIICSA (Desarrollo de Sistemas de Información)" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+        <RadzenText Text="Ⓒ 2023 SACI (Sistema para Atención de Correos Institucionales) vα 1.0" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+    </RadzenStack>
+    </RadzenFooter>
+</RadzenLayout>
 
 @code
 {
+    private bool sidebarExpanded = true;
+
+    void SidebarToggleClick() => sidebarExpanded = !sidebarExpanded;
+
+    void CerrarSesion()
+    {
+        Console.WriteLine("Hola");
+    }
+
     private string themeName = "fluent";
 
     public class ThemeDetails
@@ -165,7 +219,7 @@
         sidebarCollapse = !sidebarCollapse;
     }
 
-    public Response<TipoPersonalViewModel>? oResponseTipoPersonal = new();
+    public Response<RequestViewModel_TipoPersonal>? oResponseTipoPersonal = new();
 
     private string? authMessage;
     private List<Claim> claims = new();
@@ -197,5 +251,11 @@
             await loginService.Logout();
             navigationManager.NavigateTo("/");
         }
+    }
+
+    private async Task LogOut()
+    {
+        await loginService.Logout();
+        navigationManager.NavigateTo("/");
     }
 }

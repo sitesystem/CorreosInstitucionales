@@ -1,0 +1,753 @@
+﻿@page "/Links"
+
+@attribute [Authorize]
+
+@using CorreosInstitucionales.Shared.CapaEntities.Request
+@using CorreosInstitucionales.Shared.CapaEntities.Response;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
+
+@inject ILinkService servicioLink
+
+<PageTitle>Catálogo de Links </PageTitle>
+
+<SfBreadcrumb EnableActiveItemNavigation="true" EnableNavigation="false">
+    <BreadcrumbItems>
+        <BreadcrumbItem Text="Módulo de Catálogos" IconCss="e-icons e-settings" Disabled="true" />
+        <BreadcrumbItem Text="Catálogo de Links" IconCss="e-icons e-resizer-1" Disabled="true" />
+    </BreadcrumbItems>
+</SfBreadcrumb>
+<h3 style="font-variant: small-caps;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-link" viewBox="0 0 18 18">
+        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
+        <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6z" />
+    </svg>Catálogo de Links
+</h3>
+
+<style type="text/css">
+
+</style>
+
+@if (oResponse != null && oResponse.Data != null)
+{
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                @* <span>RowIndex: @SelectedValue</span> *@
+                @*RowRenderingMode="RowDirection.Vertical" EnableAdaptiveUI="true"*@
+                <SfGrid ID="Grid" @ref="Grid" EnablePersistence="false" TValue="RequestViewModel_Link" DataSource="@oResponse.Data" GridLines="Syncfusion.Blazor.Grids.GridLine.Both"
+                        AllowSorting="true" AllowFiltering="true" AllowTextWrap="true"
+                        AllowResizing="true" AllowPaging="true" AllowSelection="true"
+                        AllowGrouping="true" AllowReordering="true"
+                        AllowExcelExport="true" AllowPdfExport="true"
+                        ShowColumnChooser="true" EnableHover="true"
+                        SelectedRowIndex="0" ShowColumnMenu="true"
+                        Height="100%" Width="auto"
+                        RowHeight="@GridRowHeight" EnableStickyHeader="true"
+                        Toolbar="@(new List<object>() { new ItemModel() { Id = "Grid_add", Text = "Agregar", TooltipText = "Agregar", PrefixIcon = "e-add", CssClass = "e-txt-casing" },
+                                                        new ItemModel() { Id = "Grid_edit", Text = "Editar", TooltipText = "Editar", PrefixIcon = "e-edit", CssClass = "e-txt-casing" },
+                                                        new ItemModel() { Id = "Grid_cancel", Text = "Cancelar", TooltipText = "Cancelar", PrefixIcon = "e-cancel" },
+                                                        new ItemModel() { Id = "Grid_update", Text = "Guardar", TooltipText = "Actualizar", PrefixIcon = "e-update" },
+                                                        new ItemModel() { Id = "", Text = "|", TooltipText = "", PrefixIcon = "" },
+                                                        new ItemModel() { Id = "Grid_enable", Text = "Habilitar", TooltipText = "Activar", PrefixIcon = "e-check-box", CssClass = "e-success" },
+                                                        new ItemModel() { Id = "Grid_disable", Text = "Deshabilitar", TooltipText = "Desactivar", PrefixIcon = "e-trash", CssClass = "e-danger" },
+                                                        new ItemModel() { Id = "", Text = "|", TooltipText = "", PrefixIcon = "" },
+                                                        new ItemModel() { Id = "Grid_excelexport", Text = "Excel", TooltipText = "Exportar a Excel", PrefixIcon = "e-excelexport" },
+                                                        // new ItemModel() { Id = "Grid_csvexport", Text = "CSV", TooltipText = "Exportar a CSV", PrefixIcon = "e-csvexport" },
+                                                        new ItemModel() { Id = "Grid_pdfexport", Text = "PDF", TooltipText = "Exportar a PDF", PrefixIcon = "e-pdfexport" },
+                                                        new ItemModel() { Id = "copyheader", Text = "Copiar con Encabezado", TooltipText = "Copiar con Encabezado", PrefixIcon = "e-copy" },
+                                                        new ItemModel { Id = "small", PrefixIcon = "e-line-very-small", Align = ItemAlign.Right, TooltipText="20px" },
+                                                        new ItemModel { Id = "medium", PrefixIcon = "e-line-small", Align = ItemAlign.Right, TooltipText="40px" },
+                                                        new ItemModel { Id = "big", PrefixIcon = "e-line-normal", Align = ItemAlign.Right, TooltipText="60px" },
+                                                        "ColumnChooser",
+                                                        "Search" })"
+                        ContextMenuItems="@(new List<object>() { "AutoFit", "AutoFitAll", "SortAscending", "SortDescending",
+                                                                 "Copy",
+                                                                 "Edit", "Delete", "Save", "Cancel",
+                                                                 "PdfExport", "ExcelExport", "CsvExport",
+                                                                 "FirstPage", "PrevPage","LastPage", "NextPage"})">
+                    @*<SfToolbar OverflowMode="OverflowMode.Scrollable">
+                <ToolbarItems>
+                <ToolbarItem Type="ItemType.Button" Text="Dehabilitar" TooltipText="Inactivar"
+                PrefixIcon="e-icons e-trash" TabIndex="0" Align="@ItemAlign.Left"
+                CssClass="e-danger" OnClick="(() => EnableDisableByMultiSelect(false))" />
+                <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
+                </ToolbarItems>
+                </SfToolbar>*@
+
+                    <GridGroupSettings ShowGroupedColumn="true" ShowDropArea="true" />
+                    <GridEvents ExcelQueryCellInfoEvent="ExcelQueryCellInfoHandler"
+                                PdfQueryCellInfoEvent="PdfQueryCellInfoHandler"
+                                ExportComplete="ExportCompleteHandler"
+                                OnToolbarClick="ToolbarClick"
+                                TValue="RequestViewModel_Link"
+                                OnActionBegin="OnActionBeginHandler"
+                                OnActionComplete="OnActionCompleteHandler"
+                                RowSelected="GetSelectedRecords"
+                                RowDeselected="GetDeselectedRecords"
+                                CommandClicked="OnCommandClicked" />
+                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Excel" />
+                    <GridSelectionSettings Type="Syncfusion.Blazor.Grids.SelectionType.Multiple"
+                                           PersistSelection="true"
+                                           Mode="Syncfusion.Blazor.Grids.SelectionMode.Both"
+                                           CheckboxMode="CheckboxSelectionType.ResetOnRowClick"
+                                           CheckboxOnly="false"
+                                           EnableToggle="false"
+                                           EnableSimpleMultiRowSelection="true" />
+                    <GridPageSettings PageCount="5" PageSize="10" PageSizes="@(new object[] { 5, 10, 25, 50, 100, "All" })" />
+                    @if (!EditModeSelection)
+                    {
+                        <GridEditSettings AllowAdding="false" AllowEditing="true" AllowDeleting="true"
+                                          Mode="Syncfusion.Blazor.Grids.EditMode.Dialog"
+                                          ShowDeleteConfirmDialog="false">
+                            <Validator>
+                                <DataAnnotationsValidator />
+                            </Validator>
+                        </GridEditSettings>
+                    }
+                    else
+                    {
+                        <GridEditSettings AllowAdding="false" AllowEditing="true" AllowDeleting="true"
+                                          Mode="Syncfusion.Blazor.Grids.EditMode.Normal"
+                                          ShowDeleteConfirmDialog="false">
+                            <Validator>
+                                <DataAnnotationsValidator />
+                            </Validator>
+                        </GridEditSettings>
+                    }
+                    <GridColumns>
+                        <GridColumn Type="Syncfusion.Blazor.Grids.ColumnType.CheckBox"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    Width="30">
+                        </GridColumn>
+
+                        <GridColumn Field=@nameof(RequestViewModel_Link.IdLink)
+                                    HeaderText="ID"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    IsPrimaryKey="true"
+                                    IsIdentity="true"
+                                    Visible="false"
+                                    Width="50">
+                            <HeaderTemplate>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
+                                        <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z" />
+                                        <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                                    </svg> ID
+                                </div>
+                            </HeaderTemplate>
+                        </GridColumn>
+
+                        
+
+                        <GridColumn Field=@nameof(RequestViewModel_Link.LinkNombre)
+                                    HeaderText="Link"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Left"
+                                    EditType="EditType.DefaultEdit"
+                                    EditorSettings="@CustomerEditParams"
+                                    ValidationRules="@(new Syncfusion.Blazor.Grids.ValidationRules{ Required = true })"
+                                    Width="150">
+                            <HeaderTemplate>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link" viewBox="0 0 16 16">
+                                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
+                                        <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6z" />
+                                    </svg> Links
+                                </div>
+                            </HeaderTemplate>
+                            <Template>
+                                @{
+                                    var link = (context as RequestViewModel_Link).LinkNombre;
+                                }
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z" />
+                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z" />
+                                </svg>  @link
+                            </Template>
+                            <EditTemplate>
+                                @{
+                                    var link = (context as RequestViewModel_Link);
+                                    //onkeypress = "return /^[a-zA-Z.áéíóúÁÉÍÓÚ ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+
+                                    <SfAutoComplete ID="Data___LinkNombre"
+                                                    TValue="string"
+                                                    TItem="RequestViewModel_Link"
+                                                    Placeholder="Link"
+                                                    FloatLabelType="FloatLabelType.Always"
+                                                    ShowClearButton="true"
+                                                    ShowPopupButton="true"
+                                                    AllowFiltering="true"
+                                                    EnableVirtualization="false"
+                                                    IgnoreCase="true"
+                                                    Highlight="true"
+                                                    Autofill="true"
+                                                    MinLength="1"
+                                                    IgnoreAccent="true"
+                                                    SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.Ascending"
+                                                    FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                    SuggestionCount="1000"
+                                                    @bind-Value="@(link.LinkNombre)"
+                                                    DataSource="@oResponse.Data"
+                                                    OnInput="@((e) => link.LinkNombre = e.Value.ToString())"
+                                                    ValidateOnInput="false"
+                                                    PopupHeight="500px" PopupWidth="300px"
+                                                    Enabled="false"> <!--no permite editar el campo-->
+                                        <AutoCompleteFieldSettings Text="LinkNombre" Value="LinkNombre" />
+                                    </SfAutoComplete>
+                                    <ValidationMessage For="() => (link.LinkNombre)" />
+                                }
+                            </EditTemplate>
+                        </GridColumn>
+
+                        <GridColumn Field=@nameof(RequestViewModel_Link.LinkEnlace)
+                                    HeaderText="Link"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Left"
+                                    EditType="EditType.DefaultEdit"
+                                    EditorSettings="@CustomerEditParams"
+                                    ValidationRules="@(new Syncfusion.Blazor.Grids.ValidationRules{ Required = true })"
+                                    Width="150">
+                            <HeaderTemplate>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link" viewBox="0 0 16 16">
+                                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
+                                        <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6z" />
+                                    </svg> Enlace
+                                </div>
+                            </HeaderTemplate>
+                            <Template>
+                                @{
+                                    var link = (context as RequestViewModel_Link).LinkEnlace;
+                                }
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z" />
+                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z" />
+                                </svg>  @link
+                            </Template>
+                            <EditTemplate>
+                                @{
+                                    var link = (context as RequestViewModel_Link);
+                                    //onkeypress = "return /^[a-zA-Z.áéíóúÁÉÍÓÚ ]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+
+                                    <SfAutoComplete ID="Data___LinkEnlace"
+                                                    TValue="string"
+                                                    TItem="RequestViewModel_Link"
+                                                    Placeholder="Link"
+                                                    FloatLabelType="FloatLabelType.Always"
+                                                    ShowClearButton="true"
+                                                    ShowPopupButton="true"
+                                                    AllowFiltering="true"
+                                                    EnableVirtualization="false"
+                                                    IgnoreCase="true"
+                                                    Highlight="true"
+                                                    Autofill="true"
+                                                    MinLength="1"
+                                                    IgnoreAccent="true"
+                                                    SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.Ascending"
+                                                    FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                    SuggestionCount="1000"
+                                                    @bind-Value="@(link.LinkEnlace)"
+                                                    DataSource="@oResponse.Data"
+                                                    OnInput="@((e) => link.LinkEnlace = e.Value.ToString())"
+                                                    ValidateOnInput="false"
+                                                    PopupHeight="500px" PopupWidth="300px">
+                                        <AutoCompleteFieldSettings Text="LinkEnlace" Value="LinkEnlace" />
+                                    </SfAutoComplete>
+                                    <ValidationMessage For="() => (link.LinkEnlace)" />
+                                }
+                            </EditTemplate>
+                        </GridColumn>
+
+                        <GridColumn Field=@nameof(RequestViewModel_Link.LinkStatus)
+                                    HeaderText="Estatus"
+                                    HeaderTextAlign="@Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"
+                                    EditType="EditType.BooleanEdit"
+                                    DisplayAsCheckBox="true"
+                                    EditorSettings="@(EditModeSelection == true ? VerifiedEditParams : VerifiedAddParams)"
+                                    DefaultValue="true"
+                                    Type="Syncfusion.Blazor.Grids.ColumnType.Boolean"
+                                    Width="50">
+                            <HeaderTemplate>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flag-fill" viewBox="0 0 16 16">
+                                        <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001" />
+                                    </svg> Estatus
+                                </div>
+                            </HeaderTemplate>
+                            <Template>
+                                @{
+                                    var RequestViewModel_Link = context as RequestViewModel_Link;
+                                }
+                                <SfCheckBox Label="@(RequestViewModel_Link.LinkStatus == true ? "Activo" : "Inactivo")" CssClass="e-success"
+                                            @bind-Checked="@RequestViewModel_Link.LinkStatus"
+                                            @onchange="@(() => EnableDisableByCheckBox(RequestViewModel_Link.IdLink, RequestViewModel_Link.LinkStatus))" /><!--pisoNivelViewModel.PisoStatus.Value-->
+                            </Template>
+                        </GridColumn>
+
+                        <GridColumn HeaderText="Acciones" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center" AutoFit="false" Width="50px">
+                            <GridCommandColumns>
+                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-edit", CssClass = "e-primary e-round", IsPrimary=true })" />
+                                @*<GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete", CssClass = "e-danger e-round" })" /> *@
+                                <GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-update", CssClass = "e-success" })" />
+                                <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-cancel-icon", CssClass = "e-warning" })" />
+                                @* <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-eye", CssClass="e-info" })" Title="Ver detalles" /> *@
+                            </GridCommandColumns>
+                        </GridColumn>
+
+                    </GridColumns>
+                    <GridAggregates>
+                        <GridAggregate>
+                            <GridAggregateColumns>
+                                @*<GridAggregateColumn Field="Freight" Type="AggregateType.Sum" Format="C2">
+                            <FooterTemplate>
+                            @{
+                            var aggregate = (context as AggregateTemplateContext);
+                            <div>
+                            <p>Sum: @aggregate.Sum</p>
+                            </div>
+                            }
+                            </FooterTemplate>
+                            </GridAggregateColumn>*@
+                                <GridAggregateColumn Field="@nameof(RequestViewModel_Link.LinkStatus)" Type="AggregateType.TrueCount">
+                                    <FooterTemplate>
+                                        @{
+                                            var aggregate = (context as AggregateTemplateContext);
+                                            <div>
+                                                <b>Habilitados: @aggregate.TrueCount</b>
+                                            </div>
+                                        }
+                                    </FooterTemplate>
+                                </GridAggregateColumn>
+                            </GridAggregateColumns>
+                        </GridAggregate>
+                        <GridAggregate>
+                            <GridAggregateColumns>
+                                @*<GridAggregateColumn Field="Freight" Type="AggregateType.Average" Format="C2">
+                            <FooterTemplate>
+                            @{
+                            var aggregate = (context as AggregateTemplateContext);
+                            <div>
+                            <p>Average: @aggregate.Average</p>
+                            </div>
+                            }
+                            </FooterTemplate>
+                            </GridAggregateColumn>*@
+                                <GridAggregateColumn Field="@nameof(RequestViewModel_Link.LinkStatus)" Type="AggregateType.FalseCount">
+                                    <FooterTemplate>
+                                        @{
+                                            var aggregate = (context as AggregateTemplateContext);
+                                            <div>
+                                                <b>Deshabilitados: @aggregate.FalseCount</b>
+                                            </div>
+                                        }
+                                    </FooterTemplate>
+                                </GridAggregateColumn>
+                            </GridAggregateColumns>
+                        </GridAggregate>
+                    </GridAggregates>
+                </SfGrid>
+            </div>
+        </div>
+    </div>
+
+    <SfToast @ref="@ToastObj" />
+}
+else
+{
+    <SfSpinner Type="SpinnerType.Tailwind" Size="50" Label="Cargando..." Visible="true" CssClass="e-spin-overlay" />
+}
+
+@code {
+
+
+    public Response<List<RequestViewModel_Link>>? oResponse = new();
+    SfGrid<RequestViewModel_Link> Grid = new();
+    Response<object>? oRespuesta = new();
+    SfToast ToastObj = new();
+
+    public bool EditModeSelection { get; set; }
+    public int GridRowHeight = 40;
+
+    public List<RequestViewModel_Link>? MultiSelect { get; set; }
+    public List<int>? SelectedRowIndexes { get; set; }
+    public int[]? TotalValue { get; set; }
+    public string? SelectedValue;
+
+    public IEditorSettings CustomerEditParams = new StringEditCellParams { Params = new TextBoxModel() { EnableRtl = false, Readonly = false, ShowClearButton = true, Multiline = true } };
+    public IEditorSettings VerifiedAddParams = new BooleanEditCellParams { Params = new CheckBoxModel<bool>() { Label = "Estatus (Habilitado/Deshabilitado)", Disabled = true, LabelPosition = Syncfusion.Blazor.Buttons.LabelPosition.After } };
+    public IEditorSettings VerifiedEditParams = new BooleanEditCellParams { Params = new CheckBoxModel<bool>() { Label = "Estatus (Habilitado/Deshabilitado)", Disabled = false, LabelPosition = Syncfusion.Blazor.Buttons.LabelPosition.After } };
+
+    protected override async Task OnInitializedAsync() => oResponse = await servicioLink.GetAllDataAsync(false);
+
+    public async Task ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        //if (args.Item.Id == "Grid_add")
+        //{
+        //    var response = await servicioLink.EnableDisableDataById(MultiSelect.Last().IdPisoNivel, false);
+        //    oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+        //}
+        //else if (args.Item.Id == "Grid_edit")
+        //{
+        //    EditModeSelection = false;
+        //}
+        if (args.Item.Id == "Grid_enable")
+        {
+            await EnableDisableByMultiSelect(true);
+        }
+        else if (args.Item.Id == "Grid_disable")
+        {
+            await EnableDisableByMultiSelect(false);
+        }
+        else if (args.Item.Id == "Grid_pdfexport")
+        {
+            PdfExportProperties ExportProperties = new PdfExportProperties();
+            ExportProperties.FileName = "Links.pdf";
+            ExportProperties.PageSize = PdfPageSize.Letter;
+            ExportProperties.ExportType = Syncfusion.Blazor.Grids.ExportType.AllPages;
+            ExportProperties.PageOrientation = Syncfusion.Blazor.Grids.PageOrientation.Portrait;
+            ExportProperties.IsRepeatHeader = true;
+            ExportProperties.DisableAutoFitWidth = false;
+            ExportProperties.IncludeHiddenColumn = false;
+            ExportProperties.IncludeTemplateColumn = true;
+            await this.Grid.ExportToPdfAsync(ExportProperties);
+        }
+        else if (args.Item.Id == "Grid_excelexport")
+        {
+            ExcelExportProperties ExportProperties = new ExcelExportProperties();
+            ExportProperties.FileName = "Links.xlsx";
+            ExportProperties.ExportType = Syncfusion.Blazor.Grids.ExportType.AllPages;
+            ExportProperties.IncludeHiddenColumn = true;
+            ExportProperties.IncludeTemplateColumn = true;
+            await this.Grid.ExportToExcelAsync(ExportProperties);
+        }
+        else if (args.Item.Id == "Grid_csvexport")
+        {
+            await this.Grid.ExportToCsvAsync();
+        }
+        else if (args.Item.Id == "small")
+        {
+            GridRowHeight = 20;
+        }
+        else if (args.Item.Id == "medium")
+        {
+            GridRowHeight = 40;
+        }
+        else if (args.Item.Id == "big")
+        {
+            GridRowHeight = 60;
+        }
+    }
+
+    public void ExcelQueryCellInfoHandler(ExcelQueryCellInfoEventArgs<RequestViewModel_Link> args)
+    {
+        if (args.Column.Field == "LinkStatus")
+            args.Cell.Value = args.Data.LinkStatus == true ? "Habilitado" : "Deshabilitado";
+    }
+
+    public void PdfQueryCellInfoHandler(PdfQueryCellInfoEventArgs<RequestViewModel_Link> args)
+    {
+        if (args.Column.Field == "LinkStatus")
+            args.Cell.Value = args.Data.LinkStatus == true ? "Habilitado" : "Deshabilitado";
+    }
+
+    public void ExportCompleteHandler(object args)
+    {
+        ToastObj.ShowAsync(
+            new ToastModel
+                {
+                    Title = "Exportación exitosa",
+                    Content = "Se exportó el archivo correctamente.",
+                    CssClass = "e-toast-success",
+                    Icon = "e-success e-check-box", // e-meeting
+                    Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeOut } },
+                    Timeout = 3000,
+                    ShowCloseButton = true,
+                    ProgressDirection = ProgressDirection.LTR,
+                    ShowProgressBar = true,
+                    NewestOnTop = true,
+                    Position = new ToastPosition { X = "Right", Y = "Top" }
+                });
+    }
+
+    private async Task OnActionBeginHandler(Syncfusion.Blazor.Grids.ActionEventArgs<RequestViewModel_Link> args)
+    {
+        if (args.RequestType == Syncfusion.Blazor.Grids.Action.BeginEdit)
+        {
+            // Triggers before editing operation starts
+            EditModeSelection = true;
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Add)
+        {
+            // Triggers before add operation starts
+            EditModeSelection = false;
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Cancel)
+        {
+            // Triggers before cancel operation starts
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Save)
+        {
+            // Triggers before save operation starts
+            if (args.Action == "Add")
+            {
+                var response = await servicioLink.AddDataAsync(args.Data);
+                oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registro Agregado",
+                            Content = args.Data.LinkNombre,
+                            CssClass = "e-toast-success",
+                            Icon = "e-success e-check-box", // e-meeting
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeOut } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+            }
+            else if (args.Action == "Edit")
+            {
+                var response = await servicioLink.EditDataAsync(args.Data);
+                oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registro Editado",
+                            Content = args.Data.LinkNombre,
+                            CssClass = "e-toast-success",
+                            Icon = "e-annotation-edit", // e-meeting
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeIn } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+            }
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Delete)
+        {
+            // Triggers before delete operation starts
+            var response = await servicioLink.EnableDisableDataByIdAsync(args.RowData.IdLink, false);
+            oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+            await ToastObj.ShowAsync(
+                new ToastModel
+                    {
+                        Title = "Registro Deshabilitado",
+                        Content = args.Data.LinkNombre,
+                        CssClass = "e-toast-danger",
+                        Icon = "e-circle-remove", // e-meeting
+                        Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.FadeZoomIn } },
+                        Timeout = 3000,
+                        ShowCloseButton = true,
+                        ProgressDirection = ProgressDirection.LTR,
+                        ShowProgressBar = true,
+                        NewestOnTop = true,
+                        Position = new ToastPosition { X = "Right", Y = "Top" }
+                    });
+        }
+    }
+
+    private async Task OnActionCompleteHandler(Syncfusion.Blazor.Grids.ActionEventArgs<RequestViewModel_Link> args)
+    {
+        if (args.RequestType == Syncfusion.Blazor.Grids.Action.BeginEdit)
+        {
+            // Triggers once editing operation completes
+            args.PreventRender = false;
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Add)
+        {
+            // Triggers once add operation completes
+            args.PreventRender = false;
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Cancel)
+        {
+            // Triggers once cancel operation completes
+            oResponse = await servicioLink.GetAllDataAsync(false); //to fetch the updated data from db to Grid
+            await PersistSelection();
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Save)
+        {
+            // Triggers once save operation completes
+            if (args.Action == "Edit")
+            {
+            }
+
+            oResponse = await servicioLink.GetAllDataAsync(false);
+            await PersistSelection();
+            StateHasChanged();
+
+            if (args.Action == "Add")
+            {
+                await (Grid.TotalItemCount % Grid.PageSettings.PageSize == 0 ?
+                        Grid.GoToPageAsync(Grid.TotalItemCount / Grid.PageSettings.PageSize) :
+                        Grid.GoToPageAsync((Grid.TotalItemCount / Grid.PageSettings.PageSize) + 1));
+
+                await (Grid.TotalItemCount % Grid.PageSettings.PageSize == 0 ?
+                        Grid.SelectRowAsync(Grid.PageSettings.PageSize - 1) :
+                        Grid.SelectRowAsync((Grid.TotalItemCount % Grid.PageSettings.PageSize) - 1));
+            }
+        }
+        else if (args.RequestType == Syncfusion.Blazor.Grids.Action.Delete)
+        {
+            // Triggers once delete operation completes
+            oResponse = await servicioLink.GetAllDataAsync(false);
+            await PersistSelection();
+        }
+    }
+
+    private async Task EnableDisableByCheckBox(int id, bool isActivate)
+    {
+        try
+        {
+            var response = await servicioLink.EnableDisableDataByIdAsync(id, isActivate);
+            oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+
+            if (MultiSelect != null && isActivate)
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registro Habilitado",
+                            Content = MultiSelect.Last().LinkNombre,
+                            CssClass = "e-toast-success",
+                            Icon = "e-circle-check",
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.ZoomIn } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+            else if (MultiSelect != null && !isActivate)
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registro Deshabilitado",
+                            Content = MultiSelect.Last().LinkNombre,
+                            CssClass = "e-toast-danger",
+                            Icon = "e-circle-remove",
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.ZoomOut } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            oResponse = await servicioLink.GetAllDataAsync(false);
+            await PersistSelection();
+        }
+    }
+
+    public async Task EnableDisableByMultiSelect(bool isActivate)
+    {
+        try
+        {
+            string reg = string.Empty;
+
+            if (MultiSelect != null)
+                foreach (var item in MultiSelect)
+                {
+                    var response = await servicioLink.EnableDisableDataByIdAsync(item.IdLink, isActivate);
+                    oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+                    reg += "<b>" + item.IdLink + "</b> " + item.LinkNombre + "<br>";
+                }
+
+            if (MultiSelect != null && isActivate)
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registros Habilitados",
+                            Content = reg,
+                            CssClass = "e-toast-success",
+                            Icon = "e-circle-check",
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.ZoomIn } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+            else if (MultiSelect != null && !isActivate)
+                await ToastObj.ShowAsync(
+                    new ToastModel
+                        {
+                            Title = "Registros Deshabilitados",
+                            Content = reg,
+                            CssClass = "e-toast-danger",
+                            Icon = "e-circle-remove",
+                            Animation = new ToastAnimationSettings { ShowSettings = new ToastShowAnimationSettings { Effect = ToastEffect.ZoomOut } },
+                            Timeout = 3000,
+                            ShowCloseButton = true,
+                            ProgressDirection = ProgressDirection.LTR,
+                            ShowProgressBar = true,
+                            NewestOnTop = true,
+                            Position = new ToastPosition { X = "Right", Y = "Top" }
+                        });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            oResponse = await servicioLink.GetAllDataAsync(false);
+            await PersistSelection();
+        }
+    }
+
+    public async Task PersistSelection() => await (TotalValue != null && TotalValue.Length > 0 ? Grid.SelectRowsAsync(TotalValue) : Grid.SelectRowAsync(0));
+
+    public async Task GetSelectedRecords(RowSelectEventArgs<RequestViewModel_Link> args)
+    {
+        //MultiSelect = null;
+
+        MultiSelect = await this.Grid.GetSelectedRecordsAsync();
+
+        SelectedRowIndexes = await this.Grid.GetSelectedRowIndexesAsync();
+        TotalValue = SelectedRowIndexes.ToArray();
+        SelectedValue = "";
+        if (TotalValue.Length > 0 && SelectedRowIndexes.Count > 0)
+            foreach (var data in TotalValue)
+            {
+                SelectedValue = SelectedValue + " " + data;
+            }
+    }
+
+    public async Task GetDeselectedRecords(RowDeselectEventArgs<RequestViewModel_Link> args)
+    {
+        MultiSelect = await this.Grid.GetSelectedRecordsAsync();
+
+        SelectedRowIndexes = await this.Grid.GetSelectedRowIndexesAsync();
+        TotalValue = SelectedRowIndexes.ToArray();
+        SelectedValue = "";
+        if (TotalValue.Length > 0 && SelectedRowIndexes.Count > 0)
+            foreach (var data in TotalValue)
+            {
+                SelectedValue = SelectedValue + " " + data;
+            }
+    }
+
+    public void OnCommandClicked(CommandClickEventArgs<RequestViewModel_Link> args)
+    {
+        //if (args.CommandColumn.ButtonOption.Content == "Detalles")
+        //    args.RowData;
+        //Console.WriteLine(args.RowData.IdPisoNivel);
+    }
+}

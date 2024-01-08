@@ -2,24 +2,24 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.JSInterop;
+using Radzen;
 using Syncfusion.Blazor;
 using System.Globalization;
 
 using CorreosInstitucionales.Client;
 using CorreosInstitucionales.Client.Shared;
 using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificiosService;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEscuelasService;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksService;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisosService;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonalService;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitudService;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptosService;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catExtensionService;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.SendEmailService;
-using Syncfusion.Blazor.Popups;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificios;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEscuelas;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisos;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitud;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -37,25 +37,32 @@ builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticatorProvider
 builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider => provider.GetRequiredService<JwtAuthenticatorProvider>());
 
 // Inyección de Dependencias - Módulo de Send Email
-builder.Services.AddScoped<ISendEmail, RSendEmail>();
-
-// Inyección de Dependencias - Módulo de Catálogos
-builder.Services.AddScoped<ICarrera, RCarrera>();
-builder.Services.AddScoped<IEdificio, REdificio>();
-builder.Services.AddScoped<IEscuela, REscuela>();
-builder.Services.AddScoped<ILink, RLink>();
-builder.Services.AddScoped<IPiso, RPiso>();
-builder.Services.AddScoped<ITipoPersonal, RTipoPersonal>();
-builder.Services.AddScoped<ITipoSolicitud, RTipoSolicitud>();
-builder.Services.AddScoped<IAreaDepto, RAreaDepto>();
-builder.Services.AddScoped<IExtension, RExtension>();
+builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
 
 // Inyección de Dependencias - Módulo de Registro
-builder.Services.AddScoped<IUsuario, RUsuario>();
+builder.Services.AddScoped<IUsuarioService, RUsuarioService>();
 
-builder.Services.AddScoped<SfDialogService>();
+// Inyección de Dependencias - Módulo de Catálogos
+builder.Services.AddScoped<IAreaDeptoService, RAreaDeptoService>();
+builder.Services.AddScoped<ICarreraService, RCarreraService>();
+builder.Services.AddScoped<IEdificioService, REdificioService>();
+builder.Services.AddScoped<IEscuelaService, REscuelaService>();
+builder.Services.AddScoped<ILinkService, RLinkService>();
+builder.Services.AddScoped<INoExtensionService, RNoExtensionService>();
+builder.Services.AddScoped<IPisoService, RPisoService>();
+builder.Services.AddScoped<ITipoPersonalService, RTipoPersonalService>();
+builder.Services.AddScoped<ITipoSolicitudService, RTipoSolicitudService>();
+
+// Radzen Components and Services
+builder.Services.AddRadzenComponents();
+//builder.Services.AddScoped<ContextMenuService>();
+//builder.Services.AddScoped<DialogService>();
+//builder.Services.AddScoped<NotificationService>();
+//builder.Services.AddScoped<TooltipService>();
+
+// Syncfusion Components and Services
 builder.Services.AddSyncfusionBlazor(options => { options.EnableRtl = false; options.Animation = GlobalAnimationMode.Enable; /*options.IgnoreScriptIsolation = true;*/ });
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mjk4NTE1NEAzMjM0MmUzMDJlMzBiYmFBNkJpaDhkYnNuV1M4bUF6bzMzdkVqeEliMzdGUzZHZEtVdGwrSDhBPQ=="); // Trial Developer
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mjk5MDM2M0AzMjMzMmUzMDJlMzBJSEhqU1Yra0NaTkZwZDIzWTZ6MldNSkR4d3VkRWhMZmpJc1dUVTFOU2VBPQ=="); // Trial Developer
 
 // Register the Syncfusion locale service to localize Syncfusion Blazor components.
 builder.Services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));

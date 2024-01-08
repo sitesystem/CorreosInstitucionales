@@ -1,12 +1,16 @@
+global using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
-using CorreosInstitucionales.Server.CapaDataAccess.LoginAuth;
-using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Common;
-using CorreosInstitucionales.Server.CapaDataAccess.SendEmail;
+using CorreosInstitucionales.Server.CapaDataAccess.Controllers;
+using CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth;
+using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
+using CorreosInstitucionales.Shared.CapaEntities.Common;
+using CorreosInstitucionales.Shared.CapaEntities.Request;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +28,7 @@ builder.Services.AddRazorPages();
 //}
 
 //builder.Services.Configure<reCAPTCHAVerificationOptions>(Configuration.GetSection("reCAPTCHA"));
-
-builder.Services.AddScoped<ISendEmail, RSendEmail>();
+builder.Services.AddDbContext<DbCorreosInstitucionalesUpiicsaContext>();
 
 // Habilitar Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -86,7 +89,7 @@ builder.Services.Configure<AppSettings>(appSettingsSection);
 
 var appSettings = appSettingsSection.Get<AppSettings>();
 //var key = Encoding.ASCII.GetBytes(appSettings.Secreto);
-var key = Encoding.UTF8.GetBytes(appSettings.Secreto);
+var key = Encoding.UTF8.GetBytes(appSettings.Secreto ?? string.Empty);
 
 builder.Services.AddAuthentication(auth =>
 {
@@ -114,7 +117,9 @@ builder.Services.AddAuthentication(auth =>
 });
 
 // Dependency Injection (Inyectar e Implementar la Interfaz)
-builder.Services.AddScoped<ILoginService, RLoginService>();
+builder.Services.AddScoped<ILoginAuthService, RLoginAuthService>();
+builder.Services.AddKeyedScoped<IGenericService<McCatAreasDepto, RequestViewModel_AreaDepto>, RGenericService>("areaDeptoService");
+builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
 
 /******************************************************************************************************/
 
@@ -125,6 +130,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
     //app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "serverWS v1"));
 }
 else
 {
@@ -133,8 +140,9 @@ else
     app.UseHsts();
 }
 
-app.UseSwagger();
-app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "serverWS v1"));
+// Middlewares para gestionar la Authentication y la Authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseCors(cors);
 
@@ -144,10 +152,6 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-// Middlewares para gestionar la Authentication y la Authorization
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
