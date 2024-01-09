@@ -2,13 +2,13 @@
 
 @attribute [AllowAnonymous]
 
-@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Request;
-@using CorreosInstitucionales.Shared.CapaEntities.ViewModels.Response;
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.SendEmailService
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarrerasService;
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinksService;
-@using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuariosService;
+@using CorreosInstitucionales.Shared.CapaEntities.Request;
+@using CorreosInstitucionales.Shared.CapaEntities.Response;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks;
+@using CorreosInstitucionales.Shared.CapaTools.reCAPTCHA;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios;
 
 @inject ICarrera servicioCarrera
 @inject IUsuario servicioUsuario

@@ -254,6 +254,161 @@
             </div>
         </div>
     </div>
+    <div class="card border-dark mb-3" style="margin-top:20px">
+        <b class="card-header" size="20px"> Datos de Empleado</b>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <SfTextBox Placeholder="Numero Empleado"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuNumeroEmpleado"
+                               CssClass="mi-sf-textbox"
+                               onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                               ShowClearButton="true"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                               ValidateOnInput="true" />
+                    <ValidationMessage For="@(() => oUsuario.UsuNumeroEmpleado)" />
+                </div>
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <SfTextBox Placeholder="Extensión"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuNoExtension"
+                               CssClass="mi-sf-textbox"
+                               onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                               ShowClearButton="true"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                               ValidateOnInput="true" />
+                    <ValidationMessage For="@(() => oUsuario.UsuNoExtension)" />
+                </div>
+                @*<div class="col-xs-4 col-lg-4 col-md-4">
+                <SfDropDownList ID="Data___UsuIdAreaDepto"
+                TValue="int?"
+                TItem="AreaDeptoViewModel"
+                Placeholder="Area Departamento"
+                @bind-Value="@oUsuario.UsuIdAreaDepto"
+                DataSource="@oAreaDepto.Data"
+                AllowFiltering="true"
+                CssClass="mi-sf-textbox"
+                Enabled="true"
+                EnableVirtualization="false"
+                FilterBarPlaceholder="Selecciona una opción"
+                FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                FloatLabelType="FloatLabelType.Auto"
+                IgnoreAccent="true"
+                IgnoreCase="true"
+                Readonly="false"
+                ShowClearButton="true"
+                SortOrder="Syncfusion.Blazor.DropDowns.SortOrder.None">
+                <DropDownListFieldSettings Value="IdAreaDepto" Text="areNombre" />
+                </SfDropDownList>
+                </div>*@
+            </div>
+        </div>
+    </div>
+    <div class="card border-dark mb-3" style="margin-top:20px"> 
+        <b class="card-header" size="20px">Datos de la cuenta</b>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <SfTextBox Placeholder="Correo Personal"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Email"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva"
+                               CssClass="mi-sf-textbox"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true"
+                               ValidateOnInput="true" />
+                    <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
+                </div>
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <SfTextBox Placeholder="Contraseña"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Password"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuContraseña"
+                               CssClass="mi-sf-textbox"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "20" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true"
+                               ValidateOnInput="true" />
+                    <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
+                </div>
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <SfTextBox Placeholder="Confirmar contraseña"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Password"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@contra2"
+                               OnInput="(e => contra2 = e.Value.ToString())"
+                               CssClass="mi-sf-textbox"
+                               @onkeyup="@CompararCadenas"
+                               ShowClearButton="true" />
+                    <br />
+                    <SfMessage Severity="MessageSeverity.Error"
+                               ShowCloseIcon="false"
+                               ShowIcon="true"
+                               Visible="@BanderaCompararContraseña">
+                        Ingresa las contraseñas y verifica que coincidan.
+                    </SfMessage>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card border-dark mb-3" style="margin-top:20px ">
+        <b class="card-header" size="20px">Correo Institucional</b>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                    <SfTextBox Placeholder="Correo institucional"
+                               FloatLabelType="@FloatLabelType.Auto"
+                               @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta"
+                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
+                               ShowClearButton="true"
+                               Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                               ValidateOnInput="true" />
+                    <ValidationMessage For="@(() => oUsuario.UsuCorreoInstitucionalCuenta)" />
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <small class="text-body-secondary">En caso de contar con uno.</small>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 captcha">
+                    <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6 d-grid gap-2">
+                    <button type="submit" class="btn btn-success mt-4 mb-2" disabled="@DisablePostButton">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
+                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                            <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5" />
+                        </svg>&nbsp;
+                        <span role="status">Enviar</span>
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true" hidden="@isSpinningHidden"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal *@
+    <SfDialog AllowDragging="true" @bind-Visible="@dialogVisible" IsModal="true" Width="500px" ShowCloseIcon="true" Target="#target" CloseOnEscape="true">
+        <DialogTemplates>
+            <Header>
+                Revisa y verifica tus Datos
+            </Header>
+            <Content>
+                <ValidationSummary />
+            </Content>
+        </DialogTemplates>
+        <DialogButtons>
+            <DialogButton Content="Aceptar" IsPrimary="true" OnClick="@(() => this.dialogVisible = false)" CssClass="e-block" />
+        </DialogButtons>
+        <DialogEvents OnOverlayModalClick="@(() => this.dialogVisible = false)" />
+        <DialogAnimationSettings Effect="DialogEffect.Zoom" />
+    </SfDialog>
+
 </EditForm>
 
 @code {
