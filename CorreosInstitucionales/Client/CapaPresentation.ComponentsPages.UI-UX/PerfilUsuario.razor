@@ -2,6 +2,8 @@
 @using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistroAlumnos
 @using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistroEmpleados
 
+@inject NavigationManager navigationManager;
+
 <h3>Perfil Usuario</h3>
 <center>
 <div class="d-grid gap-2 d-md-block">
@@ -17,27 +19,27 @@
         {
             case 1:
                 Console.WriteLine("El tipo usuario es: Alumno inscrito");
-                
+                navigationManager.NavigateTo("/RegistroInscrito");
                 break;        
             case 2:
                 Console.WriteLine("El tipo usuario es: Alumno egresado");
-                
+                navigationManager.NavigateTo("/RegistroInscrito");
                 break;
             case 3:
                 Console.WriteLine("El tipo usuario es: Maestría");
-                
+            navigationManager.NavigateTo("/RegistroMaestria");
                 break;
             case 4:
                 Console.WriteLine("El tipo usuario es: Administrativo");
-                
+                navigationManager.NavigateTo("/RegistroAdministrativo");
                 break;
             case 5:
                 Console.WriteLine("El tipo usuario es: Docente");
-                
+                navigationManager.NavigateTo("/RegistroDocente");
                 break;
             case 6:
                 Console.WriteLine("El tipo usuario es: Honorarios");
-                
+                navigationManager.NavigateTo("/RegistroHonorario");
                 break;
             default: 
                 tipousuario=0;
