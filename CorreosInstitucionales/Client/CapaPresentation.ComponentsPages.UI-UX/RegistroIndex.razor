@@ -10,14 +10,14 @@
 
     </style>
 </head>
-<body>
-
+<body style="padding-top:100px">
+    <header style="z-index:9999; position:fixed; top:0;">
     <!-- Encabezado de Página (Header Fixed-Top) -->
     <nav class="navbar bg-dark bg-body-tertiary fixed-top" style="border-bottom: 10px solid #3d0000;" data-bs-theme="dark">
-        <div class="container">
+        <div class="container-fluid">
             <img src="https://onceninasyninos.tv/wp-content/uploads/2018/04/Banner-logos-ipn-e1523046221576.png" alt="Logo" class="d-inline-block align-text-top" style="width:8vw; height:6vh;">
-            <a class="navbar-brand text-white" style="font-variant: small-caps; text-decoration:none; font-size:calc(8.5px + 0.00590625vw)">
-                <!-- font-size:calc(10px + 0.390625vw)  -->
+                <a class="navbar-brand text-white" style="font-variant: small-caps; text-decoration:none; font-size: 1.75vw ">
+                    <!--font-size:calc(10px + 0.390625vw)    font-size:calc(8.5px + 0.00590625vw)" -->
                 SACI (Sistema para Atención de Correos Institucionales IPN)
             </a>
             <button class="btn btn-outline-light" style="text-decoration:none; font-size:calc(8px + 0.390625vw); margin: 0; padding:0.390625vw" @onclick="@(() => navigationManager.NavigateTo("/"))">
@@ -27,14 +27,14 @@
             </button>
         </div>
     </nav>
-
+    </header>
     <hr class="mb-4" />
 
     <div class="container-fluid">
-        <div class="row align-items-center min-vh-100">
+        <div class="row align-items-start min-vh-100">
              <RadzenTabs RenderMode="TabRenderMode.Client">
                 <Tabs>
-                    <RadzenTabsItem Text="Alumn@s Inscritos / Egresados" IconCss="e-icons e-paste-text-only" IconPosition="left">
+                    <RadzenTabsItem Text="Alumn@s Inscritos / Egresados">
                         <RadzenTabs RenderMode="TabRenderMode.Client">
                             <Tabs>
                                 <RadzenTabsItem Text="Alumn@s Inscritos / Egresados" >
@@ -48,7 +48,7 @@
                             </Tabs>
                         </RadzenTabs>
                     </RadzenTabsItem>
-                    <RadzenTabsItem Text="Empleados" IconCss="e-icons e-redaction" IconPosition="left">
+                    <RadzenTabsItem Text="Empleados">
                         <RadzenTabs RenderMode="TabRenderMode.Client">
                             <Tabs>
                                 <RadzenTabsItem Text="Administrativo" >
