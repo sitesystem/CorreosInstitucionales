@@ -45,6 +45,27 @@
                     </RadzenCard>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <RadzenCard>
+                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Segundo Apellido</RadzenText>
+                        <RadzenTextBox @bind-Value="@oUsuario.UsuNoCelularAnterior" class="w-100" aria-label="Default TextBox" />
+                    </RadzenCard>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <RadzenCard>
+                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">CURP</RadzenText>
+                        <RadzenTextBox @bind-Value="@oUsuario.UsuCurp" class="w-100" aria-label="Default TextBox" />
+                    </RadzenCard>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+
+                </div>
+            </div>
             <div></div>
         </div>
     </div>
@@ -163,4 +184,13 @@
         await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('name').focus()");
         this.dialogVisible = true;
     }
+
+    // public Response<RequestViewModel_Link>? oLinkCURP = new();
+    // public RequestViewModel_Link? linkCURP = new();
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     oLinkCURP = await servicioLink.GetDataByNombreAsync("CURP");
+    //     linkCURP = oLinkCURP.Data;
+    // }
 }

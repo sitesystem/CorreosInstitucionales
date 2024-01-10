@@ -1,5 +1,6 @@
 ﻿@page "/RegistroIndex"
 @attribute [AllowAnonymous]
+@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.Registros
 
 @layout LoginLayout
 @inject NavigationManager navigationManager
@@ -38,6 +39,8 @@
                             <Tabs>
                                 <RadzenTabsItem Text="Alumn@s Inscritos / Egresados" >
                                     Registro Alumn@s Inscritos / Egresados
+                                    <Registros></Registros>
+                                    
                                 </RadzenTabsItem>
                                 <RadzenTabsItem Text="Maestría">
                                     Registro maestría
