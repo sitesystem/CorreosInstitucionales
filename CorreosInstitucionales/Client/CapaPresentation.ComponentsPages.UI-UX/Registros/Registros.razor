@@ -82,7 +82,6 @@
                     @* <RadzenCard>
                         <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">CURP</RadzenText>
                         <RadzenTextBox @bind-Value="@oUsuario.UsuCurp" class="w-100" aria-label="Default TextBox" />
-
                         <a href="@linkCURP.LinkNombre" target="_blank">
                             ¿Olvidaste tu Curp?
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
@@ -108,6 +107,11 @@
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4" style="margin-top:50px">
                     <RadzenUpload Url="upload/single" Icon="upload" ChooseText="" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})">
                     </RadzenUpload>
+                    </RadzenCard>
+                </div>
+            </div>
+            <div class="row gy-3">
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                 </div>
             </div>
         </div>
@@ -157,10 +161,47 @@
                 <RadzenStack Gap="3rem" Wrap="FlexWrap.Wrap" class="rz-p-12">
                     <RadzenButton style="width: 160px" IsBusy=@busy Click=@OnBusyClick Text="Save" />
                 </RadzenStack>
+
+    <div class="card border-dark mb-3" style="margin-top:20px">
+        <b class="card-header" size="20px">Datos laborales</b>
+        <div class="card-body">
+            <div class="row gy-3">
+                <div class="col-xs-4 col-lg-4 col-md-4">
+                    <RadzenCard>
+                        @* <RadzenNumeric 
+                                        TValue="int?"
+                                        Min="1936"
+                                        Max="@year"
+                                        Step="1"
+                                        Placeholder="Año de egreso"
+                                        Format="####" @bind-Value="@oUsuario.UsuAñoEgreso"
+                                        onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                                        ShowUpDown="false"/>
+                        <ValidationMessage For="@(() => oUsuario.UsuAñoEgreso)" /> *@
+                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Número de empleado</RadzenText>
+                        <RadzenTextBox @bind-Value="@oUsuario.UsuNumeroEmpleado" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" class="w-100" aria-label="Default TextBox" />
+                          
+                    </RadzenCard>
+                </div>
+                <div class="col-xs-4 col-lg-4 col-md-4">
+                    <RadzenCard>
+                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Número de la extensión del departamento</RadzenText>
+                        <RadzenTextBox @bind-Value="@oUsuario.UsuNoExtension" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" class="w-100" aria-label="Default TextBox" />
+                    </RadzenCard>
+                </div>                    
+                <div class="col-xs-4 col-lg-4 col-md-4">
+                    <RadzenCard>
+                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Número de área de departamento</RadzenText>
+                        <RadzenNumeric 
+                                    TValue="int?"                                    
+                                    Placeholder="Número de área"                                    
+                                    ShowUpDown="false"
+                                    style="width:100%;"/>                        
+                    </RadzenCard>
+                </div>               
             </div>
         </div>
     </div>
-
 </EditForm>
 
 @code {
@@ -174,6 +215,7 @@
     Variant variant = Variant.Filled;
     AlertSize size = AlertSize.Medium;
     AlertStyle alertStyle = AlertStyle.Primary;
+    public int year = DateTime.Parse(DateTime.Now.ToString()).Year;
     public Response<object>? oRespuesta = new();
     public RequestDTO_Usuario? oUsuario = new()
         {
@@ -198,7 +240,7 @@
             UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             // DATOS LABORALES
             //UsuNumeroEmpleado = "0",                // Número del Empleado del Usuario (Administrador o Docente)
-            UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
+           // UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
             //UsuNoExtension = "0",                   // Número de Extensión del Empleado
             // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
             UsuCorreoPersonalCuentaAnterior = "",   // Correo Personal de la Cuenta Anterior
@@ -217,6 +259,7 @@
             UsuIdRolNavigation = null,
             UsuIdTipoPersonalNavigation = null
     };
+
     public bool BanderaCompararContraseña = true;
     private string contra2 = string.Empty;
 
