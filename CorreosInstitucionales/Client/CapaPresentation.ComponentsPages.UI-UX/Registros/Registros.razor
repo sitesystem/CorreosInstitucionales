@@ -4,6 +4,7 @@
 
 @using CorreosInstitucionales.Shared.CapaEntities.Request
 @using CorreosInstitucionales.Shared.CapaEntities.Response
+
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
@@ -52,7 +53,7 @@
                         <RadzenTextBox @bind-Value="@oUsuario.UsuNombre" class="w-100" aria-label="Default TextBox" />
                     </RadzenCard> *@
                     <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Nombre</RadzenText>
-                    <RadzenTextBox @bind-Value="@oUsuario.UsuNombre" class="w-100" aria-label="Default TextBox" />
+                    <RadzenTextBox @bind-Value="@oUsuario.UsuNombre" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
                 </div>
                 <div class="col-xs-4 col-lg-4 col-md-4">
                     @* <RadzenCard>
@@ -60,7 +61,7 @@
                         <RadzenTextBox @bind-Value="@oUsuario.UsuPrimerApellido" class="w-100" aria-label="Default TextBox" />
                     </RadzenCard> *@
                     <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Primer Apellido</RadzenText>
-                    <RadzenTextBox @bind-Value="@oUsuario.UsuPrimerApellido" class="w-100" aria-label="Default TextBox" />
+                    <RadzenTextBox @bind-Value="@oUsuario.UsuPrimerApellido" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
                 </div>
                 <div class="col-xs-4 col-lg-4 col-md-4">
                     @* <RadzenCard>
@@ -68,7 +69,7 @@
                         <RadzenTextBox @bind-Value="@oUsuario.UsuSegundoApellido" class="w-100" aria-label="Default TextBox" />
                     </RadzenCard> *@
                     <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Segundo Apellido</RadzenText>
-                    <RadzenTextBox @bind-Value="@oUsuario.UsuSegundoApellido" class="w-100" aria-label="Default TextBox" />
+                    <RadzenTextBox @bind-Value="@oUsuario.UsuSegundoApellido" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
                 </div>
             </div>
             <div class="row">
@@ -78,7 +79,7 @@
                         <RadzenTextBox @bind-Value="@oUsuario.UsuNoCelularAnterior" class="w-100" aria-label="Default TextBox" />
                     </RadzenCard> *@
                     <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Numero de Celular</RadzenText>
-                    <RadzenTextBox @bind-Value="@oUsuario.UsuNoCelularAnterior" class="w-100" aria-label="Default TextBox" />
+                    <RadzenTextBox @bind-Value="@oUsuario.UsuNoCelularAnterior" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4" style="margin-top:20px">
                     @* <RadzenCard>
@@ -96,7 +97,7 @@
                         </RadzenUpload>
                     </RadzenCard> *@
                     <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">CURP</RadzenText>
-                    <RadzenTextBox @bind-Value="@oUsuario.UsuCurp" MaxLength="18" class="w-100" aria-label="Default TextBox" />
+                    <RadzenTextBox @bind-Value="@oUsuario.UsuCurp" MaxLength="18" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
 
                     <a href="@linkCURP.LinkEnlace" target="_blank">
                         ¿Olvidaste tu Curp?
@@ -137,14 +138,20 @@
                                         ShowUpDown="false"/>
                         <ValidationMessage For="@(() => oUsuario.UsuAñoEgreso)" /> *@
                             <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Número de empleado</RadzenText>
-                        <RadzenTextBox @bind-Value="@oUsuario.UsuNumeroEmpleado" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" class="w-100" aria-label="Default TextBox" />
+                        <RadzenTextBox @bind-Value="@oUsuario.UsuNumeroEmpleado" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" 
+                                       class="w-100" 
+                                       aria-label="Default TextBox"
+                                       style="border-bottom: 3px solid red;" />
                           
                     </RadzenCard>
                 </div>
                 <div class="col-xs-4 col-lg-4 col-md-4">
                     <RadzenCard>
                         <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Número de la extensión del departamento</RadzenText>
-                        <RadzenTextBox @bind-Value="@oUsuario.UsuNoExtension" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" class="w-100" aria-label="Default TextBox" />
+                        <RadzenTextBox @bind-Value="@oUsuario.UsuNoExtension" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
+                        class="w-100" 
+                        aria-label="Default TextBox"
+                                       style="border-bottom: 3px solid red;" />
                     </RadzenCard>
                 </div>                    
                 <div class="col-xs-4 col-lg-4 col-md-4">
@@ -155,6 +162,7 @@
                                     Placeholder="Número de área"                                    
                                     ShowUpDown="false"
                                     class="w-100"
+                                    style="border-bottom: 3px solid red;"
                                     />                        
                     </RadzenCard>
                 </div>               
@@ -170,15 +178,15 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                     <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Correo</RadzenText>
-                    <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" class="w-100" aria-label="Default TextBox" />
+                    <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                     <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Contraseña</RadzenText>
-                    <RadzenPassword @bind-Value=@oUsuario.UsuContraseña  style="width:100%;" aria-label="enter password" />
+                    <RadzenPassword @bind-Value=@oUsuario.UsuContraseña class="w-100" aria-label="enter password" style="border-bottom: 3px solid red;" />
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
                     <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2"> Confirmar Contraseña</RadzenText>
-                    <RadzenPassword @bind-Value=@contra2 style="width:100%;" aria-label="enter password" />
+                    <RadzenPassword @bind-Value=@contra2 class="w-100" aria-label="enter password" style="border-bottom: 3px solid red;" />
                     <br/>
                     
                 </div>
