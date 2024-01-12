@@ -8,6 +8,7 @@
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
 
+
 @inject IUsuarioService servicioUsuario
 @inject ILinkService servicioLink
 @inject ISendEmailService servicioSendEmail
@@ -27,15 +28,15 @@
         flex-grow: 1;
     }
 
-        .mi-sf-textbox::after {
-            content: ' ';
-            position: absolute;
-            left: 0;
-            bottom: -3px;
-            width: 100%;
-            height: 2px;
-            background-color: red;
-        }
+    RadzenTextBox::after {
+        content: ' ';
+        position: absolute;
+        left: 0;
+        bottom: -3px;
+        width: 100%;
+        height: 2px;
+        background-color: red;
+    }
 </style>
 
 <EditForm Model="@oUsuario" OnValidSubmit="@Registrar" OnInvalidSubmit="@ScrollToTop">
@@ -105,6 +106,7 @@
                     </a>
                 </div>
                 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4" style="margin-top:50px">
+                    <RadzenCard>
                     <RadzenUpload Url="upload/single" Icon="upload" ChooseText="" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})">
                     </RadzenUpload>
                     </RadzenCard>
@@ -116,53 +118,8 @@
             </div>
         </div>
     </div>
-    <div class="card border-dark mb-3" style="margin-top:20px">
-        <b class="card-header" size="20px">Datos de la cuenta</b>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Correo</RadzenText>
-                    <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" class="w-100" aria-label="Default TextBox" />
-                </div>
-                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Contraseña</RadzenText>
-                    <RadzenPassword @bind-Value=@oUsuario.UsuContraseña  aria-label="enter password" />
-                </div>
-                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2"> Confirmar Contraseña</RadzenText>
-                    <RadzenPassword @bind-Value=@contra2 aria-label="enter password" />
-                    <br/>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card border-dark mb-3" style="margin-top:20px">
-        <b class="card-header" size="20px">Correo Institucional</b>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                    <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Ingresa tu Correo Institucional</RadzenText>
-                    <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" class="w-100" aria-label="Default TextBox" />
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <small class="text-body-secondary">En caso de contar con uno.</small>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 captcha">
-                    <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-                </div>
-
-                <RadzenStack Gap="3rem" Wrap="FlexWrap.Wrap" class="rz-p-12">
-                    <RadzenButton style="width: 160px" IsBusy=@busy Click=@OnBusyClick Text="Save" />
-                </RadzenStack>
-
-    <div class="card border-dark mb-3" style="margin-top:20px">
+    <!-- ******************************************************************* CARD DATOS LABORALES ******************************************************************* -->
+        <div class="card border-dark mb-3" style="margin-top:20px">
         <b class="card-header" size="20px">Datos laborales</b>
         <div class="card-body">
             <div class="row gy-3">
@@ -196,12 +153,76 @@
                                     TValue="int?"                                    
                                     Placeholder="Número de área"                                    
                                     ShowUpDown="false"
-                                    style="width:100%;"/>                        
+                                    class="w-100"
+                                    />                        
                     </RadzenCard>
                 </div>               
             </div>
         </div>
     </div>
+
+    <!-- ******************************************************************* CARD DATOS DE LA CUENTA ******************************************************************* -->
+
+    <div class="card border-dark mb-3" style="margin-top:20px">
+        <b class="card-header" size="20px">Datos de la cuenta</b>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Correo</RadzenText>
+                    <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" class="w-100" aria-label="Default TextBox" />
+                </div>
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Contraseña</RadzenText>
+                    <RadzenPassword @bind-Value=@oUsuario.UsuContraseña  style="width:100%;" aria-label="enter password" />
+                </div>
+                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+                    <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2"> Confirmar Contraseña</RadzenText>
+                    <RadzenPassword @bind-Value=@contra2 style="width:100%;" aria-label="enter password" />
+                    <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ******************************************************************* CARD DATOS CORREO INSTITUCIONAL ******************************************************************* -->
+    <div class="card border-dark mb-3" style="margin-top:20px">
+        <b class="card-header" size="20px">Correo Institucional</b>
+        <div class="card-body">
+            <div class="row">
+                <center>
+                    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2" class="text-start">Ingresa tu Correo Institucional</RadzenText>
+                        <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" class="w-100" aria-label="Default TextBox" />
+                    </div>
+                </center>
+            </div>
+        </div>
+        <div class="card-footer">
+            <small class="text-body-secondary">En caso de contar con uno.</small>
+        </div>
+    </div>
+    <!-- ******************************************************************* CARD RECAPTCHA ******************************************************************* -->
+    <div class="card">
+        <div class="card-body">
+            <div class="row justify-content-center gy-3">
+                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 captcha">    
+                    <RadzenCard style="background-color: transparent;">
+                        <center>
+                            <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                            <br />
+                            <RadzenButton style="width: 160px" IsBusy=@busy Click=@OnBusyClick Text="Save" />
+                                <!--<RadzenStack Gap="3rem" Wrap="FlexWrap.Wrap" class="rz-p-12">
+                                    
+                            </RadzenStack>-->
+                        </center>
+                    </RadzenCard>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                
+
 </EditForm>
 
 @code {
