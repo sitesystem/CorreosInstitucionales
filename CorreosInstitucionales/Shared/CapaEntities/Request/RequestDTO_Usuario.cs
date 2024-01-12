@@ -129,6 +129,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
 
         /*******************************  DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP  *******************************/
         [Column("usuCorreoPersonalCuentaAnterior")]
+        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo invalido.")]
         [StringLength(100)]
         public string? UsuCorreoPersonalCuentaAnterior { get; set; }
 
