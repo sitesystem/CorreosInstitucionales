@@ -16,8 +16,9 @@
 @inject IJSRuntime JSRuntime
 
 <h3 style="margin-top:20px">
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-briefcase" viewBox="0 0 18 18" style="margin-left: 20px">
-        <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5m1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0M1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5" />
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
     </svg> Registro
 </h3>
 
@@ -97,7 +98,7 @@
                     <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">CURP</RadzenText>
                     <RadzenTextBox @bind-Value="@oUsuario.UsuCurp" MaxLength="18" class="w-100" aria-label="Default TextBox" />
 
-                    <a href="@linkCURP.LinkNombre" target="_blank">
+                    <a href="@linkCURP.LinkEnlace" target="_blank">
                         ¿Olvidaste tu Curp?
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
@@ -210,10 +211,8 @@
                         <center>
                             <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                             <br />
-                            <RadzenButton style="width: 160px" IsBusy=@busy Click=@OnBusyClick Text="Save" />
-                                <!--<RadzenStack Gap="3rem" Wrap="FlexWrap.Wrap" class="rz-p-12">
-                                    
-                            </RadzenStack>-->
+                            <RadzenButton ButtonType="Radzen.ButtonType.Submit" style="width: 160px" IsBusy=@busy Click=@OnBusyClick  Text="Save" />
+                            <!--<RadzenStack Gap="3rem" Wrap="FlexWrap.Wrap" class="rz-p-12"></RadzenStack>-->
                         </center>
                     </RadzenCard>
                 </div>
