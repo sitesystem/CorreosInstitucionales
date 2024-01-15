@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Net.Http.Headers;
 
 using CorreosInstitucionales.Shared.CapaEntities.Response;
@@ -14,31 +16,73 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.RepositorioFi
         private readonly IHostEnvironment _hostEnvironment = hostEnvironment;
         private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
-        [HttpPost("{repoFolder}/{subFolder}")]
-        public async Task<IActionResult> SaveFile(string repoFolder, string subFolder, IList<IFormFile> UploadFiles)
+        [HttpPost("[action]/{folder}/{id}/{fileName}/{guid}")]
+        public async Task<IActionResult> UploadSingleFile(string folder, int id, string fileName, Guid guid, IFormFile file)
         {
             Response<object> oResponse = new();
-            long size = 0;
 
             try
             {
-                foreach (var file in UploadFiles)
+                if (file.Length > 0 && file != null)
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    //fileName = $@"C:\Users\Win10\Documents\GitHub\SITI_NET\siti\Client\wwwroot\Repositorio\{repoFolder}\{subFolder}\{fileName}";
-                    fileName = $@"C:\Users\l_alo\Documents\GitHub\siti_NET\siti\Client\wwwroot\Repositorio\{repoFolder}\{subFolder}\{fileName}";
+                    // var carpeta = Path.Combine(_hostEnvironment.ContentRootPath, $@"CapaDataAccess\Repositorio\{id}_{guid}");
+                    folder = Path.Combine(Path.Combine(_webHostEnvironment.ContentRootPath, ".."), $@"Client\wwwroot\Repositorio\{folder}\{id}");
+                    // var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    if (!Directory.Exists(folder))
+                        Directory.CreateDirectory(folder);
 
-                    //fileName = _hostEnvironment.ContentRootPath + $@"\CapaDataAccess\Repositorio\{repoFolder}\{subFolder}\{fileName}";
-                    // var file = System.IO.Path.Combine(_webHostEnvironment.ContentRootPath, oModel.IdFile, oModel.File.FileName);
+                    fileName = $"{id}_{fileName}_{guid}{Path.GetExtension(file.FileName)}";
 
-                    size += (int)file.Length;
+                    string dirPath = Path.Combine(folder, fileName);
 
-                    if (!System.IO.File.Exists(fileName))
+                    if (!System.IO.File.Exists(dirPath))
                     {
-                        using FileStream fs = System.IO.File.Create(fileName);
-                        await file.CopyToAsync(fs);
-                        await file.CopyToAsync(new FileStream(fileName, FileMode.Create));
-                        fs.Flush();
+                        using FileStream oFileStream = new(dirPath, FileMode.Create, FileAccess.Write); // System.IO.File.Create(dirPath);
+                        await file.OpenReadStream().CopyToAsync(oFileStream);
+                    }
+                }
+                oResponse.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                Response.Clear();
+                Response.StatusCode = 200;
+                Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "File removed successfully";
+                Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = ex.Message;
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
+        [HttpPost("[action]/{folder}/{id}/{fileName}/{guid}")]
+        public async Task<IActionResult> UploadMultipleFiles(string folder, int id, string fileName, Guid guid, IList<IFormFile> files)
+        {
+            Response<object> oResponse = new();
+
+            try
+            {
+                if (files.Count < 1 || files.IsNullOrEmpty())
+                    return BadRequest(oResponse);
+
+                foreach (var file in files)
+                {
+                    // var carpeta = Path.Combine(_hostEnvironment.ContentRootPath, $@"CapaDataAccess\Repositorio\{id}_{guid}");
+                    folder = Path.Combine(Path.Combine(_webHostEnvironment.ContentRootPath, ".."), $@"Client\wwwroot\Repositorio\{folder}\{id}");
+                    // var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+
+                    if (!Directory.Exists(folder))
+                        Directory.CreateDirectory(folder);
+
+                    fileName = $"{id}_{fileName}_{guid}{Path.GetExtension(file.FileName)}";
+                    long size = file.Length;
+
+                    string dirPath = Path.Combine(folder, fileName);
+
+                    if (!System.IO.File.Exists(dirPath))
+                    {
+                        using FileStream oFileStream = new(dirPath, FileMode.Create, FileAccess.Write); // System.IO.File.Create(dirPath);
+                        await file.OpenReadStream().CopyToAsync(oFileStream);
                     }
                 }
 
@@ -62,10 +106,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.RepositorioFi
             try
             {
                 var filename = _hostEnvironment.ContentRootPath + $@"\{UploadFiles[0].FileName}";
+
                 if (System.IO.File.Exists(filename))
-                {
                     System.IO.File.Delete(filename);
-                }
             }
             catch (Exception e)
             {

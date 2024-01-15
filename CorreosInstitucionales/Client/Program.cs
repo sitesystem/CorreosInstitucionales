@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.JSInterop;
 using Radzen;
-using Syncfusion.Blazor;
 using System.Globalization;
 
 using CorreosInstitucionales.Client;
@@ -16,9 +15,10 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisos;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitud;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.repositoryFiles;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -39,7 +39,10 @@ builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider =>
 // Inyección de Dependencias - Módulo de Send Email
 builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
 
-// Inyección de Dependencias - Módulo de Registro
+// Inyección de Dependencias - wwroot Repositorio (Usuarios / Solicitudes de Ticket)
+builder.Services.AddScoped<IRepositoryFiles, RRepositoryFiles>();
+
+// Inyección de Dependencias - Módulo de Registro del Usuario
 builder.Services.AddScoped<IUsuarioService, RUsuarioService>();
 
 // Inyección de Dependencias - Módulo de Catálogos
@@ -55,33 +58,33 @@ builder.Services.AddScoped<ITipoSolicitudService, RTipoSolicitudService>();
 
 // Radzen Components and Services
 builder.Services.AddRadzenComponents();
-//builder.Services.AddScoped<ContextMenuService>();
-//builder.Services.AddScoped<DialogService>();
-//builder.Services.AddScoped<NotificationService>();
-//builder.Services.AddScoped<TooltipService>();
+// builder.Services.AddScoped<ContextMenuService>();
+// builder.Services.AddScoped<DialogService>();
+// builder.Services.AddScoped<NotificationService>();
+// builder.Services.AddScoped<TooltipService>();
 
 // Syncfusion Components and Services
-builder.Services.AddSyncfusionBlazor(options => { options.EnableRtl = false; options.Animation = GlobalAnimationMode.Enable; /*options.IgnoreScriptIsolation = true;*/ });
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mjk5MDM2M0AzMjMzMmUzMDJlMzBJSEhqU1Yra0NaTkZwZDIzWTZ6MldNSkR4d3VkRWhMZmpJc1dUVTFOU2VBPQ=="); // Trial Developer
+//builder.Services.AddSyncfusionBlazor(options => { options.EnableRtl = false; options.Animation = GlobalAnimationMode.Enable; /*options.IgnoreScriptIsolation = true;*/ });
+//Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mjk5MDM2M0AzMjMzMmUzMDJlMzBJSEhqU1Yra0NaTkZwZDIzWTZ6MldNSkR4d3VkRWhMZmpJc1dUVTFOU2VBPQ=="); // Trial Developer
 
 // Register the Syncfusion locale service to localize Syncfusion Blazor components.
-builder.Services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));
+//builder.Services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));
 
 // Setting culture of the application
-var host = builder.Build();
-var jsInterop = host.Services.GetRequiredService<IJSRuntime>();
-var result = await jsInterop.InvokeAsync<string>("cultureInfo.get");
-CultureInfo culture;
-if (result != null)
-{
-    culture = new CultureInfo(result);
-}
-else
-{
-    culture = new CultureInfo("es");
-    await jsInterop.InvokeVoidAsync("cultureInfo.set", "es");
-}
-CultureInfo.DefaultThreadCurrentCulture = culture;
-CultureInfo.DefaultThreadCurrentUICulture = culture;
+//var host = builder.Build();
+//var jsInterop = host.Services.GetRequiredService<IJSRuntime>();
+//var result = await jsInterop.InvokeAsync<string>("cultureInfo.get");
+//CultureInfo culture;
+//if (result != null)
+//{
+//    culture = new CultureInfo(result);
+//}
+//else
+//{
+//    culture = new CultureInfo("es");
+//    await jsInterop.InvokeVoidAsync("cultureInfo.set", "es");
+//}
+//CultureInfo.DefaultThreadCurrentCulture = culture;
+//CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 await builder.Build().RunAsync();

@@ -76,7 +76,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
 
         /*******************************  DATOS ACADÉMICOS  *******************************/
         /// <summary>
-        /// Numero de Boleta del Uusario Solicitante
+        /// Número de Boleta del Usuario Solicitante
         /// </summary>
         [Column("usuBoletaAlumno")]
         [StringLength(10, ErrorMessage = "La Boleta introducida debe ser máximo de 10 dígitos.")]

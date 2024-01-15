@@ -1,4 +1,7 @@
-﻿@using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
+﻿@using Radzen
+@using Radzen.Blazor
+
+@using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
 @using CorreosInstitucionales.Shared.CapaEntities.Request
 @using CorreosInstitucionales.Shared.CapaEntities.Response
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal
@@ -173,42 +176,42 @@
 
     void SidebarToggleClick() => sidebarExpanded = !sidebarExpanded;
 
-    void CerrarSesion()
-    {
-        Console.WriteLine("Hola");
-    }
+    // void CerrarSesion()
+    // {
+    //     Console.WriteLine("Hola");
+    // }
 
-    private string themeName = "fluent";
+    // private string themeName = "fluent";
 
-    public class ThemeDetails
-    {
-        public string? ID { get; set; }
-        public string? Text { get; set; }
-    }
+    // public class ThemeDetails
+    // {
+    //     public string? ID { get; set; }
+    //     public string? Text { get; set; }
+    // }
 
-    private List<ThemeDetails> Themes = new List<ThemeDetails>()
-    {
-        new ThemeDetails(){ ID = "bootstrap5", Text = "Bootstrap 5" },
-        new ThemeDetails(){ ID = "bootstrap5-dark", Text = "Bootstrap 5 Dark" },
-        new ThemeDetails(){ ID = "bootstrap4", Text = "Bootstrap 4" },
-        //new ThemeDetails(){ ID = "bootstrap4-dark", Text = "Bootstrap 4 Dark" },
-        new ThemeDetails(){ ID = "bootstrap", Text = "Bootstrap 3" },
-        new ThemeDetails(){ ID = "bootstrap-dark", Text = "Bootstrap 3 Dark" },
-        new ThemeDetails(){ ID = "material", Text = "Material UI" },
-        new ThemeDetails(){ ID = "material-dark", Text = "Material UI Dark" },
-        new ThemeDetails(){ ID = "tailwind", Text = "TailWind CSS"},
-        new ThemeDetails(){ ID = "tailwind-dark", Text = "TailWind CSS Dark" },
-        new ThemeDetails(){ ID = "fabric", Text = "Fabric" },
-        new ThemeDetails(){ ID = "fabric-dark", Text = "Fabric Dark" },
-        new ThemeDetails(){ ID = "fluent", Text = "Fluent" },
-        new ThemeDetails(){ ID = "fluent-dark", Text = "Fluent Dark" },
-        new ThemeDetails(){ ID = "highcontrast", Text = "High Contrast" }
-    };
+    // private List<ThemeDetails> Themes = new List<ThemeDetails>()
+    // {
+    //     new ThemeDetails(){ ID = "bootstrap5", Text = "Bootstrap 5" },
+    //     new ThemeDetails(){ ID = "bootstrap5-dark", Text = "Bootstrap 5 Dark" },
+    //     new ThemeDetails(){ ID = "bootstrap4", Text = "Bootstrap 4" },
+    //     //new ThemeDetails(){ ID = "bootstrap4-dark", Text = "Bootstrap 4 Dark" },
+    //     new ThemeDetails(){ ID = "bootstrap", Text = "Bootstrap 3" },
+    //     new ThemeDetails(){ ID = "bootstrap-dark", Text = "Bootstrap 3 Dark" },
+    //     new ThemeDetails(){ ID = "material", Text = "Material UI" },
+    //     new ThemeDetails(){ ID = "material-dark", Text = "Material UI Dark" },
+    //     new ThemeDetails(){ ID = "tailwind", Text = "TailWind CSS"},
+    //     new ThemeDetails(){ ID = "tailwind-dark", Text = "TailWind CSS Dark" },
+    //     new ThemeDetails(){ ID = "fabric", Text = "Fabric" },
+    //     new ThemeDetails(){ ID = "fabric-dark", Text = "Fabric Dark" },
+    //     new ThemeDetails(){ ID = "fluent", Text = "Fluent" },
+    //     new ThemeDetails(){ ID = "fluent-dark", Text = "Fluent Dark" },
+    //     new ThemeDetails(){ ID = "highcontrast", Text = "High Contrast" }
+    // };
 
-    public void OnThemeChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, ThemeDetails> args)
-    {
-        JSRuntime.InvokeAsync<object>("setTheme", args.ItemData.ID);
-    }
+    // public void OnThemeChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, ThemeDetails> args)
+    // {
+    //     JSRuntime.InvokeAsync<object>("setTheme", args.ItemData.ID);
+    // }
 
     private bool sidebarCollapse = true;
 
@@ -240,18 +243,18 @@
             navigationManager.NavigateTo("/");
     }
 
-    private async Task DropDownSelect(MenuEventArgs args)
-    {
-        if (args.Item.Id == "Perfil")
-        {
-            navigationManager.NavigateTo("/Perfil");
-        }
-        else if (args.Item.Id == "LogOut")
-        {
-            await loginService.Logout();
-            navigationManager.NavigateTo("/");
-        }
-    }
+    // private async Task DropDownSelect(MenuEventArgs args)
+    // {
+    //     if (args.Item.Id == "Perfil")
+    //     {
+    //         navigationManager.NavigateTo("/Perfil");
+    //     }
+    //     else if (args.Item.Id == "LogOut")
+    //     {
+    //         await loginService.Logout();
+    //         navigationManager.NavigateTo("/");
+    //     }
+    // }
 
     private async Task LogOut()
     {

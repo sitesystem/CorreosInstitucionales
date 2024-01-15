@@ -5,15 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaTools;
+using System;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegistros
 {
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
-    public class UsuariosController(DbCorreosInstitucionalesUpiicsaContext db) : ControllerBase
+    public class UsuariosController(DbCorreosInstitucionalesUpiicsaContext db, IHostEnvironment hostEnvironment, IWebHostEnvironment webHostEnvironment) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
+        private readonly IHostEnvironment _hostEnvironment = hostEnvironment;
+        private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllData(bool filterByStatus)
@@ -50,9 +53,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
             try
             {
-                var list = await _db.MpTbUsuarios.FindAsync(id);
+                var item = await _db.MpTbUsuarios.FindAsync(id);
                 oResponse.Success = 1;
-                oResponse.Data = list;
+                oResponse.Data = item;
             }
             catch (Exception ex)
             {

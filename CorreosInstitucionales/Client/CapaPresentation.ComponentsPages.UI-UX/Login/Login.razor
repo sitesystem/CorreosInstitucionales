@@ -3,6 +3,8 @@
 
 @attribute [AllowAnonymous]
 
+<PageTitle>SACI | Inicio de Sesión</PageTitle>
+
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims;
 
@@ -14,15 +16,8 @@
 
 @layout LoginLayout
 
-@inject DialogService DialogModalService
-@inject NotificationService NotificationService
-
-@inject IJSRuntime JSRuntime
 @inject ILoginServices loginService
-@inject ISendEmailService servicioSendEmail
 @inject IUsuarioService servicioUsuario
-<title>SACI | Inicio de Sesión</title>
-@* <PageTitle>SACI | Inicio de Sesión</PageTitle> *@
 
 <RadzenComponents />
 
@@ -122,7 +117,7 @@
 
                     <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" @bind-SelectedIndex="@selectedIndex" Change=@(args => OnChange(args))>
                         <Tabs>
-                            <RadzenTabsItem Text="Iniciar Sesión">
+                            <RadzenTabsItem Text="Iniciar Sesión" Icon="person" IconColor="@Colors.Base900">
                                 <EditForm Model="@login" OnValidSubmit="@IniciarSesion" OnInvalidSubmit="@OnInvalidSubmit">
 
                                     <DataAnnotationsValidator />
@@ -216,7 +211,7 @@
                                                   Shade="Shade.Darker" />
                                 </EditForm>
                             </RadzenTabsItem>
-                            <RadzenTabsItem Text="Recuperar Contraseña">
+                            <RadzenTabsItem Text="Recuperar Contraseña" Icon="lock_reset" IconColor="@Colors.Base900">
                                 <EditForm Model="@oRecuperarContraseñaCorreo" OnValidSubmit="@RecuperarContraseña" OnInvalidSubmit="@OnInvalidSubmit">
 
                                     <DataAnnotationsValidator />
@@ -443,7 +438,7 @@
         login.UsuContraseña = "";
     }
 
-    //Captcha
+    // Captcha
     private ReCAPTCHA reCAPTCHAComponent;
     private bool ValidReCAPTCHA = false;
     // private bool ServerVerificatiing = false;
@@ -453,7 +448,7 @@
 
     private void OnExpired() => ValidReCAPTCHA = false;
 
-    //Envio de mensaje
+    // Envio de mensaje
     public RecuperarContraseñaCorreo oRecuperarContraseñaCorreo = new();
     public Response<RequestDTO_Usuario>? oRespuesta = new();
     public string contentRecuperarContraseñaBtn = "Recuperar Contraseña";
