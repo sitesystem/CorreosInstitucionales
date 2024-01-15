@@ -5,10 +5,12 @@
 @using CorreosInstitucionales.Shared.CapaEntities.Request
 @using CorreosInstitucionales.Shared.CapaEntities.Response
 
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
 
+@inject IAreaDeptoService servicioAreaDepto
 @inject ILinkService servicioLink
 @inject ISendEmailService servicioSendEmail
 @inject IUsuarioService servicioUsuario
@@ -16,21 +18,6 @@
 @* @inject IJSRuntime JSRuntime *@
 
 <style>
-    .mi-sf-textbox {
-        position: relative;
-        flex-basis: 100px;
-        flex-grow: 1;
-    }
-
-    RadzenTextBox::after {
-        content: ' ';
-        position: absolute;
-        left: 0;
-        bottom: -3px;
-        width: 100%;
-        height: 2px;
-        background-color: red;
-    }
 </style>
 
 @if(oUsuario != null)
@@ -39,135 +26,184 @@
 
         <DataAnnotationsValidator/>
 
-        <div class="card border-dark mb-3" style="margin-top:20px">
-            <b class="card-header" size="20px">Datos Personales</b>
-            <div class="card-body">
+        <!-- ************************************************************************ DATOS PERSONALES **************************************************************************************************************************************************************-->
+        <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos Personales" CollapseTitle="Datos Personales" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="account-box" IconColor="@Colors.Secondary"/>&ensp;<b style="font-variant: small-caps;">Datos Personales</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
                 <div class="row">
-                    <div class="col-xs-4 col-lg-4 col-md-4">
-                        @* <RadzenCard>
-                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Nombre</RadzenText>
-                            <RadzenTextBox @bind-Value="@oUsuario.UsuNombre" class="w-100" aria-label="Default TextBox" />
-                        </RadzenCard> *@
-                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Nombre</RadzenText>
-                        <RadzenTextBox @bind-Value="@oUsuario.UsuNombre" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
+                    @* <RadzenStack AlignItems="Radzen.AlignItems.Center" Class="rz-mx-auto rz-my-12">
+                <RadzenImage Path="@oUsuario.UsuFileNameCurp" Style="width: 15rem;" AlternateText="community" />
+                </RadzenStack> *@
+
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Nombre(s)" AllowFloatingLabel="false" Placeholder="Nombre(s)" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start><RadzenIcon Icon="person" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
+                            <ChildContent>
+                                <RadzenTextBox @bind-Value="@oUsuario.UsuNombre" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"
+                                               @oninput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
+                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                            </ChildContent>
+                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                        </RadzenFormField>
+                        <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
                     </div>
-                    <div class="col-xs-4 col-lg-4 col-md-4">
-                        @* <RadzenCard>
-                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Primer Apellido</RadzenText>
-                            <RadzenTextBox @bind-Value="@oUsuario.UsuPrimerApellido" class="w-100" aria-label="Default TextBox" />
-                        </RadzenCard> *@
-                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Primer Apellido</RadzenText>
-                        <RadzenTextBox @bind-Value="@oUsuario.UsuPrimerApellido" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
+
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Primer Apellido" AllowFloatingLabel="false" Placeholder="Primer Apellido" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start><RadzenIcon Icon="person" IconColor="@Colors.Base800" /></Start>
+                            <ChildContent>
+                                <RadzenTextBox @bind-Value="@oUsuario.UsuPrimerApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
+                                               @oninput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
+                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                            </ChildContent>
+                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                        </RadzenFormField>
+                        <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
                     </div>
-                    <div class="col-xs-4 col-lg-4 col-md-4">
-                        @* <RadzenCard>
-                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Segundo Apellido</RadzenText>
-                            <RadzenTextBox @bind-Value="@oUsuario.UsuSegundoApellido" class="w-100" aria-label="Default TextBox" />
-                        </RadzenCard> *@
-                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Segundo Apellido</RadzenText>
-                        <RadzenTextBox @bind-Value="@oUsuario.UsuSegundoApellido" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
+
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Segundo Apellido" AllowFloatingLabel="false" Placeholder="Segundo Apellido" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start><RadzenIcon Icon="person" IconColor="@Colors.Base800" /></Start>
+                            <ChildContent>
+                                <RadzenTextBox @bind-Value="@oUsuario.UsuSegundoApellido" MinLength="0" MaxLength="150"
+                                               @oninput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
+                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                            </ChildContent>
+                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                        </RadzenFormField>
+                        <ValidationMessage For="@(() => oUsuario.UsuSegundoApellido)" />
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4" style="margin-top:20px">
-                        @* <RadzenCard>
-                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Numero de Celular</RadzenText>
-                            <RadzenTextBox @bind-Value="@oUsuario.UsuNoCelularAnterior" class="w-100" aria-label="Default TextBox" />
-                        </RadzenCard> *@
-                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Numero de Celular</RadzenText>
-                        <RadzenTextBox @bind-Value="@oUsuario.UsuNoCelularAnterior" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
+
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Número de Celular" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start><RadzenIcon Icon="phone_iphone" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
+                            <ChildContent>
+                                <RadzenMask MinLength="0" MaxLength="20" @bind-Value="@oUsuario.UsuNoCelularNuevo" style="border-bottom: 3px solid red;"
+                                            Mask="(**) **** ****" CharacterPattern="[0-9]" Placeholder="(00) 0000 0000" />
+                            </ChildContent>
+                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                        </RadzenFormField>
+                        <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
                     </div>
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4" style="margin-top:20px">
-                        @* <RadzenCard>
-                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">CURP</RadzenText>
-                            <RadzenTextBox @bind-Value="@oUsuario.UsuCurp" class="w-100" aria-label="Default TextBox" />
-                            <a href="@linkCURP.LinkNombre" target="_blank">
-                                ¿Olvidaste tu Curp?
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
-                                    <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="CURP" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start>
+                                @* <RadzenIcon Icon="badge" IconColor="@Colors.SecondaryDarker" IconStyle="IconStyle.Secondary" /> *@
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-vcard-fill" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm9 1.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4a.5.5 0 0 0-.5.5M9 8a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4A.5.5 0 0 0 9 8m1 2.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 0-1h-3a.5.5 0 0 0-.5.5m-1 2C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 0 2 13h6.96q.04-.245.04-.5M7 6a2 2 0 1 0-4 0 2 2 0 0 0 4 0" />
                                 </svg>
-                            </a>
-                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2" TagName="TagName.H3">Archivo CURP</RadzenText>
-                            <RadzenUpload Url="upload/single" class="w-100" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})">
-                            </RadzenUpload>
-                        </RadzenCard> *@
-                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">CURP</RadzenText>
-                        <RadzenTextBox @bind-Value="@oUsuario.UsuCurp" MaxLength="18" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
-
-                        <a href="@linkCURP.LinkEnlace" target="_blank">
-                            ¿Olvidaste tu Curp?
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
-                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
-                            </svg>
-                        </a>
+                            </Start>
+                            <ChildContent>
+                                <RadzenTextBox @bind-Value="@oUsuario.UsuCurp" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="18"
+                                               @oninput="@((e) => oUsuario.UsuCurp = e.Value.ToString().ToUpper())"
+                                               onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                            </ChildContent>
+                            <Helper>
+                                <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" TextAlign="TextAlign.Justify">
+                                    <a href="@oLinkCURP.Data.LinkEnlace" target="_blank" class="icon-link icon-link-hover">
+                                        ¿Olvidaste tu <strong>CURP</strong>?
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
+                                            <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+                                        </svg>
+                                    </a>
+                                </RadzenText>
+                            </Helper>
+                        </RadzenFormField>
+                        <ValidationMessage For="@(() => oUsuario.UsuCurp)" />
                     </div>
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4" style="margin-top:50px">
-                        <RadzenCard>
-                        <RadzenUpload Url="upload/single" Icon="upload" ChooseText="" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})">
-                        </RadzenUpload>
-                        </RadzenCard>
+
+                    <div class="col-md-4 col-lg-4">
+                        @{
+                            var folder = "Usuarios";
+                            int id = 2;
+                            var fileName = "CURP";
+                            Guid guid = Guid.NewGuid();
+                        }
+                        <RadzenFormField Text="Archivo del CURP" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
+                            <ChildContent>
+                                <RadzenUpload @ref="uploadCURP" Url=@($"api/RepositoryFiles/UploadSingleFile/{folder}/{id}/{fileName}/{guid}") Accept="image/*, .pdf, .doc, .docx"
+                                              Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                              Change=@(args => OnChangeFiles(args, "Manual Upload"))
+                                              Error=@(args => OnErrorFiles(args, "FileInput"))
+                                              InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                              Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                              Complete="@(args => OnCompleteFiles(args))" />
+                                @* <RadzenButton Text="Subir" Click=@(args => upload.Upload()) class="d-block mt-4" /> *@
+                            </ChildContent>
+                            @* <Helper></Helper> *@
+                        </RadzenFormField>
                     </div>
                 </div>
-                <div class="row gy-3">
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
+            </ChildContent>
+            <SummaryTemplate>
+                <ValidationSummary />
+            </SummaryTemplate>
+        </RadzenFieldset>
+
+        <!-- ************************************************************************ DATOS LABORALES **************************************************************************************************************************************************************-->
+       @*  <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos Laborales" CollapseTitle="Datos Laborales" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-3">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="school" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Datos Laborales</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                <div class="row">
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Numero Empleado" AllowFloatingLabel="false" Placeholder="" AllowClear="" Variant="Variant.Outlined" class="w-100 mt-3" Disable="false">
+                            <Start><RadzenIcon Icon="dialpad" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary"></RadzenIcon></Start>
+                            <ChildContent>
+                                <RadzenMask @bind-Value="@oUsuario.UsuNumeroEmpleado" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="15"
+                                            Mask="**********" CharacterPattern="[A-Z0-9]" Placeholder="****60****"></RadzenMask>
+                            </ChildContent>
+                        </RadzenFormField>
+                        <ValidationMessage For="@(())=> oUsuario.UsuNumeroEmpleado"></ValidationMessage>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Numero de Extension" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Disable="false">
+                            <Start><RadzenIcon Icon="school" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary"></RadzenIcon></Start>
+                            <ChildContent>
+                                <RadzenDropDown @bind-Value="@oUsuario.UsuNoExtension" style="border-bottom: 3px solid red;" MinLength="0" MaxLenght="15"></RadzenDropDown>
+                            </ChildContent>
+                        </RadzenFormField>
+                        <ValidationMessage For="@(())=>oUsuario.UsuNoExtension"></ValidationMessage>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Area Departamento" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Disable="false">
+                            <Start><RadzenIcon Icon="school" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary"></RadzenIcon></Start>
+                            <ChildContent>
+                                <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Número de área de departamento</RadzenText>
+                                <RadzenDropDown @bind-Value="@oUsuario.UsuIdAreaDepto"
+                                                TValue="int?"
+                                                ValueProperty="IdAreaDepto"
+                                                TextProperty="AreNombreAreaDepto"
+                                                Data="@oAreaDepto.Data"
+                                                AllowClear="true"
+                                                AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                                FilterOperator="StringFilterOperator.Contains"
+                                                AllowVirtualization="true"
+                                                Placeholder="Selecciona una opción"
+                                                FilterPlaceholder="Buscar..."
+                                                Multiple="false"
+                                                Chips="true"
+                                                InputAttributes="@(new Dictionary<string,object>(){{ "font-family", "Arial" }})"
+                                                style="border-bottom: 3px solid red;" />
+                            </ChildContent>
+                        </RadzenFormField>
+                        <ValidationMessage For="@(() => oUsuario.UsuIdAreaDepto)"></ValidationMessage>
                     </div>
                 </div>
-            </div>
-        </div>
+            </ChildContent>
+        </RadzenFieldset> *@
 
-        <!-- ******************************************************************* CARD DATOS LABORALES ******************************************************************* -->
-            <div class="card border-dark mb-3" style="margin-top:20px">
-            <b class="card-header" size="20px">Datos laborales</b>
-            <div class="card-body">
-                <div class="row gy-3">
-                    <div class="col-xs-4 col-lg-4 col-md-4">
-                        <RadzenCard>
-                            @* <RadzenNumeric 
-                                            TValue="int?"
-                                            Min="1936"
-                                            Max="@year"
-                                            Step="1"
-                                            Placeholder="Año de egreso"
-                                            Format="####" @bind-Value="@oUsuario.UsuAñoEgreso"
-                                            onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                                            ShowUpDown="false"/>
-                            <ValidationMessage For="@(() => oUsuario.UsuAñoEgreso)" /> *@
-                                <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Número de empleado</RadzenText>
-                            <RadzenTextBox @bind-Value="@oUsuario.UsuNumeroEmpleado" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" 
-                                           class="w-100" 
-                                           aria-label="Default TextBox"
-                                           style="border-bottom: 3px solid red;" />
-                          
-                        </RadzenCard>
-                    </div>
-                    <div class="col-xs-4 col-lg-4 col-md-4">
-                        <RadzenCard>
-                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Número de la extensión del departamento</RadzenText>
-                            <RadzenTextBox @bind-Value="@oUsuario.UsuNoExtension" onkeypress="return /^[0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));"
-                            class="w-100" 
-                            aria-label="Default TextBox"
-                                           style="border-bottom: 3px solid red;" />
-                        </RadzenCard>
-                    </div>                    
-                    <div class="col-xs-4 col-lg-4 col-md-4">
-                        <RadzenCard>
-                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Número de área de departamento</RadzenText>
-                            <RadzenNumeric 
-                                        TValue="int?"                                    
-                                        Placeholder="Número de área"                                    
-                                        ShowUpDown="false"
-                                        class="w-100"
-                                        style="border-bottom: 3px solid red;"
-                                        />                        
-                        </RadzenCard>
-                    </div>               
-                </div>
-            </div>
-        </div>
-
-        <!-- ******************************************************************* CARD DATOS DE LA CUENTA ******************************************************************* -->
+        <!-- ************************************************************************ DATOS CUENTA **************************************************************************************************************************************************************-->
 
         <div class="card border-dark mb-3" style="margin-top:20px">
             <b class="card-header" size="20px">Datos de la cuenta</b>
@@ -190,7 +226,7 @@
                 </div>
             </div>
         </div>
-        <!-- ******************************************************************* CARD DATOS CORREO INSTITUCIONAL ******************************************************************* -->
+        <!-- ************************************************************************ CORREO INSTITUCIONAL **************************************************************************************************************************************************************-->
         <div class="card border-dark mb-3" style="margin-top:20px">
             <b class="card-header" size="20px">Correo Institucional</b>
             <div class="card-body">
@@ -207,7 +243,7 @@
                 <small class="text-body-secondary">En caso de contar con uno.</small>
             </div>
         </div>
-        <!-- ******************************************************************* CARD RECAPTCHA ******************************************************************* -->
+        <!-- ************************************************************************ ReCAPTCHA **************************************************************************************************************************************************************-->
         <div class="card">
             <div class="card-body">
                 <div class="row justify-content-center gy-3">
@@ -362,11 +398,13 @@ else
 
     public Response<RequestViewModel_Link>? oLinkCURP = new();
     public RequestViewModel_Link? linkCURP = new();
+    public Response<List<RequestViewModel_AreaDepto>>? oAreaDepto = new();
 
     protected override async Task OnInitializedAsync()
     {
         oLinkCURP = await servicioLink.GetDataByNameAsync("CURP");
         linkCURP = oLinkCURP.Data;
+        oAreaDepto = await servicioAreaDepto.GetAllDataAsync(true);
     }
 
     // Subida de archivo ---------------------------------------------------------------
@@ -384,4 +422,39 @@ else
     //     }
     // }
     // 
+    private RadzenUpload uploadCURP = new();
+    private RadzenUpload uploadComprobanteInscripcion = new();
+
+    void OnChangeFiles(Radzen.UploadChangeEventArgs args, string name)
+    {
+        foreach (var file in args.Files)
+        {
+            // console.Log($"File: {file.Name} / {file.Size} bytes");
+        }
+
+        // console.Log($"{name} changed");
+    }
+
+    void OnErrorFiles(Radzen.UploadErrorEventArgs args, string name)
+    {
+        // console.Log($"{args.Message}");
+    }
+
+    void OnProgressFiles(Radzen.UploadProgressArgs args, string name)
+    {
+        // console.Log($"{args.Progress}% '{name}' / {args.Loaded} of {args.Total} bytes.");
+
+        if (args.Progress == 100)
+        {
+            foreach (var file in args.Files)
+            {
+                // console.Log($"Uploaded: {file.Name} / {file.Size} bytes");
+            }
+        }
+    }
+
+    void OnCompleteFiles(Radzen.UploadCompleteEventArgs args)
+    {
+        // console.Log($"Server response: {args.RawResponse}");
+    }
 }
