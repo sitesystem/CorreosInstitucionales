@@ -279,7 +279,27 @@
             </div>
         </div>
         <!-- ******************************************************************* CARD DATOS CORREO INSTITUCIONAL ******************************************************************* -->
-        <div class="card border-dark mb-3" style="margin-top:20px">
+
+        <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos Personales" CollapseTitle="Datos Personales" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="account_box" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Correo Institucional</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                <div class="row">
+                    <center>
+                        <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
+                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2" class="text-start">Ingresa tu Correo Institucional</RadzenText>
+                            <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" class="w-100" aria-label="Default TextBox" />
+                        </div>
+                    </center>
+                </div>
+            </ChildContent>
+             
+        </RadzenFieldset>
+
+        @* <div class="card border-dark mb-3" style="margin-top:20px">
             <b class="card-header" size="20px">Correo Institucional</b>
             <div class="card-body">
                 <div class="row">
@@ -294,7 +314,7 @@
             <div class="card-footer">
                 <small class="text-body-secondary">En caso de contar con uno.</small>
             </div>
-        </div>
+        </div> *@
         <!-- ******************************************************************* CARD RECAPTCHA ******************************************************************* -->
         <div class="card">
             <div class="card-body">
