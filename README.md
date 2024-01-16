@@ -39,9 +39,8 @@
 > ## Sistema para atención de correos institucionales y quitar SACI del cintillo 
 > ## Footer poner 2024 y fuente menor a la que se tiene
 > ## SLIDER de galería de fotos sin controles para el usuario
-> ## NOTA del registro y campos obligatorios este fija en la pantalla y quede en el header
+> ## NOTAS del registro y campos obligatorios este fija en la pantalla y quede en el aside o que se mantenga como en el header
 > ## QUITAR parentesis de la mascara del campo de celular
-> ## NOTAS deben ir en el slider
 > ## Validar el campo correo institucional
 
 
