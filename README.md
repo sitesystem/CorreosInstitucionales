@@ -16,10 +16,20 @@
 > ## Diseño del login pueda cambiar por parte del administrador.
 > ## Aviso de politicas y privacidad como footer en registros.
 > ## Cambio de contraseña por un show message para todo el sistema si la bandera de recuperación de contraseña esta activa.
-> ## ¿Qué es? HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "10" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
 > ## Envio de correos 
 > 	* Cuando se cuando se le atiende su correo institucional y contraseña.
-
+> ## Catálogo de areas departemento. 
+> ## Catálogo de extensiones.
+> ## Catálogo de pisos
+> ## Catálogo de enlaces
+> ## Catálogo de carreras
+> ## Catálogo de tipos de solicitud
+> ## Catálogo de tipos de personal
+> ## Catálogo de datos de la escuela
+> ## Catálogo de edificios
+> ## Validación el campo de boleta de egresados e inscritos. 
+> ## Revisar la validación de boleta de maestría. B y 6 numeros. 
+> ## Validar restricción prohibitiva de registros duplicados por correo  y CURP.
 
 > [!IMPORTANT]
 > # EN PROCESO
@@ -31,18 +41,6 @@
 
 > [!WARNING]
 > # EN PROCESO DE AUTORIZACIÓN :shipit:
-> ## Catálogo de areas departemento. 
-> ## Catálogo de extensiones.
-> ## Validación el campo de boleta de egresados e inscritos. 
-> ## Revisar la validación de boleta de maestría. B y 6 numeros. 
-> ## Catálogo de edificios
-> ## Catálogo de pisos
-> ## Catálogo de enlaces
-> ## Catálogo de carreras
-> ## Catálogo de tipos de solicitud
-> ## Catálogo de tipos de personal
-> ## Catálogo de datos de la escuela
-> ## Validar restricción prohibitiva de registros duplicados por correo  y CURP.
 > ## Galería del login.
 > ## Recuperación de correo.
 > 	* Interfaz 

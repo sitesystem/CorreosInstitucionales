@@ -45,7 +45,7 @@
                     </svg> Regresar
                 </button>
             </div>
-        </nav>
+        </nav>        
     </header>
 
     <hr class="rz-my-12" />
@@ -72,12 +72,13 @@
                     <b>NOTA:</b> Los campos subrayados de rojo son <strong>obligatorios.</strong>
                 </RadzenAlert>
 
-                <RadzenTabs RenderMode="TabRenderMode.Client" TabPosition="TabPosition.Top">
+                <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" @bind-SelectedIndex="@selectedIndex">
                     <Tabs>
-                        <RadzenTabsItem Text="Alumn@s" Icon="school" IconColor="@Colors.Base800" style="font-variant: small-caps;">
-                            <RadzenTabs RenderMode="TabRenderMode.Client">
-                                <Tabs>
-                                    <RadzenTabsItem Text="Alumn@s Inscritos / Egresados" Icon="school" IconColor="@Colors.Base800" style="font-variant: small-caps;">
+                        <RadzenTabsItem Text="Alumn@s" Icon="school" IconColor="@Colors.Base800">
+                            
+                            <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" @bind-SelectedIndex="@selectedIndex">
+                                <Tabs>                                                                                                          
+                                    <RadzenTabsItem Text="Alumn@s Inscritos / Egresados" Icon="school" IconColor="@Colors.Base800" style="font-variant: small-caps;">                                                                                
                                         <AlumnoInscritoEgresado></AlumnoInscritoEgresado>
                                     </RadzenTabsItem>
                                     <RadzenTabsItem Text="Maestría" Icon="school" IconColor="@Colors.Base800" style="font-variant: small-caps;">
@@ -137,3 +138,8 @@
         </nav>
     </footer>
 </body>
+
+
+@code{
+    public int selectedIndex = 0;
+}
