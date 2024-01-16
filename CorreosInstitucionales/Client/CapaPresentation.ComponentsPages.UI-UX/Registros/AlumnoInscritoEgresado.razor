@@ -256,29 +256,66 @@
         </RadzenFieldset>
 
         <!-- ******************************************************************* CARD DATOS DE LA CUENTA ******************************************************************* -->
-
-        <div class="card border-dark mb-3" style="margin-top:20px">
-            <b class="card-header" size="20px">Datos de la cuenta</b>
-            <div class="card-body">
+        <br/>
+        <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos de la cuenta" CollapseTitle="Datos de la cuenta" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="account_circle" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Datos de la cuenta</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
                 <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Correo</RadzenText>
-                        <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" class="w-100" aria-label="Default TextBox" style="border-bottom: 3px solid red;" />
+                    @* <RadzenStack AlignItems="Radzen.AlignItems.Center" Class="rz-mx-auto rz-my-12">
+                <RadzenImage Path="@oUsuario.UsuFileNameCurp" Style="width: 15rem;" AlternateText="community" />
+                </RadzenStack> *@
+
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Correo" AllowFloatingLabel="false" Placeholder="Nombre(s)" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start><RadzenIcon Icon="email" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
+                            <ChildContent>
+                                <RadzenTextBox @bind-Value="@oUsuario.UsuNombre" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"
+                                               @oninput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
+                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                            </ChildContent>
+                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                        </RadzenFormField>
+                        <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
                     </div>
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2">Contraseña</RadzenText>
-                        <RadzenPassword @bind-Value=@oUsuario.UsuContraseña class="w-100" aria-label="enter password" style="border-bottom: 3px solid red;" />
+
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Contraseña" AllowFloatingLabel="false" Placeholder="Primer Apellido" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start><RadzenIcon Icon="password" IconColor="@Colors.Base800" /></Start>
+                            <ChildContent>
+                                <RadzenTextBox @bind-Value="@oUsuario.UsuPrimerApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
+                                               @oninput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
+                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                            </ChildContent>
+                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                        </RadzenFormField>
+                        <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
                     </div>
-                    <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2"> Confirmar Contraseña</RadzenText>
-                        <RadzenPassword @bind-Value=@contra2 class="w-100" aria-label="enter password" style="border-bottom: 3px solid red;" />
-                        <br/>
-                    
-                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Confirmar contraseña" AllowFloatingLabel="false" Placeholder="Segundo Apellido" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start><RadzenIcon Icon="password" IconColor="@Colors.Base800" /></Start>
+                            <ChildContent>
+                                <RadzenTextBox @bind-Value="@oUsuario.UsuSegundoApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
+                                               @oninput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
+                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                            </ChildContent>
+                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                        </RadzenFormField>
+                        <ValidationMessage For="@(() => oUsuario.UsuSegundoApellido)" />
+                    </div>                                                           
                 </div>
-            </div>
-        </div>
+            </ChildContent>
+            <SummaryTemplate>
+                <ValidationSummary />
+            </SummaryTemplate>
+        </RadzenFieldset>
+        
         <!-- ******************************************************************* CARD DATOS CORREO INSTITUCIONAL ******************************************************************* -->
+        
         <div class="card border-dark mb-3" style="margin-top:20px">
             <b class="card-header" size="20px">Correo Institucional</b>
             <div class="card-body">
