@@ -326,13 +326,20 @@
                 <div class="row">
                     <center>
                         <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2" class="text-start">Ingresa tu Correo Institucional</RadzenText>
-                            <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta" class="w-100" aria-label="Default TextBox" />
+                            <RadzenFormField Text="Correo Institucional" AllowFloatingLabel="false" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                                <Start><RadzenIcon Icon="email" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
+                                <ChildContent>
+                                    <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"
+                                                   @oninput="@((e) => oUsuario.UsuCorreoInstitucionalCuenta = e.Value.ToString().ToUpper())"
+                                                   onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                </ChildContent>
+                                @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            </RadzenFormField>
+                            <ValidationMessage For="@(() => oUsuario.UsuCorreoInstitucionalCuenta)" />
                         </div>
                     </center>
                 </div>
             </ChildContent>
-             
         </RadzenFieldset>
 
         @* <div class="card border-dark mb-3" style="margin-top:20px">

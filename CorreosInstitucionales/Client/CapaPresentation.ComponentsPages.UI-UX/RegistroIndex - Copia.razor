@@ -1,4 +1,4 @@
-﻿@* @page "/RegistroIndex" *@
+﻿@page "/RegistroIndex"
 
 @attribute [AllowAnonymous]
 
@@ -26,6 +26,13 @@
             font-size: 16px;
         }
     }
+
+    aside{
+        float: left;
+        width: 250px;
+        padding: 10px;
+        position:fixed;
+    }
 </style>
 
 <body>
@@ -49,6 +56,15 @@
     </header>
 
     <hr class="rz-my-12" />
+    <aside>
+        <RadzenAlert Title="" AlertStyle="Radzen.AlertStyle.Info" Variant="Variant.Filled" Size="Radzen.AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false">
+            <b>NOTA:</b> La creación de los Correos Institucionales  de los alumnos de nuevo ingreso tendrá un <strong>tiempo de espera de hasta 2 meses.</strong>
+        </RadzenAlert>
+
+        <RadzenAlert Title="" AlertStyle="Radzen.AlertStyle.Danger" Variant="Variant.Filled" Size="Radzen.AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false">
+            <b>NOTA:</b> Los campos subrayados de rojo son <strong>obligatorios.</strong>
+        </RadzenAlert>
+    </aside>
 
     <div class="container">
         <div class="row align-items-center">
@@ -64,15 +80,7 @@
                     </RadzenText>
                 </RadzenCard>
 
-                <RadzenAlert Title="" AlertStyle="Radzen.AlertStyle.Info" Variant="Variant.Filled" Size="Radzen.AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="true">
-                    <b>NOTA:</b> La creación de los Correos Institucionales  de los alumnos de nuevo ingreso tendrá un <strong>tiempo de espera de hasta 2 meses.</strong>
-                </RadzenAlert>
-
-                <RadzenAlert Title="" AlertStyle="Radzen.AlertStyle.Danger" Variant="Variant.Filled" Size="Radzen.AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="true">
-                    <b>NOTA:</b> Los campos subrayados de rojo son <strong>obligatorios.</strong>
-                </RadzenAlert>
-
-                <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
+                <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" style="margin-top:20px">
                     <Tabs>
                         <RadzenTabsItem Text="Alumn@s" Icon="school" IconColor="@Colors.Base800">
                             
