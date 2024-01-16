@@ -74,7 +74,7 @@
                             <Start><RadzenIcon Icon="phone_iphone" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
                                 <RadzenMask MinLength="0" MaxLength="20" @bind-Value="@oUsuario.UsuNoCelularNuevo" style="border-bottom: 3px solid red;"
-                                            Mask="(**) **** ****" CharacterPattern="[0-9]" Placeholder="(00) 0000 0000" />
+                                            Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" />
                             </ChildContent>
                             @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
@@ -327,7 +327,7 @@
                     <center>
                         <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
                             <RadzenText TextStyle="Radzen.Blazor.TextStyle.Subtitle2" class="text-start">Ingresa tu Correo Institucional</RadzenText>
-                            <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" class="w-100" aria-label="Default TextBox" />
+                            <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta" class="w-100" aria-label="Default TextBox" />
                         </div>
                     </center>
                 </div>
