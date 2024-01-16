@@ -36,12 +36,10 @@
 > ## El cintillo logos uno de ipn izquierdo
 > ## El cintillo logos uno del plantel derecho
 > ## Quitar la palabra bienvenido puedes poner SACI
-> ## Sistema para atención de correos institucionales y quitar SACI del cintillo 
 > ## Footer poner 2024 y fuente menor a la que se tiene
-> ## SLIDER de galería de fotos sin controles para el usuario
 > ## NOTAS del registro y campos obligatorios este fija en la pantalla y quede en el aside o que se mantenga como en el header
-> ## QUITAR parentesis de la mascara del campo de celular
-> ## Validar el campo correo institucional
+
+
 
 
 
@@ -62,6 +60,9 @@
 > ## Envio de correos 
 > 	* Cuando se registra.
 > 	* Cuando se recupera.
+> ## QUITAR parentesis de la mascara del campo de celular
+> ## SLIDER de galería de fotos sin controles para el usuario
+> ## Sistema para atención de correos institucionales y quitar SACI del cintillo 
 
 > [!TIP]
 > # TERMINADOS

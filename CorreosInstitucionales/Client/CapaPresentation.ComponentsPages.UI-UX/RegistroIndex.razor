@@ -37,7 +37,7 @@
                 <img src="https://onceninasyninos.tv/wp-content/uploads/2018/04/Banner-logos-ipn-e1523046221576.png" alt="Logo" class="d-inline-block align-text-top" style="width:8vw; height:6vh;">
                     <a class="navbar-brand text-white cintillo">
                         <!--font-size:calc(10px + 0.390625vw)    font-size:calc(8.5px + 0.00590625vw)"  1.75vw-->
-                    SACI (Sistema para Atención de Correos Institucionales IPN)
+                    Sistema para Atención de Correos Institucionales SACI
                 </a>
                 <button class="btn btn-outline-light" style="text-decoration:none; font-size:calc(8px + 0.390625vw); margin: 0; padding:0.390625vw" @onclick="@(() => navigationManager.NavigateTo("/"))">
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
@@ -72,11 +72,11 @@
                     <b>NOTA:</b> Los campos subrayados de rojo son <strong>obligatorios.</strong>
                 </RadzenAlert>
 
-                <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" @bind-SelectedIndex="@selectedIndex">
+                <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
                     <Tabs>
                         <RadzenTabsItem Text="Alumn@s" Icon="school" IconColor="@Colors.Base800">
                             
-                            <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" @bind-SelectedIndex="@selectedIndex">
+                            <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
                                 <Tabs>                                                                                                          
                                     <RadzenTabsItem Text="Alumn@s Inscritos / Egresados" Icon="school" IconColor="@Colors.Base800">                                                                                
                                         <AlumnoInscritoEgresado></AlumnoInscritoEgresado>
@@ -140,6 +140,3 @@
 </body>
 
 
-@code{
-    public int selectedIndex = 0;
-}
