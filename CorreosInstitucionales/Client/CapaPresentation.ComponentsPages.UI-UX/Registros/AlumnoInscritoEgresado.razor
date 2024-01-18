@@ -254,7 +254,7 @@
                 <ValidationSummary />
             </SummaryTemplate>
         </RadzenFieldset>
-
+        
         <!-- ******************************************************************* CARD DATOS DE LA CUENTA ******************************************************************* -->
         <br/>
         <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos de la cuenta" CollapseTitle="Datos de la cuenta" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3">
@@ -270,20 +270,18 @@
                 </RadzenStack> *@
 
                     <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Correo" AllowFloatingLabel="false" Placeholder="Nombre(s)" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="Correo" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="email" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
-                                <RadzenTextBox @bind-Value="@oUsuario.UsuNombre" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"
-                                               @oninput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
-                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"/>
                             </ChildContent>
                             @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
+                        <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
                     </div>
 
                     <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Contraseña" AllowFloatingLabel="false" Placeholder="Primer Apellido" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="Contraseña" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="password" IconColor="@Colors.Base800" /></Start>
                             <ChildContent>
                                 <RadzenTextBox @bind-Value="@oUsuario.UsuPrimerApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
@@ -296,7 +294,7 @@
                     </div>
 
                     <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Confirmar contraseña" AllowFloatingLabel="false" Placeholder="Segundo Apellido" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="Confirmar contraseña" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="password" IconColor="@Colors.Base800" /></Start>
                             <ChildContent>
                                 <RadzenTextBox @bind-Value="@oUsuario.UsuSegundoApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
@@ -329,9 +327,7 @@
                             <RadzenFormField Text="Correo Institucional" AllowFloatingLabel="false" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                                 <Start><RadzenIcon Icon="email" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
                                 <ChildContent>
-                                    <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"
-                                                   @oninput="@((e) => oUsuario.UsuCorreoInstitucionalCuenta = e.Value.ToString().ToUpper())"
-                                                   onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                    <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"/>
                                 </ChildContent>
                                 @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                             </RadzenFormField>
@@ -423,7 +419,7 @@ else
         //UsuNoExtension = "0",                   // Número de Extensión del Empleado
         // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
         UsuCorreoPersonalCuentaAnterior = "",   // Correo Personal de la Cuenta Anterior
-        UsuCorreoPersonalCuentaNueva = "",      // Correo Personal de la Cuenta Nueva o Actual
+        //UsuCorreoPersonalCuentaNueva = "",      // Correo Personal de la Cuenta Nueva o Actual
         UsuContraseña = "",                     // Contraseña en la PLataforma del Usuario Solicitante o Administrador
         UsuRecuperarContraseña = false,         // Contraseña Temporal que se le proporciona al Usuario Solicitante
         // DATOS DEL CORREO INSTITUCIONAL

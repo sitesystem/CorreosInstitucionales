@@ -129,13 +129,14 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
 
         /*******************************  DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP  *******************************/
         [Column("usuCorreoPersonalCuentaAnterior")]
-        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo invalido.")]
+        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo invalido. (Formato: xxxxxx@xxx.xx)")]
         [StringLength(100)]
         public string? UsuCorreoPersonalCuentaAnterior { get; set; }
 
         [Column("usuCorreoPersonalCuentaNueva")]
         [StringLength(100)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO ELECTRÓNICO PERSONAL requerido.")]
+        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo invalido. (Formato: xxxxxx@xxx.xx)")]
         public string UsuCorreoPersonalCuentaNueva { get; set; } = null!;
 
         /// <summary>
@@ -154,6 +155,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
 
         /*******************************  DATOS DEL CORREO INSTITUCIONAL  *******************************/
         [Column("usuCorreoInstitucionalCuenta")]
+        [RegularExpression("^[\\w-\\.]+([@ipn\\.mx]|[@alumno\\.ipn\\.mx]|[@egresado\\.ipn\\.mx])+$", ErrorMessage = "Correo invalido. (Formato: xxxxxx@ipn.mx ó @alumno.ipn.mx ó @egresado.ipn.mx)")]
         [StringLength(100)]
         public string? UsuCorreoInstitucionalCuenta { get; set; }
 
