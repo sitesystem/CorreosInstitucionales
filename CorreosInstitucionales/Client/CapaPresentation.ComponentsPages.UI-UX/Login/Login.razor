@@ -109,11 +109,17 @@
                 font-weight:bold;
             }
         }
-
+    .header{
+        position:fixed;
+        top:0;
+        width:100%;
+        background-color:#C0C0C0;
+        z-index:9999;
+    }
 </style>
 
 <!-- Encabezado de Página (Header Fixed-Top) -->
-<nav class="navbar fixed-top" style="background-color:#C0C0C0; border-bottom: 10px solid #076633;">
+<nav class="navbar fixed-top header" style="background-color:#C0C0C0; border-bottom: 10px solid #076633; ">
     <!--#CFCFCF-->
     <div class="container">
         <img src="/ipn.png" alt="Logo" width="30" height="34" class="d-inline-block align-text-top">
@@ -125,8 +131,9 @@
     </div>
 </nav>
 <hr class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-m-10" />
+
 <!-- Contenido Principal -->
-<div class="container">
+<div class="container" style="padding-top:40px">
     <div class="row align-items-center min-vh-100 gap-0">
 
         <!-- Formulario de login -->
