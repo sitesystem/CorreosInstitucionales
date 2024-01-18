@@ -284,26 +284,48 @@
                         <RadzenFormField Text="Contraseña" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="password" IconColor="@Colors.Base800" /></Start>
                             <ChildContent>
-                                <RadzenTextBox @bind-Value="@oUsuario.UsuPrimerApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
-                                               @oninput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
-                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                <RadzenTextBox @bind-Value="@oUsuario.UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150" aria-label="enter password" Visible="@(!Visiblepassword)" />
+                                <RadzenPassword @bind-Value="@oUsuario.UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150" aria-label="enter password" Visible="@Visiblepassword" />
                             </ChildContent>
+                            <End>
+                                <RadzenButton Icon="@(Visiblepassword ? "visibility" : "visibility_off")"
+                                              Click="@TogglePassword"
+                                              Variant="Variant.Text"
+                                              Size="ButtonSize.Small"
+                                              ButtonStyle="Radzen.ButtonStyle.Secondary"
+                                              Shade="Shade.Dark" />
+                            </End>
                             @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
+                        <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
                     </div>
 
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Confirmar contraseña" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="password" IconColor="@Colors.Base800" /></Start>
                             <ChildContent>
-                                <RadzenTextBox @bind-Value="@oUsuario.UsuSegundoApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
-                                               @oninput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
-                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                <RadzenTextBox @bind-Value="@contra2" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
+                                               @oninput="(e=> contra2 = e.Value.ToString())"
+                                               @onkeyup="@CompararCadenas" Visible="@(!passwordConfirmarContraseña)" />
+                                <RadzenPassword @bind-Value="@contra2" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
+                                                @oninput="(e=> contra2 = e.Value.ToString())"
+                                                @onkeyup="@CompararCadenas"
+                                                aria-label="enter password"
+                                                Visible="@passwordConfirmarContraseña" />
                             </ChildContent>
+                            <End>
+                                <RadzenButton Icon="@(passwordConfirmarContraseña ? "visibility" : "visibility_off")"
+                                              Click="TogglePasswordConfirmar"
+                                              Variant="Variant.Text"
+                                              Size="ButtonSize.Small"
+                                              ButtonStyle="Radzen.ButtonStyle.Secondary"
+                                              Shade="Shade.Dark" />
+                            </End>
                             @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuSegundoApellido)" />
+                        <RadzenAlert Title="" AlertStyle="Radzen.AlertStyle.Danger" Variant="Variant.Filled" Size="Radzen.AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false" @bind-Visible="BanderaCompararContraseña">
+                            <b>NOTA:</b> Las contraseñas no son iguales verifique su <strong>marcación.</strong>
+                        </RadzenAlert>
                     </div>                                                           
                 </div>
             </ChildContent>
@@ -327,7 +349,7 @@
                             <RadzenFormField Text="Correo Institucional" AllowFloatingLabel="false" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                                 <Start><RadzenIcon Icon="email" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
                                 <ChildContent>
-                                    <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"/>
+                                    <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta" MinLength="0" MaxLength="200"/>
                                 </ChildContent>
                                 @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                             </RadzenFormField>
@@ -363,7 +385,7 @@
                             <center>
                                 <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                                 <br />
-                                <RadzenButton ButtonType="Radzen.ButtonType.Submit" style="width: 160px" IsBusy=@busy Click=@OnBusyClick  Text="Save" />
+                                <RadzenButton ButtonType="Radzen.ButtonType.Submit" style="width: 160px" IsBusy=@busy Click=@OnBusyClick Text="Save" Disabled="@DisablePostButton" />
                                 <!--<RadzenStack Gap="3rem" Wrap="FlexWrap.Wrap" class="rz-p-12"></RadzenStack>-->
                             </center>
                         </RadzenCard>
@@ -435,7 +457,9 @@ else
         UsuIdTipoPersonalNavigation = null
     };
 
-    public bool BanderaCompararContraseña = true;
+    // Comparador de contraseña
+
+    public bool BanderaCompararContraseña = false;
     private string contra2 = string.Empty;
 
     private void CompararCadenas()
@@ -457,6 +481,13 @@ else
 
     public async Task Registrar()
     {
+        // try{
+
+        // }
+        // catch (HttpRequestException e)
+        // {
+        //     await JSRuntime.InvokeAsync<object>("alert", e.Message);
+        // }
         if (ValidReCAPTCHA)
         {
             try
@@ -581,4 +612,17 @@ else
         new Semestres() { Value = "9no semestre", Key = "9" },
         new Semestres() { Value = "10mo semestre", Key = "10" },
     };
+    //Visible password
+    bool Visiblepassword = true;
+
+    void TogglePassword()
+    {
+        Visiblepassword = !Visiblepassword;
+    }
+
+    bool passwordConfirmarContraseña = true;
+    void TogglePasswordConfirmar()
+    {
+        passwordConfirmarContraseña = !passwordConfirmarContraseña;
+    }
 }

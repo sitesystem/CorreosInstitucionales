@@ -155,7 +155,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
 
         /*******************************  DATOS DEL CORREO INSTITUCIONAL  *******************************/
         [Column("usuCorreoInstitucionalCuenta")]
-        [RegularExpression("^[\\w-\\.]+([@ipn\\.mx]|[@alumno\\.ipn\\.mx]|[@egresado\\.ipn\\.mx])+$", ErrorMessage = "Correo invalido. (Formato: xxxxxx@ipn.mx ó @alumno.ipn.mx ó @egresado.ipn.mx)")]
+        [RegularExpression("^[\\w-\\.]+@ipn\\.mx$|^[\\w-\\.]+@alumno\\.ipn\\.mx$|^[\\w-\\.]+@egresado\\.ipn\\.mx$", ErrorMessage = "Correo invalido. (Formato: xxxxxx@ipn.mx ó @alumno.ipn.mx ó @egresado.ipn.mx)")]
         [StringLength(100)]
         public string? UsuCorreoInstitucionalCuenta { get; set; }
 
