@@ -7,6 +7,7 @@
 
 @inject ICarreraService servicioCarrera
 @inject IUsuarioService servicioUsuario
+@inject DialogService dialogService
 
 <style>
 </style>
@@ -385,8 +386,9 @@
                             <center>
                                 <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                                 <br />
-                                <RadzenButton ButtonType="Radzen.ButtonType.Submit" style="width: 160px" IsBusy=@busy Click=@OnBusyClick Text="Save" Disabled="@DisablePostButton" />
-                                <!--<RadzenStack Gap="3rem" Wrap="FlexWrap.Wrap" class="rz-p-12"></RadzenStack>-->
+                                <buton type="submit" onclick="@Registrar">Registrar</buton>
+                                @* <RadzenButton ButtonType="Radzen.ButtonType.Submit" style="width: 160px" IsBusy="@(!isSpinningHidden)"  Text="@Content" Disabled="@DisablePostButton" /> *@
+                                <!--<RadzenStack Gap="3rem" Wrap="FlexWrap.Wrap" class="rz-p-12"></RadzenStack>   Click=@@OnBusyClick-->
                             </center>
                         </RadzenCard>
                     </div>
@@ -402,14 +404,14 @@ else
 
 @code
 {
-    bool busy;
+    // bool busy;
 
-    async Task OnBusyClick()
-    {
-        busy = true;
-        await Task.Delay(2000);
-        busy = false;
-    }
+    // async Task OnBusyClick()
+    // {
+    //     busy = true;
+    //     await Task.Delay(2000);
+    //     busy = false;
+    // }
 
     public int year = DateTime.Parse(DateTime.Now.ToString()).Year;
     public Response<object>? oRespuesta = new();
@@ -419,36 +421,37 @@ else
         // DATOS ID DEL USUARIO
         IdUsuario = 0,
         UsuIdRol = 2,                           // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-        UsuIdTipoPersonal = 4,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
+        UsuIdTipoPersonal = 1,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
         // DATOS PERSONALES
         UsuNombre = "",                         // Nombre del Usuario Solicitante o Administrador
         UsuPrimerApellido = "",                 // Primer Apellido del Usuario Solicitante o Administrador
         UsuSegundoApellido = "",                // Segundo Apellido del Usuario Solicitante o Administrador
         UsuCurp = "",                           // CURP con 18 caracteres como mínimo
         UsuFileNameCurp = "",                   // Nombre del Archivo y extensión .pdf del CURP
-        // UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
+        UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
         // UsuNoCelularNuevo = "0000000000",       // Número de Celular Nuevo que sería el número de celular actual
         // DATOS ACADÉMICOS
         UsuBoletaAlumno = "",                   // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
         UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
-        UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
+        //UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
         UsuSemestre = "",                       // Semestre que cursa el Alumno Inscrito o de Maestria
         UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
         UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
         // DATOS LABORALES
         //UsuNumeroEmpleado = "0",                // Número del Empleado del Usuario (Administrador o Docente)
-        // UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
+         UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
         //UsuNoExtension = "0",                   // Número de Extensión del Empleado
         // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
-        UsuCorreoPersonalCuentaAnterior = "",   // Correo Personal de la Cuenta Anterior
-        //UsuCorreoPersonalCuentaNueva = "",      // Correo Personal de la Cuenta Nueva o Actual
+        //UsuCorreoPersonalCuentaAnterior = "",   // Correo Personal de la Cuenta Anterior
+        UsuCorreoPersonalCuentaNueva = "",      // Correo Personal de la Cuenta Nueva o Actual
         UsuContraseña = "",                     // Contraseña en la PLataforma del Usuario Solicitante o Administrador
         UsuRecuperarContraseña = false,         // Contraseña Temporal que se le proporciona al Usuario Solicitante
         // DATOS DEL CORREO INSTITUCIONAL
         UsuCorreoInstitucionalCuenta = "",      // Cuenta Correo Institucional IPN generada por DCyC
         UsuCorreoInstitucionalContraseña = "",  // Contraseña del Correo Institucional IPN Generada por DCyC
         // OTROS DATOS
-        // UsuFechaHoraAlta = DateTime.Parse(DateTime.Now.ToString()).Year; // Fecha y Hora de Alta del Usuario
+        UsuFechaHoraAlta = null,
+        //UsuFechaHoraAlta = DateTime.Parse(DateTime.Now.ToString()).Year; // Fecha y Hora de Alta del Usuario
         UsuStatus = true,                       // Usuario (1 - Activo / 0 - Inactivo)
         // DATOS FK NAVIGATION
         UsuIdAreaDeptoNavigation = null,
@@ -481,6 +484,7 @@ else
 
     public async Task Registrar()
     {
+        Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
         // try{
 
         // }
@@ -492,6 +496,34 @@ else
         {
             try
             {
+                Console.WriteLine("IdRol: " + oUsuario.UsuIdRol);
+                Console.WriteLine("UsuIdTipoPersonal: " + oUsuario.UsuIdTipoPersonal);
+                Console.WriteLine("UsuNombre: " + oUsuario.UsuNombre);
+                Console.WriteLine("UsuPrimerApellido: " + oUsuario.UsuPrimerApellido);
+                Console.WriteLine("UsuSegundoApellido: " + oUsuario.UsuSegundoApellido);
+                Console.WriteLine("UsuCurp: " + oUsuario.UsuCurp);
+                Console.WriteLine("UsuFileNameCurp: " + oUsuario.UsuFileNameCurp);
+                Console.WriteLine("UsuNoCelularAnterior: " + oUsuario.UsuNoCelularAnterior);
+                Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
+                Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
+                Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
+                Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
+                Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
+                Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
+                Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
+                Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
+                Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
+                Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
+                Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
+                Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
+                Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
+                Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
+                Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
+                Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
+                Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
+                Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
+
+                await Task.Delay(2000);
                 Content = "Enviando Registro...";
                 isSpinningHidden = false;
 
@@ -503,6 +535,7 @@ else
                 Console.WriteLine("Datos    " + oRespuesta.Data + "\n");
 
                 if (oRespuesta.Success == 1)
+                {
                     await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
                         {
                             EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
@@ -510,14 +543,20 @@ else
                             Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
                                                "Registro exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
                         });
-                else
+                        ShowCloseableFromOverlayDialogSuccess();
+                }              
+                else{
                     await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
                         {
                             EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
                             Subject = "ERROR DE REGISTRO EN SACI",
                             Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                                 "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                                                    "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
                         });
+                        ShowCloseableFromOverlayDialogFailure();
+                }
+                    
+                    
             }
             catch (HttpRequestException e)
             {
@@ -549,8 +588,7 @@ else
     {
         oLinkCURP = await servicioLink.GetDataByNameAsync("CURP");
         oLinkSAES = await servicioLink.GetDataByNameAsync("SAES UPIICSA");
-        oCarreras = await servicioCarrera.GetAllDataAsync(true);
-
+        oCarreras = await servicioCarrera.GetAllDataAsync(true);        
         // oResponse = await servicioUsuario.GetDataByIdAsync(1);
         // oUsuario.UsuFileNameCurp = servicioRepositoryFiles.GetPathByFolderIdFileName("Usuarios", 1, "1_CURP_b77e7bd8-fac7-4556-bf55-0032a2328199.jpg");
     }
@@ -625,4 +663,30 @@ else
     {
         passwordConfirmarContraseña = !passwordConfirmarContraseña;
     }
+    //Dialog de Radzen exitoso
+    async Task ShowCloseableFromOverlayDialogSuccess()
+    {
+        await dialogService.OpenAsync("Closeable from overlay Dialog", 
+        ds =>
+        @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="rz-p-12">
+            <RadzenImage Path="https://vidanuevaenelespiritu.com/wp-content/uploads/2023/01/Registro_Exitoso-removebg-preview.png" Style="width: 200px;" AlternateText="Success" />
+            <RadzenText TextStyle="TextStyle.H6">De click fuera de este cuadro para salir o presione la tecla ESC</RadzenText>
+        </RadzenStack>, 
+        new DialogOptions() 
+        {
+            CloseDialogOnOverlayClick = true, CloseDialogOnEsc = true 
+        });
+    }
+    //Dialog de Radzen fracaso
+    async Task ShowCloseableFromOverlayDialogFailure()
+    {
+        await dialogService.OpenAsync("Closeable from overlay Dialog",
+        ds =>
+        @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="rz-p-12">
+            <RadzenImage Path="https://c0.klipartz.com/pngpicture/72/984/gratis-png-ilustracion-de-signo-de-advertencia-iconos-de-computadora-advertencia-de-tiempo-en-el-icono-iconos-de-iconos-de-alerta-thumbnail.png" Style="width: 200px;" AlternateText="Failure" />
+            <RadzenText TextStyle="TextStyle.H6">De click fuera de este cuadro para salir o presione la tecla ESC</RadzenText>
+        </RadzenStack>, 
+        new DialogOptions() { CloseDialogOnOverlayClick = true, CloseDialogOnEsc = true });
+    }
+
 }

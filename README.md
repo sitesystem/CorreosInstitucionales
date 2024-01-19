@@ -3,16 +3,14 @@
 > # Estudiar Radzen Blazor Studio
 > ## Subir archivos al servidor.
 > ## Instalar disco duro al servidor.
-> ## Crear tabla de usuarios.
+> ## Crear interfaz tabla de usuarios.
 > ## Catálogo de escuelas detalle
 > 	* Campos incompletos
 > 	* Subida del logo
 > ## Si se deshabilita un estado de tipo personal entonces se deshabilita su registro.
 > 	*  EJEMPLO MAESTRÍA NO EXISTE EN UNA ESCUELA ENTONCES NO DEBE APARECER SU REGISTRO.
 > ## Cuando el tipo de solicitud cambie se deshabilite tambien se deshabilitará la opción solicitar solicitud.
-> ## Registros upload de archivos.
 > ## Registro empleados si pone la extensión en automático se pone el área o su inverso si pone el área en automático pone la extensión.
-> ## Revisar el framework que sea gratuito y permita pasar a producción.
 > ## Diseño del login pueda cambiar por parte del administrador.
 > ## Aviso de politicas y privacidad como footer en registros.
 > ## Cambio de contraseña por un show message para todo el sistema si la bandera de recuperación de contraseña esta activa.
@@ -30,14 +28,10 @@
 > ## Validación el campo de boleta de egresados e inscritos. 
 > ## Revisar la validación de boleta de maestría. B y 6 numeros. 
 > ## Validar restricción prohibitiva de registros duplicados por correo  y CURP.
-> ## Tiempo de transición del slider 2 minutos para cada imagen
 > ## NO hay boton de regreso y redirige en automático al login
-> ## El cintillo de color gris
 > ## El cintillo logos uno de ipn izquierdo
 > ## El cintillo logos uno del plantel derecho
-> ## Quitar la palabra bienvenido puedes poner SACI
-> ## Footer poner 2024 y fuente menor a la que se tiene
-> ## NOTAS del registro y campos obligatorios este fija en la pantalla y quede en el aside o que se mantenga como en el header
+
 
 
 
@@ -45,6 +39,11 @@
 
 > [!IMPORTANT]
 > # EN PROCESO
+> ## Tiempo de transición del slider 2 minutos para cada imagen
+> ## NOTAS del registro y campos obligatorios este fija en la pantalla y quede en el aside o que se mantenga como en el header
+> ## Envio de correos 
+> 	* Cuando se registra.
+> ## Registros upload de archivos.
 > ## Subir aplicación al servidor.
 > ## Diseño de la interfaz de perfil.
 
@@ -58,11 +57,13 @@
 > 	* Interfaz 
 > 	* funcionalidad
 > ## Envio de correos 
-> 	* Cuando se registra.
 > 	* Cuando se recupera.
 > ## QUITAR parentesis de la mascara del campo de celular
 > ## SLIDER de galería de fotos sin controles para el usuario
-> ## Sistema para atención de correos institucionales y quitar SACI del cintillo 
+> ## Sistema para atención de correos institucionales y quitar SACI del cintillo
+> ## Quitar la palabra bienvenido puedes poner SACI
+> ## Footer poner 2024 y fuente menor a la que se tiene 
+> ## El cintillo de color gris
 
 > [!TIP]
 > # TERMINADOS

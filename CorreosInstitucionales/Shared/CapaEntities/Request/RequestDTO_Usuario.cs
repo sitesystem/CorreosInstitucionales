@@ -165,7 +165,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
 
         /*******************************  OTROS DATOS  *******************************/
         [Column("usuFechaHoraAlta", TypeName = "datetime")]
-        public DateTime UsuFechaHoraAlta { get; set; }
+        public DateTime? UsuFechaHoraAlta { get; set; }
 
         /// <summary>
         /// Activo / Inactivo
