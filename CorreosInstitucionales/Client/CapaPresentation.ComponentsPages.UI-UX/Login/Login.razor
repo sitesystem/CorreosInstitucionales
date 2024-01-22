@@ -11,13 +11,10 @@
 @using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
 @using CorreosInstitucionales.Shared.CapaEntities.Request
 @using CorreosInstitucionales.Shared.CapaEntities.Response
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
 
 @layout LoginLayout
 
 @inject ILoginServices loginService
-@inject IUsuarioService servicioUsuario
 
 <RadzenComponents />
 
@@ -131,9 +128,8 @@
     </div>
 </nav>
 <hr class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-m-10" />
-
 <!-- Contenido Principal -->
-<div class="container" style="padding-top:40px">
+<div class="container">
     <div class="row align-items-center min-vh-100 gap-0">
 
         <!-- Formulario de login -->
@@ -157,12 +153,15 @@
                                                      Variant="Variant.Outlined"
                                                      Class="w-100 mt-3"
                                                      MaxLength="100"
-                                                     Disabled="false">
+                                                     Disabled="false"
+                                                     AllowFloatingLabel="true">
                                         <Start>
                                             <RadzenIcon Icon="email" />
                                         </Start>
                                         <ChildContent>
-                                            <RadzenTextBox @bind-Value="@login.UsuCorreoPersonal" />
+                                            <RadzenTextBox @bind-Value="@login.UsuCorreoPersonal"
+                                                           ReadOnly="false"
+                                                           Attributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )" />
                                         </ChildContent>
                                         <Helper>
                                             @* <RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">* required</RadzenText> *@
@@ -177,12 +176,10 @@
                                                      Class="w-100 mt-5"
                                                      MaxLength="50"
                                                      Disabled="false">
-                                        <Start>
-                                            <RadzenIcon Icon="vpn_key" />
-                                        </Start>
+                                        <Start><RadzenIcon Icon="vpn_key" /></Start>
                                         <ChildContent>
-                                            <RadzenTextBox @bind-Value="@login.UsuContraseña" Visible="@(!password)" />
-                                            <RadzenPassword @bind-Value="@login.UsuContraseña" Visible="@password" />
+                                            <RadzenTextBox id="password" @bind-Value="@login.UsuContraseña" Visible="@(!password)" />
+                                            <RadzenPassword id="password" @bind-Value="@login.UsuContraseña" Visible="@password" />
                                         </ChildContent>
                                         <End>
                                             <RadzenButton Icon="@(password ? "visibility" : "visibility_off")"
@@ -192,43 +189,9 @@
                                                           ButtonStyle="Radzen.ButtonStyle.Secondary"
                                                           Shade="Shade.Dark" />
                                         </End>
-                                        <Helper>
-                                            @* <RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">* required</RadzenText> *@
-                                        </Helper>
+                                        @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">* required</RadzenText></Helper> *@
                                     </RadzenFormField>
                                     <ValidationMessage For="@(() => login.UsuContraseña)" />
-
-                                    @*
-                                    <SfTextBox ID="email"
-                                               Placeholder="Correo Electrónico Personal"
-                                               @bind-Value="@login.UsuCorreoPersonal"
-                                               CssClass="mi-sf-textbox mt-5"
-                                               Enabled="true"
-                                               EnableRtl="false"
-                                               FloatLabelType="@FloatLabelType.Auto"
-                                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                                               Multiline="false"
-                                               Readonly="false"
-                                               ShowClearButton="true"
-                                               Type="Syncfusion.Blazor.Inputs.InputType.Text"
-                                               ValidateOnInput="true" />
-                                    <ValidationMessage For="@(() => login.UsuCorreoPersonal)" />
-
-                                    <SfTextBox ID="password"
-                                               Placeholder="Contraseña"
-                                               @bind-Value="@login.UsuContraseña"
-                                               CssClass="mi-sf-textbox mt-5"
-                                               Enabled="true"
-                                               EnableRtl="false"
-                                               FloatLabelType="@FloatLabelType.Auto"
-                                               HtmlAttributes="@(new Dictionary<string, object> { { "maxlength", "50" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )"
-                                               Multiline="false"
-                                               Readonly="false"
-                                               ShowClearButton="true"
-                                               Type="Syncfusion.Blazor.Inputs.InputType.Password"
-                                               ValidateOnInput="true" />
-                                    <ValidationMessage For="@(() => login.UsuContraseña)" />
-                                    *@
 
                                     <RadzenButton Text="Iniciar Sesión"
                                                   BusyText="Iniciando Sesión ..."
@@ -253,15 +216,11 @@
                                                      MaxLength="100"
                                                      MinLength="0"
                                                      Disabled="false">
-                                        <Start>
-                                            <RadzenIcon Icon="email" />
-                                        </Start>
+                                        <Start><RadzenIcon Icon="email" /></Start>
                                         <ChildContent>
                                             <RadzenTextBox @bind-Value="@oRecuperarContraseñaCorreo.CorreoElectronicoPersonal" />
                                         </ChildContent>
-                                        <Helper>
-                                            @* <RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">* required</RadzenText> *@
-                                        </Helper>
+                                        @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">* required</RadzenText></Helper> *@
                                     </RadzenFormField>
 
                                     <div class="row">
@@ -506,50 +465,62 @@
 
                 if (oRespuesta.Success == 1)
                 {
-                    await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
+                    await servicioSendEmail.SendEmailAsync(
+                        new RequestDTO_SendEmail()
                         {
                             EmailTo = oRecuperarContraseñaCorreo.CorreoElectronicoPersonal,
                             Subject = "SACI RECUPERACIÓN DE CONTRASEÑA",
                             Body = "Estimad@: <b>" + oRespuesta.Data.UsuNombre + " " + oRespuesta.Data.UsuPrimerApellido + " " + oRespuesta.Data.UsuSegundoApellido + "</b><br><br>" +
-                                   oRespuesta.Message + "<br><br>" +
-                                   "Se le ha asignado Contraseña Temporal para el acceso a SACI que tendrá que cambiar al entrar al sistema." + "<br><br>" +
-                                   "Por favor resguarde sus credenciales adecuadamente." + "<br><br>" +
-                                   "<b>SACI (Sistema para Atención de Correos Institucionales IPN)</b>"
+                                    oRespuesta.Message + "<br><br>" +
+                                    "Se le ha asignado Contraseña Temporal para el acceso a SACI que tendrá que cambiar al entrar al sistema." + "<br><br>" +
+                                    "Por favor resguarde sus credenciales adecuadamente." + "<br><br>" +
+                                    "<b>SACI (Sistema para Atención de Correos Institucionales IPN)</b>"
                         });
 
                     await DialogModalService.OpenAsync("Alerta", ds =>
-                            @<div>
-                                <table class="Table text-center">
-                                    <tbody style="line-height: 2.0;">
-                                        <tr>
-                                            <td class="data">
-                                                <span class="circle-border"><span class="e-icons e-check" style="font-size: 30px; color: green; font-weight:700;"></span></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="data text-success" style="font-size: 25px;">
-                                                <b style="font-weight: 500 !important;">¡Recuperación de<br />Contraseña Exitosa!</b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="data">
-                                                <b>@oRespuesta.Data.UsuNombre @oRespuesta.Data.UsuPrimerApellido @oRespuesta.Data.UsuSegundoApellido</b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="data">
-                                                Se generó una Contraseña Temporal enviada a su correo personal.
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>, new Radzen.DialogOptions() {
-                                  CloseDialogOnOverlayClick = true,
-                                  Width = "Auto", Height = "Auto",
-                                  Resizable = true, Draggable = true,
-                                  CssClass = "custom-dialog-class",
-                                  WrapperCssClass = "custom-dialog-wrapper-class"
-                              });
+                        @<div>
+                            <table class="Table text-center">
+                                <tbody style="line-height: 2.0;">
+                                    <tr>
+                                        <td class="data">
+                                            <span class="circle-border">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16" style="color: green; font-weight: bold;">
+                                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+                                                </svg>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="data text-success" style="font-size: 25px;">
+                                            <b style="font-weight: 500 !important;">¡Recuperación de<br />Contraseña Exitosa!</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="data">
+                                            <b>@oRespuesta.Data.UsuNombre @oRespuesta.Data.UsuPrimerApellido @oRespuesta.Data.UsuSegundoApellido</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="data">
+                                            Se generó una Contraseña Temporal enviada a su correo personal.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>,
+                        new Radzen.DialogOptions()
+                        {
+                            CloseDialogOnOverlayClick = true,
+                            CloseDialogOnEsc = true,
+                            Width = "Auto",
+                            Height = "Auto",
+                            Resizable = true,
+                            Draggable = true,
+                            ShowTitle = true,
+                            ShowClose = true,
+                            CssClass = "custom-dialog-class",
+                            WrapperCssClass = "custom-dialog-wrapper-class"
+                        });
 
                     OnChange(1);
                 }

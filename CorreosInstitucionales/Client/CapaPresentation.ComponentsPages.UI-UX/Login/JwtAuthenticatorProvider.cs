@@ -6,19 +6,13 @@ using System.Text.Json;
 
 namespace CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
 {
-    public class JwtAuthenticatorProvider : AuthenticationStateProvider, ILoginServices
+    public class JwtAuthenticatorProvider(IJSRuntime jsRuntime, HttpClient httpClient) : AuthenticationStateProvider, ILoginServices
     {
-        private readonly IJSExtensions _jsRuntime;
-        private readonly HttpClient _httpClient;
+        private readonly IJSExtensions _jsRuntime = new IJSExtensions(jsRuntime);
+        private readonly HttpClient _httpClient = httpClient;
         public static readonly string TOKENKEY = "TokenKey";
 
         private static AuthenticationState _anonimo => new(new ClaimsPrincipal(new ClaimsIdentity()));
-
-        public JwtAuthenticatorProvider(IJSRuntime jsRuntime, HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-            _jsRuntime = new IJSExtensions(jsRuntime);
-        }
 
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {

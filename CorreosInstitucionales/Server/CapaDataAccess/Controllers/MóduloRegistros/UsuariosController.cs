@@ -92,6 +92,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         public async Task<IActionResult> AddData(RequestDTO_Usuario model)
         {
             Response<object> oResponse = new();
+            CreatedAtActionResult oCreatedAtActionResult;
 
             try
             {
@@ -143,6 +144,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 await _db.SaveChangesAsync();
 
                 oResponse.Success = 1;
+
+                oCreatedAtActionResult = CreatedAtAction(nameof(AddData), new { id = oUsuario.IdUsuario }, oUsuario);
+                oResponse.Message = oUsuario.IdUsuario.ToString(); // PK ID Único del Usuario Creado o dado de Alta
             }
             catch (Exception ex)
             {

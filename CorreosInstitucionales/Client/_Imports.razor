@@ -10,6 +10,9 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Http
 @using Microsoft.JSInterop
 
+@using Radzen
+@using Radzen.Blazor
+
 @using CorreosInstitucionales.Client
 @using CorreosInstitucionales.Client.Shared
 
@@ -17,19 +20,20 @@
 @using CorreosInstitucionales.Shared.CapaEntities.Response
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.repositoryFiles
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
-
-@using Radzen
-@using Radzen.Blazor
 
 @inject AuthenticationStateProvider servicioAuthenticationStateProvider
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
 
-@inject NotificationService NotificationService
+@inject ContextMenuService ContextMenuService
 @inject DialogService DialogModalService
+@inject NotificationService NotificationService
+@inject TooltipService TooltipService
 
 @inject IJSRuntime JSRuntime
 @inject ILinkService servicioLink
 @inject IRepositoryFiles servicioRepositoryFiles
 @inject ISendEmailService servicioSendEmail
+@inject IUsuarioService servicioUsuario

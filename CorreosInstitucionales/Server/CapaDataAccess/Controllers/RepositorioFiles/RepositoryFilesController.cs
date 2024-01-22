@@ -31,7 +31,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.RepositorioFi
                     if (!Directory.Exists(folder))
                         Directory.CreateDirectory(folder);
 
-                    fileName = $"{id}_{fileName}_{guid}{Path.GetExtension(file.FileName)}";
+                    fileName = $"{id}_{Path.GetFileNameWithoutExtension(fileName)}_{guid}{Path.GetExtension(file.FileName).ToLower()}";
 
                     string dirPath = Path.Combine(folder, fileName);
 
@@ -74,7 +74,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.RepositorioFi
                     if (!Directory.Exists(folder))
                         Directory.CreateDirectory(folder);
 
-                    fileName = $"{id}_{fileName}_{guid}{Path.GetExtension(file.FileName)}";
+                    fileName = $"{id}_{fileName}_{guid}{Path.GetExtension(file.FileName).ToLower()}";
                     long size = file.Length;
 
                     string dirPath = Path.Combine(folder, fileName);

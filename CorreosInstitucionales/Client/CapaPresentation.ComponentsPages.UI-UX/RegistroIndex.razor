@@ -6,8 +6,6 @@
 
 @layout LoginLayout
 
-@inject NavigationManager navigationManager
-
 <PageTitle>SACI | Registro de Usuario</PageTitle>
 
 <style>
@@ -82,7 +80,9 @@
                                         <AlumnoInscritoEgresado></AlumnoInscritoEgresado>
                                     </RadzenTabsItem>
                                     <RadzenTabsItem Text="Maestría" Icon="school" IconColor="@Colors.Base800">
-                                        Registro maestría
+                                        @* Registro maestría *@
+                                        <RadzenButton Text="Dialog with custom CSS classes" ButtonStyle="ButtonStyle.Secondary"
+                                                      Click=@ShowDialogWithCustomCssClasses />
                                     </RadzenTabsItem>                                
                                 </Tabs>
                             </RadzenTabs>
@@ -139,4 +139,17 @@
     </footer>
 </body>
 
-
+@code
+{
+    async Task ShowDialogWithCustomCssClasses()
+    {
+        await DialogModalService.OpenAsync("Dialog with custom CSS classes", ds =>
+    @<div>
+        This dialog has custom CSS classes.
+    </div>, new DialogOptions()
+          {
+              CssClass = "custom-dialog-class",
+              WrapperCssClass = "custom-dialog-wrapper-class"
+          });
+    }
+}
