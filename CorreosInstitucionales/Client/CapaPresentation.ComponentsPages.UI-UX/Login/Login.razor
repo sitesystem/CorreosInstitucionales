@@ -113,24 +113,25 @@
         background-color:#C0C0C0;
         z-index:9999;
     }
+
 </style>
 
 <!-- Encabezado de Página (Header Fixed-Top) -->
-<nav class="navbar fixed-top header" style="background-color:#C0C0C0; border-bottom: 10px solid #076633; ">
+<nav class="navbar header" style="background-color:#C0C0C0; border-bottom: 10px solid #076633; ">
     <!--#CFCFCF-->
     <div class="container">
-        <img src="/ipn.png" alt="Logo" width="30" height="34" class="d-inline-block align-text-top">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_IPN.png" alt="Logo" width="30" height="34" class="d-inline-block align-text-top">
         <a class="navbar-brand text-black text-wrap cintillo">
             Sistema para Atención de Correos Institucionales
             <!--SACI (Sistema para Atención de Correos Institucionales IPN)-->
         </a>
-        <img src="/ipn.png" alt="Logo" width="30" height="34" class="rounded float-end">
+        <img src="https://www.upiicsa.ipn.mx/assets/files/upiicsa/conocenos/identidad/UPIICSA.png" alt="Logo" width="30" height="34" class="rounded float-end">
     </div>
 </nav>
 <hr class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-m-10" />
 <!-- Contenido Principal -->
-<div class="container">
-    <div class="row align-items-center min-vh-100 gap-0">
+<div class="container" style="padding-top:50px">
+    <div class="row align-items-center min-vh-100 gap-0" >
 
         <!-- Formulario de login -->
         <div class="col-md-6 order-1">
@@ -277,53 +278,29 @@
 
         <!-- Carrusel -->
         <div class="col-md-6 order-2">
-            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" >
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
-                </div>
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active" data-bs-interval="60000">
+                    <div class="carousel-item active">
                         <img src="https://live.staticflickr.com/4016/4533682406_36c07f363d_c.jpg" class="d-block w-100" alt="...">
-                        <!--<div class="carousel-caption">
-                            <h5>First slide label</h5>
-                            <p>Some representative placeholder content for the first slide.</p>
-                        </div>-->
                     </div>
-                    <div class="carousel-item" data-bs-interval="60000">
+                    <div class="carousel-item">
                         <img src="https://pbs.twimg.com/media/D2Wz_3lX4AAP02j.jpg" class="d-block w-100" alt="...">
-                        <!--<div class="carousel-caption">
-                            <h5>Second slide label</h5>
-                            <p>Some representative placeholder content for the second slide.</p>
-                        </div>-->
-
                     </div>
-                    <div class="carousel-item" data-bs-interval="60000">
+                    <div class="carousel-item" >
                         <img src="https://s3.amazonaws.com/rytvmx/wpmedia/2022/10/10201207/clases-822x547.jpg" class="d-block w-100" alt="...">
-                        <!--<div class="carousel-caption">
-                            <h5>Third slide label</h5>
-                            <p>Some representative placeholder content for the third slide.</p>
-                        </div>-->
-
                     </div>
-                    <div class="carousel-item" data-bs-interval="60000">
+                    <div class="carousel-item" >
                         <img src="https://ntcd.mx/uploads/2017/03/21/nota-tecnologia-supera-ipn-expectativas-de-estudiantes-colombianas-del-programa-de-movilidad201721325.jpg" class="d-block w-100" alt="...">
-                        <!--<div class="carousel-caption">
-                            <h5>Third slide label</h5>
-                            <p>Some representative placeholder content for the third slide.</p>
-                        </div>-->
                     </div>
                 </div>
-                <!--<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>-->
+
+                </a>
             </div>
         </div>
     </div>
