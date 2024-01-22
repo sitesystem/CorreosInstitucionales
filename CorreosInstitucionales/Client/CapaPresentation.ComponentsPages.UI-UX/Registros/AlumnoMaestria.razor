@@ -1,4 +1,4 @@
-﻿@page "/RegistroAlumnoInscritoEgresado"
+﻿@page "/RegistroAlumnoMaestria"
 
 @attribute [AllowAnonymous]
 
@@ -159,12 +159,12 @@
                         <RadzenFormField Text="Boleta" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="dialpad" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
-                                <RadzenMask @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="15"
-                                            Mask="**********" CharacterPattern="[A-Z0-9]" Placeholder="****60****" />
+                                <RadzenMask @bind-Value="@oUsuario.UsuBoletaMaestria" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
+                                            Mask="*******" CharacterPattern="[A-Z0-9]" Placeholder="B******" />
                             </ChildContent>
                             @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumno)" />
+                        <ValidationMessage For="@(() => oUsuario.UsuBoletaMaestria)" />
                     </div>
 
                     <div class="col-md-4 col-lg-4">
@@ -220,24 +220,7 @@
                     </div>
 
                     <div class="col-md-4 col-lg-4">
-
-                        <div class="rz-p-12 rz-text-align-center">
-                            <RadzenSelectBar @bind-Value=@flagegresado TValue="bool" class="mb-5">
-                                <Items>
-                                    <RadzenSelectBarItem Text="Sí" Value="true" />
-                                    <RadzenSelectBarItem Text="No" Value="false" />
-                                </Items>
-                            </RadzenSelectBar>
-                        </div>
-
                     </div>
-                    @if (flagegresado == true)
-                    {
-                       <div class="col-md-4 col-lg-4">
-                       </div> 
-                    }
-                    
-
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Archivo del Comprobante de Inscripción" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
@@ -265,9 +248,6 @@
                         <ValidationMessage For="@(() => oUsuario.UsuFileNameComprobanteInscripcion)" />
                         <ValidationMessage For="@(() => oUsuario.UsuFileSizeComprobanteInscripcion)" />
                     </div>
-
-
-
                 </div>
             </ChildContent>
             <SummaryTemplate>
@@ -422,7 +402,7 @@ else
         // DATOS ID DEL USUARIO
         IdUsuario = 0,
         UsuIdRol = 2,                           // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-        UsuIdTipoPersonal = 1,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
+        UsuIdTipoPersonal = 3,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorario])
         // DATOS PERSONALES
         UsuNombre = "",                         // Nombre del Usuario Solicitante o Administrador
         UsuPrimerApellido = "",                 // Primer Apellido del Usuario Solicitante o Administrador
@@ -433,9 +413,9 @@ else
         UsuNoCelularAnterior = "0000000000",    // Número de Celular Anterior si llega a cambiar por uno nuevo
         UsuNoCelularNuevo = "",                 // Número de Celular Nuevo que sería el número de celular actual
         // DATOS ACADÉMICOS
-        UsuBoletaAlumno = "",                   // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
-        UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
-        // UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
+        UsuBoletaAlumno = "0000600000",         // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+        //UsuBoletaMaestria = "B000000",        // Número de Boleta del Usuario (Alumno de Maestria)
+        // UsuIdCarrera = 1,                    // FK ID de la Carrera del Alumno
         UsuSemestre = "",                       // Semestre que cursa el Alumno Inscrito o de Maestria
         UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
         UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
@@ -726,7 +706,5 @@ else
         {
             busyLoading = false;
         }
-    }
-    @*///////////////////////////////////////////////  Egresado  //////////////////////////////////////////////////////////////////////*@
-    bool flagegresado;
+    }   
 }

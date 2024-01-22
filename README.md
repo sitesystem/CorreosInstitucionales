@@ -25,13 +25,7 @@
 > ## Catálogo de tipos de personal
 > ## Catálogo de datos de la escuela
 > ## Catálogo de edificios
-> ## Validación el campo de boleta de egresados e inscritos. 
-> ## Revisar la validación de boleta de maestría. B y 6 numeros. 
-> ## Validar restricción prohibitiva de registros duplicados por correo  y CURP.
 > ## NO hay boton de regreso y redirige en automático al login
-> ## El cintillo logos uno de ipn izquierdo
-> ## El cintillo logos uno del plantel derecho
-
 
 
 
@@ -40,12 +34,11 @@
 > [!IMPORTANT]
 > # EN PROCESO
 > ## Tiempo de transición del slider 2 minutos para cada imagen
-> ## NOTAS del registro y campos obligatorios este fija en la pantalla y quede en el aside o que se mantenga como en el header
 > ## Envio de correos 
 > 	* Cuando se registra.
-> ## Registros upload de archivos.
 > ## Subir aplicación al servidor.
 > ## Diseño de la interfaz de perfil.
+> ## El cintillo logos uno del plantel derecho captar del catálogo
 
 
 
@@ -64,6 +57,13 @@
 > ## Quitar la palabra bienvenido puedes poner SACI
 > ## Footer poner 2024 y fuente menor a la que se tiene 
 > ## El cintillo de color gris
+> ## Registros upload de archivos.
+> ## Revisar la validación de boleta de maestría. B y 6 numeros. 
+> ## Validar restricción prohibitiva de registros duplicados por correo  y CURP.
+> ## Validación el campo de boleta de egresados e inscritos.
+> ## El cintillo logos uno de ipn izquierdo
+> ## NOTAS del registro y campos obligatorios este fija en la pantalla en el body
+
 
 > [!TIP]
 > # TERMINADOS

@@ -472,9 +472,23 @@
                             Subject = "SACI RECUPERACIÓN DE CONTRASEÑA",
                             Body = "Estimad@: <b>" + oRespuesta.Data.UsuNombre + " " + oRespuesta.Data.UsuPrimerApellido + " " + oRespuesta.Data.UsuSegundoApellido + "</b><br><br>" +
                                     oRespuesta.Message + "<br><br>" +
-                                    "Se le ha asignado Contraseña Temporal para el acceso a SACI que tendrá que cambiar al entrar al sistema." + "<br><br>" +
-                                    "Por favor resguarde sus credenciales adecuadamente." + "<br><br>" +
-                                    "<b>SACI (Sistema para Atención de Correos Institucionales IPN)</b>"
+                                    "Se le informa que se recuperó con éxito sus credenciales a la plataforma SACI (Sistema de Ayuda para Correos Institucionales) de la" + "<br>" +
+                                    "unidad académica (nombre de la escuela), por este medio se le hace entrega de sus credenciales de acceso" + "<br>" +
+                                    "Credenciales:" + "<br><br>" +
+                                    "<ul>" +
+                                        "<li>Usuario:<b>" + " " + oRespuesta.Data.UsuNombre + " " + oRespuesta.Data.UsuPrimerApellido + " " + oRespuesta.Data.UsuSegundoApellido + " " + "</b></li>" +
+                                        "<li>Contraseña:<b>" + " " + oRespuesta.Message + " " + "</b></li>" +
+                                    "</ul>" + 
+                                    "La contraseña que se le género es de forma temporal, por lo que al momento de accesar al sistema se le solicitará que cambie su contraseña," + "<br>" +
+                                    "la cual debe de tener la siguiente estructura:" + "<br>" +
+                                        "<ul>" +                                            
+                                            "<li>8 caracteres como mínimo</li>"+
+                                            "<li>Debe contener 1 número</li>" +
+                                            "<li>Contener una mayuscula</li>" +
+                                            "<li>Contener un carácter especial(#,$,!,?,etc.)</li>" +
+                                        "</ul>" +
+                                    "Que tenga un excelente día." + "<br>" +
+                                    "NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD DEL SERVICIO." 
                         });
 
                     await DialogModalService.OpenAsync("Alerta", ds =>
