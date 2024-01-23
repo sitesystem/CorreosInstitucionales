@@ -220,25 +220,6 @@
                     </div>
 
                     <div class="col-md-4 col-lg-4">
-
-                        <div class="rz-p-12 rz-text-align-center">
-                            <RadzenSelectBar @bind-Value=@flagegresado TValue="bool" class="mb-5">
-                                <Items>
-                                    <RadzenSelectBarItem Text="Sí" Value="true" />
-                                    <RadzenSelectBarItem Text="No" Value="false" />
-                                </Items>
-                            </RadzenSelectBar>
-                        </div>
-
-                    </div>
-                    @if (flagegresado == true)
-                    {
-                       <div class="col-md-4 col-lg-4">
-                       </div> 
-                    }
-                    
-
-                    <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Archivo del Comprobante de Inscripción" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base800" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
@@ -266,7 +247,34 @@
                         <ValidationMessage For="@(() => oUsuario.UsuFileSizeComprobanteInscripcion)" />
                     </div>
 
-
+                    <div class="col-md-4 col-lg-4">
+                        <div class="d-flex justify-content-center ">
+                            <RadzenSelectBar @bind-Value=@flagegresado TValue="bool" class="mt-4">
+                                <Items>
+                                    <RadzenSelectBarItem Text="Sí" Value="true" />
+                                    <RadzenSelectBarItem Text="No" Value="false" />
+                                </Items>
+                            </RadzenSelectBar>
+                        </div>
+                        @* <div class="rz-p-12 rz-text-align-center"></div>  align-middle*@
+                    </div>
+                    @if (flagegresado == true)
+                    {
+                        oUsuario.UsuIdTipoPersonal = 2;
+                        oUsuario.UsuSemestre="8";
+                        <div class="col-md-4 col-lg-4">
+                            <RadzenFormField Text="Año de egreso" class="w-100 mt-3 ">
+                                <RadzenNumeric @bind-Value="@oUsuario.UsuAñoEgreso" Max="@year" ShowUpDown="false" Step="1" Format="####" />
+                            </RadzenFormField>
+                            <ValidationMessage For="@(() => oUsuario.UsuAñoEgreso)" />
+                        </div>
+                    }
+                    else
+                    {
+                        oUsuario.UsuIdTipoPersonal = 1;
+                        oUsuario.UsuAñoEgreso = 0;
+                        @* oUsuario.UsuSemestre = ""; *@
+                    }
 
                 </div>
             </ChildContent>
@@ -394,7 +402,9 @@
         <div class="row align-content-center align-items-center">
             <div class="col-md-6 offset-md-3 text-center">    
                 <RadzenCard>
-                    <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                    <center>
+                        <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                    </center>
                     <RadzenButton Text="Enviar Registro"
                                   BusyText="Enviando Registro ..."
                                   ButtonStyle="ButtonStyle.Success"
@@ -437,7 +447,7 @@ else
         UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
         // UsuIdCarrera = 1,                       // FK ID de la Carrera del Alumno
         UsuSemestre = "",                       // Semestre que cursa el Alumno Inscrito o de Maestria
-        UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
+       //UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
         UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
         UsuFileSizeComprobanteInscripcion = 0l, // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
         // DATOS LABORALES
@@ -729,4 +739,6 @@ else
     }
     @*///////////////////////////////////////////////  Egresado  //////////////////////////////////////////////////////////////////////*@
     bool flagegresado;
+    @*///////////////////////////////////////////////  Año actual  //////////////////////////////////////////////////////////////////////*@
+    public int year = DateTime.Parse(DateTime.Now.ToString()).Year;
 }
