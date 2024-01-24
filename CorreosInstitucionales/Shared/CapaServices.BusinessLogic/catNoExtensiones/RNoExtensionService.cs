@@ -15,7 +15,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensio
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
-        const string url = "/api/NoExtensiones/";
+        const string url = "/api/NoExtension/";
 
         public async Task<Response<List<RequestViewModel_NoExtension>>?> GetAllDataAsync(bool filterByStatus)
         {
