@@ -176,7 +176,6 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuNoExtension")]
     [StringLength(10)]
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NO. DE EXTENSIÓN requerido.")]
     public string? UsuNoExtension { get; set; }
 
     /*******************************  DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP  *******************************/

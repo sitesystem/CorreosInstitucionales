@@ -201,7 +201,6 @@
                         </RadzenFormField>
                         @* <RadzenTextBox Value="@oUsuario.UsuNoExtension.ToString()"></RadzenTextBox>
                          <RadzenTextBox Value="@oUsuario.UsuIdAreaDepto.ToString()"></RadzenTextBox> *@
-                        <ValidationMessage For="@(() => oUsuario.UsuNoExtension)" />
                     </div>
                     
                     <div class="col-md-4 col-lg-4">
@@ -228,37 +227,6 @@
                             @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuIdAreaDepto)" />
-                    </div>
-                 
-                    <div class="col-md-4 col-lg-4">
-                    </div>
-
-                    <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Archivo del Comprobante de Inscripción" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
-                            <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
-                            <ChildContent>
-                                <RadzenUpload @ref="oUploadFile_ComprobanteInscripción" Url="" Accept="image/*, .pdf, .doc, .docx"
-                                              Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
-                                              Change=@(args => OnChangeFiles(args, Comprobante_Inscripción))
-                                              Error=@(args => OnErrorFiles(args, "FileInput"))
-                                              InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
-                                              Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
-                                              Complete="@(args => OnCompleteFiles(args))" />
-                            </ChildContent>
-                            <Helper>
-                                <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" TextAlign="TextAlign.Justify">
-                                    <a href="@oLinkSAES.Data.LinkEnlace" target="_blank" class="icon-link icon-link-hover">
-                                        Consulta tu <strong>Comprobante de Inscripción</strong>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
-                                            <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
-                                        </svg>
-                                    </a>
-                                </RadzenText>
-                            </Helper>
-                        </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuFileNameComprobanteInscripcion)" />
-                        <ValidationMessage For="@(() => oUsuario.UsuFileSizeComprobanteInscripcion)" />
                     </div>
                 </div>
             </ChildContent>
