@@ -78,7 +78,7 @@ public class RequestDTO_Usuario
     /// <summary>
     /// Tamaño del Archivo PDF del CURP del Usuario
     /// </summary>
-    [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF del Comprobante de Inscripción adjuntado debe ser máximo de 2 MB.")]
+    [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF del CURP adjuntado debe ser máximo de 2 MB.")]
     public long? UsuFileSizeCurp { get; set; }
 
     /// <summary>
@@ -86,7 +86,7 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuNoCelularAnterior")]
     [StringLength(20)]
-    [MinLength(10, ErrorMessage = "Verifique el Número de Celular Anterior que tenga al menos 10 dígitos.")]
+    [MinLength(14, ErrorMessage = "Verifique el Número de Celular Anterior que tenga al menos 10 dígitos.")]
     public string? UsuNoCelularAnterior { get; set; }
 
     /// <summary>
@@ -95,7 +95,7 @@ public class RequestDTO_Usuario
     [Column("usuNoCelularNuevo")]
     [StringLength(20)]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NO. DE CELULAR requerido.")]
-    [MinLength(10, ErrorMessage = "El Número de Celular Actual debe ser mínimo de 10 dígitos.")]
+    [MinLength(14, ErrorMessage = "El Número de Celular Actual debe ser mínimo de 10 dígitos.")]
     public string UsuNoCelularNuevo { get; set; } = null!;
 
     /*******************************  DATOS ACADÉMICOS  *******************************/
@@ -139,7 +139,7 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuAñoEgreso")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo AÑO DE EGRESO requerido.")]
-    public int? UsuAñoEgreso { get; set; }
+    public int UsuAñoEgreso { get; set; }
 
     /// <summary>
     /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP
