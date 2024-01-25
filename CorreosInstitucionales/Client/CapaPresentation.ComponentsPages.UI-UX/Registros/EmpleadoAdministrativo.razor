@@ -44,7 +44,6 @@
             </HeaderTemplate>
             <ChildContent>
                 <div class="row">
-
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Nombre(s)" AllowFloatingLabel="false" Placeholder="Nombre(s)" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="person" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
@@ -148,28 +147,28 @@
         <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos Laborales" CollapseTitle="Datos Laborales" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-3">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
-                    <RadzenIcon Icon="school" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Datos Laborales</b>
+                    <RadzenIcon Icon="work" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Datos Laborales</b>
                 </span>
             </HeaderTemplate>
             <ChildContent>
                 <div class="row">
                     <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Numero de Empleado" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-3" Disable="false">
+                        <RadzenFormField Text="Número de Empleado" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-3" Disable="false">
                             <Start><RadzenIcon Icon="dialpad" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary"/></Start>
                             <ChildContent>
                                 <RadzenMask @bind-Value="@oUsuario.UsuNumeroEmpleado" style="border-bottom: 3px solid red;" MinLenght="0" MaxLength="15"
-                                            Mask="**********" CharacterPattern="[A-Z0-9]" />
+                                            Mask="**********" CharacterPattern="[A-Z0-9]" Placeholder="**********" />
                             </ChildContent>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuNumeroEmpleado)"/>
                     </div>
                     <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Numero Extension" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
-                            <Start><RadzenIcon Icon="tag" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                        <RadzenFormField Text="Número Extension" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start><RadzenIcon Icon="phone" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
                                 <RadzenDropDown @bind-Value="@oUsuario.UsuNoExtension"
                                                 TValue="string?"
-                                                ValueProperty="IdExtension" 
+                                                ValueProperty="ExtNoExtension" 
                                                 TextProperty="ExtNoExtension"
                                                 Data="@oNoExtension.Data"
                                                 AllowClear="true"
@@ -188,12 +187,12 @@
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuNoExtension)" />
                     </div>
-                   @*  <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Area / Deptamento" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
-                            <Start><RadzenIcon Icon="tag" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                   <div class="col-md-4 col-lg-4">
+                        <RadzenFormField Text="Area / Departamento" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                            <Start><RadzenIcon Icon="lan" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
                                 <RadzenDropDown @bind-Value="@oUsuario.UsuIdAreaDepto"
-                                                TValue="int?"
+                                                TValue="int"
                                                 ValueProperty="IdAreaDepto"
                                                 TextProperty="AreNombreAreaDepto"
                                                 Data="@oAreaDepto.Data"
@@ -212,7 +211,7 @@
                             
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuIdAreaDepto)" />
-                    </div> *@
+                    </div>
                 </div>
             </ChildContent>
         </RadzenFieldset>
@@ -334,21 +333,19 @@
         <!-- ******************************************************************* CARD RECAPTCHA ******************************************************************* -->
         <div class="row">
             <div class="col-md-4 offset-md-4 rz-mt-3">
-                <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-            </div>
-        </div>
+                <RadzenStack Orientation="Radzen.Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
+                    <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                    <RadzenButton Text="Enviar Registro"
+                                  BusyText="Enviando Registro ..."
+                                  ButtonStyle="ButtonStyle.Success"
+                                  ButtonType="ButtonType.Submit"
+                                  IsBusy="@busyLoading"
+                                  Icon="send"
+                                  Class="w-100 mt-3"
+                                  Shade="Shade.Darker"
+                                  Disabled="@DisablePostButton" />
+                </RadzenStack>
 
-        <div class="row">
-            <div class="col-md-4 offset-md-4 text-center">
-                <RadzenButton Text="Enviar Registro"
-                              BusyText="Enviando Registro ..."
-                              ButtonStyle="ButtonStyle.Success"
-                              ButtonType="ButtonType.Submit"
-                              IsBusy="@busyLoading"
-                              Icon="send"
-                              Class="w-100 mt-3"
-                              Shade="Shade.Darker"
-                              Disabled="@DisablePostButton" />
             </div>
         </div>
     </EditForm>
@@ -377,13 +374,13 @@ else
             UsuNoCelularAnterior = "00 00 00 00 00",    // Número de Celular Anterior si llega a cambiar por uno nuevo
             //UsuNoCelularNuevo = "",                 // Número de Celular Nuevo que sería el número de celular actual
             // DATOS ACADÉMICOS
-            UsuBoletaAlumno = "",                   // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+            UsuBoletaAlumno = "0000600000",                   // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
-            // UsuIdCarrera = 1,                    // FK ID de la Carrera del Alumno
-            UsuSemestre = "",                       // Semestre que cursa el Alumno Inscrito o de Maestria
+            UsuIdCarrera = 1,                    // FK ID de la Carrera del Alumno
+            UsuSemestre = "0",                       // Semestre que cursa el Alumno Inscrito o de Maestria
             UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
-            UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
-            UsuFileSizeComprobanteInscripcion = 0l, // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            UsuFileNameComprobanteInscripcion = "-", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            UsuFileSizeComprobanteInscripcion = 1l, // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             // DATOS LABORALES
             //UsuNumeroEmpleado = "0",              // Número del Empleado del Usuario (Administrador o Docente)
             UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
@@ -510,24 +507,24 @@ else
 
             if (ValidReCAPTCHA && verificacion?.Success == 1)
             {
-                // Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
-                // Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
-                // Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
-                // Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
-                // Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
-                // Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
-                // Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
-                // Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
-                // Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
-                // Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
-                // Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
-                // Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
-                // Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
-                // Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
-                // Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
-                // Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
-                // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
-                // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
+                Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
+                Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
+                Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
+                Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
+                Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
+                Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
+                Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
+                Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
+                Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
+                Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
+                Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
+                Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
+                Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
+                Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
+                Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
+                Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
+                Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
+                Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
 
                 var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
                 oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
