@@ -376,7 +376,7 @@ else
             // DATOS ACADÉMICOS
             UsuBoletaAlumno = "0000600000",                   // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
-            UsuIdCarrera = 1,                    // FK ID de la Carrera del Alumno
+            UsuIdCarrera = 2,                    // FK ID de la Carrera del Alumno
             UsuSemestre = "0",                       // Semestre que cursa el Alumno Inscrito o de Maestria
             UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
             UsuFileNameComprobanteInscripcion = "-", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
@@ -557,13 +557,13 @@ else
                     idResponse = int.Parse(oRespuesta.Message);
 
                     oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
-                    oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
+                    //oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
 
                     oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
-                    oUploadFile_ComprobanteInscripción.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
+                    //oUploadFile_ComprobanteInscripción.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
 
                     await oUploadFile_CURP.Upload();
-                    await oUploadFile_ComprobanteInscripción.Upload();
+                    //await oUploadFile_ComprobanteInscripción.Upload();
 
                     @*//  DIALOG MESSAGE REGISTRO EXITOSO  //*@
                     await DialogModalService.OpenAsync("Mensaje", ds =>
