@@ -376,7 +376,7 @@ else
             // DATOS ACADÉMICOS
             UsuBoletaAlumno = "0000600000",                   // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
-            UsuIdCarrera = 1,                    // FK ID de la Carrera del Alumno
+            UsuIdCarrera = 2,                    // FK ID de la Carrera del Alumno
             UsuSemestre = "0",                       // Semestre que cursa el Alumno Inscrito o de Maestria
             UsuAñoEgreso = 0,                       // Año de Egreso en dado caso
             UsuFileNameComprobanteInscripcion = "-", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
@@ -507,24 +507,24 @@ else
 
             if (ValidReCAPTCHA && verificacion?.Success == 1)
             {
-                Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
-                Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
-                Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
-                Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
-                Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
-                Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
-                Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
-                Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
-                Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
-                Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
-                Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
-                Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
-                Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
-                Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
-                Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
-                Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
-                Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
-                Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
+                // Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
+                // Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
+                // Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
+                // Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
+                // Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
+                // Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
+                // Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
+                // Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
+                // Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
+                // Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
+                // Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
+                // Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
+                // Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
+                // Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
+                // Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
+                // Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
+                // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
+                // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
 
                 var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
                 oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
@@ -542,13 +542,12 @@ else
                             Usuario: <b>{oUsuario.UsuCorreoPersonalCuentaNueva}</b><br>
                             Contraseña: <b>{oUsuario.UsuContraseña}</b><br><br>
                             Sus datos son los siguientes:<br>
-                            IdRol: {oUsuario.UsuIdRol}<br>
-                            UsuIdTipoPersonal: {oUsuario.UsuIdTipoPersonal}<br>
-                            UsuNombre: {oUsuario.UsuNombre}<br>
-                            UsuPrimerApellido: {oUsuario.UsuPrimerApellido}<br>
-                            UsuSegundoApellido: {oUsuario.UsuSegundoApellido}<br>
-                            UsuCurp: {oUsuario.UsuCurp}<br>
-                            UsuFileNameCurp: {oUsuario.UsuFileNameCurp}<br>
+                            Rol: Usuario<br>
+                            Personal: Administrativo <br>
+                            Nombre: {oUsuario.UsuNombre}<br>
+                            Primer Apellido: {oUsuario.UsuPrimerApellido}<br>
+                            Segundo Apellido: {oUsuario.UsuSegundoApellido}<br>
+                            Curp: {oUsuario.UsuCurp}<br>
                             UsuNoCelularAnterior: {oUsuario.UsuNoCelularAnterior}<br>
                             Que tenga un excelente día.<br>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO."
                         });
@@ -557,13 +556,13 @@ else
                     idResponse = int.Parse(oRespuesta.Message);
 
                     oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
-                    oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
+                    //oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
 
                     oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
-                    oUploadFile_ComprobanteInscripción.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
+                    //oUploadFile_ComprobanteInscripción.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
 
                     await oUploadFile_CURP.Upload();
-                    await oUploadFile_ComprobanteInscripción.Upload();
+                    //await oUploadFile_ComprobanteInscripción.Upload();
 
                     @*//  DIALOG MESSAGE REGISTRO EXITOSO  //*@
                     await DialogModalService.OpenAsync("Mensaje", ds =>
