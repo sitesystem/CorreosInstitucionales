@@ -507,24 +507,24 @@ else
 
             if (ValidReCAPTCHA && verificacion?.Success == 1)
             {
-                Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
-                Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
-                Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
-                Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
-                Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
-                Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
-                Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
-                Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
-                Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
-                Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
-                Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
-                Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
-                Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
-                Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
-                Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
-                Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
-                Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
-                Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
+                // Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
+                // Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
+                // Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
+                // Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
+                // Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
+                // Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
+                // Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
+                // Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
+                // Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
+                // Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
+                // Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
+                // Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
+                // Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
+                // Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
+                // Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
+                // Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
+                // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
+                // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
 
                 var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
                 oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
@@ -542,8 +542,8 @@ else
                             Usuario: <b>{oUsuario.UsuCorreoPersonalCuentaNueva}</b><br>
                             Contraseña: <b>{oUsuario.UsuContraseña}</b><br><br>
                             Sus datos son los siguientes:<br>
-                            Rol: {oUsuario.UsuIdRol}<br>
-                            Personal: {oUsuario.UsuIdTipoPersonal}<br>
+                            Rol: Usuario<br>
+                            Personal: Administrativo <br>
                             Nombre: {oUsuario.UsuNombre}<br>
                             Primer Apellido: {oUsuario.UsuPrimerApellido}<br>
                             Segundo Apellido: {oUsuario.UsuSegundoApellido}<br>
