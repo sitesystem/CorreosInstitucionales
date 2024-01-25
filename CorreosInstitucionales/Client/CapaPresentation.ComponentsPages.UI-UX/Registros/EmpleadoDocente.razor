@@ -27,13 +27,9 @@
         /*padding-left: 32px;*/
     }
 </style>
-@* @foreach (var item in oExtensiones.Data)
-{
-    <div>@item.ExtNoExtension</div>
-} *@
 
-@* @if (oExtensiones != null && oExtensiones.Data != null)
-{ *@
+@if (oExtensiones != null && oExtensiones.Data != null)
+{
     <EditForm Model="@oUsuario" OnValidSubmit="@OnValidHandled_Registrar" OnInvalidSubmit="@OnInvalidHandled_ScrollToTop">
 
         <DataAnnotationsValidator/>
@@ -370,11 +366,11 @@
             </div>
         </div>
     </EditForm>
-@* }
+}
 else
 {
     <LoadingComponent />
-} *@
+}
 
 @code
 {

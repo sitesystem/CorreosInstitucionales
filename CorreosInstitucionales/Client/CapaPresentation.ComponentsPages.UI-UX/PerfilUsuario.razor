@@ -1,56 +1,53 @@
-﻿@* @page "/PerfilUsuario"
-@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistroAlumnos
-@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistroEmpleados
+﻿@page "/PerfilUsuario"
 
-@inject NavigationManager navigationManager;
+@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.Registros
 
 <h3>Perfil Usuario</h3>
-<center>
+
 <div class="d-grid gap-2 d-md-block">
     <button class="btn btn-primary " type="button" onclick="@ActivarFormulario">Modificar datos del perfil</button>
 </div>
-</center>
-
 
 @if (banderaFormulario==true)
 {
-        <h3>Modificación de Datos de perfil</h3>
-        @switch (tipousuario)
-        {
-            case 1:
-                Console.WriteLine("El tipo usuario es: Alumno inscrito");
-                navigationManager.NavigateTo("/RegistroInscrito");
-                break;        
-            case 2:
-                Console.WriteLine("El tipo usuario es: Alumno egresado");
-                navigationManager.NavigateTo("/RegistroInscrito");
-                break;
-            case 3:
-                Console.WriteLine("El tipo usuario es: Maestría");
-            navigationManager.NavigateTo("/RegistroMaestria");
-                break;
-            case 4:
-                Console.WriteLine("El tipo usuario es: Administrativo");
-                navigationManager.NavigateTo("/RegistroAdministrativo");
-                break;
-            case 5:
-                Console.WriteLine("El tipo usuario es: Docente");
-                navigationManager.NavigateTo("/RegistroDocente");
-                break;
-            case 6:
-                Console.WriteLine("El tipo usuario es: Honorarios");
-                navigationManager.NavigateTo("/RegistroHonorario");
-                break;
-            default: 
-                tipousuario=0;
-                break;
-        }
+    <h3>Modificación de Datos de perfil</h3>
+    @switch (tipousuario)
+    {
+        case 1:
+            Console.WriteLine("El tipo usuario es: Alumno inscrito");
+            navigationManager.NavigateTo("/RegistroInscrito");
+            break;        
+        case 2:
+            Console.WriteLine("El tipo usuario es: Alumno egresado");
+            navigationManager.NavigateTo("/RegistroInscrito");
+            break;
+        case 3:
+            Console.WriteLine("El tipo usuario es: Maestría");
+        navigationManager.NavigateTo("/RegistroMaestria");
+            break;
+        case 4:
+            Console.WriteLine("El tipo usuario es: Administrativo");
+            navigationManager.NavigateTo("/RegistroAdministrativo");
+            break;
+        case 5:
+            Console.WriteLine("El tipo usuario es: Docente");
+            navigationManager.NavigateTo("/RegistroDocente");
+            break;
+        case 6:
+            Console.WriteLine("El tipo usuario es: Honorarios");
+            navigationManager.NavigateTo("/RegistroHonorario");
+            break;
+        default: 
+            tipousuario=0;
+            break;
+    }
 }
 
 @code
 {
     private int tipousuario=0;
     public bool banderaFormulario = false;
+
     public void ActivarFormulario()
     {
         if (banderaFormulario == false)
@@ -59,4 +56,3 @@
             banderaFormulario = false;
     }
 }
- *@

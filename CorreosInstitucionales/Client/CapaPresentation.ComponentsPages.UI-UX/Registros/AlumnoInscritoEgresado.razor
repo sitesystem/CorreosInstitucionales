@@ -118,8 +118,8 @@
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Archivo del CURP" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
-                            <ChildContent>
-                                <RadzenUpload @ref="oUploadFile_CURP" Url="" Accept="image/*, .pdf, .doc, .docx"
+                            <ChildContent> @* image/*, .pdf, .doc, .docx *@
+                                <RadzenUpload @ref="oUploadFile_CURP" Url="" Accept=".pdf"
                                               Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
                                               Change=@(args => OnChangeFiles(args, CURP))
                                               Error=@(args => OnErrorFiles(args, "FileInput"))
@@ -217,8 +217,8 @@
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Archivo del Comprobante de Inscripción" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
-                            <ChildContent>
-                                <RadzenUpload @ref="oUploadFile_ComprobanteInscripción" Url="" Accept="image/*, .pdf, .doc, .docx"
+                            <ChildContent> @* image/*, .pdf, .doc, .docx *@
+                                <RadzenUpload @ref="oUploadFile_ComprobanteInscripción" Url="" Accept=".pdf"
                                               Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
                                               Change=@(args => OnChangeFiles(args, Comprobante_Inscripción))
                                               Error=@(args => OnErrorFiles(args, "FileInput"))
@@ -287,10 +287,10 @@
         </RadzenFieldset>
         
         <!-- ******************************************************************* CARD DATOS DE LA CUENTA ******************************************************************* -->
-        <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos de la Cuenta" CollapseTitle="Datos de la cuenta" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-3">
+        <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos de la Cuenta" CollapseTitle="Datos de la Cuenta" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-3">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
-                    <RadzenIcon Icon="account_circle" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Datos de la cuenta</b>
+                    <RadzenIcon Icon="account_circle" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Datos de la Cuenta</b>
                 </span>
             </HeaderTemplate>
             <ChildContent>
@@ -366,7 +366,7 @@
         </RadzenFieldset>
         
         <!-- ******************************************************************* CARD DATOS CORREO INSTITUCIONAL ******************************************************************* -->
-        <RadzenFieldset AllowCollapse="true" ExpandTitle="Correo Electrónico Institucional" CollapseTitle="Correo Electrónico Institucional" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-3">
+        <RadzenFieldset AllowCollapse="true" ExpandTitle="Correo Electrónico Institucional" CollapseTitle="Correo Electrónico Institucional" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 my-3">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
                     <RadzenIcon Icon="account_box" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Correo Electrónico Institucional</b>
@@ -374,7 +374,7 @@
             </HeaderTemplate>
             <ChildContent>
                 <div class="row">
-                    <div class="col-md-6 col-lg-6 offset-md-3 offset-lg-3">
+                    <div class="col-md-4 col-lg-4 offset-md-4 offset-lg-4">
                         <RadzenFormField Text="Correo Electrónico Institucional" AllowFloatingLabel="false" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="mail_outline" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
@@ -404,21 +404,19 @@
         <!-- ******************************************************************* CARD RECAPTCHA ******************************************************************* -->
         <div class="row">
             <div class="col-md-4 offset-md-4 rz-mt-3">
-                <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4 offset-md-4 text-center">
-                <RadzenButton Text="Enviar Registro"
-                              BusyText="Enviando Registro ..."
-                              ButtonStyle="ButtonStyle.Success"
-                              ButtonType="ButtonType.Submit"
-                              IsBusy="@busyLoading"
-                              Icon="send"
-                              Class="w-100 mt-3"
-                              Shade="Shade.Darker"
-                              Disabled="@DisablePostButton" />
+                <RadzenStack Orientation="Radzen.Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
+                    <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                    <RadzenButton Text="Enviar Registro"
+                                  BusyText="Enviando Registro ..."
+                                  ButtonStyle="ButtonStyle.Success"
+                                  ButtonType="ButtonType.Submit"
+                                  IsBusy="@busyLoading"
+                                  Icon="send"
+                                  Class="w-100 mt-3"
+                                  Shade="Shade.Darker"
+                                  Disabled="@DisablePostButton" />
+                </RadzenStack>
+                
             </div>
         </div>
     </EditForm>
@@ -540,7 +538,7 @@ else
     private async Task OnInvalidHandled_ScrollToTop()
     {
         await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
-        await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('name').select()");
+        await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('names').select()");
     }
 
     @*///////////////////////////////////////////////  VALIDAR CAMPOS DEL FORMULARIO ARCHIVOS PARA SUBIR  ///////////////////////////////////////////////*@

@@ -119,7 +119,7 @@
                             </Template>
                             <ChildContent>
                                 @* <RadzenProfileMenuItem Text="Perfil" Path="Pefil" Icon="person"></RadzenProfileMenuItem> *@
-                                <RadzenButton Variant="Variant.Text" Click="@LogOut" Text="Perfil" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="account_circle" class="d-block text-start" style="width: 100%" />
+                                <RadzenButton Variant="Variant.Text" Click="@(() => navigationManager.NavigateTo("/PerfilUsuario"))" Text="Perfil" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="account_circle" class="d-block text-start" style="width: 100%" />
                                 <RadzenButton Variant="Variant.Text" Click="@LogOut" Text="Cerrar Sesión" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="logout" class="d-block text-start" style="width: 100%" />
                             </ChildContent>
                         </RadzenProfileMenu>
