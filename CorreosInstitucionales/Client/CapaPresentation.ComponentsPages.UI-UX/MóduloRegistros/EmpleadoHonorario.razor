@@ -1,4 +1,4 @@
-﻿@page "/RegistroEmpleadoAdministrativo"
+﻿@page "/RegistroEmpleadoHonorario"
 
 @attribute [AllowAnonymous]
 
@@ -363,7 +363,7 @@ else
         // DATOS ID DEL USUARIO
         IdUsuario = 0,
         UsuIdRol = 2,                           // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-        UsuIdTipoPersonal = 4,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
+        UsuIdTipoPersonal = 6,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorario])
         // DATOS PERSONALES
         UsuNombre = "",                         // Nombre del Usuario Solicitante o Administrador
         UsuPrimerApellido = "",                 // Primer Apellido del Usuario Solicitante o Administrador
