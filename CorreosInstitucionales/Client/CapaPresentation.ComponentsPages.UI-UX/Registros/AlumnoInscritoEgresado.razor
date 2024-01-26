@@ -2,10 +2,6 @@
 
 @attribute [AllowAnonymous]
 
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
-
-@inject ICarreraService servicioCarrera
-
 <style type="text/css">
     .circle-border {
         align-items: center;
@@ -49,7 +45,7 @@
                                                @oninput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
                     </div>
@@ -62,7 +58,7 @@
                                                @oninput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
                     </div>
@@ -75,7 +71,7 @@
                                                @oninput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuSegundoApellido)" />
                     </div>
@@ -87,7 +83,7 @@
                                 <RadzenMask id="phoneNumberCurrent" MinLength="0" MaxLength="20" @bind-Value="@oUsuario.UsuNoCelularNuevo" style="border-bottom: 3px solid red;"
                                             Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
                     </div>
@@ -126,7 +122,6 @@
                                               InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
                                               Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
                                               Complete="@(args => OnCompleteFiles(args))" />
-                                @* <RadzenButton Text="Subir" Click=@(args => uploadCURP.Upload()) class="d-block mt-4" /> *@
                             </ChildContent>
                             @* <Helper></Helper> *@
                         </RadzenFormField>
@@ -157,7 +152,7 @@
                                 <RadzenMask id="boletaAlumn" @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="15"
                                             Mask="**********" CharacterPattern="[A-Z0-9]" Placeholder="****60****" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumno)" />
                     </div>
@@ -183,7 +178,7 @@
                                                 InputAttributes="@(new Dictionary<string,object>(){{ "font-family", "Arial" }})"
                                                 style="border-bottom: 3px solid red;" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuIdCarrera)" />
                     </div>
@@ -209,7 +204,7 @@
                                                 InputAttributes="@(new Dictionary<string,object>(){{ "font-family", "Arial" }})"
                                                 style="border-bottom: 3px solid red;" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuSemestre)" />
                     </div>
@@ -227,7 +222,7 @@
                                               Complete="@(args => OnCompleteFiles(args))" />
                             </ChildContent>
                             <Helper>
-                                <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" TextAlign="TextAlign.Justify">
+                                <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" TextAlign="TextAlign.Left">
                                     <a href="@oLinkSAES.Data.LinkEnlace" target="_blank" class="icon-link icon-link-hover">
                                         Consulta tu <strong>Comprobante de Inscripción</strong>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">

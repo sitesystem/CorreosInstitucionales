@@ -18,11 +18,13 @@
 
 @using CorreosInstitucionales.Shared.CapaEntities.Request
 @using CorreosInstitucionales.Shared.CapaEntities.Response
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.repositoryFiles
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
 
+@* Inyectar Interfaz de los Servicios *@
 @inject AuthenticationStateProvider servicioAuthenticationStateProvider
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
@@ -37,3 +39,6 @@
 @inject IRepositoryFiles servicioRepositoryFiles
 @inject ISendEmailService servicioSendEmail
 @inject IUsuarioService servicioUsuario
+
+@* Módulo de Catálogos *@
+@inject ICarreraService servicioCarrera
