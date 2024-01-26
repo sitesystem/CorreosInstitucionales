@@ -73,7 +73,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             try
             {
                 var list = await _db.MpTbUsuarios
-                                    .Where(u => u.UsuCorreoPersonalCuentaNueva == correo || u.UsuCurp == curp)
+                                    .Where(u => u.UsuCorreoPersonalCuentaNueva == correo || u.UsuCurp == curp && u.UsuStatus == true)
                                     .FirstOrDefaultAsync();
                 if (list == null)
                     oResponse.Success = 1;
@@ -132,7 +132,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     UsuCorreoInstitucionalContraseña = model.UsuCorreoInstitucionalContraseña,
                     // OTROS DATOS
                     UsuFechaHoraAlta = DateTime.Now,
-                    UsuStatus = true,
+                    UsuStatus = model.UsuStatus,
                     // DATOS FK NAVIGATION
                     UsuIdAreaDeptoNavigation = null,
                     UsuIdCarreraNavigation = null,

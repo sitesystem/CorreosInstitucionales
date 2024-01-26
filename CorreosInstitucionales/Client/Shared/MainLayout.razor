@@ -59,7 +59,7 @@
 
 <RadzenLayout>
     <RadzenHeader class="rz-background-color-info-darker rz-border-radius-0 rz-py-0">
-        <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
             <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" Class="rz-m-0" />
             <AuthorizeView>
                 <Authorized>
@@ -71,10 +71,10 @@
                     <RadzenCard Variant="Variant.Filled" Class="rz-p-0">
                         <RadzenProfileMenu Class="">
                             <Template>
-                                <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
                                     <RadzenStack Gap="0px">
-                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Body1"><b>SACI</b></RadzenText>
-                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Overline" class="rz-mb-0 rz-p-0" style="font-variant: small-caps;">
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>SACI</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0" style="font-variant: small-caps;">
                                             Sistema para Atención de Correos Institucionales IPN
                                         </RadzenText>
                                     </RadzenStack>
@@ -95,11 +95,11 @@
                     <RadzenCard Variant="Variant.Filled" Class="rz-p-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
                         <RadzenProfileMenu Class="">
                             <Template>
-                                <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
                                     <RadzenImage Path="./ipn.png" Style="width: 30px; height: 30px; border-radius: 50%;" Class="rz-m-0" />
                                     <RadzenStack Gap="0px">
-                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Overline" class="rz-mb-0 rz-p-0">Personal:</RadzenText>
-                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Body1"><b>@tipoPersonal</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Personal:</RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@tipoPersonal</b></RadzenText>
                                     </RadzenStack>
                                 </RadzenStack>
                             </Template>
@@ -109,11 +109,11 @@
                     <RadzenCard Variant="Variant.Filled" Class="rz-p-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
                         <RadzenProfileMenu Class="">
                             <Template>
-                                <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
                                     <RadzenGravatar Email="@email" />
                                     <RadzenStack Gap="0px">
-                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Overline" class="rz-mb-0 rz-p-0">Correo Electrónico Personal</RadzenText>
-                                        <RadzenText TextStyle="Radzen.Blazor.TextStyle.Body1"><b>@email</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Correo Electrónico Personal</RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@email</b></RadzenText>
                                     </RadzenStack>
                                 </RadzenStack>
                             </Template>
@@ -162,7 +162,7 @@
     </RadzenBody>
 
     <RadzenFooter class="rz-background-color-base-900 rz-border-base-900">
-    <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceAround" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceAround" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
         <RadzenText Text="UPIICSA (Desarrollo de Sistemas de Información)" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
         <RadzenText Text="Ⓒ 2023 SACI (Sistema para Atención de Correos Institucionales) vα 1.0" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
     </RadzenStack>
