@@ -30,108 +30,102 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
- 
-	<style>
-		p{
-		
-		padding:5px;
-	}
-	</style>
-	<div align="center">
-		<a style='color:black; font-size:1em; font-weight:bold; font-family: Arial; font-size: 30px; text-align:center;'> Sistema de Ayuda para Correos Institucionales</a>
-    </div>
 </head>
 
-<body>
-	<main style='display:grid; place-items:center;'>
+<body > <!-- class='container-fluid'-->
+	<header>
+		<div align='center'>
+			<p class='fw-bolder text-center fs-3'> Sistema de Ayuda para Correos Institucionales</p>
+		</div>
+	</header>
+	<main class='container-fluid'><!-- style='display:grid; place-items:center;'-->
 		<section >
-			<article style='background-color: rgb(255, 255, 255); border-radius:10px;'>
-				<p style='text-align:justify;'>	Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
+			<article class='p-2 rounded' style='background-color: rgb(255, 255, 255);'>
+				<p class='text-start' style='font-size:calc(10px + 0.290625vw);'>	Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
 				Se le informa que su registro fué exitoso en la Plataforma <b>SACI (Sistema de Ayuda para Correos Institucionales)</b>
-				de la Unidad Académica (nombre de la escuela), por este medio se le hace entrega de sus 
+				de la Unidad Académica (nombre de la escuela), por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>
 				</p>
 			</article>
-			<article style='background-color: rgb(244,244,244); border-radius:10px;'>
-				<p style='text-align:justify;'>	
-				<b>Credenciales de Acceso:</b><br>
-				<div align="center">
-						<table class="table table-striped table-bordered border-black" style='width:50vw; '>
+			
+			<article class='p-2 rounded container-fluid' style='background-color: rgb(244,244,244); width:90vw'>				
+				<div align='center'>
+						<table class='table table-striped table-bordered border-black p-2' style='width:80vw; ><!-- style='width:50vw; '-->
 							<thead>
-								<tr>
-									<th scope="col">Identificador</th>
-									<th scope="col">Credenciales</th>
+								<tr>									
+									<th scope='col' colspan='2' style='font-size:calc(12px + 0.290625vw);'>Credenciales de Acceso</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>Usuario:</td>
-									<td><b>{oUsuario.UsuCorreoPersonalCuentaNueva}</b></td>
+									<td style='font-size:calc(10px + 0.290625vw);'>Usuario:</td>
+									<td style='font-size:calc(10px + 0.290625vw);'><b>{oUsuario.UsuCorreoPersonalCuentaNueva}</b></td>
 								</tr>
 								<tr>
-									<td>Contraseña:</td>
-									<td><b>{oUsuario.UsuContraseña}</b></td>
+									<td style='font-size:calc(10px + 0.290625vw);'>Contraseña:</td>
+									<td style='font-size:calc(10px + 0.290625vw);'><b>{oUsuario.UsuContraseña}</b></td>
 								</tr>			
 								
 							</tbody>
 						</table>
 				</div>
-				</p>
 			</article>
-			<div align="center">
-				<article style='background-color: rgb(255, 255, 255); width:90vw; border-radius:10px; '>
-					<p style="text-align:justify"><!---->
+			
+			<div align='center'>
+				<article class='p-2 rounded' style='background-color: rgb(255, 255, 255); width:90vw; '>
+					<p class='text-start' style='font-size:calc(10px + 0.290625vw);'><!---->
 						Sus datos son los siguientes:<br>
 					
-						<table class="table table-striped table-bordered border-black" style='width:80vw; '>
+						<table class='table table-striped table-bordered border-black' style='width:80vw; '>
 							<thead>
-								<tr>
-									<th scope="col">Campos</th>
-									<th scope="col">Datos</th>
+								<tr>									
+									<th scope='col' colspan='2' style='font-size:calc(12px + 0.290625vw);'>Datos personales</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>Rol</td>
-									<td>{oUsuario.UsuIdRol}</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>Rol</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>{oUsuario.UsuIdRol}</td>
 								</tr>
 								<tr>
-									<td>Tipo de personal</td>
-									<td>Usuario</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>Tipo de personal</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>Usuario</td>
 								</tr>			
 								<tr>
-									<td>Nombre</td>
-									<td>{oUsuario.UsuNombre}</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>Nombre</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>{oUsuario.UsuNombre}</td>
 								</tr>
 								<tr>
-									<td>Primer Apellido</td>
-									<td>{oUsuario.UsuPrimerApellido}</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>Primer Apellido</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>{oUsuario.UsuPrimerApellido}</td>
 								</tr>
 								<tr>
-									<td>Segundo Apellido</td>
-									<td>{oUsuario.UsuPrimerApellido}</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>Segundo Apellido</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>{oUsuario.UsuPrimerApellido}</td>
 								</tr>
 								<tr>
-									<td>CURP</td>
-									<td>{oUsuario.UsuCurp}</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>CURP</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>{oUsuario.UsuCurp}</td>
 								</tr>
 								<tr>
-									<td>Celular</td>
-									<td>{oUsuario.UsuNoCelularAnterior}</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>Celular</td>
+									<td style='font-size:calc(10px + 0.290625vw);'>{oUsuario.UsuNoCelularAnterior}</td>
 								</tr>
 							</tbody>
 						</table>
 					</p>
 				</article>
 			</div>
-			<footer><p style="text-align:justify">Que tenga un excelente día.<br>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.</p></footer>
+			<footer><p class='text-start' style='font-size:calc(10px + 0.290625vw);'>Que tenga un excelente día.<br>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.</p></footer>
 		</section>	
 	</main>
+	
+	<footer>
+		<div align='center'>		
+			<img src='LOGOSACI.PNG' width='100' height='100' alt='...'></img>
+		</div>
+	</footer>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
-<footer>
-	<div align="center">		
-		<img src="LOGOSACI.PNG" width="100" height="100" alt="..."></img>
-	</div>
-</footer>
+
 
 </html>
