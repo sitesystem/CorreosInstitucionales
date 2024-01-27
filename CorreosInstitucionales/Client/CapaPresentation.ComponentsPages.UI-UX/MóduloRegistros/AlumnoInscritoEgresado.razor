@@ -304,7 +304,7 @@
 
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Contraseña" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
-                            <Start><RadzenIcon Icon="password" IconColor="@Colors.Base400" /></Start>
+                            <Start><RadzenIcon Icon="password" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
                                 <RadzenTextBox id="contraseña_alumno" @bind-Value="@oUsuario.UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
                                                Visible="@(!VisibleContraseña)" />
@@ -326,16 +326,15 @@
 
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Confirmar Contraseña" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
-                            <Start><RadzenIcon Icon="password" IconColor="@Colors.Base400" /></Start>
+                            <Start><RadzenIcon Icon="password" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
                                 <RadzenTextBox id="confirmar_contraseña_alumno" @bind-Value="@UsuConfirmarContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20"
                                                @oninput="(e => UsuConfirmarContraseña = e.Value.ToString())"
                                                @onkeyup="@CompararContraseñas"
                                                Visible="@(!VisibleConfirmarContraseña)" />
-                                <RadzenPassword id="confirmar_contraseña_visible_alumno" @bind-Value="@UsuConfirmarContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20"
+                                <RadzenPassword id="confirmar_contraseña_visible_alumno" @bind-Value="@UsuConfirmarContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
                                                 @oninput="(e => UsuConfirmarContraseña = e.Value.ToString())"
                                                 @onkeyup="@CompararContraseñas"
-                                                aria-label="enter password"
                                                 Visible="@VisibleConfirmarContraseña" />
                             </ChildContent>
                             <End>
@@ -350,7 +349,7 @@
                         </RadzenFormField>
                         <RadzenAlert Title="Error" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false"
                                      @bind-Visible="flagErrorPasswords">
-                                     Las contraseñas no coinciden, <strong>verifiquelas.</strong>
+                                     Las contraseñas no coinciden, <strong>verifíquelas.</strong>
                         </RadzenAlert>
                     </div>                                                           
                 </div>

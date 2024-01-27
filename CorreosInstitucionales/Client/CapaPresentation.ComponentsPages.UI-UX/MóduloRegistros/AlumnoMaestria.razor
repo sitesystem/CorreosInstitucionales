@@ -294,10 +294,9 @@
                                                @oninput="(e => UsuConfirmarContraseña = e.Value.ToString())"
                                                @onkeyup="@CompararContraseñas"
                                                Visible="@(!VisibleConfirmarContraseña)" />
-                                <RadzenPassword id="confirmar_contraseña_visible_maestria" @bind-Value="@UsuConfirmarContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20"
+                                <RadzenPassword id="confirmar_contraseña_visible_maestria" @bind-Value="@UsuConfirmarContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
                                                 @oninput="(e => UsuConfirmarContraseña = e.Value.ToString())"
                                                 @onkeyup="@CompararContraseñas"
-                                                aria-label="enter password"
                                                 Visible="@VisibleConfirmarContraseña" />
                             </ChildContent>
                             <End>
@@ -312,7 +311,7 @@
                         </RadzenFormField>
                         <RadzenAlert Title="Error" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false"
                                      @bind-Visible="flagErrorPasswords">
-                                     Las contraseñas no coinciden, <strong>verifiquelas.</strong>
+                                     Las contraseñas no coinciden, <strong>verifíquelas.</strong>
                         </RadzenAlert>
                     </div>                                                           
                 </div>
