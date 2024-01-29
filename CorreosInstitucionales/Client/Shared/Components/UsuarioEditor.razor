@@ -1,0 +1,139 @@
+﻿@using System.Text.Json
+@using System.Text.Json.Serialization
+
+@using System.Text.Json.Serialization.Metadata
+
+
+@inject Radzen.DialogService dialogService
+
+@if(editable)
+{
+    <EditForm @ref=editor Model=@registro OnValidSubmit=@OnFormValid>
+        <div class="alert alert-info">
+            Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+        </div>
+        <DataAnnotationsValidator/>
+        <!--<ValidationSummary />-->
+
+        <h1>Datos Personales</h1>
+        <div class="row">
+            <div class="col-6 mb-2">
+                <span class="fw-bold">Nombre(s) <strong class="red" title="requerido">*</strong></span>
+                <InputText id="it_usuNombre" @bind-Value="@registro.UsuNombre" class="form-control required"></InputText>
+                <ValidationMessage For="()=>registro.UsuNombre"></ValidationMessage>
+            </div>
+
+            <div class="col-6 mb-2">
+                <span class="fw-bold">Primer Apellido <strong class="red" title="requerido">*</strong></span>
+                <InputText @bind-Value="@registro.UsuPrimerApellido" class="form-control required"></InputText>
+                <ValidationMessage For="()=>registro.UsuPrimerApellido"></ValidationMessage>
+            </div>
+
+            <div class="col-6 mb-2">
+                <span class="fw-bold">Segundo Apellido</span>
+                <InputText @bind-Value="@registro.UsuSegundoApellido" class="form-control"></InputText>
+                <ValidationMessage For="()=>registro.UsuSegundoApellido"></ValidationMessage>
+            </div>
+        </div>
+        
+        <div Class="row">
+            <div class="col-6 mb-2">
+                <span class="fw-bold">CURP <strong class="red" title="requerido">*</strong></span>
+                <InputText @bind-Value="@registro.UsuCurp" class="form-control required"></InputText>
+                <ValidationMessage For="()=>registro.UsuCurp"></ValidationMessage>
+            </div>
+        </div>
+
+        
+
+        <hr />
+
+        <h1>Datos de contacto</h1>
+        <!--
+        <div Class="row">
+            <div class="col-6 mb-2">
+                <span class="fw-bold">Número de celular <strong class="red" title="requerido">*</strong></span>
+                <InputText @bind-Value="@registro.UsuNoCelularNuevo" class="form-control required"></InputText>
+                <ValidationMessage For="()=>registro.UsuNoCelularNuevo"></ValidationMessage>
+            </div>
+        </div>-->
+
+        <div class="row">
+            
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">
+            Guardar
+        </button>
+    </EditForm>
+}
+
+
+<pre>
+    @debug
+</pre>
+
+<!--
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.5rem">
+    <RadzenButton Click="@((args) => dialogService.Close(false))" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" />
+    <RadzenButton Click="@((args) => dialogService.Close(true))" Variant="Variant.Flat" Text="OK" Style="width: 120px" />
+</RadzenStack>
+-->
+
+@code 
+{
+
+    [Parameter] public RequestDTO_Usuario usuario { get; set; } = new RequestDTO_Usuario();
+    private RequestDTO_Usuario registro = new RequestDTO_Usuario();
+
+    EditForm editor = default!;
+    DataAnnotationsValidator validator = default!;
+
+    private bool editable = false;
+
+    private string debug = "";
+
+    /*
+    protected override async Task OnInitializedAsync()
+    {
+
+    }*/
+
+    protected override void OnInitialized()
+    {
+        // CREAR UNA COPIA PARA EDITARLA
+        string json = JsonSerializer.Serialize(usuario);
+        RequestDTO_Usuario? tmp = JsonSerializer.Deserialize<RequestDTO_Usuario>(json);
+        if(tmp is null)
+        {
+            debug = "NO SE PUDO CREAR UNA COPIA PARA EDITAR.";
+        }
+        else
+        {
+
+            registro = tmp;
+            editable = true;
+            
+        }
+    }
+
+    private void OnSubmit()
+    {
+        debug += Environment.NewLine + "SUBMIT";
+    }
+
+    private void OnFormValid()
+    {
+        /* SI EL FORMULARIO ES VÁLIDO, SE GUARDA LA COPIA EDITADA 
+         * Y SE CONSERVA EL REGISTRO ORIGINAL 
+         * 
+         * - SE PUEDE IMPLEMENTAR
+         * UN BOTÓN DE DESHACER LOS CAMBIOS, SIEMPRE Y CUANDO NO SE
+         * RECARGUE LA PÁGINA -
+        */
+       
+        dialogService.Close(true);
+    }
+
+}

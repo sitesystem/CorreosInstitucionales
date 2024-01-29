@@ -1,0 +1,16 @@
+﻿h1{
+    font-weight:bold;
+    font-size: 1.25em;
+    margin-bottom:0.5em;
+}
+
+.required
+{
+    border-bottom:2px solid red;
+}
+
+.red
+{
+    font-weight:bold;
+    color:red;
+}
