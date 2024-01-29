@@ -1,0 +1,158 @@
+﻿@page "/catalogos/debug"
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+
+<h3>DebugCatalogos</h3>
+<pre>
+    @foreach (PropertyInfo prop in dummy.GetType().GetProperties())
+    {
+        @RenderTag(prop);
+    }
+</pre>
+
+<ul>
+    @foreach (PropertyInfo prop in dummy.GetType().GetProperties())
+    {
+        <li>
+            @prop.Name - <pre>@DetectType(prop.PropertyType)</pre>
+            &nbsp;
+            @if (IsRequired(prop))
+            {
+                <span class="red">*</span>
+            }
+
+            <br />
+
+            <!--
+            <ul>
+            @foreach(var attr in prop.GetCustomAttributes())
+            {
+                <li>@attr</li>
+            }
+            </ul>
+            -->
+            
+            <br />
+
+            
+        </li>
+    }
+
+</ul>
+
+<ul>
+
+
+</ul>
+
+
+@code 
+{
+    RequestDTO_Usuario dummy = new RequestDTO_Usuario();
+
+    private bool IsRequired(PropertyInfo prop)
+    {
+        return prop.GetCustomAttribute<RequiredAttribute>() is not null;
+        //return prop.GetCustomAttributes().Where(p => p.Equals(RequiredAttribute)).Any();
+    }
+
+    private string RenderTag(PropertyInfo prop)
+    {
+        string template =
+    @"<div class=""col-6 mb-2"">
+        <span class=""fw-bold"">{0}{1}</span>
+        <{3} @bind-Value=""@registro.{0}"" class=""form-control{2}""></{3}>
+        <ValidationMessage For=""()=>registro.{0}""></ValidationMessage>
+    </div>"+Environment.NewLine+Environment.NewLine;
+
+        bool required = IsRequired(prop);
+        string caption = string.Empty;
+        string css = string.Empty;
+        TypeDescription tag_type = DetectType(prop.PropertyType);
+        string tag = "InputText";
+
+        if (required)
+        {
+            caption = "<strong class=\"red\" title=\"requerido\">*</strong>";
+            css = " required";
+        }
+
+        switch (tag_type.Description)
+        {
+            case "BOOL": tag = "InputCheckbox"; break;
+            case "DATE": tag = "InputDate"; break;
+            case "NUMBER": tag = "InputNumber"; break;
+        }
+
+        return tag_type is null ? string.Empty : string.Format(template, prop.Name, caption, css, tag);
+    }
+
+    private class TypeDescription
+    {
+        public string Description { get; private set; }
+        public bool IsNullable { get; private set; }
+        public bool Discard { get; private set; }
+
+        public TypeDescription(string description, bool isNullable = false, bool discad = false)
+        {
+            this.Description = description;
+            this.IsNullable = isNullable;
+            this.Discard = discad;
+        }
+    }
+
+    private TypeDescription DetectType(Type t)
+    {
+        Type? ttype = Nullable.GetUnderlyingType(t);
+        Type look = ttype ?? t;
+
+        string? result = null;
+        
+        Dictionary<Type, string> mappings = new Dictionary<Type, string>()
+        {
+            {typeof(bool), "BOOL"},
+            {typeof(DateTime) , "DATE" },
+            {typeof(string), "STRING"},
+            {typeof(Int16),"NUMBER"},
+            {typeof(Int32),"NUMBER"},
+            {typeof(Int64),"NUMBER"},
+            {typeof(UInt16),"NUMBER"},
+            {typeof(UInt32),"NUMBER"},
+            {typeof(UInt64),"NUMBER"},
+            {typeof(UInt128),"NUMBER"},
+        };
+
+        if(mappings.ContainsKey(look))
+        {
+            result = mappings[look];
+        }
+        
+        /*
+
+
+        switch (tcode)
+        {
+            case : result = "BOOL"; break;
+            case : result =; break;
+            case : result = "STRING"; break;
+            case : result = "NUMBER"; break;
+            case TypeCode.Object:
+
+
+                switch(typeof(ttype))
+                {
+                    case System.Boolean:
+
+
+                        break;
+                }
+
+            break;
+        }*/
+
+        return new TypeDescription(result??"",ttype is not null, result is null);// $"TYPE '{t}'\tTTYPE:'{ttype}'\tRESULT:'{result}'";
+    }
+     
+
+
+}

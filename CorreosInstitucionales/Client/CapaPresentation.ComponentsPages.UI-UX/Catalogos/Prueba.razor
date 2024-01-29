@@ -1,0 +1,74 @@
+﻿@page "/catalogos/prueba"
+@inject DialogService DialogService
+
+@if (data is not null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in data)
+            {
+                <tr>
+                    <td>
+                        @item.UsuNombre
+                        @item.UsuPrimerApellido
+                        @item.UsuSegundoApellido
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" @onclick="async ()=>await Editar(item)">
+                            Editar
+                        </button>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<pre>
+    @debug
+</pre>
+
+
+@code 
+{
+    private string debug = "";
+    private List<RequestDTO_Usuario> data = new List<RequestDTO_Usuario>();
+    private bool shouldRender = true;
+
+    protected override bool ShouldRender() => shouldRender;
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await servicioUsuario.GetAllDataAsync(true);
+
+        if(response is not null)
+        {
+            data = response.Data??new List<RequestDTO_Usuario>();
+        }
+        else
+        {
+            shouldRender = false;
+        }
+    }
+
+    private async Task Editar(RequestDTO_Usuario usuario)
+    {
+        var result = await DialogService.OpenAsync<UsuarioEditor>(
+            usuario.UsuNombre,
+            new Dictionary<string, object>() { { "usuario", usuario } },
+            new DialogOptions() { CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true, Width = "50%" }
+        );
+
+        debug += Environment.NewLine + $"{result}";
+
+        //StateHasChanged();
+    }
+
+}
