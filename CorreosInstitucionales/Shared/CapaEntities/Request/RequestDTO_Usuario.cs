@@ -86,7 +86,7 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuNoCelularAnterior")]
     [StringLength(20)]
-    [MinLength(14, ErrorMessage = "Verifique el Número de Celular Anterior que tenga al menos 10 dígitos.")]
+    [MinLength(14, ErrorMessage = "Verifique el No. DE CELULAR ANTERIOR que tenga al menos 10 dígitos.")]
     public string? UsuNoCelularAnterior { get; set; }
 
     /// <summary>
@@ -94,8 +94,8 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuNoCelularNuevo")]
     [StringLength(20)]
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NO. DE CELULAR requerido.")]
-    [MinLength(14, ErrorMessage = "El Número de Celular Actual debe ser mínimo de 10 dígitos.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR ACTUAL requerido.")]
+    [MinLength(14, ErrorMessage = "El No. DE CELULAR ACTUAL debe ser mínimo de 10 dígitos.")]
     public string UsuNoCelularNuevo { get; set; } = null!;
 
     /*******************************  DATOS ACADÉMICOS  *******************************/
@@ -103,27 +103,27 @@ public class RequestDTO_Usuario
     /// Número de Boleta del Usuario Alumno/Egresado
     /// </summary>
     [Column("usuBoletaAlumno")]
-    [StringLength(10, ErrorMessage = "La Boleta introducida debe ser máximo de 10 dígitos.")]
+    [StringLength(10, ErrorMessage = "La BOLETA introducida debe ser máximo de 10 dígitos.")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo BOLETA requerido.")]
-    [MinLength(10, ErrorMessage = "La Boleta introducida debe ser mínimo de 10 dígitos.")]
-    [RegularExpression("^\\d{4}60\\d{4}$", ErrorMessage = "Boleta Inválida (Formato: xxxx60xxxx).")]
+    [MinLength(10, ErrorMessage = "La BOLETA introducida debe ser mínimo de 10 dígitos.")]
+    [RegularExpression("^\\d{4}60\\d{4}$", ErrorMessage = "BOLETA Inválida (Formato: xxxx60xxxx).")]
     public string? UsuBoletaAlumno { get; set; }
 
     /// <summary>
     /// Número de Boleta del Usuario Alumno de Maestría
     /// </summary>
     [Column("usuBoletaMaestria")]
-    [StringLength(7, ErrorMessage = "La Boleta introducida debe ser máximo de 7 caracteres.")]
+    [StringLength(7, ErrorMessage = "La BOLETA introducida debe ser máximo de 7 caracteres.")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo BOLETA requerido.")]
-    [MinLength(7, ErrorMessage = "La Boleta introducida debe ser mínimo de 7 caracteres.")]
-    [RegularExpression("^B\\d{6}$", ErrorMessage = "Boleta Inválida (Formato: Bxxxxxx).")]
+    [MinLength(7, ErrorMessage = "La BOLETA introducida debe ser mínimo de 7 caracteres.")]
+    [RegularExpression("^B\\d{6}$", ErrorMessage = "BOLETA Inválida (Formato: Bxxxxxx).")]
     public string? UsuBoletaMaestria { get; set; }
 
     /// <summary>
     /// FK ID de la Carrera que pertenece o cursó
     /// </summary>
     [Column("usuIdCarrera")]
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CARRERA/LICENCIATURA requerido.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CARRERA / LICENCIATURA requerido.")]
     public int? UsuIdCarrera { get; set; }
 
     /// <summary>
@@ -161,21 +161,22 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuNumeroEmpleado")]
     [StringLength(100)]
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NO. DE EMPLEADO requerido.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE EMPLEADO requerido.")]
     public string? UsuNumeroEmpleado { get; set; }
 
     /// <summary>
     /// FK ID del Área / Departamento domde labora el Empleado
     /// </summary>
     [Column("usuIdAreaDepto")]
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo ÁREA/DEPARTAMENTO requerido.")]
-    public int UsuIdAreaDepto { get; set; }
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo ÁREA / DEPARTAMENTO requerido.")]
+    public int? UsuIdAreaDepto { get; set; }
 
     /// <summary>
     /// Número de Extensión del Área / Departamento
     /// </summary>
     [Column("usuNoExtension")]
     [StringLength(10)]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE EXTENSIÓN requerido.")]
     public string? UsuNoExtension { get; set; }
 
     /*******************************  DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP  *******************************/
@@ -183,7 +184,7 @@ public class RequestDTO_Usuario
     /// Correo Personal Anterior
     /// </summary>
     [Column("usuCorreoPersonalCuentaAnterior")]
-    [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo invalido. (Formato: xxxxxx@xxx.xx)")]
+    [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo inválido. (Formato: xxxxxx@xxx.xx)")]
     [StringLength(100)]
     public string? UsuCorreoPersonalCuentaAnterior { get; set; }
 
@@ -193,7 +194,7 @@ public class RequestDTO_Usuario
     [Column("usuCorreoPersonalCuentaNueva")]
     [StringLength(100)]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO ELECTRÓNICO PERSONAL requerido.")]
-    [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo invalido. (Formato: xxxxxx@xxx.xx)")]
+    [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "CORREO inválido. (Formato: xxxxxx@xxx.xx)")]
     public string UsuCorreoPersonalCuentaNueva { get; set; } = null!;
 
     /// <summary>
@@ -215,7 +216,7 @@ public class RequestDTO_Usuario
     /// Correo Electrónico Institucional IPN
     /// </summary>
     [Column("usuCorreoInstitucionalCuenta")]
-    [RegularExpression("^[\\w-\\.]+@ipn\\.mx$|^[\\w-\\.]+@alumno\\.ipn\\.mx$|^[\\w-\\.]+@egresado\\.ipn\\.mx$", ErrorMessage = "Correo invalido. (Formato: xxxxxx@ipn.mx ó @alumno.ipn.mx ó @egresado.ipn.mx)")]
+    [RegularExpression("^[\\w-\\.]+@ipn\\.mx$|^[\\w-\\.]+@alumno\\.ipn\\.mx$|^[\\w-\\.]+@egresado\\.ipn\\.mx$", ErrorMessage = "CORREO inválido. (Formato: xxxxxx@ipn.mx ó @alumno.ipn.mx ó @egresado.ipn.mx)")]
     [StringLength(100)]
     public string? UsuCorreoInstitucionalCuenta { get; set; }
 

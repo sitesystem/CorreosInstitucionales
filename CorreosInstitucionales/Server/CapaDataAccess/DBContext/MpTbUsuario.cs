@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
@@ -140,7 +140,7 @@ public partial class MpTbUsuario
     /// FK ID del Área / Departamento domde labora el Empleado
     /// </summary>
     [Column("usuIdAreaDepto")]
-    public int UsuIdAreaDepto { get; set; }
+    public int? UsuIdAreaDepto { get; set; }
 
     /// <summary>
     /// Número de Extensión del Área / Departamento
@@ -200,7 +200,7 @@ public partial class MpTbUsuario
     /// Fecha Hora del Alta del Usuario
     /// </summary>
     [Column("usuFechaHoraAlta", TypeName = "datetime")]
-    public DateTime UsuFechaHoraAlta { get; set; }
+    public DateTime? UsuFechaHoraAlta { get; set; }
 
     /// <summary>
     /// Estatus { 0 = Inactivo, 1 = Activo }
@@ -215,7 +215,7 @@ public partial class MpTbUsuario
 
     [ForeignKey("UsuIdAreaDepto")]
     [InverseProperty("MpTbUsuarios")]
-    public virtual McCatAreasDepto UsuIdAreaDeptoNavigation { get; set; } = null!;
+    public virtual McCatAreasDepto? UsuIdAreaDeptoNavigation { get; set; }
 
     [ForeignKey("UsuIdCarrera")]
     [InverseProperty("MpTbUsuarios")]

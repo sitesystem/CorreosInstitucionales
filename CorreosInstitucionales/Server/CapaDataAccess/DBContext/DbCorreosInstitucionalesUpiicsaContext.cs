@@ -259,9 +259,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasComment("Estatus { 0 = Inactivo, 1 = Activo }");
 
-            entity.HasOne(d => d.UsuIdAreaDeptoNavigation).WithMany(p => p.MpTbUsuarios)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MP_tbUsuarios_MC_catAreasDeptos");
+            entity.HasOne(d => d.UsuIdAreaDeptoNavigation).WithMany(p => p.MpTbUsuarios).HasConstraintName("FK_MP_tbUsuarios_MC_catAreasDeptos");
 
             entity.HasOne(d => d.UsuIdCarreraNavigation).WithMany(p => p.MpTbUsuarios).HasConstraintName("FK_MP_tbUsuarios_MC_catCarreras");
 

@@ -2,8 +2,6 @@
 @using Radzen.Blazor
 
 @using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
-@using CorreosInstitucionales.Shared.CapaEntities.Request
-@using CorreosInstitucionales.Shared.CapaEntities.Response
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal
 
 @inherits LayoutComponentBase
@@ -56,22 +54,17 @@
     </main>
 </div>
 *@
-
-<RadzenLayout>
-    <RadzenHeader class="rz-background-color-info-darker rz-border-radius-0 rz-py-0">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
-            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" Class="rz-m-0" />
-            <AuthorizeView>
-                <Authorized>
-                    <RadzenImage Path="https://www.radzen.com/assets/radzen-logo-top-b2d6e9dcacf7d344bbab515b8748c5f4d702c6c5bfc349bd9ff9003016a3a6ee.svg"
-                                 Style="width: 8rem; border-radius: 5px;"
-                                 AlternateText="url image"
-                                 Class="rz-m-0 rz-p-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block" />
-                    
+<AuthorizeView>
+    <Authorized>
+        <RadzenLayout>
+            <RadzenHeader class="rz-background-color-info-darker rz-border-radius-0 rz-py-0">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
+                    <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" Class="rz-m-0" />
                     <RadzenCard Variant="Variant.Filled" Class="rz-p-0">
-                        <RadzenProfileMenu Class="">
+                        <RadzenProfileMenu>
                             <Template>
                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
+                                    <RadzenImage Path="./logo_saci.png" Style="height:30px;" AlternateText="logo saci" />
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Body1"><b>SACI</b></RadzenText>
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0" style="font-variant: small-caps;">
@@ -82,7 +75,6 @@
                             </Template>
                         </RadzenProfileMenu>
                     </RadzenCard>
-
                     @{
                         string? rol = context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value;
                         string? tipoPersonal = string.Empty;
@@ -91,12 +83,11 @@
                         string? name = context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value;
                         string? email = context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
                     }
-
                     <RadzenCard Variant="Variant.Filled" Class="rz-p-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
-                        <RadzenProfileMenu Class="">
+                        <RadzenProfileMenu>
                             <Template>
                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
-                                    <RadzenImage Path="./ipn.png" Style="width: 30px; height: 30px; border-radius: 50%;" Class="rz-m-0" />
+                                    <RadzenImage Path="./logo_ipn.png" Style="height: 30px;" />
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Personal:</RadzenText>
                                         <RadzenText TextStyle="TextStyle.Body1"><b>@tipoPersonal</b></RadzenText>
@@ -124,50 +115,51 @@
                             </ChildContent>
                         </RadzenProfileMenu>
                     </RadzenCard>
-                </Authorized>
-                <NotAuthorized>
-                    <p>No Autorizado</p>
-                </NotAuthorized>
-                <Authorizing>
-                    <p>Autorizando...</p>
-                </Authorizing>
-            </AuthorizeView>
-        </RadzenStack>
-    </RadzenHeader>
+                </RadzenStack>
+            </RadzenHeader>
 
-    <!-- ... Contenido para pantallas pequeñas móviles -->
-    <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-background-color-base-900">
-        <RadzenSidebar @bind-Expanded="@sidebarExpanded" Responsive="false" Style="width: max-content" class="rz-background-color-base-900 rz-border-base-900">
-            <RadzenPanelMenu Multiple="false" ShowArrow="true">
-                <NavMenu />
-            </RadzenPanelMenu>
-        </RadzenSidebar>
-    </div>
+            <!-- ... Contenido para pantallas pequeñas móviles -->
+            <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-background-color-base-900">
+                <RadzenSidebar @bind-Expanded="@sidebarExpanded" Responsive="false" Style="width: max-content" class="rz-background-color-base-900 rz-border-base-900">
+                    <RadzenPanelMenu Multiple="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" ShowArrow="true">
+                        <NavMenu isExpanded="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" />
+                    </RadzenPanelMenu>
+                </RadzenSidebar>
+            </div>
 
-    <!-- ... Contenido para pantallas grandes ... -->
-    <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block rz-background-color-base-900">
-        <RadzenSidebar Responsive="false" Style="width: max-content" class="rz-background-color-base-900 rz-border-base-900">
-            <RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" Multiple="false" ShowArrow="true">
-                <NavMenu />
-            </RadzenPanelMenu>
-        </RadzenSidebar>
-    </div>
+            <!-- ... Contenido para pantallas grandes ... -->
+            <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block rz-background-color-base-900">
+                <RadzenSidebar Responsive="false" Style="width: max-content" class="rz-background-color-base-900 rz-border-base-900">
+                    <RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)"
+                                     Multiple="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" ShowArrow="true">
+                        <NavMenu isExpanded="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" />
+                    </RadzenPanelMenu>
+                </RadzenSidebar>
+            </div>
 
-    <RadzenBody style="background: url('../fondo.jpg') repeat center center fixed;">
-        <RadzenColumn Size="12">
-            <article class="content px-4" style="background: url('../fondo.jpg') repeat center center fixed;">
-                @Body
-            </article>
-        </RadzenColumn>
-    </RadzenBody>
+            <RadzenBody style="background: url('../fondo.jpg') repeat center center fixed;">
+                <RadzenColumn Size="12">
+                    <article class="content px-4" style="background: url('../fondo.jpg') repeat center center fixed;">
+                        @Body
+                    </article>
+                </RadzenColumn>
+            </RadzenBody>
 
-    <RadzenFooter class="rz-background-color-base-900 rz-border-base-900">
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceAround" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
-        <RadzenText Text="UPIICSA (Desarrollo de Sistemas de Información)" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-        <RadzenText Text="Ⓒ 2023 SACI (Sistema para Atención de Correos Institucionales) vα 1.0" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-    </RadzenStack>
-    </RadzenFooter>
-</RadzenLayout>
+            <RadzenFooter class="rz-background-color-base-900 rz-border-base-900">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceAround" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
+                    <RadzenText Text="UPIICSA (Desarrollo de Sistemas de Información)" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                    <RadzenText Text="Ⓒ 2023 SACI (Sistema para Atención de Correos Institucionales) vα 1.0" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                </RadzenStack>
+            </RadzenFooter>
+        </RadzenLayout>
+    </Authorized>
+    <NotAuthorized>
+        <p>No Autorizado</p>
+    </NotAuthorized>
+    <Authorizing>
+        <p>Autorizando...</p>
+    </Authorizing>
+</AuthorizeView>
 
 @code
 {

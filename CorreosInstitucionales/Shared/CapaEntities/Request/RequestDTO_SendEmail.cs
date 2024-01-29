@@ -8,8 +8,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
     public class RequestDTO_SendEmail
     {
-        public string EmailTo { get; set; } = null!;  // Correo Electrónico
-        public string? Subject { get; set; }        // Asunto
-        public string? Body { get; set; }           // Cuerpo o Contenido
+        public string EmailTo { get; set; } = null!;    // Correo Electrónico
+        public string? Subject { get; set; }            // Asunto
+        public string? Body { get; set; }               // Cuerpo o Contenido
     }
 }

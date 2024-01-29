@@ -156,7 +156,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Response
         public string? UsuCorreoInstitucionalContraseña { get; set; }
 
         [Column("usuFechaHoraAlta", TypeName = "datetime")]
-        public DateTime UsuFechaHoraAlta { get; set; }
+        public DateTime? UsuFechaHoraAlta { get; set; }
 
         /// <summary>
         /// Activo / Inactivo

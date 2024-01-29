@@ -39,51 +39,59 @@
 
     <!-- Encabezado de Página (Header Fixed-Top) -->
     <header>
-        @* <nav class="navbar bg-dark bg-body-tertiary fixed-top" style="border-bottom: 10px solid #3d0000;" data-bs-theme="dark"> *@
-        <nav class="navbar fixed-top" style="background-color:#C0C0C0; border-bottom: 10px solid #076633;">
-            <div class="container">
-                <img src="/ipn.png" alt="Logo" class="d-inline-block align-text-top" style="width:2vw; height:4vh;">
-                    <a class="navbar-brand text-black cintillo">
-                        <!--font-size:calc(10px + 0.390625vw)    font-size:calc(8.5px + 0.00590625vw)"  1.75vw-->
-                    Sistema para Atención de Correos Institucionales SACI
-                </a>
-                <button class="btn btn-success" style="text-decoration:none; font-size:calc(7px + 0.3906vw); margin: 0; padding:0.3906vw" @onclick="@(() => navigationManager.NavigateTo("/"))">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z" />
-                    </svg> Regresar
-                </button>
+        <nav class="navbar header fixed-top">
+            <div class="container ">
+                <RadzenHeader class="rz-border-radius-0 rz-py-0" Style="border-bottom: 10px solid #076633;">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" Class="w-100">
+                        <RadzenImage Path="./pleca_saci.png" Style="height:100px;" AlternateText="pleca saci" class="img-fluid rz-my-0" />
+                        <RadzenImage Path="./logo_ipn.png" Style="height:100px;" AlternateText="logo ipn" class="img-fluid rz-my-0" />
+                        <RadzenImage Path="./logo_upiicsa.png" Style="height:100px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />
+                        <RadzenImage Path="./logo_saci.png" Style="height:100px;" AlternateText="logo saci" class="img-fluid rz-my-0" />
+                        <RadzenImage Path="./pleca_ipn.png" Style="height:100px;" AlternateText="pleca ipn" class="img-fluid rz-my-0" />
+                    </RadzenStack>
+                </RadzenHeader>
             </div>
-        </nav>        
+        </nav>
     </header>
-
+    
     <hr class="d-block rz-my-10 rz-color-base-100" />
 
-    <div class="container">
-        <div class="row align-items-center">
+    <div class="container rz-background-color-base-800 rz-p-3 rz-border-radius-1">
+        <div class="row align-items-center rz-mt-10 rz-mb-5">
             <div class="col">
                 <RadzenCard Variant="Variant.Filled" class="rz-background-color-white rz-shadow-2 rz-border-radius-1 rz-py-2 rz-mb-3">
-                    <RadzenText TextStyle="Radzen.Blazor.TextStyle.Body1">
-                        <h5 style="font-variant: small-caps;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
-                                <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                            </svg> Registro del Usuario
-                        </h5>
-                    </RadzenText>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" Class="w-100">
+                        <RadzenText TextStyle="TextStyle.Body1">
+                            <h5 style="font-variant: small-caps;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+                                    <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+                                </svg> Registro del Usuario
+                            </h5>
+                        </RadzenText>
+                        <RadzenButton Text="Regresar"
+                                      BusyText=""
+                                      ButtonStyle="ButtonStyle.Warning"
+                                      ButtonType="ButtonType.Button"
+                                      IsBusy="false"
+                                      Icon="arrow_back"
+                                      Class="rz-ripple"
+                                      Shade="Shade.Darker"
+                                      Click="@(() => navigationManager.NavigateTo("/"))" />
+                    </RadzenStack>
                 </RadzenCard>
 
                 <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
                     <Tabs>
                         <RadzenTabsItem Text="Alumn@s" Icon="school" IconColor="@Colors.Base800">
-                            
                             <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
-                                <Tabs>                                                                                                          
-                                    <RadzenTabsItem Text="Alumn@s Inscritos / Egresados" Icon="school" IconColor="@Colors.Base800">                                                                                
-                                        <AlumnoInscritoEgresado></AlumnoInscritoEgresado>
+                                <Tabs>
+                                    <RadzenTabsItem Text="Alumn@s Inscritos / Egresados" Icon="school" IconColor="@Colors.Base800">
+                                        <AlumnoInscritoEgresado />
                                     </RadzenTabsItem>
                                     <RadzenTabsItem Text="Maestría" Icon="school" IconColor="@Colors.Base800">
-                                        <AlumnoMaestria></AlumnoMaestria>
-                                    </RadzenTabsItem>                                
+                                        <AlumnoMaestria />
+                                    </RadzenTabsItem>
                                 </Tabs>
                             </RadzenTabs>
                         </RadzenTabsItem>
@@ -91,13 +99,13 @@
                             <RadzenTabs RenderMode="TabRenderMode.Client">
                                 <Tabs>
                                     <RadzenTabsItem Text="Administrativos" Icon="badge" IconColor="@Colors.Base800">
-                                        <EmpleadoAdministrativo></EmpleadoAdministrativo>
+                                        <EmpleadoAdministrativoDocente IdTipoPersonal="4" TipoPersonal="administrativo" />
                                     </RadzenTabsItem>
                                     <RadzenTabsItem Text="Docentes" Icon="badge" IconColor="@Colors.Base800">
-                                        <EmpleadoDocente></EmpleadoDocente>
+                                        <EmpleadoAdministrativoDocente IdTipoPersonal="5" TipoPersonal="docente" />
                                     </RadzenTabsItem>
                                     <RadzenTabsItem Text="Honorarios" Icon="badge" IconColor="@Colors.Base800">
-                                        <EmpleadoHonorario></EmpleadoHonorario>
+                                        <EmpleadoHonorario />
                                     </RadzenTabsItem>
                                 </Tabs>
                             </RadzenTabs>
@@ -108,13 +116,14 @@
         </div>
     </div>
 
-    <hr class="d-block rz-my-10 rz-color-base-100" />
+    <hr class="d-block rz-color-base-100 rz-my-5" />
     
     <!-- Pie de Página (Footer Fixed-Bottom) -->
     <footer>
         <nav class="navbar bg-body-tertiary bg-dark fixed-bottom" data-bs-theme="dark">
             <div class="container text-center">
                 <a class="navbar-brand" style="text-decoration:none; font-size:calc(8px + 0.390625vw); color:white;">
+                    <RadzenImage Path="./logo_upiicsa.png" Style="height:20px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />&nbsp;
                     UPIICSA (Desarrollo de Sistemas de Información)
                 </a>
                 <a class="navbar-brand" style="text-decoration:none; font-size:calc(8px + 0.390625vw); color:white;">

@@ -14,17 +14,17 @@ DBContext
 => optionsBuilder.UseSqlServer("Server=localhost;Database=db_SITI;Trusted_Connection=True;TrustServerCertificate=True;");
 
 
- private readonly IConfiguration? _config;
+private readonly IConfiguration? _config;
 
- public DbCorreosInstitucionalesUpiicsaContext()
- {
- }
+public DbCorreosInstitucionalesUpiicsaContext()
+{
+}
 
- public DbCorreosInstitucionalesUpiicsaContext(DbContextOptions<DbCorreosInstitucionalesUpiicsaContext> options, IConfiguration config)
-     : base(options)
- {
-     _config = config;
- }
+public DbCorreosInstitucionalesUpiicsaContext(DbContextOptions<DbCorreosInstitucionalesUpiicsaContext> options, IConfiguration config)
+    : base(options)
+{
+    _config = config;
+}
 
 //=> optionsBuilder.UseSqlServer("Server=localhost;Database=db_CorreosInstitucionales_UPIICSA;Trusted_Connection=True;TrustServerCertificate=True;");
 //=> optionsBuilder.UseSqlServer(_config.GetConnectionString("SQLServer"));
