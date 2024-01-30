@@ -738,6 +738,17 @@ else
                                     </tr>
                                 </tbody>
                             </table>
+                            <div align="center">
+                                <RadzenButton Text="Regresar"
+                                              BusyText=""
+                                              ButtonStyle="ButtonStyle.Warning"
+                                              ButtonType="ButtonType.Button"
+                                              IsBusy="false"
+                                              Icon="arrow_back"
+                                              Class="rz-ripple"
+                                              Shade="Shade.Darker"
+                                              Click="@(() => navigationManager.NavigateTo("/"))" />
+                            </div>
                         </div>,
                         new DialogOptions()
                         {
@@ -748,7 +759,7 @@ else
                             Resizable = true,
                             ShowTitle = true,
                             ShowClose = true,
-                            Draggable = true,
+                            Draggable = true,                            
                             CssClass = "custom-dialog-class",
                             WrapperCssClass = "custom-dialog-wrapper-class"
                         });
