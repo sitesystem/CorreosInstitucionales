@@ -14,11 +14,12 @@
 @using Radzen.Blazor
 
 @using CorreosInstitucionales.Client
+@using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
 @using CorreosInstitucionales.Client.Shared
+@using CorreosInstitucionales.Client.Shared.Components;
 
 @using CorreosInstitucionales.Shared.CapaEntities.Request
 @using CorreosInstitucionales.Shared.CapaEntities.Response
-
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
@@ -28,7 +29,6 @@
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
 
 @* Inyectar Interfaz de los Servicios *@
-@using CorreosInstitucionales.Client.Shared.Components;
 @inject AuthenticationStateProvider servicioAuthenticationStateProvider
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager

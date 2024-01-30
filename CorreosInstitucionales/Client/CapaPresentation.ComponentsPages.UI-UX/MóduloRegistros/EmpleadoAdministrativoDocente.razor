@@ -47,7 +47,7 @@
                                                @oninput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
                     </div>
@@ -60,7 +60,7 @@
                                                @oninput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
                     </div>
@@ -73,7 +73,7 @@
                                                @oninput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuSegundoApellido)" />
                     </div>
@@ -85,7 +85,7 @@
                                 <RadzenMask Name="phoneNumberCurrent_administrativo_docente" @bind-Value="@oUsuario.UsuNoCelularNuevo" MinLength="0" MaxLength="20" style="border-bottom: 3px solid red;"
                                             Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" />
                             </ChildContent>
-                            @* <Helper><RadzenText TextStyle="TextStyle.Caption">Nombre de Pila</RadzenText></Helper> *@
+                            <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
                     </div>
@@ -125,7 +125,7 @@
                                               Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
                                               Complete="@(args => OnCompleteFiles(args))" />
                             </ChildContent>
-                            @* <Helper></Helper> *@
+                            <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuFileNameCurp)" />
                         <ValidationMessage For="@(() => oUsuario.UsuFileSizeCurp)" />
@@ -515,25 +515,6 @@ else
 
             if (ValidReCAPTCHA && verification?.Success == 1)
             {
-                // Console.WriteLine("UsuNoCelularNuevo: " + oUsuario.UsuNoCelularNuevo);
-                // Console.WriteLine("UsuBoletaAlumno: " + oUsuario.UsuBoletaAlumno);
-                // Console.WriteLine("UsuBoletaMaestria: " + oUsuario.UsuBoletaMaestria);
-                // Console.WriteLine("UsuIdCarrera: " + oUsuario.UsuIdCarrera);
-                // Console.WriteLine("UsuSemestre: " + oUsuario.UsuSemestre);
-                // Console.WriteLine("UsuAñoEgreso: " + oUsuario.UsuAñoEgreso);
-                // Console.WriteLine("UsuFileNameComprobanteInscripcion: " + oUsuario.UsuFileNameComprobanteInscripcion);
-                // Console.WriteLine("UsuNumeroEmpleado: " + oUsuario.UsuNumeroEmpleado);
-                // Console.WriteLine("UsuIdAreaDepto: " + oUsuario.UsuIdAreaDepto);
-                // Console.WriteLine("UsuNoExtension: " + oUsuario.UsuNoExtension);
-                // Console.WriteLine("UsuCorreoPersonalCuentaAnterior: " + oUsuario.UsuCorreoPersonalCuentaAnterior);
-                // Console.WriteLine("UsuCorreoPersonalCuentaNueva: " + oUsuario.UsuCorreoPersonalCuentaNueva);
-                // Console.WriteLine("UsuContraseña: " + oUsuario.UsuContraseña);
-                // Console.WriteLine("UsuRecuperarContraseña: " + oUsuario.UsuRecuperarContraseña);
-                // Console.WriteLine("UsuCorreoInstitucionalCuenta: " + oUsuario.UsuCorreoInstitucionalCuenta);
-                // Console.WriteLine("UsuCorreoInstitucionalContraseña: " + oUsuario.UsuCorreoInstitucionalContraseña);
-                // Console.WriteLine("UsuFechaHoraAlta: " + oUsuario.UsuFechaHoraAlta);
-                // Console.WriteLine("UsuStatus: " + oUsuario.UsuStatus);
-
                 var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
                 oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
 

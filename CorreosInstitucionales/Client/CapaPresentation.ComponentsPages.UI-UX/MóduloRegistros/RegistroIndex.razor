@@ -40,7 +40,7 @@
     <!-- Encabezado de Página (Header Fixed-Top) -->
     <header>
         <nav class="navbar header fixed-top">
-            <div class="container ">
+            <div class="container">
                 <RadzenHeader class="rz-border-radius-0 rz-py-0" Style="border-bottom: 10px solid #076633;">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" Class="w-100">
                         <RadzenImage Path="./pleca_saci.png" Style="height:100px;" AlternateText="pleca saci" class="img-fluid rz-my-0" />
@@ -105,7 +105,7 @@
                                         <EmpleadoAdministrativoDocente IdTipoPersonal="5" TipoPersonal="docente" />
                                     </RadzenTabsItem>
                                     <RadzenTabsItem Text="Honorarios" Icon="badge" IconColor="@Colors.Base800">
-                                        <EmpleadoHonorario />
+                                        <EmpleadoHonorarios />
                                     </RadzenTabsItem>
                                 </Tabs>
                             </RadzenTabs>
@@ -146,6 +146,9 @@
             </div>
         </nav>
     </footer>
+
+    <ButtonScrollToTop />
+
 </body>
 
 @code

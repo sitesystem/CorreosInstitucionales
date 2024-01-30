@@ -8,10 +8,6 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims;
 
-@using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
-@using CorreosInstitucionales.Shared.CapaEntities.Request
-@using CorreosInstitucionales.Shared.CapaEntities.Response
-
 @layout LoginLayout
 
 @inject ILoginServices loginService
@@ -342,6 +338,8 @@
         </a>
     </div>
 </nav>
+
+<ButtonScrollToTop />
 
 @code
 {

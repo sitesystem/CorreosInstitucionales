@@ -61,6 +61,20 @@
             });
         }
 
+        window.onscroll = function () {
+            var scrollToTopBtn_movil = document.querySelector(".scroll-to-top-movil");
+            var scrollToTopBtn_monitor = document.querySelector(".scroll-to-top-monitor");
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollToTopBtn_movil.style.display = "block";
+                scrollToTopBtn_monitor.style.display = "block";
+            }
+            else
+            {
+                scrollToTopBtn_movil.style.display = "none";
+                scrollToTopBtn_monitor.style.display = "none";
+            }
+        };
+
         window.scrollToTop = function () {
             window.scrollTo(0, 0); // Desplaza a la parte superior de la página
         };
