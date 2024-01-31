@@ -2,26 +2,48 @@
 
 @using System.Reflection
 @using System.ComponentModel.DataAnnotations
+@using System.ComponentModel.DataAnnotations.Schema
+
+@inject IClipboardService clipboard;
 
 <PageTitle>Generar UI</PageTitle>
 
 <h3>Generar controles a partir de Catálogos</h3>
-<InputSelect id="sel_clase" @bind-Value="@selected_index" class="form-select mb-2">
-    @for(int i=0; i< items.Count; i++)
-    {
-        <option value="@i">@items[i].GetType().ToString().Split('.').Last()</option>
-    }
-</InputSelect>
 
-<pre>
-    @foreach (PropertyInfo prop in items[selected_index].GetType().GetProperties())
-    {
-        @Render(prop)
-    }
-</pre>
+<div class="row">
+    <div class="col-8">
+        <InputSelect @bind-Value="@selected_index" class="form-select mb-2">
+            @for (int i = 0; i < items.Count; i++)
+            {
+                <option value="@i">@items[i].GetType().ToString().Split('.').Last()</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="col-4">
+        <button class="btn btn-primary form-control" @onclick="CopyToClipboard">Copiar al portapapeles</button>
+    </div>
+</div>
+
+<pre class="bg-white shadow p-4">@Render()</pre>
 
 @code 
 {
+
+    async Task CopyToClipboard()
+    {
+        await clipboard.CopyToClipboard(debug);
+        /*
+        debug += Environment.NewLine + pre.Id + Environment.NewLine + pre.ToString();
+
+        return Task.CompletedTask;
+    */
+    }
+
+
+
+    string debug = string.Empty;
+
     int selected_index = 0;
     List<object> items = new List<object>()
     {
@@ -40,9 +62,16 @@
         new RequestViewModel_TipoSolicitud()
     };
 
-    public string Render(PropertyInfo p)
+    public string Render()
     {
-        return (new UIControl(p)).ToString();
+        debug = string.Empty;
+
+        foreach (PropertyInfo prop in items[selected_index].GetType().GetProperties())
+        {
+            debug += (new UIControl(prop)).ToString();
+        }
+
+        return debug;
     }
 
     private enum ControlType: int
@@ -51,7 +80,8 @@
         BOOL,
         DATE,
         STRING,
-        NUMBER
+        NUMBER,
+        LIST
     }
 
     private class UIControl
@@ -63,6 +93,7 @@
         public bool         IsKey       { get; private set; }
 
         public bool         HasRegExValidation { get; private set; }
+        public bool         HasForeignKey       {get; private set; }
 
         public bool         RequiresValidation { 
             get { 
@@ -85,6 +116,7 @@
             this.IsKey      = p.GetCustomAttribute<KeyAttribute>() is not null;
 
             this.HasRegExValidation = p.GetCustomAttribute<RegularExpressionAttribute>() is not null;
+            this.HasForeignKey = p.GetCustomAttribute<ForeignKeyAttribute>() is not null;
 
             Dictionary<Type, ControlType> mappings = new Dictionary<Type, ControlType>()
             {
@@ -103,6 +135,11 @@
             if (mappings.ContainsKey(rtype))
             {
                 this.Control = mappings[rtype];
+            }
+
+            if(this.HasForeignKey)
+            {
+                this.Control = ControlType.LIST;
             }
         }
 
@@ -149,6 +186,7 @@
                 case ControlType.BOOL:  tag = "InputCheckbox";  break;
                 case ControlType.DATE:  tag = "InputDate";      break;
                 case ControlType.NUMBER:tag = "InputNumber";    break;
+                case ControlType.LIST:  tag = "InputSelect";    break;
             }
 
             /*
