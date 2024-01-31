@@ -26,8 +26,8 @@
 > ## Catálogo de datos de la escuela
 > ## Catálogo de edificios
 > ## NO hay boton de regreso y redirige en automático al login
-
-
+> ## Registro de contraseña nueva al entrar si la bandera recuperar contraseña esta activa
+> ## Perfil con datos del usuario
 
 
 

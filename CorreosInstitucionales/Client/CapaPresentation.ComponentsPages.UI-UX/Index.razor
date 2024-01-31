@@ -36,4 +36,141 @@
 
 @code
 {
+    // public Response<RequestDTO_Usuario>? oRecuperar = new();
+    // public RequestDTO_Usuario? oUsuario = new();
+    // {
+    //             UsuContraseña = "",                     // Contraseña en la PLataforma del Usuario Solicitante o Administrador
+    // };
+
+    // // Comparar las Contraseñas
+    // public bool flagErrorPasswords = false;
+    // private string UsuConfirmarContraseña = string.Empty;
+    // private void CompararContraseñas() => flagErrorPasswords = !string.Equals(oUsuario.UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal) ? true : false;
+
+    // // Hacer visible las Contraseñas con el ícono eye
+    // private bool VisibleContraseña = true;
+    // private bool VisibleConfirmarContraseña = true;
+    // private void ToggleContraseña() => VisibleContraseña = !VisibleContraseña;
+    // private void ToggleConfirmarContraseña() => VisibleConfirmarContraseña = !VisibleConfirmarContraseña;
+
+    // //boton
+    // private bool busyLoading = false;
+    // private bool DisablePostButton => flagErrorPasswords;
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     if (oRecuperar.Data.UsuRecuperarContraseña == true)
+    //     {
+    //         await DialogModalService.OpenAsync("Mensaje", ds =>
+    //             @<div>
+    //                 <EditForm>
+    //                 <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos de la Cuenta" CollapseTitle="Datos de la Cuenta" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-3">
+    //                     <HeaderTemplate>
+    //                         <span class="d-inline-flex align-items-center align-middle">
+    //                             <RadzenIcon Icon="account_circle" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Datos de la Cuenta</b>
+    //                         </span>
+    //                     </HeaderTemplate>
+    //                     <ChildContent>
+    //                         <div class="row">
+    //                             <div class="col-md-4 col-lg-4">
+    //                                 <RadzenFormField Text="Nueva contraseña" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+    //                                     <Start><RadzenIcon Icon="password" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+    //                                     <ChildContent>
+    //                                         <RadzenTextBox id="contraseña_alumno" @bind-Value="@oUsuario.UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
+    //                                                         Visible="@(!VisibleContraseña)" />
+    //                                         <RadzenPassword id="contraseña_visible_alumno" @bind-Value="@oUsuario.UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
+    //                                                         Visible="@VisibleContraseña" />
+    //                                     </ChildContent>
+    //                                     <End>
+    //                                         <RadzenButton Icon="@(VisibleContraseña ? "visibility" : "visibility_off")"
+    //                                                         Click="@ToggleContraseña"
+    //                                                         Variant="Variant.Text"
+    //                                                         Size="ButtonSize.Small"
+    //                                                         ButtonStyle="ButtonStyle.Secondary"
+    //                                                         Shade="Shade.Dark" />
+    //                                     </End>
+    //                                     <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
+    //                                 </RadzenFormField>
+    //                                 <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
+    //                             </div>
+
+    //                             <div class="col-md-4 col-lg-4">
+    //                                 <RadzenFormField Text="Confirmar Contraseña" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+    //                                     <Start><RadzenIcon Icon="password" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+    //                                     <ChildContent>
+    //                                         <RadzenTextBox id="confirmar_contraseña_alumno" @bind-Value="@UsuConfirmarContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20"
+    //                                                         @oninput="(e => UsuConfirmarContraseña = e.Value.ToString())"
+    //                                                         @onkeyup="@CompararContraseñas"
+    //                                                         Visible="@(!VisibleConfirmarContraseña)" />
+    //                                         <RadzenPassword id="confirmar_contraseña_visible_alumno" @bind-Value="@UsuConfirmarContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
+    //                                                         @oninput="(e => UsuConfirmarContraseña = e.Value.ToString())"
+    //                                                         @onkeyup="@CompararContraseñas"
+    //                                                         Visible="@VisibleConfirmarContraseña" />
+    //                                     </ChildContent>
+    //                                     <End>
+    //                                         <RadzenButton Icon="@(VisibleConfirmarContraseña ? "visibility" : "visibility_off")"
+    //                                                         Click="ToggleConfirmarContraseña"
+    //                                                         Variant="Variant.Text"
+    //                                                         Size="ButtonSize.Small"
+    //                                                         ButtonStyle="ButtonStyle.Secondary"
+    //                                                         Shade="Shade.Dark" />
+    //                                     </End>
+    //                                     <Helper><RadzenText TextStyle="TextStyle.Caption">.</RadzenText></Helper>
+    //                                 </RadzenFormField>
+    //                                 <RadzenAlert Title="Error" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false"
+    //                                                 @bind-Visible="flagErrorPasswords">
+    //                                     Las contraseñas no coinciden, <strong>verifíquelas.</strong>
+    //                                 </RadzenAlert>
+    //                             </div>
+    //                         </div>
+    //                     </ChildContent>
+    //                     <SummaryTemplate>
+    //                         <ValidationSummary />
+    //                     </SummaryTemplate>
+    //                 </RadzenFieldset>
+    //                 <div class="row">
+    //                     <div class="col-md-4 offset-md-4 rz-mt-3">
+    //                         <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
+    //                             <RadzenButton Text="Enviar Registro"
+    //                                           BusyText="Enviando Registro ..."
+    //                                           ButtonStyle="ButtonStyle.Success"
+    //                                           ButtonType="ButtonType.Submit"
+    //                                           IsBusy="@busyLoading"
+    //                                           Icon="send"
+    //                                           Class="w-100 mt-3 rz-ripple"
+    //                                           Shade="Shade.Darker"
+    //                                           Disabled="@DisablePostButton"
+    //                                           Size="ButtonSize.Large"
+    //                                           Variant="Variant.Filled" />
+    //                         </RadzenStack>
+    //                     </div>
+    //                 </div>
+    //                 </EditForm>
+    //                 <div align="center">
+    //                     <RadzenButton Text="Regresar"
+    //                                     BusyText=""
+    //                                     ButtonStyle="ButtonStyle.Warning"
+    //                                     ButtonType="ButtonType.Button"
+    //                                     IsBusy="false"
+    //                                     Icon="arrow_back"
+    //                                     Class="rz-ripple"
+    //                                     Shade="Shade.Darker"
+    //                                     Click="@(() => navigationManager.NavigateTo("/"))" />
+    //                 </div>
+    //             </div>,
+    //             new DialogOptions()
+    //             {
+    //                 CloseDialogOnOverlayClick = false,
+    //                 CloseDialogOnEsc = false,
+    //                 Width = "Auto",
+    //                 Height = "Auto",
+    //                 Resizable = true,
+    //                 ShowTitle = true,
+    //                 ShowClose = true,
+    //                 Draggable = true,
+    //                 CssClass = "custom-dialog-class",
+    //                 WrapperCssClass = "custom-dialog-wrapper-class"
+    //             });
+    //     }
+    // }
 }

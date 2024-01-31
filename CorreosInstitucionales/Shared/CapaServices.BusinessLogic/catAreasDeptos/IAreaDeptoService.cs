@@ -12,7 +12,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDepto
     public interface IAreaDeptoService
     {
         public Task<Response<List<RequestViewModel_AreaDepto>>?> GetAllDataAsync(bool filterByStatus);
-        public Task<Response<RequestViewModel_AreaDepto>?> GetDataByIdAsync(int id);
+        public Task<Response<RequestViewModel_AreaDepto>?> GetDataByIdAsync(int? id);
         public Task<HttpResponseMessage> AddDataAsync(RequestViewModel_AreaDepto oAreaDepto);
         public Task<HttpResponseMessage> EditDataAsync(RequestViewModel_AreaDepto oAreaDepto);
         public Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate);

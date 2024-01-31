@@ -12,7 +12,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras
     public interface ICarreraService
     {
         public Task<Response<List<RequestViewModel_Carrera>>?> GetAllDataAsync(bool filterByStatus);
-        public Task<Response<RequestViewModel_Carrera>?> GetDataByIdAsync(int id);
+        public Task<Response<RequestViewModel_Carrera>?> GetDataByIdAsync(int? id);
         public Task<HttpResponseMessage> AddDataAsync(RequestViewModel_Carrera oCarrera);
         public Task<HttpResponseMessage> EditDataAsync(RequestViewModel_Carrera oCarrera);
         public Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate);
