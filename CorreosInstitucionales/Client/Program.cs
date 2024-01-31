@@ -20,6 +20,7 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.repositoryFiles;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
+using CorreosInstitucionales.Client.Shared.Utils;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -27,6 +28,9 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 //builder.Services.AddSingleton(sp => new HttpClient(httpClientHandler) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+// Inyección de Dependencias - Portapapeles
+builder.Services.AddScoped<IClipboardService, ClipboardService>();
 
 // Inyección de Dependencias - Módulo de Login
 builder.Services.AddAuthorizationCore();
