@@ -1,10 +1,20 @@
 ﻿@page "/catalogos/debug"
+
 @using System.Reflection
 @using System.ComponentModel.DataAnnotations
 
-<h3>DebugCatalogos</h3>
+<PageTitle>Generar UI</PageTitle>
+
+<h3>Generar controles a partir de Catálogos</h3>
+<InputSelect id="sel_clase" @bind-Value="@selected_index" class="form-select mb-2">
+    @for(int i=0; i< items.Count; i++)
+    {
+        <option value="@i">@items[i].GetType().ToString().Split('.').Last()</option>
+    }
+</InputSelect>
+
 <pre>
-    @foreach (PropertyInfo prop in dummy.GetType().GetProperties())
+    @foreach (PropertyInfo prop in items[selected_index].GetType().GetProperties())
     {
         @Render(prop)
     }
@@ -12,7 +22,23 @@
 
 @code 
 {
-    RequestDTO_Usuario dummy = new RequestDTO_Usuario();
+    int selected_index = 0;
+    List<object> items = new List<object>()
+    {
+        new RequestDTO_Usuario(),
+        new RequestDTO_Solicitud(),
+        new RequestViewModel_AreaDepto(),
+        new RequestViewModel_Carrera(),
+        new RequestViewModel_Edificio(),
+        new RequestViewModel_Escuela(),
+        new RequestViewModel_EstadoSolicitud(),
+        new RequestViewModel_Link(),
+        new RequestViewModel_NoExtension(),
+        new RequestViewModel_Piso(),
+        new RequestViewModel_Rol(),
+        new RequestViewModel_TipoPersonal(),
+        new RequestViewModel_TipoSolicitud()
+    };
 
     public string Render(PropertyInfo p)
     {
@@ -36,6 +62,17 @@
         public bool         IsRequired  { get; private set; }
         public bool         IsKey       { get; private set; }
 
+        public bool         HasRegExValidation { get; private set; }
+
+        public bool         RequiresValidation { 
+            get { 
+                return 
+                    this.IsRequired || 
+                    !this.IsNullable ||
+                    this.HasRegExValidation; 
+            } 
+        }
+
         public UIControl(PropertyInfo p)
         {
             Type? ttype = Nullable.GetUnderlyingType(p.PropertyType);
@@ -46,6 +83,8 @@
             this.IsNullable = ttype is not null;
             this.IsRequired = p.GetCustomAttribute<RequiredAttribute>() is not null;
             this.IsKey      = p.GetCustomAttribute<KeyAttribute>() is not null;
+
+            this.HasRegExValidation = p.GetCustomAttribute<RegularExpressionAttribute>() is not null;
 
             Dictionary<Type, ControlType> mappings = new Dictionary<Type, ControlType>()
             {
@@ -74,15 +113,20 @@
                 return string.Empty;
             }
 
+            string code_validation = 
+                this.RequiresValidation ? 
+                    $"<ValidationMessage For=\"()=>registro.{this.Name}\"></ValidationMessage>" : 
+                    string.Empty;
+
             string tpl_content = @"<div class=""col-6 mb-2"">
                 <span class=""fw-bold"">{0}{1}</span>
                 {2}
-                <ValidationMessage For=""()=>registro.{0}""></ValidationMessage>
+                {3}
             </div>"+Environment.NewLine;
 
             if(this.IsKey || this.IsNullable)
             {
-                return string.Format(tpl_content, this.Name, string.Empty, this.IsNullable ? "-NULLABLE" : "-KEY(ID) ATTR-");
+                return string.Format(tpl_content, this.Name, string.Empty, this.IsNullable ? "-NULLABLE" : "-KEY(ID) ATTR-", string.Empty);
             }
 
             string tpl_input = @"<{0} {1} class=""form-control{2}""/>";
@@ -118,7 +162,7 @@
             
             string code_input = string.Format(tpl_input, tag, code_bind, css);
 
-            return string.Format(tpl_content, this.Name, required, code_input);
+            return string.Format(tpl_content, this.Name, required, code_input, code_validation);
         }
     }
 }
