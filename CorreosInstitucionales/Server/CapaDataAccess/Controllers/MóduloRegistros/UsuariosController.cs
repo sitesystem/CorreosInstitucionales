@@ -241,7 +241,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     await _db.SaveChangesAsync();
 
                     oRespuesta.Success = 1;
-                    oRespuesta.Message = $"Se generó una Contraseña Temporal: <b>{tmpPassword}</b>";
+                    oRespuesta.Message = $"<b>{tmpPassword}</b>";
                     oRespuesta.Data = oUsuario;
                 }
                 else

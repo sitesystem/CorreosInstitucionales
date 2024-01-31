@@ -26,20 +26,17 @@
 > ## Catálogo de datos de la escuela
 > ## Catálogo de edificios
 > ## NO hay boton de regreso y redirige en automático al login
-> ## Registro de contraseña nueva al entrar si la bandera recuperar contraseña esta activa
-> ## Perfil con datos del usuario
+
 
 
 
 > [!IMPORTANT]
 > # EN PROCESO
-> ## Tiempo de transición del slider 2 minutos para cada imagen
-> ## Envio de correos 
-> 	* Cuando se registra.
 > ## Subir aplicación al servidor.
 > ## Diseño de la interfaz de perfil.
 > ## El cintillo logos uno del plantel derecho captar del catálogo
-
+> ## Registro de contraseña nueva al entrar si la bandera recuperar contraseña esta activa
+> ## Perfil con datos del usuario
 
 
 
@@ -63,6 +60,9 @@
 > ## Validación el campo de boleta de egresados e inscritos.
 > ## El cintillo logos uno de ipn izquierdo
 > ## NOTAS del registro y campos obligatorios este fija en la pantalla en el body
+> ## Tiempo de transición del slider 2 minutos para cada imagen
+> ## Envio de correos 
+> 	* Cuando se registra.
 
 
 > [!TIP]
