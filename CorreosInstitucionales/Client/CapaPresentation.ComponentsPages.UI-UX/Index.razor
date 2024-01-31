@@ -2,15 +2,11 @@
 
 @attribute [Authorize]
 
-
 <style>
 </style>
 
 <PageTitle>Inicio | Panel de Control</PageTitle>
 @* <SurveyPrompt Title="How is Blazor working for you?" /> *@
-
-
-
 
 <AuthorizeView Policy="[Rol] Usuario Solicitante">
 	<Authorized>
@@ -37,9 +33,6 @@
 		<p>Autorizando...</p>
 	</Authorizing>
 </AuthorizeView>
-
-	
-
 
 @code
 {
@@ -180,7 +173,4 @@
     //             });
     //     }
     // }
-
-    
-
 }

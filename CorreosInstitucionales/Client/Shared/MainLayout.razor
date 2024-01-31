@@ -76,10 +76,8 @@
                         </RadzenProfileMenu>
                     </RadzenCard>
                     @{
-                        string? rol = context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value;
-                        string? tipoPersonal = string.Empty;
-                        if (oResponseTipoPersonal != null && oResponseTipoPersonal.Data != null)
-                            tipoPersonal = oResponseTipoPersonal.Data.TipoperNombre;
+                        string? rol = context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "1" ? "Administrador" : "Usuario";
+                        string? tipoPersonal = (oResponseTipoPersonal != null && oResponseTipoPersonal.Data != null) ? oResponseTipoPersonal.Data.TipoperNombre : null;
                         string? name = context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value;
                         string? email = context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
                     }
@@ -89,7 +87,7 @@
                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
                                     <RadzenImage Path="./logo_ipn.png" Style="height: 30px;" />
                                     <RadzenStack Gap="0px">
-                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Personal:</RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">@rol:</RadzenText>
                                         <RadzenText TextStyle="TextStyle.Body1"><b>@tipoPersonal</b></RadzenText>
                                     </RadzenStack>
                                 </RadzenStack>
