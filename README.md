@@ -37,6 +37,7 @@
 > ## El cintillo logos uno del plantel derecho captar del catálogo
 > ## Registro de contraseña nueva al entrar si la bandera recuperar contraseña esta activa
 > ## Perfil con datos del usuario
+> ## Modal de registro de usuario
 
 
 

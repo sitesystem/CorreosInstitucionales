@@ -215,6 +215,8 @@
 
     private string? authMessage;
     private List<Claim> claims = new();
+    private Response<RequestDTO_Usuario> oResponse = new();
+    private RequestDTO_Usuario oUsuario = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -227,6 +229,10 @@
             claims = user.Claims.ToList();
             var tipoPersonal = user.Claims.FirstOrDefault(c => c.Type == "TipoPersonal")?.Value;
             oResponseTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(int.Parse(tipoPersonal));
+            int id = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
+            oResponse = await servicioUsuario.GetDataByIdAsync(id);
+            oUsuario = oResponse.Data;
+            //oUsuario.
         }
         else
             navigationManager.NavigateTo("/");

@@ -17,6 +17,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
         public Task<HttpResponseMessage> AddDataAsync(RequestDTO_Usuario oUsuario);
         public Task<HttpResponseMessage> EditDataAsync(RequestDTO_Usuario oUsuario);
         public Task<HttpResponseMessage> ResetPassword(string correoPersonal);
+        public Task<HttpResponseMessage> ChangePassword(int id, string newPassword);
         public Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate);
     }
 }

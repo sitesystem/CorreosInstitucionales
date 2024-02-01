@@ -69,6 +69,20 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
             return response;
         }
 
+        public async Task<HttpResponseMessage> ChangePassword(int id, string newPassword)
+        {
+            // var json = JsonSerializer.Serialize(correoPersonal);
+            // var content = new StringContent(json, Encoding.UTF8, "application/json");
+            // var response = await _httpClient.PutAsync(url, content);
+            var response = await _httpClient.PutAsJsonAsync($"{url}changePassword/{id}/{newPassword}",
+                 new JsonSerializerOptions()
+                 {
+                     PropertyNameCaseInsensitive = true
+                 });
+
+            return response;
+        }
+
         public async Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate)
         {
             var response = await _httpClient.PutAsJsonAsync($"{url}editByIdStatus/{id}/{isActivate}",
