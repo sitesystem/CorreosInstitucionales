@@ -4,57 +4,66 @@
 
 @using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistros
 
-@* <div class="d-grid gap-2 d-md-block">
-    <button class="btn btn-primary " type="button" onclick="@ActivarFormulario">Modificar datos del perfil</button>
-</div>
- *@
-@* @if (banderaFormulario==true)
+@inject IUsuarioService servicioUsuario
+
+<h3>Modificación de Datos de perfil</h3>
+@switch (oUsuario.UsuIdTipoPersonal)
 {
-    <h3>Modificación de Datos de perfil</h3>
-    @switch (tipousuario)
-    {
-        case 1:
-            Console.WriteLine("El tipo usuario es: Alumno inscrito");
-            navigationManager.NavigateTo("/RegistroInscrito");
-            break;        
-        case 2:
-            Console.WriteLine("El tipo usuario es: Alumno egresado");
-            navigationManager.NavigateTo("/RegistroInscrito");
-            break;
-        case 3:
-            Console.WriteLine("El tipo usuario es: Maestría");
-        navigationManager.NavigateTo("/RegistroMaestria");
-            break;
-        case 4:
-            Console.WriteLine("El tipo usuario es: Administrativo");
-            navigationManager.NavigateTo("/RegistroAdministrativo");
-            break;
-        case 5:
-            Console.WriteLine("El tipo usuario es: Docente");
-            navigationManager.NavigateTo("/RegistroDocente");
-            break;
-        case 6:
-            Console.WriteLine("El tipo usuario es: Honorarios");
-            navigationManager.NavigateTo("/RegistroHonorario");
-            break;
-        default: 
-            tipousuario=0;
-            break;
+    case 1:
+        Console.WriteLine("El tipo usuario es: Alumno inscrito");
+        <AlumnoInscritoEgresado></AlumnoInscritoEgresado>
+        //navigationManager.NavigateTo("/RegistroInscrito");
+        break;        
+    case 2:
+        Console.WriteLine("El tipo usuario es: Alumno egresado");
+        //navigationManager.NavigateTo("/RegistroInscrito");
+        break;
+    case 3:
+        Console.WriteLine("El tipo usuario es: Maestría");
+        <AlumnoMaestria></AlumnoMaestria>
+        //navigationManager.NavigateTo("/RegistroMaestria");
+        break;
+    case 4:
+        Console.WriteLine("El tipo usuario es: Administrativo");
+        <EmpleadoAdministrativoDocente TipoPersonal="4"></EmpleadoAdministrativoDocente>
+        //navigationManager.NavigateTo("/RegistroAdministrativo");
+        break;
+    case 5:
+        Console.WriteLine("El tipo usuario es: Docente");
+        //navigationManager.NavigateTo("/RegistroDocente");
+        break;
+    case 6:
+        Console.WriteLine("El tipo usuario es: Honorarios");
+        <EmpleadoHonorarios></EmpleadoHonorarios>
+        //navigationManager.NavigateTo("/RegistroHonorario");
+        break;
+    default: 
+        //tipousuario=0;
+        break;
     }
-} *@
 
 
 
 @code
 {
-    private int tipousuario=0;
-    public bool banderaFormulario = false;
+    public Response<RequestDTO_Usuario> oResponseUsuario = new();
+    public RequestDTO_Usuario oUsuario = new();
+    private string? authMessage;
+    private List<Claim> claims = new();
 
-    public void ActivarFormulario()
+    protected override async Task OnInitializedAsync()
     {
-        if (banderaFormulario == false)
-            banderaFormulario = true;
+        var authState = await servicioAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            int idTipoPersonal = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "TipoPersonal")?.Value);
+            int idUsuario = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
+            oResponseUsuario = await servicioUsuario.GetDataByIdAsync(idUsuario);
+            oUsuario = oResponseUsuario.Data;
+        }
         else
-            banderaFormulario = false;
+            navigationManager.NavigateTo("/");
     }
 }
