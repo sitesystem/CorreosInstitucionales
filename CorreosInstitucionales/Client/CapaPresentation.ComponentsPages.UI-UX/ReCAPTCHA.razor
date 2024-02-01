@@ -1,5 +1,6 @@
 ﻿@using  System.ComponentModel
 
+@implements IAsyncDisposable
 @inject IJSRuntime JS
 
 <div id="@UniqueId"></div>
@@ -15,15 +16,25 @@
     [Parameter]
     public EventCallback OnExpired { get; set; }
 
+    private IJSObjectReference? module;
+
     private string UniqueId = Guid.NewGuid().ToString();
 
     private int WidgetId;
 
+    /*
     protected override async Task OnInitializedAsync()
     {
-        await JS.InvokeAsync<object>("My.reCAPTCHA.init");
-        WidgetId = await JS.InvokeAsync<int>("My.reCAPTCHA.render", DotNetObjectReference.Create(this), UniqueId, SiteKey);
-    }
+        module = await JS.InvokeAsync<IJSObjectReference>
+            (
+                "import", 
+                "./CapaPresentation.ComponentsPages.UI-UX/ReCAPTCHA.razor.js"
+            );
+
+        await module.InvokeAsync<object>("reCAPTCHA.init");
+
+        WidgetId = await module.InvokeAsync<int>("reCAPTCHA.render", DotNetObjectReference.Create(this), UniqueId, SiteKey);
+    }*/
 
     [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
     public void CallbackOnSuccess(string response)
@@ -42,5 +53,29 @@
     public ValueTask<string> GetResponseAsync()
     {
         return JS.InvokeAsync<string>("My.reCAPTCHA.getResponse", WidgetId);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>
+            (
+                "import",
+                "./CapaPresentation.ComponentsPages.UI-UX/ReCAPTCHA.razor.js"
+            );
+
+            await module.InvokeAsync<object>("reCAPTCHA.init");
+
+            WidgetId = await module.InvokeAsync<int>("reCAPTCHA.render", DotNetObjectReference.Create(this), UniqueId, SiteKey);
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (module is not null)
+        {
+            await module.DisposeAsync();
+        }
     }
 }
