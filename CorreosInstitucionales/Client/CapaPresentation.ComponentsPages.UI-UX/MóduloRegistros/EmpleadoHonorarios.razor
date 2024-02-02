@@ -332,22 +332,34 @@
         </RadzenAlert>
 
         <!-- ******************************************************************* CARD RECAPTCHA ******************************************************************* -->
+        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="rz-mt-5">
+            <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="0px" Class="" Style="font-family:var(--rz-text-font-family);">
+                <RadzenCheckBox Name="aviso_privacidad_honorarios" TValue="bool" @bind-Value="@aceptar_aviso_privacidad" TriState="false" Change="@(args => aceptar_aviso_privacidad = args)" Disabled="false" ReadOnly="false" />
+                <RadzenLabel Text="He leído y Acepto los términos del" Component="aviso_privacidad_honorarios" Style="margin-left: 8px; vertical-align: middle;" />&ensp;
+                <a href="./aviso_privacidad.pdf" target="_blank" @onclick="@ShowDialogWithCustomCssClasses" class="icon-link icon-link-hover">
+                    <b>Aviso</b> de <strong>Privacidad</strong>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
+                        <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+                    </svg>
+                </a>
+            </RadzenStack>
+        </RadzenStack>
+
         <div class="row">
             <div class="col-md-4 offset-md-4 rz-mt-3">
-                <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
-                    <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-                    <RadzenButton Text="Enviar Registro"
-                                  BusyText="Enviando Registro ..."
-                                  ButtonStyle="ButtonStyle.Success"
-                                  ButtonType="ButtonType.Submit"
-                                  IsBusy="@busyLoading"
-                                  Icon="send"
-                                  Class="w-100 mt-3 rz-ripple"
-                                  Shade="Shade.Darker"
-                                  Disabled="@DisablePostButton"
-                                  Size="ButtonSize.Large"
-                                  Variant="Variant.Filled" />
-                </RadzenStack>
+                <RadzenButton Text="Enviar Registro"
+                              BusyText="Enviando Registro ..."
+                              ButtonStyle="ButtonStyle.Success"
+                              ButtonType="ButtonType.Submit"
+                              IsBusy="@busyLoading"
+                              Icon="send"
+                              Class="w-100 mt-3 rz-ripple"
+                              Shade="Shade.Darker"
+                              Disabled="@DisablePostButton"
+                              Size="ButtonSize.Large"
+                              Variant="Variant.Filled" />
             </div>
         </div>
     </EditForm>
@@ -487,9 +499,12 @@ else
 
     void OnCompleteFiles(UploadCompleteEventArgs args) => Console.WriteLine($"Server response: {args.RawResponse}");
 
+    @*///////////////////////////////////////////////  AVISO DE PRIVACIDAD PARA LA PROTECCIÓN DE DATOS PERSONALES  ////////////////////////////////////*@
+    private bool aceptar_aviso_privacidad = false;
+
     @*///////////////////////////////////////////////  REGISTRAR USUARIO  //////////////////////////////////////////////////////////////////////*@
     private bool busyLoading = false;
-    private bool DisablePostButton => !ValidReCAPTCHA || flagErrorPasswords;
+    private bool DisablePostButton => !ValidReCAPTCHA || flagErrorPasswords || !aceptar_aviso_privacidad;
     private string folder = "Usuarios";
     private string CURP = "CURP";
     private string Comprobante_Inscripción = "Comprobante-Inscripción";
@@ -733,5 +748,37 @@ else
         {
             busyLoading = false;
         }
+    }
+
+    private async Task ShowDialogWithCustomCssClasses()
+    {
+        await DialogModalService.OpenAsync("<span style='font-variant: small-caps; font-size:18px;'>Aviso de Privacidad para la Protección de Datos Personales<span>", ds =>
+            @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
+                <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-p-3">
+                    <iframe src="./aviso_privacidad.pdf" frameborder="1" scrolling="yes" style="height:300px; width:500px;" />
+                </RadzenCard>
+                <RadzenButton Text="Cerrar"
+                              BusyText=""
+                              ButtonStyle="ButtonStyle.Warning"
+                              ButtonType="ButtonType.Button"
+                              IsBusy="false"
+                              Icon="check_circle"
+                              Class="rz-ripple rz-my-0"
+                              Shade="Shade.Darker"
+                              Click="@(() => ds.Close(false))" />
+            </RadzenStack>,
+            new DialogOptions()
+            {
+                CloseDialogOnOverlayClick = true,
+                CloseDialogOnEsc = true,
+                Width = "600px",
+                Height = "Auto",
+                Resizable = true,
+                ShowTitle = true,
+                ShowClose = true,
+                Draggable = true,
+                CssClass = "custom-dialog-class",
+                WrapperCssClass = "custom-dialog-wrapper-class"
+            });
     }
 }

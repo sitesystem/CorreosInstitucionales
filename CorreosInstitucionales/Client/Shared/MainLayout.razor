@@ -118,7 +118,7 @@
 
             <!-- ... Contenido para pantallas pequeñas móviles -->
             <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-background-color-base-900">
-                <RadzenSidebar @bind-Expanded="@sidebarExpanded" Responsive="false" Style="width: max-content" class="rz-background-color-base-900 rz-border-base-900">
+                <RadzenSidebar @bind-Expanded="@sidebarExpanded" Responsive="false" Style="width:max-content; font-family:var(--rz-text-font-family);" class="rz-background-color-base-900 rz-border-base-900">
                     <RadzenPanelMenu Multiple="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" ShowArrow="true">
                         <NavMenu isExpanded="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" />
                     </RadzenPanelMenu>
@@ -127,7 +127,7 @@
 
             <!-- ... Contenido para pantallas grandes ... -->
             <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block rz-background-color-base-900">
-                <RadzenSidebar Responsive="false" Style="width: max-content" class="rz-background-color-base-900 rz-border-base-900">
+                <RadzenSidebar Responsive="false" Style="width:max-content; font-family:var(--rz-text-font-family);" class="rz-background-color-base-900 rz-border-base-900">
                     <RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)"
                                      Multiple="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" ShowArrow="true">
                         <NavMenu isExpanded="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" />

@@ -1,4 +1,4 @@
-﻿@page "/RegistroIndex"
+﻿@page "/RegistroUsuario"
 
 @attribute [AllowAnonymous]
 
@@ -36,7 +36,6 @@
 </style>
 
 <body>
-
     <!-- Encabezado de Página (Header Fixed-Top) -->
     <header>
         <nav class="navbar header fixed-top">
@@ -53,9 +52,7 @@
             </div>
         </nav>
     </header>
-    
     <hr class="d-block rz-my-10 rz-color-base-100" />
-
     <div class="container rz-background-color-base-800 rz-p-3 rz-border-radius-1">
         <div class="row align-items-center rz-mt-10 rz-mb-5">
             <div class="col">
@@ -115,9 +112,7 @@
             </div>
         </div>
     </div>
-
     <hr class="d-block rz-color-base-100 rz-my-5" />
-    
     <!-- Pie de Página (Footer Fixed-Bottom) -->
     <footer>
         <nav class="navbar bg-body-tertiary bg-dark fixed-bottom" data-bs-theme="dark">
@@ -153,4 +148,46 @@
 
 @code
 {
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await ShowDialogWithCustomCssClasses();
+    }
+
+    private async Task ShowDialogWithCustomCssClasses()
+    {
+        await DialogModalService.OpenAsync("<span style='font-variant: small-caps; font-size:18px;'>Aviso de Privacidad para la Protección de Datos Personales<span>", ds =>
+            @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
+                <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-p-3">
+                    <iframe src="./aviso_privacidad.pdf" frameborder="1" scrolling="yes" style="height:300px; width:500px;" />
+                </RadzenCard>
+                <RadzenButton Text="Cerrar"
+                              BusyText=""
+                              ButtonStyle="ButtonStyle.Warning"
+                              ButtonType="ButtonType.Button"
+                              IsBusy="false"
+                              Icon="check_circle"
+                              Class="rz-ripple rz-my-0"
+                              Shade="Shade.Darker"
+                              Click="@(() => ds.Close(false))" />
+            </RadzenStack>,
+            new DialogOptions()
+            {
+                CloseDialogOnOverlayClick = true,
+                CloseDialogOnEsc = true,
+                Width = "600px",
+                Height = "Auto",
+                Resizable = true,
+                ShowTitle = true,
+                ShowClose = true,
+                Draggable = true,
+                CssClass = "custom-dialog-class",
+                WrapperCssClass = "custom-dialog-wrapper-class"
+            });
+    }
 }
