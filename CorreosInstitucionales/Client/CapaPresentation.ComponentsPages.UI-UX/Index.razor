@@ -1,9 +1,8 @@
 ﻿@page "/Index"
 
-
 @attribute [Authorize]
 
-<style>
+<style type="text/css">
 </style>
 
 <PageTitle>Inicio | Panel de Control</PageTitle>
@@ -12,9 +11,6 @@
 <AuthorizeView Policy="[Rol] Usuario Solicitante">
 	<Authorized>
 		<p>Autorizado</p>
-		@* <RadzenButton Text="Show info notification" Style="margin-bottom: 20px; width: 200px"
-                    ButtonStyle="ButtonStyle.Info"
-                    Click=@(args => ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Info Summary", Detail = "Info Detail", Duration = 4000 })) /> *@
 	</Authorized>
 	<NotAuthorized>
 		<p>No Autorizado</p>
@@ -36,7 +32,6 @@
 	</Authorizing>
 </AuthorizeView>
 
-
  @* @if (oResponse.Data.UsuRecuperarContraseña == true)
     { *@
         <div class="container">
@@ -44,7 +39,6 @@
 
                 <RadzenPanel>
                     <HeaderTemplate>
-           
                     </HeaderTemplate>
                     <ChildContent>
                         <div align="center">
@@ -146,19 +140,13 @@
         </div>
    @*  } *@
 
-
-
-
-
 @code
 {
     public Response<RequestDTO_Usuario>? oResponse = new();
     public RequestDTO_Usuario? oUsuario = new();
     public Response<object>? oRespuesta = new();
     public RequestDTO_ChangePassword oChangePassword = new();
-    int idUsuario=0;
-
-
+    int idUsuario = 0;
 
     // Comparar las Contraseñas
     public bool flagErrorPasswords = false;
@@ -241,7 +229,6 @@
         {
             busyLoading = false;
         }
-
     }
 
     protected override async Task OnInitializedAsync()
@@ -256,6 +243,5 @@
             // oUsuario = oResponse.Data;
             //oUsuario.
         }
-        
     }
 }

@@ -73,9 +73,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             try
             {
                 var list = await _db.MpTbUsuarios
-                                    .Where(u => u.UsuCorreoPersonalCuentaNueva == correo || u.UsuCurp == curp && u.UsuStatus == true)
+                                    .Where(u => u.UsuCorreoPersonalCuentaNueva == correo || u.UsuCurp == curp)
+                                    .Where(u => u.UsuStatus == true)
                                     .FirstOrDefaultAsync();
-                if (list == null)
+                if (list is null)
                     oResponse.Success = 1;
                 else
                     oResponse.Data = list;
@@ -227,7 +228,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             Response<MpTbUsuario> oRespuesta = new();
             try
             {
-                MpTbUsuario? oUsuario = await _db.MpTbUsuarios.Where(u => u.UsuCorreoPersonalCuentaNueva == correoPersonal).FirstOrDefaultAsync();
+                MpTbUsuario? oUsuario = await _db.MpTbUsuarios.Where(u => u.UsuCorreoPersonalCuentaNueva == correoPersonal && u.UsuStatus == true)
+                                                              .FirstOrDefaultAsync();
 
                 if (oUsuario != null)
                 {

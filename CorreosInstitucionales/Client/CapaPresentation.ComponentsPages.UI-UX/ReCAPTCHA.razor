@@ -1,7 +1,6 @@
 ﻿@using  System.ComponentModel
 
 @implements IAsyncDisposable
-@inject IJSRuntime JS
 
 <div id="@UniqueId"></div>
 
@@ -34,7 +33,8 @@
         await module.InvokeAsync<object>("reCAPTCHA.init");
 
         WidgetId = await module.InvokeAsync<int>("reCAPTCHA.render", DotNetObjectReference.Create(this), UniqueId, SiteKey);
-    }*/
+    }
+    */
 
     [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
     public void CallbackOnSuccess(string response)
@@ -52,14 +52,14 @@
 
     public ValueTask<string> GetResponseAsync()
     {
-        return JS.InvokeAsync<string>("My.reCAPTCHA.getResponse", WidgetId);
+        return JSRuntime.InvokeAsync<string>("My.reCAPTCHA.getResponse", WidgetId);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            module = await JS.InvokeAsync<IJSObjectReference>
+            module = await JSRuntime.InvokeAsync<IJSObjectReference>
             (
                 "import",
                 "./CapaPresentation.ComponentsPages.UI-UX/ReCAPTCHA.razor.js"
