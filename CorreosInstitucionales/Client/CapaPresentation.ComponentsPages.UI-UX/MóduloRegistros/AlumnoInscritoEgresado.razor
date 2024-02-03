@@ -437,51 +437,12 @@ else
 
 @code
 {
+    @*///////////////////////////////////////////////  OBTENER PARÁMETROS PARA AGREGAR O ACTUALIZAR DATA  ///////////////////////////////////////////////*@
+    [Parameter] public string ActionAddEdit { get; set; }
+    [Parameter] public RequestDTO_Usuario? oEditUsuario { get; set; }
+
     @*///////////////////////////////////////////////  INICIALIZAR OBJETO DEL USUARIO  ///////////////////////////////////////////////*@
-    public RequestDTO_Usuario? oUsuario = new()
-    {
-        // DATOS ID DEL USUARIO
-        IdUsuario = 0,
-        UsuIdRol = 2,                           // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-        UsuIdTipoPersonal = 1,                  // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
-        // DATOS PERSONALES
-        UsuNombre = "",                         // Nombre del Usuario Solicitante o Administrador
-        UsuPrimerApellido = "",                 // Primer Apellido del Usuario Solicitante o Administrador
-        UsuSegundoApellido = "",                // Segundo Apellido del Usuario Solicitante o Administrador
-        UsuCurp = "",                           // CURP con 18 caracteres como mínimo
-        UsuFileNameCurp = "",                   // Nombre del Archivo y extensión .pdf del CURP
-        UsuFileSizeCurp = 0L,                   // Tamaño del Archivo .pdf del CURP
-        UsuNoCelularAnterior = "00 00 00 00 00",// Número de Celular Anterior si llega a cambiar por uno nuevo
-        UsuNoCelularNuevo = "",                 // Número de Celular Nuevo que sería el número de celular actual
-        // DATOS ACADÉMICOS
-        UsuBoletaAlumno = "",                   // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
-        UsuBoletaMaestria = "B000000",          // Número de Boleta del Usuario (Alumno de Maestria)
-        // UsuIdCarrera = 1,                    // FK ID de la Carrera del Alumno
-        UsuSemestre = "",                       // Semestre que cursa el Alumno Inscrito o de Maestria
-        UsuAñoEgreso = 1950,                    // Año de Egreso en dado caso
-        UsuFileNameComprobanteInscripcion = "", // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
-        UsuFileSizeComprobanteInscripcion = 0l, // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
-        // DATOS LABORALES
-        UsuNumeroEmpleado = "0",                // Número del Empleado del Usuario (Administrador o Docente)
-        UsuIdAreaDepto = 1,                     // FK ID del Área/Departamento del Usuario Empleado
-        UsuNoExtension = "0",                   // Número de Extensión del Empleado
-        // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
-        UsuCorreoPersonalCuentaAnterior = null, // Correo Personal de la Cuenta Anterior
-        UsuCorreoPersonalCuentaNueva = "",      // Correo Personal de la Cuenta Nueva o Actual
-        UsuContraseña = "",                     // Contraseña en la PLataforma del Usuario Solicitante o Administrador
-        UsuRecuperarContraseña = false,         // Contraseña Temporal que se le proporciona al Usuario Solicitante
-        // DATOS DEL CORREO INSTITUCIONAL
-        UsuCorreoInstitucionalCuenta = "",      // Cuenta Correo Institucional IPN generada por DCyC
-        UsuCorreoInstitucionalContraseña = "",  // Contraseña del Correo Institucional IPN Generada por DCyC
-        // OTROS DATOS
-        // UsuFechaHoraAlta = DateTime.Parse(DateTime.Now.ToString()).Year; // Fecha y Hora de Alta del Usuario
-        UsuStatus = true,                       // Usuario (1 - Activo / 0 - Inactivo)
-        // DATOS FK NAVIGATION
-        UsuIdAreaDeptoNavigation = null,
-        UsuIdCarreraNavigation = null,
-        UsuIdRolNavigation = null,
-        UsuIdTipoPersonalNavigation = null
-    };
+    public RequestDTO_Usuario? oUsuario = new();
 
     @*///////////////////////////////////////////////  INICIALIZAR OBJETOS Y OBTENER DATA ASYNC  ///////////////////////////////////////////////*@
     public Response<RequestDTO_Usuario>? oResponse = new();
@@ -496,6 +457,95 @@ else
         oLinkSAES = await servicioLink.GetDataByNameAsync("SAES UPIICSA");
         oCarreras = await servicioCarrera.GetAllDataAsync(true);
         // oUsuario.UsuFileNameCurp = servicioRepositoryFiles.GetPathByFolderIdFileName("Usuarios", 1, "1_CURP_b77e7bd8-fac7-4556-bf55-0032a2328199.jpg");
+
+        if (ActionAddEdit == "agregar")
+        {
+            // DATOS ID DEL USUARIO
+            oUsuario.IdUsuario = 0;
+            oUsuario.UsuIdRol = 2;                              // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
+            oUsuario.UsuIdTipoPersonal = 1;                     // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
+            // DATOS PERSONALES
+            oUsuario.UsuNombre = "";                            // Nombre del Usuario Solicitante o Administrador
+            oUsuario.UsuPrimerApellido = "";                    // Primer Apellido del Usuario Solicitante o Administrador
+            oUsuario.UsuSegundoApellido = "";                   // Segundo Apellido del Usuario Solicitante o Administrador
+            oUsuario.UsuCurp = "";                              // CURP con 18 caracteres como mínimo
+            oUsuario.UsuFileNameCurp = "";                      // Nombre del Archivo y extensión .pdf del CURP
+            oUsuario.UsuFileSizeCurp = 0L;                      // Tamaño del Archivo .pdf del CURP
+            oUsuario.UsuNoCelularAnterior = "00 00 00 00 00";   // Número de Celular Anterior si llega a cambiar por uno nuevo
+            oUsuario.UsuNoCelularNuevo = "";                    // Número de Celular Nuevo que sería el número de celular actual
+            // DATOS ACADÉMICOS
+            oUsuario.UsuBoletaAlumno = "";                      // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+            oUsuario.UsuBoletaMaestria = "B000000";             // Número de Boleta del Usuario (Alumno de Maestria)
+            // oUsuario.UsuIdCarrera = 1;                       // FK ID de la Carrera del Alumno
+            oUsuario.UsuSemestre = "";                          // Semestre que cursa el Alumno Inscrito o de Maestria
+            oUsuario.UsuAñoEgreso = 1950;                       // Año de Egreso en dado caso
+            oUsuario.UsuFileNameComprobanteInscripcion = "";    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            oUsuario.UsuFileSizeComprobanteInscripcion = 0l;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            // DATOS LABORALES
+            oUsuario.UsuNumeroEmpleado = "0";                   // Número del Empleado del Usuario (Administrador o Docente)
+            oUsuario.UsuIdAreaDepto = 1;                        // FK ID del Área/Departamento del Usuario Empleado
+            oUsuario.UsuNoExtension = "0";                      // Número de Extensión del Empleado
+            // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
+            oUsuario.UsuCorreoPersonalCuentaAnterior = null;    // Correo Personal de la Cuenta Anterior
+            oUsuario.UsuCorreoPersonalCuentaNueva = "";         // Correo Personal de la Cuenta Nueva o Actual
+            oUsuario.UsuContraseña = "";                        // Contraseña en la PLataforma del Usuario Solicitante o Administrador
+            oUsuario.UsuRecuperarContraseña = false;            // Contraseña Temporal que se le proporciona al Usuario Solicitante
+            // DATOS DEL CORREO INSTITUCIONAL
+            oUsuario.UsuCorreoInstitucionalCuenta = "";         // Cuenta Correo Institucional IPN generada por DCyC
+            oUsuario.UsuCorreoInstitucionalContraseña = "";     // Contraseña del Correo Institucional IPN Generada por DCyC
+            // OTROS DATOS
+            // oUsuario.UsuFechaHoraAlta = DateTime.Parse(DateTime.Now.ToString()).Year; // Fecha y Hora de Alta del Usuario
+            oUsuario.UsuStatus = true;                          // Usuario (1 - Activo / 0 - Inactivo)
+            // DATOS FK NAVIGATION
+            oUsuario.UsuIdAreaDeptoNavigation = null;
+            oUsuario.UsuIdCarreraNavigation = null;
+            oUsuario.UsuIdRolNavigation = null;
+            oUsuario.UsuIdTipoPersonalNavigation = null;
+        }
+        else if (ActionAddEdit == "actualizar")
+        {
+            // DATOS ID DEL USUARIO
+            oUsuario.IdUsuario = oEditUsuario.IdUsuario;
+            oUsuario.UsuIdRol = oEditUsuario.UsuIdRol;                          // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
+            oUsuario.UsuIdTipoPersonal = oEditUsuario.UsuIdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
+            // DATOS PERSONALES
+            oUsuario.UsuNombre = oEditUsuario.UsuNombre;                        // Nombre del Usuario Solicitante o Administrador
+            oUsuario.UsuPrimerApellido = oEditUsuario.UsuPrimerApellido;        // Primer Apellido del Usuario Solicitante o Administrador
+            oUsuario.UsuSegundoApellido = oEditUsuario.UsuSegundoApellido;      // Segundo Apellido del Usuario Solicitante o Administrador
+            oUsuario.UsuCurp = oEditUsuario.UsuCurp;                            // CURP con 18 caracteres como mínimo
+            oUsuario.UsuFileNameCurp = oEditUsuario.UsuFileNameCurp;            // Nombre del Archivo y extensión .pdf del CURP
+            oUsuario.UsuFileSizeCurp = oEditUsuario.UsuFileSizeCurp;            // Tamaño del Archivo .pdf del CURP
+            oUsuario.UsuNoCelularAnterior = oEditUsuario.UsuNoCelularAnterior;  // Número de Celular Anterior si llega a cambiar por uno nuevo
+            oUsuario.UsuNoCelularNuevo = oEditUsuario.UsuNoCelularNuevo;        // Número de Celular Nuevo que sería el número de celular actual
+            // DATOS ACADÉMICOS
+            oUsuario.UsuBoletaAlumno = oEditUsuario.UsuBoletaAlumno;            // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+            oUsuario.UsuBoletaMaestria = oEditUsuario.UsuBoletaMaestria;        // Número de Boleta del Usuario (Alumno de Maestria)
+            oUsuario.UsuIdCarrera = oEditUsuario.UsuIdCarrera;                  // FK ID de la Carrera del Alumno
+            oUsuario.UsuSemestre = oEditUsuario.UsuSemestre;                    // Semestre que cursa el Alumno Inscrito o de Maestria
+            oUsuario.UsuAñoEgreso = oEditUsuario.UsuAñoEgreso;                  // Año de Egreso en dado caso
+            oUsuario.UsuFileNameComprobanteInscripcion = oEditUsuario.UsuFileNameComprobanteInscripcion;    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            oUsuario.UsuFileSizeComprobanteInscripcion = oEditUsuario.UsuFileSizeComprobanteInscripcion;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            // DATOS LABORALES
+            oUsuario.UsuNumeroEmpleado = oEditUsuario.UsuNumeroEmpleado;        // Número del Empleado del Usuario (Administrador o Docente)
+            oUsuario.UsuIdAreaDepto = oEditUsuario.UsuIdAreaDepto;              // FK ID del Área/Departamento del Usuario Empleado
+            oUsuario.UsuNoExtension = oEditUsuario.UsuNoExtension;              // Número de Extensión del Empleado
+            // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
+            oUsuario.UsuCorreoPersonalCuentaAnterior = oEditUsuario.UsuCorreoPersonalCuentaAnterior;        // Correo Personal de la Cuenta Anterior
+            oUsuario.UsuCorreoPersonalCuentaNueva = oEditUsuario.UsuCorreoPersonalCuentaNueva;              // Correo Personal de la Cuenta Nueva o Actual
+            oUsuario.UsuContraseña = oEditUsuario.UsuContraseña;                                            // Contraseña en la PLataforma del Usuario Solicitante o Administrador
+            oUsuario.UsuRecuperarContraseña = oEditUsuario.UsuRecuperarContraseña;                          // Contraseña Temporal que se le proporciona al Usuario Solicitante
+            // DATOS DEL CORREO INSTITUCIONAL
+            oUsuario.UsuCorreoInstitucionalCuenta = oEditUsuario.UsuCorreoInstitucionalCuenta;              // Cuenta Correo Institucional IPN generada por DCyC
+            oUsuario.UsuCorreoInstitucionalContraseña = oEditUsuario.UsuCorreoInstitucionalContraseña;      // Contraseña del Correo Institucional IPN Generada por DCyC
+            // OTROS DATOS
+            oUsuario.UsuFechaHoraAlta = oEditUsuario.UsuFechaHoraAlta;          // Fecha y Hora de Alta del Usuario
+            oUsuario.UsuStatus = oEditUsuario.UsuStatus;                        // Usuario (1 - Activo / 0 - Inactivo)
+            // DATOS FK NAVIGATION
+            oUsuario.UsuIdAreaDeptoNavigation = null;
+            oUsuario.UsuIdCarreraNavigation = null;
+            oUsuario.UsuIdRolNavigation = null;
+            oUsuario.UsuIdTipoPersonalNavigation = null;
+        }
     }
 
     @*///////////////////////////////////////////////  INICIALIZAR LISTA DE SEMESTRES  ///////////////////////////////////////////////*@
@@ -974,9 +1024,9 @@ else
     private async Task ShowDialogWithCustomCssClasses()
     {
         await DialogModalService.OpenAsync("<span style='font-variant: small-caps; font-size:18px;'>Aviso de Privacidad para la Protección de Datos Personales<span>", ds =>
-            @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
-                <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-p-3">
-                    <iframe src="./aviso_privacidad.pdf" frameborder="1" scrolling="yes" style="height:300px; width:500px;" />
+            @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="5px" Class="w-100">
+                <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-m-0 rz-p-0 w-100">
+                    <iframe src="./aviso_privacidad.pdf" frameborder="1" scrolling="yes" class="w-100" style="height:300px; max-height:500px;" />
                 </RadzenCard>
                 <RadzenButton Text="Cerrar"
                               BusyText=""
@@ -984,7 +1034,7 @@ else
                               ButtonType="ButtonType.Button"
                               IsBusy="false"
                               Icon="check_circle"
-                              Class="rz-ripple rz-my-0"
+                              Class="rz-ripple rz-my-0 w-100"
                               Shade="Shade.Darker"
                               Click="@(() => ds.Close(false))" />
             </RadzenStack>,

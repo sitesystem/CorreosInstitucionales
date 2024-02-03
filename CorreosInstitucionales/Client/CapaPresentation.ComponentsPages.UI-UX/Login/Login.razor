@@ -554,7 +554,7 @@
                 else
                 {
                     errorMsgVisible = true;
-                    contentErrorMsg = $@"No se encuentró registrado el <b>Correo Electrónico Personal.</b>";
+                    contentErrorMsg = oRespuesta.Message;
                 }
             }
             catch (HttpRequestException e)

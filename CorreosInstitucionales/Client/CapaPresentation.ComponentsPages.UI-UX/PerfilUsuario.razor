@@ -4,50 +4,43 @@
 
 @using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistros
 
-@inject IUsuarioService servicioUsuario
-
 <h3>Modificación de Datos de perfil</h3>
-@switch (oUsuario.UsuIdTipoPersonal)
+
+@switch (oEditUsuario.UsuIdTipoPersonal)
 {
     case 1:
-        Console.WriteLine("El tipo usuario es: Alumno inscrito");
-        <AlumnoInscritoEgresado></AlumnoInscritoEgresado>
-        //navigationManager.NavigateTo("/RegistroInscrito");
-        break;        
+            Console.WriteLine("El tipo usuario es: Alumno inscrito");
+            <RadzenCard Variant="Variant.Filled" Class="">
+                <AlumnoInscritoEgresado ActionAddEdit="actualizar" oEditUsuario="oEditUsuario" />
+            </RadzenCard>
+            break;        
     case 2:
-        Console.WriteLine("El tipo usuario es: Alumno egresado");
-        //navigationManager.NavigateTo("/RegistroInscrito");
-        break;
+            Console.WriteLine("El tipo usuario es: Alumno egresado");
+            break;
     case 3:
-        Console.WriteLine("El tipo usuario es: Maestría");
-        <AlumnoMaestria></AlumnoMaestria>
-        //navigationManager.NavigateTo("/RegistroMaestria");
-        break;
+            Console.WriteLine("El tipo usuario es: Maestría");
+            <AlumnoMaestria />
+            break;
     case 4:
-        Console.WriteLine("El tipo usuario es: Administrativo");
-        <EmpleadoAdministrativoDocente TipoPersonal="4"></EmpleadoAdministrativoDocente>
-        //navigationManager.NavigateTo("/RegistroAdministrativo");
-        break;
+            Console.WriteLine("El tipo usuario es: Administrativo");
+            <EmpleadoAdministrativoDocente TipoPersonal="4" />
+            break;
     case 5:
-        Console.WriteLine("El tipo usuario es: Docente");
-        //navigationManager.NavigateTo("/RegistroDocente");
-        break;
+            Console.WriteLine("El tipo usuario es: Docente");
+            break;
     case 6:
-        Console.WriteLine("El tipo usuario es: Honorarios");
-        <EmpleadoHonorarios></EmpleadoHonorarios>
-        //navigationManager.NavigateTo("/RegistroHonorario");
-        break;
+            Console.WriteLine("El tipo usuario es: Honorarios");
+            <EmpleadoHonorarios />
+            break;
     default: 
-        //tipousuario=0;
-        break;
-    }
-
-
+            // tipousuario=0;
+            break;
+}
 
 @code
 {
     public Response<RequestDTO_Usuario> oResponseUsuario = new();
-    public RequestDTO_Usuario oUsuario = new();
+    public RequestDTO_Usuario oEditUsuario = new();
     private string? authMessage;
     private List<Claim> claims = new();
 
@@ -61,7 +54,7 @@
             int idTipoPersonal = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "TipoPersonal")?.Value);
             int idUsuario = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
             oResponseUsuario = await servicioUsuario.GetDataByIdAsync(idUsuario);
-            oUsuario = oResponseUsuario.Data;
+            oEditUsuario = oResponseUsuario.Data;
         }
         else
             navigationManager.NavigateTo("/");

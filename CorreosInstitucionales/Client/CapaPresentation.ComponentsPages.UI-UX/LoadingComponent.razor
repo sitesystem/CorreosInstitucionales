@@ -5,5 +5,27 @@
 
 @code
 {
-
+    protected override async Task OnInitializedAsync()
+    {
+        // await DialogModalService.OpenAsync("Cargando", ds =>
+        //     @<div>
+        //         <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Class="rz-m-12" Gap="2rem">
+        //             <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Secondary" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Medium" />
+        //             <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.Auto" TextAlign="TextAlign.Center">Cargando <strong>...</strong></RadzenText>
+        //         </RadzenStack>
+        //     </div>,
+        //     new DialogOptions()
+        //     {
+        //         CloseDialogOnOverlayClick = false,
+        //         CloseDialogOnEsc = false,
+        //         Width = "Auto",
+        //         Height = "Auto",
+        //         Resizable = true,
+        //         ShowTitle = false,
+        //         ShowClose = true,
+        //         Draggable = true,
+        //         CssClass = "custom-dialog-class",
+        //         WrapperCssClass = "custom-dialog-wrapper-class"
+        //     });
+    }
 }

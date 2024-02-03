@@ -84,7 +84,7 @@
                             <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
                                 <Tabs>
                                     <RadzenTabsItem Text="Alumn@s Inscritos / Egresados" Icon="school" IconColor="@Colors.Base800">
-                                        <AlumnoInscritoEgresado />
+                                        <AlumnoInscritoEgresado ActionAddEdit="agregar" oEditUsuario="null" />
                                     </RadzenTabsItem>
                                     <RadzenTabsItem Text="Maestría" Icon="school" IconColor="@Colors.Base800">
                                         <AlumnoMaestria />
@@ -162,9 +162,9 @@
     private async Task ShowDialogWithCustomCssClasses()
     {
         await DialogModalService.OpenAsync("<span style='font-variant: small-caps; font-size:18px;'>Aviso de Privacidad para la Protección de Datos Personales<span>", ds =>
-            @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
-                <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-p-3">
-                    <iframe src="./aviso_privacidad.pdf" frameborder="1" scrolling="yes" style="height:300px; width:500px;" />
+            @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="5px" Class="w-100">
+                <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-m-0 rz-p-0 w-100">
+                    <iframe src="./aviso_privacidad.pdf" frameborder="1" scrolling="yes" class="w-100" style="height:300px; max-height:500px;" />
                 </RadzenCard>
                 <RadzenButton Text="Cerrar"
                               BusyText=""
@@ -172,7 +172,7 @@
                               ButtonType="ButtonType.Button"
                               IsBusy="false"
                               Icon="check_circle"
-                              Class="rz-ripple rz-my-0"
+                              Class="rz-ripple rz-my-0 w-100"
                               Shade="Shade.Darker"
                               Click="@(() => ds.Close(false))" />
             </RadzenStack>,
