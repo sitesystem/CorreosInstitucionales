@@ -82,7 +82,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
                             new(ClaimTypes.Name, usuario.UsuNombre.ToString()),
                             new(ClaimTypes.Role, usuario.UsuIdRol.ToString()),
                             new("ID", usuario.IdUsuario.ToString()),
-                            new("Name", usuario.UsuNombre.ToString() + " " + usuario.UsuPrimerApellido.ToString() + " " + usuario.UsuSegundoApellido.ToString()),
+                            new("Name", usuario.UsuNombre.ToString() + " " + usuario.UsuPrimerApellido.ToString() + " " + usuario.UsuSegundoApellido?.ToString()),
                             new("Email", usuario.UsuCorreoPersonalCuentaNueva.ToString()),
                             new("Rol", usuario.UsuIdRol.ToString()),
                             new("TipoPersonal", usuario.UsuIdTipoPersonal.ToString())

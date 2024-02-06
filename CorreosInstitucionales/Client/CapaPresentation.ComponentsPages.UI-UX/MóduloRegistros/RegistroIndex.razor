@@ -8,143 +8,119 @@
 
 <RadzenComponents />
 
-<style>
-    @@media(min-width: 100px) {
-        .cintillo {
-            font-variant: small-caps;
-            text-decoration: none;
-            font-size: 2.5vw;
-            font-weight: bold;
-        }
-    }
-
-    @@media(min-width: 1001px) {
-        .cintillo {
-            font-variant: small-caps;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
-        }
-    }
-
-    aside{
-        float: left;
-        width: 250px;
-        padding: 10px;
-        position:fixed;
-    }
+<style type="text/css">
 </style>
 
-<body>
-    <!-- Encabezado de Página (Header Fixed-Top) -->
-    <header>
-        <nav class="navbar header fixed-top">
-            <div class="container">
-                <RadzenHeader class="rz-border-radius-0 rz-py-0" Style="border-bottom: 10px solid #076633;">
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" Class="w-100">
-                        <RadzenImage Path="./pleca_saci.png" Style="height:100px;" AlternateText="pleca saci" class="img-fluid rz-my-0" />
-                        <RadzenImage Path="./logo_ipn.png" Style="height:100px;" AlternateText="logo ipn" class="img-fluid rz-my-0" />
-                        <RadzenImage Path="./logo_upiicsa.png" Style="height:100px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />
-                        <RadzenImage Path="./logo_saci.png" Style="height:100px;" AlternateText="logo saci" class="img-fluid rz-my-0" />
-                        <RadzenImage Path="./pleca_ipn.png" Style="height:100px;" AlternateText="pleca ipn" class="img-fluid rz-my-0" />
-                    </RadzenStack>
-                </RadzenHeader>
-            </div>
-        </nav>
-    </header>
-    <hr class="d-block rz-my-10 rz-color-base-100" />
-    <div class="container rz-background-color-base-800 rz-p-3 rz-border-radius-1">
-        <div class="row align-items-center rz-mt-10 rz-mb-5">
-            <div class="col">
-                <RadzenCard Variant="Variant.Filled" class="rz-background-color-white rz-shadow-2 rz-border-radius-1 rz-py-2 rz-mb-3">
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" Class="w-100">
-                        <RadzenText TextStyle="TextStyle.Body1">
-                            <h5 style="font-variant: small-caps;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
-                                    <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                                </svg> Registro del Usuario
-                            </h5>
-                        </RadzenText>
-                        <RadzenButton Text="Regresar"
-                                      BusyText=""
-                                      ButtonStyle="ButtonStyle.Warning"
-                                      ButtonType="ButtonType.Button"
-                                      IsBusy="false"
-                                      Icon="arrow_back"
-                                      Class="rz-ripple"
-                                      Shade="Shade.Darker"
-                                      Click="@(() => navigationManager.NavigateTo("/"))" />
-                    </RadzenStack>
-                </RadzenCard>
+<!-- Encabezado de Página (Header Fixed-Top) -->
+<header>
+    <nav class="navbar header fixed-top">
+        <div class="container">
+            <RadzenHeader class="rz-border-radius-0 rz-py-0" Style="border-bottom: 10px solid #076633;">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" Class="w-100">
+                    <RadzenImage Path="./pleca_saci.png" Style="height:100px;" AlternateText="pleca saci" class="img-fluid rz-my-0" />
+                    <RadzenImage Path="./logo_ipn.png" Style="height:100px;" AlternateText="logo ipn" class="img-fluid rz-my-0" />
+                    <RadzenImage Path="./logo_upiicsa.png" Style="height:100px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />
+                    <RadzenImage Path="./logo_saci.png" Style="height:100px;" AlternateText="logo saci" class="img-fluid rz-my-0" />
+                    <RadzenImage Path="./pleca_ipn.png" Style="height:100px;" AlternateText="pleca ipn" class="img-fluid rz-my-0" />
+                </RadzenStack>
+            </RadzenHeader>
+        </div>
+    </nav>
+</header>
+<hr class="d-block rz-my-10 rz-color-base-100" />
+<div class="container rz-background-color-base-800 rz-p-3 rz-border-radius-1">
+    <div class="row align-items-center rz-mt-10 rz-mb-5">
+        <div class="col">
+            <RadzenCard Variant="Variant.Filled" class="rz-background-color-white rz-shadow-2 rz-border-radius-1 rz-py-2 rz-mb-3">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" Class="w-100">
+                    <RadzenText TextStyle="TextStyle.Body1">
+                        <h5 style="font-variant: small-caps;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+                                <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+                            </svg> Registro del Usuario
+                        </h5>
+                    </RadzenText>
+                    <RadzenButton Text="Regresar"
+                                    BusyText=""
+                                    ButtonStyle="ButtonStyle.Warning"
+                                    ButtonType="ButtonType.Button"
+                                    IsBusy="false"
+                                    Icon="arrow_back"
+                                    Class="rz-ripple"
+                                    Shade="Shade.Darker"
+                                    Click="@(() => navigationManager.NavigateTo("/"))" />
+                </RadzenStack>
+            </RadzenCard>
 
-                <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
-                    <Tabs>
-                        <RadzenTabsItem Text="Alumn@s" Icon="school" IconColor="@Colors.Base800">
-                            <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
-                                <Tabs>
-                                    <RadzenTabsItem Text="Alumn@s Inscritos / Egresados" Icon="school" IconColor="@Colors.Base800">
-                                        <AlumnoInscritoEgresado ActionAddEdit="agregar" oEditUsuario="null" />
-                                    </RadzenTabsItem>
-                                    <RadzenTabsItem Text="Maestría" Icon="school" IconColor="@Colors.Base800">
-                                        <AlumnoMaestria />
-                                    </RadzenTabsItem>
-                                </Tabs>
-                            </RadzenTabs>
-                        </RadzenTabsItem>
-                        <RadzenTabsItem Text="Emplead@s" Icon="badge" IconColor="@Colors.Base800">
-                            <RadzenTabs RenderMode="TabRenderMode.Client">
-                                <Tabs>
-                                    <RadzenTabsItem Text="Administrativos" Icon="badge" IconColor="@Colors.Base800">
-                                        <EmpleadoAdministrativoDocente IdTipoPersonal="4" TipoPersonal="administrativo" />
-                                    </RadzenTabsItem>
-                                    <RadzenTabsItem Text="Docentes" Icon="badge" IconColor="@Colors.Base800">
-                                        <EmpleadoAdministrativoDocente IdTipoPersonal="5" TipoPersonal="docente" />
-                                    </RadzenTabsItem>
-                                    <RadzenTabsItem Text="Honorarios" Icon="badge" IconColor="@Colors.Base800">
-                                        <EmpleadoHonorarios />
-                                    </RadzenTabsItem>
-                                </Tabs>
-                            </RadzenTabs>
-                        </RadzenTabsItem>
-                    </Tabs>
-                </RadzenTabs>
-            </div>
+            <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
+                <Tabs>
+                    <RadzenTabsItem Text="Alumn@s" Icon="school" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
+                        <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
+                            <Tabs>
+                                <RadzenTabsItem Text="@($@"Alumn@ Inscrit@")" Icon="school" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
+                                    <Alumnos ActionAddEdit="agregar" oEditUsuario="null" IdTipoPersonal="1" TipoPersonal="alumno_inscrito" />   @* Agregar Registro Alumno Inscrito *@
+                                </RadzenTabsItem>
+                                <RadzenTabsItem Text="@($@"Egresad@")" Icon="school" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
+                                    <Alumnos ActionAddEdit="agregar" oEditUsuario="null" IdTipoPersonal="2" TipoPersonal="egresado" />          @* Agregar Registro Alumno Egresado *@
+                                </RadzenTabsItem>
+                                <RadzenTabsItem Text="Maestría" Icon="school" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
+                                    <Alumnos ActionAddEdit="agregar" oEditUsuario="null" IdTipoPersonal="3" TipoPersonal="maestria" />          @* Agregar Registro Alumno Maestría *@
+                                </RadzenTabsItem>
+                            </Tabs>
+                        </RadzenTabs>
+                    </RadzenTabsItem>
+                    <RadzenTabsItem Text="Emplead@s" Icon="badge" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
+                        <RadzenTabs RenderMode="TabRenderMode.Client">
+                            <Tabs>
+                                <RadzenTabsItem Text="Administrativo" Icon="badge" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
+                                    <EmpleadoAdministrativoDocente IdTipoPersonal="4" TipoPersonal="administrativo" />  @* Agregar Registro Empleado Administrativo *@
+                                </RadzenTabsItem>
+                                <RadzenTabsItem Text="Docente" Icon="badge" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
+                                    <EmpleadoAdministrativoDocente IdTipoPersonal="5" TipoPersonal="docente" />         @* Agregar Registro Empleado Docente *@
+                                </RadzenTabsItem>
+                                <RadzenTabsItem Text="Honorarios" Icon="badge" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
+                                    <EmpleadoHonorarios />                                                              @* Agregar Registro Empleado Honorarios *@
+                                </RadzenTabsItem>
+                            </Tabs>
+                        </RadzenTabs>
+                    </RadzenTabsItem>
+                </Tabs>
+            </RadzenTabs>
         </div>
     </div>
-    <hr class="d-block rz-color-base-100 rz-my-5" />
-    <!-- Pie de Página (Footer Fixed-Bottom) -->
-    <footer>
-        <nav class="navbar bg-body-tertiary bg-dark fixed-bottom" data-bs-theme="dark">
-            <div class="container text-center">
-                <a class="navbar-brand" style="text-decoration:none; font-size:calc(8px + 0.390625vw); color:white;">
-                    <RadzenImage Path="./logo_upiicsa.png" Style="height:20px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />&nbsp;
-                    UPIICSA (Desarrollo de Sistemas de Información)
-                </a>
-                <a class="navbar-brand" style="text-decoration:none; font-size:calc(8px + 0.390625vw); color:white;">
-                    &copy; 2024 SACI vα 1.0 &ensp;| &nbsp;
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pc-display" viewBox="0 0 16 16">
-                        <path d="M8 1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm1 13.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0M9.5 1a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM9 3.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1h-5a.5.5 0 0 0-.5.5M1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v2h-.5a.5.5 0 0 0 0 1H7v-4H1.5a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7V2z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-laptop" viewBox="0 0 16 16">
-                        <path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tablet" viewBox="0 0 16 16">
-                        <path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-                        <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-phone" viewBox="0 0 16 16">
-                        <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-                        <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
-                    </svg>
-                </a>
-            </div>
-        </nav>
-    </footer>
+</div>
+<hr class="d-block rz-color-base-100 rz-my-5" />
+<!-- Pie de Página (Footer Fixed-Bottom) -->
+<footer>
+    <nav class="navbar bg-body-tertiary bg-dark fixed-bottom" data-bs-theme="dark">
+        <div class="container text-center">
+            <a class="navbar-brand" style="text-decoration:none; font-size:calc(8px + 0.390625vw); color:white;">
+                <RadzenImage Path="./logo_upiicsa.png" Style="height:20px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />&nbsp;
+                UPIICSA (Desarrollo de Sistemas de Información)
+            </a>
+            <a class="navbar-brand" style="text-decoration:none; font-size:calc(8px + 0.390625vw); color:white;">
+                &copy; 2024 SACI vα 1.0 &ensp;| &nbsp;
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pc-display" viewBox="0 0 16 16">
+                    <path d="M8 1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm1 13.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0M9.5 1a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM9 3.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1h-5a.5.5 0 0 0-.5.5M1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v2h-.5a.5.5 0 0 0 0 1H7v-4H1.5a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7V2z" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-laptop" viewBox="0 0 16 16">
+                    <path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tablet" viewBox="0 0 16 16">
+                    <path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                    <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-phone" viewBox="0 0 16 16">
+                    <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                    <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                </svg>
+            </a>
+        </div>
+    </nav>
+</footer>
 
-    <ButtonScrollToTop />
-
-</body>
+<ButtonScrollToTop />
 
 @code
 {
@@ -156,22 +132,22 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await ShowDialogWithCustomCssClasses();
+            await ShowDialog_AvisoPrivacidad();
     }
 
-    private async Task ShowDialogWithCustomCssClasses()
+    private async Task ShowDialog_AvisoPrivacidad()
     {
-        await DialogModalService.OpenAsync("<span style='font-variant: small-caps; font-size:18px;'>Aviso de Privacidad para la Protección de Datos Personales<span>", ds =>
+        await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>Aviso de Privacidad para la Protección de Datos Personales<span>", ds =>
             @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="5px" Class="w-100">
                 <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-m-0 rz-p-0 w-100">
-                    <iframe src="./aviso_privacidad.pdf" frameborder="1" scrolling="yes" class="w-100" style="height:300px; max-height:500px;" />
+                    <iframe src="./aviso_privacidad.pdf" frameborder="1" scrolling="yes" class="w-100" style="height:300px;" />
                 </RadzenCard>
                 <RadzenButton Text="Cerrar"
                               BusyText=""
                               ButtonStyle="ButtonStyle.Warning"
                               ButtonType="ButtonType.Button"
                               IsBusy="false"
-                              Icon="check_circle"
+                              Icon="cancel"
                               Class="rz-ripple rz-my-0 w-100"
                               Shade="Shade.Darker"
                               Click="@(() => ds.Close(false))" />

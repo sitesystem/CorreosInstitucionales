@@ -1,5 +1,4 @@
-﻿@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal
-@using Microsoft.AspNetCore.Authorization;
+﻿@using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Components.Authorization;
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
@@ -15,18 +14,22 @@
 @using Radzen.Blazor
 
 @using CorreosInstitucionales.Client
+@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX
 @using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
+@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistros
+
 @using CorreosInstitucionales.Client.Shared
 @using CorreosInstitucionales.Client.Shared.Components;
 @using CorreosInstitucionales.Client.Shared.Utils;
 
 @using CorreosInstitucionales.Shared.CapaEntities.Request
 @using CorreosInstitucionales.Shared.CapaEntities.Response
+
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.repositoryFiles
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
 
@@ -40,9 +43,11 @@
 @inject NotificationService NotificationService
 @inject TooltipService TooltipService
 
+@* LogIn / LogOut *@
+@inject ILoginServices loginService
+
 @* Capa Tools Helper *@
 @inject IJSRuntime JSRuntime
-@inject IRepositoryFiles servicioRepositoryFiles
 @inject ISendEmailService servicioSendEmail
 
 @* Módulo de Registros *@

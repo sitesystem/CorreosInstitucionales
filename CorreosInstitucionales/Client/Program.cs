@@ -17,7 +17,6 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitud;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.repositoryFiles;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 using CorreosInstitucionales.Client.Shared.Utils;
@@ -42,9 +41,6 @@ builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider =>
 
 // Inyección de Dependencias - Módulo de Send Email
 builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
-
-// Inyección de Dependencias - wwroot Repositorio (Usuarios / Solicitudes de Ticket)
-builder.Services.AddScoped<IRepositoryFiles, RRepositoryFiles>();
 
 // Inyección de Dependencias - Módulo de Registro del Usuario
 builder.Services.AddScoped<IUsuarioService, RUsuarioService>();

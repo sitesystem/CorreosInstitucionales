@@ -1,37 +1,21 @@
-﻿@using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
+﻿<style type="text/css">
+    .nav-menu-hover:hover {
+        
+    }
+</style>
 
-@inject NavigationManager navigationManager;
-@inject ILoginServices loginService
-
-@*
-<div class="top-row ps-3 navbar navbar-dark" style="background-color: #3d0000;">
-    <div class="container-fluid">
-        <div class="e-avatar e-avatar-small e-avatar-circle image">
-            <img src="/ipn.png" alt="profile_pic">
-        </div>
-        <a class="navbar-brand" href="/">SACI</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass nav-scrollable" style="background-color:#121416;">
-    <nav class="flex-column">
-    </nav>
-</div> *@
+@*************************** Dashboard (Panel de Control) ***************************@
+<RadzenPanelMenuItem Text="Inicio (Panel de Control)" Icon="home" IconColor="@Colors.Primary" Path="Index" Style="font-variant: small-caps; font-size:16px;" class="nav-menu-hover" />
+<RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" class="nav-menu-hover" />
 
 <AuthorizeView Policy="[Rol] Usuario Solicitante">
     <Authorized>
-        @*************************** Dashboard (Panel de Control) ***************************@
-        <RadzenPanelMenuItem Text="Panel de Control" Icon="home" Path="Index" style="font-variant: small-caps; font-size:16px;" />
-        <RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" />
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
-        <RadzenPanelMenuItem Text="Solicitudes (Tickets)" Icon="bookmarks" Expanded="@isExpanded">
+        <RadzenPanelMenuItem Text="@($@"SOLICITUDES DE TICKETS")" Icon="bookmarks" IconColor="@Colors.SecondaryLight" Expanded="@isExpanded" class="nav-menu-hover">
             @*************************** Levantamiento del Nuevo Ticket ***************************@
-            <RadzenPanelMenuItem Text="Nueva Solicitud (Ticket)" Icon="local_offer" Path="NuevaSolicitudTicket" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Nueva Solicitud de Ticket" Icon="local_offer" IconColor="@Colors.Warning" Path="NuevaSolicitudTicket" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Pendientes y Atendidas ***************************@
-            <RadzenPanelMenuItem Text="Seguimiento de Solicitudes (Tickets)" Icon="bookmark" Path="/SeguimientoTickets" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Seguimiento de Solicitudes de Tickets" Icon="bookmark" IconColor="@Colors.Success" Path="/SeguimientoTickets" class="nav-menu-hover" />
         </RadzenPanelMenuItem>
     </Authorized>
     <Authorizing>
@@ -42,15 +26,12 @@
 
 <AuthorizeView Policy="[Rol] Administrador">
     <Authorized>
-        @*************************** Dashboard (Panel de Control) ***************************@
-        <RadzenPanelMenuItem Text="Panel de Control" Icon="home" Path="Index" style="font-variant: small-caps; font-size:16px;" />
-        <RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" />
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
-        <RadzenPanelMenuItem Text="Solicitudes (Tickets)" Icon="bookmarks" Expanded="true">
+        <RadzenPanelMenuItem Text="Solicitudes (Tickets)" Icon="bookmarks" Expanded="true" class="nav-menu-hover">
             @*************************** Solicitudes (Ticket's) Pendientes ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" Path="SolicitudesPendientes" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" Path="SolicitudesPendientes" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Atendidas ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" Path="SolicitudesAtendidas" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" Path="SolicitudesAtendidas" class="nav-menu-hover" />
         </RadzenPanelMenuItem>
         @*************************** Módulo de Catálogos ***************************@
         <RadzenPanelMenuItem Text="Catálogos" Icon="settings" Expanded="@isExpanded">
@@ -82,23 +63,15 @@
     </NotAuthorized>
 </AuthorizeView>
 
-<RadzenPanelMenuItem Text="" class="rz-background-color-base-900" />
 @*************************** Perfil ***************************@
-<RadzenPanelMenuItem Text="Perfil" Icon="account_circle" Path="PerfilUsuario" />
+<RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoDark" Path="PerfilUsuario" class="nav-menu-hover" />
 @*************************** Cerrar Sesión (LogOut) ***************************@
-<RadzenPanelMenuItem Text="Cerrar Sesión" Icon="logout" Click="@LogOut" />
+<RadzenPanelMenuItem Text="Cerrar Sesión" Icon="logout" IconColor="@Colors.Danger" Click="@LogOut" class="nav-menu-hover" />
 
 @code
 {
-    // private bool collapseNavMenu = true;
-    // private bool expandMenuBlazor, expandMenuTickets = true, expandMenuAdmin, expandMenuCatálogos, expandMenuOtros;
-    // private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    // private void ToggleNavMenu()
-    // {
-    //     collapseNavMenu = !collapseNavMenu;
-    // }
-    [Parameter] public bool isExpanded { get; set; }
+    [Parameter]
+    public bool isExpanded { get; set; }
 
     private async Task LogOut()
     {

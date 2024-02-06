@@ -169,13 +169,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 if (oUsuario != null)
                 {
                     // DATOS ID DEL USUARIO
-                    oUsuario.UsuIdRol = 2;
+                    oUsuario.UsuIdRol = model.UsuIdRol;
                     oUsuario.UsuIdTipoPersonal = model.UsuIdTipoPersonal;
-                    // oUsuario.UsuToken = Guid.NewGuid().ToString("D"),
                     // DATOS PERSONALES
                     oUsuario.UsuNombre = model.UsuNombre.ToUpper();
                     oUsuario.UsuPrimerApellido = model.UsuPrimerApellido.ToUpper();
-                    oUsuario.UsuSegundoApellido = model.UsuSegundoApellido.ToUpper();
+                    oUsuario.UsuSegundoApellido = model.UsuSegundoApellido?.ToUpper();
                     oUsuario.UsuCurp = model.UsuCurp.ToUpper();
                     oUsuario.UsuFileNameCurp = model.UsuFileNameCurp;
                     oUsuario.UsuNoCelularAnterior = model.UsuNoCelularAnterior;
@@ -194,14 +193,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                     oUsuario.UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior;
                     oUsuario.UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva;
-                    oUsuario.UsuContraseña = Encrypt.GetSHA256(model.UsuContraseña);
+                    oUsuario.UsuContraseña = model.UsuContraseña;
                     oUsuario.UsuRecuperarContraseña = false;
                     // DATOS DEL CORREO INSTITUCIONAL
                     oUsuario.UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta;
                     oUsuario.UsuCorreoInstitucionalContraseña = model.UsuCorreoInstitucionalContraseña;
                     // OTROS DATOS
                     // oUsuario.UsuFechaHoraAlta = DateTime.UtcNow;
-                    // oUsuario.UsuStatus = true;
+                    oUsuario.UsuStatus = true;
                     // DATOS FK NAVIGATION
                     oUsuario.UsuIdAreaDeptoNavigation = null;
                     oUsuario.UsuIdCarreraNavigation = null;
