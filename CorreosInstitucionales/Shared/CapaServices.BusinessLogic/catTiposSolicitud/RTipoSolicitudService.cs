@@ -11,7 +11,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitud
 {
-    public class RTipoSolicitudService(HttpClient httpClient) : ITipoSolicitudService
+    public class RTipoSolicitudService(HttpClient httpClient) : IGenericService<RequestViewModel_TipoSolicitud>
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };

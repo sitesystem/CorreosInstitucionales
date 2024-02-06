@@ -11,7 +11,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEscuelas
 {
-    public class REscuelaService(HttpClient httpClient) : IEscuelaService
+    public class REscuelaService(HttpClient httpClient) : IGenericService<RequestViewModel_Escuela>
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };

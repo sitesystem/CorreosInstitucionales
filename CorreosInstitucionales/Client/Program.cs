@@ -11,8 +11,10 @@ using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificios;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEscuelas;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEstadoSolicitud;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisos;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catRoles;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitud;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos;
@@ -43,18 +45,21 @@ builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider =>
 builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
 
 // Inyección de Dependencias - Módulo de Registro del Usuario
-builder.Services.AddScoped<IUsuarioService, RUsuarioService>();
+builder.Services.AddScoped<RUsuarioService>();
 
 // Inyección de Dependencias - Módulo de Catálogos
-builder.Services.AddScoped<IAreaDeptoService, RAreaDeptoService>();
-builder.Services.AddScoped<ICarreraService, RCarreraService>();
-builder.Services.AddScoped<IEdificioService, REdificioService>();
-builder.Services.AddScoped<IEscuelaService, REscuelaService>();
-builder.Services.AddScoped<ILinkService, RLinkService>();
-builder.Services.AddScoped<INoExtensionService, RNoExtensionService>();
-builder.Services.AddScoped<IPisoService, RPisoService>();
-builder.Services.AddScoped<ITipoPersonalService, RTipoPersonalService>();
-builder.Services.AddScoped<ITipoSolicitudService, RTipoSolicitudService>();
+builder.Services.AddScoped<RAreaDeptoService>();
+builder.Services.AddScoped<RCarreraService>();
+builder.Services.AddScoped<REdificioService>();
+builder.Services.AddScoped<REscuelaService>();
+builder.Services.AddScoped<REstadoSolicitudService>();
+builder.Services.AddScoped<RLinkService>();
+builder.Services.AddScoped<RNoExtensionService>();
+builder.Services.AddScoped<RRolesService>();
+builder.Services.AddScoped<RPisoService>();
+builder.Services.AddScoped<RTipoPersonalService>();
+builder.Services.AddScoped<RTipoSolicitudService>();
+
 
 // Radzen Components and Services
 builder.Services.AddRadzenComponents();

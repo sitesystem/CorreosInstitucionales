@@ -11,7 +11,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones
 {
-    public class RNoExtensionService(HttpClient httpClient) : INoExtensionService
+    public class RNoExtensionService(HttpClient httpClient) : IGenericService<RequestViewModel_NoExtension>
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };

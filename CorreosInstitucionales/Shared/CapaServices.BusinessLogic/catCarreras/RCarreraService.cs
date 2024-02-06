@@ -11,7 +11,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras
 {
-    public class RCarreraService(HttpClient httpClient) : ICarreraService
+    public class RCarreraService(HttpClient httpClient) : IGenericService<RequestViewModel_Carrera>
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
@@ -25,7 +25,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras
             return result;
         }
 
-        public async Task<Response<RequestViewModel_Carrera>?> GetDataByIdAsync(int? id)
+        public async Task<Response<RequestViewModel_Carrera>?> GetDataByIdAsync(int id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_Carrera>>($"{url}filterById/{id}", options: _options);
             return result;

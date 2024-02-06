@@ -12,7 +12,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos
 {
-    public class RAreaDeptoService(HttpClient httpClient) : IAreaDeptoService
+    public class RAreaDeptoService(HttpClient httpClient) : IGenericService<RequestViewModel_AreaDepto>
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
@@ -26,7 +26,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDepto
             return result;
         }
 
-        public async Task<Response<RequestViewModel_AreaDepto>?> GetDataByIdAsync(int? id)
+        public async Task<Response<RequestViewModel_AreaDepto>?> GetDataByIdAsync(int id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_AreaDepto>>($"{url}filterById/{id}", options: _options);
             return result;

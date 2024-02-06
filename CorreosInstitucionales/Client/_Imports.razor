@@ -19,17 +19,25 @@
 @using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistros
 
 @using CorreosInstitucionales.Client.Shared
-@using CorreosInstitucionales.Client.Shared.Components;
-@using CorreosInstitucionales.Client.Shared.Utils;
+@using CorreosInstitucionales.Client.Shared.Components
+@using CorreosInstitucionales.Client.Shared.Components.Utils
 
 @using CorreosInstitucionales.Shared.CapaEntities.Request
 @using CorreosInstitucionales.Shared.CapaEntities.Response
+@using CorreosInstitucionales.Shared.Utils;
 
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificios
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEscuelas
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEstadoSolicitud
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisos
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitud
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catRoles
+
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
 
@@ -51,11 +59,18 @@
 @inject ISendEmailService servicioSendEmail
 
 @* Módulo de Registros *@
-@inject IUsuarioService servicioUsuario
+@inject RUsuarioService servicioUsuario
 
 @* Módulo de Catálogos *@
-@inject IAreaDeptoService servicioAreaDepto
-@inject ICarreraService servicioCarrera
-@inject ILinkService servicioLink
-@inject INoExtensionService servicioNoExtension
-@inject ITipoPersonalService servicioTipoPersonal
+@inject RAreaDeptoService servicioAreaDepto
+@inject RCarreraService servicioCarrera
+@inject REdificioService servicioEdificio
+@inject REscuelaService servicioEscuela
+@inject RLinkService servicioLink
+@inject RNoExtensionService servicioNoExtension
+@inject RPisoService servicioPiso
+@inject RTipoPersonalService servicioTipoPersonal
+@inject RTipoSolicitudService servicioTipoSolicitud
+
+@inject RRolesService servicioRoles
+@inject REstadoSolicitudService servicioEstadoSolicitud
