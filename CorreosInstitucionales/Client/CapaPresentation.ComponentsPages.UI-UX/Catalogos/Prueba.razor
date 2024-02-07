@@ -1,9 +1,9 @@
 ﻿@page "/catalogos/prueba"
 @inject DialogService DialogService
 
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic
+@using System.Text.Json
 
-@if (data is not null)
+@if (usuarios is not null)
 {
     <table class="table">
         <thead>
@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in data)
+            @foreach (var item in usuarios)
             {
                 <tr>
                     <td>
@@ -22,7 +22,7 @@
                         @item.UsuSegundoApellido
                     </td>
                     <td>
-                        <button type="button" class="btn btn-primary" @onclick="async ()=>await Editar(item)">
+                        <button type="button" class="btn btn-primary" @onclick="async ()=> await Editar(item)">
                             Editar
                         </button>
                     </td>
@@ -42,48 +42,43 @@
 @code 
 {
     private string debug = "";
-    private List<RequestDTO_Usuario> data = new List<RequestDTO_Usuario>();
-    private bool shouldRender = true;
-
-    private List<RequestViewModel_AreaDepto> cat_UsuIdAreaDepto;
-    private List<RequestViewModel_Carrera>? cat_UsuIdCarrera;
-    private List<RequestViewModel_Rol>? cat_UsuIdRol;
-    private List<RequestViewModel_TipoPersonal>? cat_UsuIdTipoPersonal;
-
-
-
-    protected override bool ShouldRender() => shouldRender;
-
-    public async Task<List<T>> GetList<T>(IGenericService<T> service)
-    {
-        var response = await service.GetAllDataAsync(true);
-
-        if (response is null || response.Data is null)
-        {
-            return new List<T>();
-        }
-
-        return response.Data;
-    }
-
+    private List<RequestDTO_Usuario> usuarios = new List<RequestDTO_Usuario>();
+    
     protected override async Task OnInitializedAsync()
     {
-        cat_UsuIdAreaDepto = await WebUtils.ListAll(servicioAreaDepto);
+        usuarios = await WebUtils.ListAll(servicioUsuario);
     }
-
-
 
     private async Task Editar(RequestDTO_Usuario usuario)
     {
-        var result = await DialogService.OpenAsync<UsuarioEditor>(
-            usuario.UsuNombre,
-            new Dictionary<string, object>() { { "usuario", usuario } },
-            new DialogOptions() { CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true, Width = "50%" }
-        );
+        string json = JsonSerializer.Serialize(usuario);
+        RequestDTO_Usuario? registro = JsonSerializer.Deserialize<RequestDTO_Usuario>(json);
 
-        debug += Environment.NewLine + $"{result}";
+        if(registro is null)
+        {
+            debug = "NO SE PUDO CREAR UNA COPIA PARA EDITAR.";
+        }
+        else
+        {
+            RequestDTO_Usuario? result = await DialogService.OpenAsync<UsuarioEditor>
+            (
+                usuario.UsuNombre,
+                new Dictionary<string, object>() { { "registro", registro } },
+                new DialogOptions() {  ShowClose = false, Width = "75%" }
+            );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
 
-        //StateHasChanged();
+            if(result is not null)
+            {
+                HttpResponseMessage response = await servicioUsuario.EditDataAsync(result);
+                if(response.IsSuccessStatusCode)
+                {
+                    debug = "GUARDADO!";
+                    usuario = result;
+                    usuarios = await WebUtils.ListAll(servicioUsuario);
+                }
+            }
+        }
     }
 
     

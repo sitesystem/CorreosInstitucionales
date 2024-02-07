@@ -62,11 +62,24 @@
         new UIObject(new RequestViewModel_EstadoSolicitud(),"servicioEstadoSolicitud")
     };
 
+    string GetService(IEnumerable<UIObject> items, Type t)
+    {
+        UIObject? obj = items.Where(i => i.Value.GetType().Equals(t)).FirstOrDefault();
+
+        if(obj is not null)
+        {
+            return obj.Service;
+        }
+
+        return "UNDEFINED";
+    }
+
     public string Render()
     {
         string razor = string.Empty;
         string cs_vars = string.Empty;
         string cs_loaders = string.Empty;
+        string cs_code = string.Empty;
 
         bool has_custom_code = false;
 
@@ -85,8 +98,8 @@
 
             if(control.HasForeignKey)
             {
-                cs_vars += $"{Environment.NewLine}\t{control.Code}";
-                cs_loaders += $"{Environment.NewLine}\tcat_{control.Name} = await WebUtils.ListAll({control.Service});";
+                cs_vars += $"\t{control.Code}{Environment.NewLine}";
+                cs_loaders += $"\tcat_{control.Name} = await WebUtils.ListAll({GetService(items, control.VarType)});{Environment.NewLine}";
 
                 has_custom_code = true;
             }
@@ -94,13 +107,19 @@
 
         if(has_custom_code)
         {
-            string fetch_code = @"";
-            
-
-            cs_vars = $"@code{Environment.NewLine}{{{cs_vars}{Environment.NewLine}{cs_loaders}{Environment.NewLine}}}{Environment.NewLine}";
+            cs_code = $@"
+@code
+{{
+    {cs_vars}
+    protected override async Task OnInitializedAsync()
+    {{
+{cs_loaders}
+    }}
+}}
+";
         }
 
-        razor_code = razor + Environment.NewLine + cs_vars;
+        razor_code = razor + Environment.NewLine + cs_code;
         return razor_code;
     }
 
@@ -135,6 +154,7 @@
     private class UIControl
     {
         public ControlType  Control     { get; private set; }
+        public Type         VarType     { get; private set; }
         public string       Service     { get; private set; }
         public string       ClassName   { get; private set; }
         public string       Name        { get; private set; }
@@ -179,13 +199,13 @@
         public UIControl(PropertyInfo p, string service)
         {
             Type? ttype = Nullable.GetUnderlyingType(p.PropertyType);
-            Type rtype  = ttype ?? p.PropertyType;
             ForeignKeyAttribute? fk = p.GetCustomAttribute<ForeignKeyAttribute>();
 
             this.Control    = ControlType.DISCARD;
+            this.VarType    = ttype ?? p.PropertyType; ;
             this.Service    = service;
             this.Name       = p.Name;
-            this.ClassName  = rtype.ToString().Split('.').Last();
+            this.ClassName  = this.VarType.ToString().Split('.').Last();
             this.IsNullable = ttype is not null;
             this.IsRequired = p.GetCustomAttribute<RequiredAttribute>() is not null;
             this.IsKey      = fk is not null;
@@ -212,16 +232,16 @@
                 {typeof(UInt128)    ,ControlType.NUMBER }
             };
 
-            if (mappings.ContainsKey(rtype))
+            if (mappings.ContainsKey(this.VarType))
             {
-                this.Control = mappings[rtype];
+                this.Control = mappings[this.VarType];
             }
 
             if(this.HasForeignKey)
             {
                 this.Control = ControlType.LIST;
                 this.Name = fk!.Name;
-                this.Content = BuildOptionContent(rtype);
+                this.Content = BuildOptionContent(this.VarType);
             }
         }
 
@@ -245,7 +265,7 @@
 
             if(this.IsNullable)
             {
-                this.Razor = string.Format(tpl_content, this.Name, string.Empty, "-NULLABLE-", string.Empty);
+                this.Razor = string.Format(tpl_content, this.Name, string.Empty, $"<br/>@registro.{this.Name}", string.Empty);
                 return;
             }
 
@@ -254,11 +274,12 @@
             string required = string.Empty;
 
             bool has_content = false;
+            bool is_multiselect = false;
 
             if (this.IsRequired)
             {
                 required = "<strong class=\"red\" title=\"requerido\">*</strong>";
-                css = " required";
+                css = "required";
             }
 
             switch (this.Control)
@@ -266,11 +287,13 @@
                 case ControlType.BOOL:  tag = "InputCheckbox";  break;
                 case ControlType.DATE:  tag = "InputDate";      break;
                 case ControlType.NUMBER:tag = "InputNumber";    break;
-                case ControlType.LIST:  tag = "InputSelect"; has_content = true; break;
+                case ControlType.LIST:  tag = "InputSelect"; has_content = true; is_multiselect = true; break;
             }
 
-            string code_input = $"<{tag} @bind-Value=\"@registro.{this.Name}\" class=\"form-control{css}\"" + (has_content ? $">{this.Content}</{tag}>" : "/>");
-            this.Code = $"public List<{this.ClassName}> cat_{this.Name} {{ get; set; }}";
+            css += " " + (is_multiselect ? "form-select" : "form-control");
+            
+            string code_input = $"<{tag} @bind-Value=\"@registro.{this.Name}\" class=\"{css}\"" + (has_content ? $">{this.Content}</{tag}>" : "/>");
+            this.Code = $"public List<{this.ClassName}> cat_{this.Name} {{ get; private set; }}  = new List<{this.ClassName}>();";
             this.Razor = string.Format(tpl_content, this.Name, required, code_input, code_validation);
         }
     }
