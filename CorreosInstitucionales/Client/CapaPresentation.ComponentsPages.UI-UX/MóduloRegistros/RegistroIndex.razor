@@ -142,15 +142,27 @@
                 <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-m-0 rz-p-0 w-100">
                     <iframe src="./aviso_privacidad.pdf" frameborder="1" scrolling="yes" class="w-100" style="height:300px;" />
                 </RadzenCard>
-                <RadzenButton Text="Cerrar"
-                              BusyText=""
-                              ButtonStyle="ButtonStyle.Warning"
-                              ButtonType="ButtonType.Button"
-                              IsBusy="false"
-                              Icon="cancel"
-                              Class="rz-ripple rz-my-0 w-100"
-                              Shade="Shade.Darker"
-                              Click="@(() => ds.Close(false))" />
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="w-100">
+                    <RadzenButton Text="Cerrar"
+                                  BusyText=""
+                                  ButtonStyle="ButtonStyle.Warning"
+                                  ButtonType="ButtonType.Button"
+                                  IsBusy="false"
+                                  Icon="cancel"
+                                  Class="rz-ripple rz-my-0 w-100"
+                                  Shade="Shade.Darker"
+                                  Click="@(() => ds.Close(false))" />
+                    <a href="./aviso_privacidad.pdf" target="_blank" class="w-100">
+                        <RadzenButton Text="Descargar"
+                                      BusyText=""
+                                      ButtonStyle="ButtonStyle.Secondary"
+                                      ButtonType="ButtonType.Button"
+                                      IsBusy="false"
+                                      Icon="cloud_download"
+                                      class="rz-ripple rz-my-0 w-100"
+                                      Shade="Shade.Darker" />
+                    </a>
+                </RadzenStack>
             </RadzenStack>,
             new DialogOptions()
             {

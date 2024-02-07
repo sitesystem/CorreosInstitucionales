@@ -21,7 +21,7 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
-using CorreosInstitucionales.Client.Shared.Utils;
+using CorreosInstitucionales.Client.Shared.Components.Utils;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -59,7 +59,6 @@ builder.Services.AddScoped<RRolesService>();
 builder.Services.AddScoped<RPisoService>();
 builder.Services.AddScoped<RTipoPersonalService>();
 builder.Services.AddScoped<RTipoSolicitudService>();
-
 
 // Radzen Components and Services
 builder.Services.AddRadzenComponents();

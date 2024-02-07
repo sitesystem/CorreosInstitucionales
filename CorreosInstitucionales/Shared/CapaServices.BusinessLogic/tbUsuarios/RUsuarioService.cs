@@ -25,7 +25,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
             return result;
         }
 
-        public async Task<Response<RequestDTO_Usuario>?> GetDataByIdAsync(int id)
+        public async Task<Response<RequestDTO_Usuario>?> GetDataByIdAsync(int? id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<RequestDTO_Usuario>>($"{url}filterById/{id}", options: _options);
             return result;

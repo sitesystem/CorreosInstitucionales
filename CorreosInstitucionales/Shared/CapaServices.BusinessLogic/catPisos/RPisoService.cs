@@ -25,7 +25,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisos
             return result;
         }
 
-        public async Task<Response<RequestViewModel_Piso>?> GetDataByIdAsync(int id)
+        public async Task<Response<RequestViewModel_Piso>?> GetDataByIdAsync(int? id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_Piso>>($"{url}filterById/{id}", options: _options);
             return result;

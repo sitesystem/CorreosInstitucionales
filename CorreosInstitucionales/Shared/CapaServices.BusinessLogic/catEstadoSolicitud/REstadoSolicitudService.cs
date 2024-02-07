@@ -26,7 +26,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEstadoSoli
             return result;
         }
 
-        public async Task<Response<RequestViewModel_EstadoSolicitud>?> GetDataByIdAsync(int id)
+        public async Task<Response<RequestViewModel_EstadoSolicitud>?> GetDataByIdAsync(int? id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_EstadoSolicitud>>($"{url}filterById/{id}", options: _options);
             return result;

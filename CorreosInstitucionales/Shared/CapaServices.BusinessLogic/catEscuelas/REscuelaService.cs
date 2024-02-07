@@ -25,7 +25,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEscuelas
             return result;
         }
 
-        public async Task<Response<RequestViewModel_Escuela>?> GetDataByIdAsync(int id)
+        public async Task<Response<RequestViewModel_Escuela>?> GetDataByIdAsync(int? id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_Escuela>>($"{url}filterById/{id}", options: _options);
             return result;

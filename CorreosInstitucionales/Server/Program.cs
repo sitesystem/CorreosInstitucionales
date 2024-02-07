@@ -89,7 +89,7 @@ builder.Services.Configure<AppSettings>(appSettingsSection);
 
 var appSettings = appSettingsSection.Get<AppSettings>();
 //var key = Encoding.ASCII.GetBytes(appSettings.Secreto);
-var key = Encoding.UTF8.GetBytes(appSettings.Secreto ?? string.Empty);
+var key = Encoding.UTF8.GetBytes(appSettings?.Secreto ?? string.Empty);
 
 builder.Services.AddAuthentication(auth =>
 {
