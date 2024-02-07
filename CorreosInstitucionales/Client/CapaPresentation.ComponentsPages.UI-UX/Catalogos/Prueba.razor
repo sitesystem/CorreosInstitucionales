@@ -1,6 +1,8 @@
 ﻿@page "/catalogos/prueba"
 @inject DialogService DialogService
 
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic
+
 @if (data is not null)
 {
     <table class="table">
@@ -43,20 +45,33 @@
     private List<RequestDTO_Usuario> data = new List<RequestDTO_Usuario>();
     private bool shouldRender = true;
 
+    private List<RequestViewModel_AreaDepto> cat_UsuIdAreaDepto;
+    private List<RequestViewModel_Carrera>? cat_UsuIdCarrera;
+    private List<RequestViewModel_Rol>? cat_UsuIdRol;
+    private List<RequestViewModel_TipoPersonal>? cat_UsuIdTipoPersonal;
+
+
+
     protected override bool ShouldRender() => shouldRender;
+
+    public async Task<List<T>> GetList<T>(IGenericService<T> service)
+    {
+        var response = await service.GetAllDataAsync(true);
+
+        if (response is null || response.Data is null)
+        {
+            return new List<T>();
+        }
+
+        return response.Data;
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        var response = await servicioUsuario.GetAllDataAsync(true);
-
-        if(response is not null)
-        {
-            data = response.Data??new List<RequestDTO_Usuario>();
-        }
-        else
-        {
-            shouldRender = false;
-        }
+        cat_UsuIdAreaDepto = await WebUtils.ListAll(servicioAreaDepto);
     }
+
+
 
     private async Task Editar(RequestDTO_Usuario usuario)
     {
@@ -70,5 +85,7 @@
 
         //StateHasChanged();
     }
+
+    
 
 }
