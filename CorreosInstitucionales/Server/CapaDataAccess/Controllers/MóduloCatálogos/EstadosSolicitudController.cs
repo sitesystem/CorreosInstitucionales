@@ -13,7 +13,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
 
-        [HttpGet]
+        [HttpGet()]
         public async Task<IActionResult> GetAllData()
         {
             Response<List<McCatEstadosSolicitud>> oResponse = new();

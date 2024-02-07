@@ -15,7 +15,7 @@
         <InputSelect @bind-Value="@selected_index" class="form-select mb-2">
             @for (int i = 0; i < items.Count; i++)
             {
-                <option value="@i">@items[i].GetType().ToString().Split('.').Last()</option>
+                <option value="@i">@items[i].ToString()</option>
             }
         </InputSelect>
     </div>
@@ -25,53 +25,83 @@
     </div>
 </div>
 
+<pre>@debug</pre>
+
 <pre class="bg-white shadow p-4">@Render()</pre>
 
 @code 
 {
+    public string debug = string.Empty;
 
     async Task CopyToClipboard()
     {
-        await clipboard.CopyToClipboard(debug);
-        /*
-        debug += Environment.NewLine + pre.Id + Environment.NewLine + pre.ToString();
+        await clipboard.CopyToClipboard(razor_code);
 
-        return Task.CompletedTask;
-    */
     }
 
-
-
-    string debug = string.Empty;
+    string razor_code = string.Empty;
 
     int selected_index = 0;
-    List<object> items = new List<object>()
+    List<UIObject> items = new List<UIObject>()
     {
-        new RequestDTO_Usuario(),
-        new RequestDTO_Solicitud(),
-        new RequestViewModel_AreaDepto(),
-        new RequestViewModel_Carrera(),
-        new RequestViewModel_Edificio(),
-        new RequestViewModel_Escuela(),
-        new RequestViewModel_EstadoSolicitud(),
-        new RequestViewModel_Link(),
-        new RequestViewModel_NoExtension(),
-        new RequestViewModel_Piso(),
-        new RequestViewModel_Rol(),
-        new RequestViewModel_TipoPersonal(),
-        new RequestViewModel_TipoSolicitud()
+        new UIObject(new RequestDTO_Usuario(),"servicioUsuario"),
+        new UIObject(new RequestDTO_Solicitud(),"servicioSolicitud"),
+
+        new UIObject(new RequestViewModel_AreaDepto(),"servicioAreaDepto"),
+        new UIObject(new RequestViewModel_Carrera(),"servicioCarrera"),
+        new UIObject(new RequestViewModel_Edificio(),"servicioEdificio"),
+        new UIObject(new RequestViewModel_Escuela(),"servicioEscuela"),
+        new UIObject(new RequestViewModel_Link(),"servicioLink"),
+        new UIObject(new RequestViewModel_NoExtension(),"servicioNoExtension"),
+        new UIObject(new RequestViewModel_Piso(),"servicioPiso"),
+
+        new UIObject(new RequestViewModel_TipoPersonal(),"servicioTipoPersonal"),
+        new UIObject(new RequestViewModel_TipoSolicitud(),"servicioTipoSolicitud"),
+
+        new UIObject(new RequestViewModel_Rol(),"servicioRoles"),
+        new UIObject(new RequestViewModel_EstadoSolicitud(),"servicioEstadoSolicitud")
     };
 
     public string Render()
     {
-        debug = string.Empty;
+        string razor = string.Empty;
+        string cs_vars = string.Empty;
+        string cs_loaders = string.Empty;
 
-        foreach (PropertyInfo prop in items[selected_index].GetType().GetProperties())
+        bool has_custom_code = false;
+
+        UIControl control;
+
+        UIObject item = items[selected_index];
+        Type type = item.Value.GetType();
+        string service =  item.Service;
+
+        foreach (PropertyInfo prop in type.GetProperties())
         {
-            debug += (new UIControl(prop)).ToString();
+            control = new UIControl(prop, service);
+            control.Build();
+
+            razor += Environment.NewLine + control.Razor;
+
+            if(control.HasForeignKey)
+            {
+                cs_vars += $"{Environment.NewLine}\t{control.Code}";
+                cs_loaders += $"{Environment.NewLine}\tcat_{control.Name} = await WebUtils.ListAll({control.Service});";
+
+                has_custom_code = true;
+            }
         }
 
-        return debug;
+        if(has_custom_code)
+        {
+            string fetch_code = @"";
+            
+
+            cs_vars = $"@code{Environment.NewLine}{{{cs_vars}{Environment.NewLine}{cs_loaders}{Environment.NewLine}}}{Environment.NewLine}";
+        }
+
+        razor_code = razor + Environment.NewLine + cs_vars;
+        return razor_code;
     }
 
     private enum ControlType: int
@@ -84,9 +114,29 @@
         LIST
     }
 
+    private class UIObject
+    {
+        public object Value { get; private set; }
+        public string Service { get; private set; }
+
+        public UIObject(object v, string s)
+        {
+            this.Value = v;
+            this.Service = s;
+        }
+
+        public override string ToString()
+        {
+            return this.Value.GetType().Name;
+        }
+    }
+
+
     private class UIControl
     {
         public ControlType  Control     { get; private set; }
+        public string       Service     { get; private set; }
+        public string       ClassName   { get; private set; }
         public string       Name        { get; private set; }
         public bool         IsNullable  { get; private set; }
         public bool         IsRequired  { get; private set; }
@@ -104,19 +154,49 @@
             } 
         }
 
-        public UIControl(PropertyInfo p)
+        public string       Debug   { get; private set; }
+        public string       Code    { get; private set; }
+        public string       Razor   { get; private set; }
+        public string       Content { get; private set; }
+
+        public string BuildOptionContent(Type t)
+        {
+            if (!t.IsClass)
+            {
+                return string.Empty;
+            }
+
+            PropertyInfo[] properties = t.GetProperties();
+            PropertyInfo[] l_keys = properties.Where(p => p.GetCustomAttribute<KeyAttribute>() is not null).ToArray();
+            PropertyInfo[] l_names = properties.Where(p => p.Name.ToLower().Contains("nombre") || p.Name.ToLower().Contains("descripcion")).ToArray();
+
+            string id = l_keys.Length > 0 ? l_keys.First().Name : "id";
+            string name = l_names.Length > 0 ? l_names.First().Name : "name";
+
+            return $"@foreach (var item in cat_{this.Name}) {{ <option value=\"@item.{id}\">@item.{name}</option> }}"; ;
+        }
+
+        public UIControl(PropertyInfo p, string service)
         {
             Type? ttype = Nullable.GetUnderlyingType(p.PropertyType);
             Type rtype  = ttype ?? p.PropertyType;
+            ForeignKeyAttribute? fk = p.GetCustomAttribute<ForeignKeyAttribute>();
 
             this.Control    = ControlType.DISCARD;
+            this.Service    = service;
             this.Name       = p.Name;
+            this.ClassName  = rtype.ToString().Split('.').Last();
             this.IsNullable = ttype is not null;
             this.IsRequired = p.GetCustomAttribute<RequiredAttribute>() is not null;
-            this.IsKey      = p.GetCustomAttribute<KeyAttribute>() is not null;
+            this.IsKey      = fk is not null;
 
             this.HasRegExValidation = p.GetCustomAttribute<RegularExpressionAttribute>() is not null;
             this.HasForeignKey = p.GetCustomAttribute<ForeignKeyAttribute>() is not null;
+
+            this.Debug = string.Empty;
+            this.Code = string.Empty;
+            this.Razor = string.Empty;
+            this.Content = string.Empty;
 
             Dictionary<Type, ControlType> mappings = new Dictionary<Type, ControlType>()
             {
@@ -140,14 +220,16 @@
             if(this.HasForeignKey)
             {
                 this.Control = ControlType.LIST;
+                this.Name = fk!.Name;
+                this.Content = BuildOptionContent(rtype);
             }
         }
 
-        public override string ToString()
+        public void Build()
         {
             if(this.Control == ControlType.DISCARD)
             {
-                return string.Empty;
+                return;
             }
 
             string code_validation = 
@@ -159,21 +241,19 @@
                 <span class=""fw-bold"">{0}{1}</span>
                 {2}
                 {3}
-            </div>"+Environment.NewLine;
+            </div>"+this.Debug+Environment.NewLine;
 
-            if(this.IsKey || this.IsNullable)
+            if(this.IsNullable)
             {
-                return string.Format(tpl_content, this.Name, string.Empty, this.IsNullable ? "-NULLABLE" : "-KEY(ID) ATTR-", string.Empty);
+                this.Razor = string.Format(tpl_content, this.Name, string.Empty, "-NULLABLE-", string.Empty);
+                return;
             }
-
-            string tpl_input = @"<{0} {1} class=""form-control{2}""/>";
-
 
             string tag = "InputText";
             string css = string.Empty;
             string required = string.Empty;
 
-            string code_bind = @"@bind-Value=""@registro.{0}""";
+            bool has_content = false;
 
             if (this.IsRequired)
             {
@@ -186,21 +266,12 @@
                 case ControlType.BOOL:  tag = "InputCheckbox";  break;
                 case ControlType.DATE:  tag = "InputDate";      break;
                 case ControlType.NUMBER:tag = "InputNumber";    break;
-                case ControlType.LIST:  tag = "InputSelect";    break;
+                case ControlType.LIST:  tag = "InputSelect"; has_content = true; break;
             }
 
-            /*
-            if(this.IsNullable)
-            {
-                code_bind = @"@bind-Value:get=""@registro.{0}"" @bind-Value:set=""(value) => {{ @registro.{0} = value; }}""";
-            }
-            */
-
-            code_bind = string.Format(code_bind, this.Name);
-            
-            string code_input = string.Format(tpl_input, tag, code_bind, css);
-
-            return string.Format(tpl_content, this.Name, required, code_input, code_validation);
+            string code_input = $"<{tag} @bind-Value=\"@registro.{this.Name}\" class=\"form-control{css}\"" + (has_content ? $">{this.Content}</{tag}>" : "/>");
+            this.Code = $"public List<{this.ClassName}> cat_{this.Name} {{ get; set; }}";
+            this.Razor = string.Format(tpl_content, this.Name, required, code_input, code_validation);
         }
     }
 }
