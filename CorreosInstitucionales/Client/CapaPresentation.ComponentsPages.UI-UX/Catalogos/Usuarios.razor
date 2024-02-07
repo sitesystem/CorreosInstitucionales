@@ -1,11 +1,11 @@
-﻿@page "/catalogos/prueba"
+﻿@page "/catalogos/usuarios"
 @inject DialogService DialogService
 
 @using System.Text.Json
 
 @if (usuarios is not null)
 {
-    <table class="table">
+    <table class="table table-hover shadow">
         <thead>
             <tr>
                 <th>Nombre</th>
@@ -22,11 +22,9 @@
                         @item.UsuSegundoApellido
                     </td>
                     <td>
-                        <button type="button" class="btn btn-primary" @onclick="async ()=> await Editar(item)">
+                        <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
                             Editar
                         </button>
-                    </td>
-                    <td>
                     </td>
                 </tr>
             }
@@ -43,7 +41,7 @@
 {
     private string debug = "";
     private List<RequestDTO_Usuario> usuarios = new List<RequestDTO_Usuario>();
-    
+
     protected override async Task OnInitializedAsync()
     {
         usuarios = await WebUtils.ListAll(servicioUsuario);
@@ -54,27 +52,21 @@
         string json = JsonSerializer.Serialize(usuario);
         RequestDTO_Usuario? registro = JsonSerializer.Deserialize<RequestDTO_Usuario>(json);
 
-        if(registro is null)
-        {
-            debug = "NO SE PUDO CREAR UNA COPIA PARA EDITAR.";
-        }
-        else
+        if(registro is not null)
         {
             RequestDTO_Usuario? result = await DialogService.OpenAsync<UsuarioEditor>
             (
                 usuario.UsuNombre,
                 new Dictionary<string, object>() { { "registro", registro } },
-                new DialogOptions() {  ShowClose = false, Width = "75%" }
+                new DialogOptions() { ShowClose = false, Width = "75%" }
             );
             //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
 
             if(result is not null)
             {
-                HttpResponseMessage response = await servicioUsuario.EditDataAsync(result);
-                if(response.IsSuccessStatusCode)
+                HttpResponseMessage response = await servicioUsuario.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
                 {
-                    debug = "GUARDADO!";
-                    usuario = result;
                     usuarios = await WebUtils.ListAll(servicioUsuario);
                 }
             }
