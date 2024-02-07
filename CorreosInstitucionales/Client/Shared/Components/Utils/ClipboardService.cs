@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace CorreosInstitucionales.Client.Shared.Utils
+namespace CorreosInstitucionales.Client.Shared.Components.Utils
 {
     public class ClipboardService: IClipboardService
     {

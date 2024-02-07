@@ -11,7 +11,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal
 {
-    public class RTipoPersonalService(HttpClient httpClient) : ITipoPersonalService
+    public class RTipoPersonalService(HttpClient httpClient) : IGenericService<RequestViewModel_TipoPersonal>
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };

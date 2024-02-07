@@ -11,7 +11,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificios
 {
-    public class REdificioService(HttpClient httpClient) : IEdificioService
+    public class REdificioService(HttpClient httpClient) : IGenericService<RequestViewModel_Edificio>
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
