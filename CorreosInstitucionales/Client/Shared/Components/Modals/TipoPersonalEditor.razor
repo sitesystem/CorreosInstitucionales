@@ -1,0 +1,54 @@
+﻿@inject Radzen.DialogService dialogService
+
+<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+    <div class="alert alert-info">
+        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+    </div>
+    <DataAnnotationsValidator/>
+    <div class="row"><!--ROW-->
+        <div class="col-6 mb-2">
+            <span class="fw-bold">IdTipoPersonal</span>
+            <InputNumber @bind-Value="@registro.IdTipoPersonal" class=" form-control" />
+            <ValidationMessage For="()=>registro.IdTipoPersonal"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">TipoperNombre</span>
+            <InputText @bind-Value="@registro.TipoperNombre" class=" form-control" />
+            <ValidationMessage For="()=>registro.TipoperNombre"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">TipoperDescripcion</span>
+            <InputText @bind-Value="@registro.TipoperDescripcion" class=" form-control" />
+            <ValidationMessage For="()=>registro.TipoperDescripcion"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">TipoperStatus<strong class="red" title="requerido">*</strong></span>
+            <InputCheckbox @bind-Value="@registro.TipoperStatus" class="required form-control" />
+            <ValidationMessage For="()=>registro.TipoperStatus"></ValidationMessage>
+        </div>
+    </div><!--ROW-->
+    
+    <div class="row">
+        <div class="offset-8 col-2 mb-2">
+            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+        </div>
+
+        <div class="col-2 mb-2">
+            <button type="submit" class="btn btn-primary form-control">
+                Guardar
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code
+{
+    [Parameter] public RequestViewModel_TipoPersonal registro { get; set; } = new RequestViewModel_TipoPersonal();
+    
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}

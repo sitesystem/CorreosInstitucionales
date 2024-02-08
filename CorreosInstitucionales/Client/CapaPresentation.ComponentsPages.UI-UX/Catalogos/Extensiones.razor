@@ -1,0 +1,79 @@
+﻿@page "/catalogo/extensiones"
+@inject DialogService DialogService
+
+@using System.Text.Json
+
+<table class="table table-hover shadow">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
+            <tr>
+                <td>
+                    @item.ExtNoExtension - @item.ExtIdAreaDeptoNavigation!.AreNombreAreaDepto
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                        Editar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code
+{
+    //ÉSTE CÓDIGO VA EN LA PÁGINA DONDE SE ENCUENTRA EL LISTADO
+    private List<RequestViewModel_NoExtension> items = new List<RequestViewModel_NoExtension>();
+
+    public List<RequestViewModel_AreaDepto> cat_ExtIdAreaDepto { get; private set; } = new List<RequestViewModel_AreaDepto>();
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            items = await WebUtils.ListAll(servicioNoExtension);
+
+            cat_ExtIdAreaDepto = await WebUtils.ListAll(servicioAreaDepto);
+
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task Editar(RequestViewModel_NoExtension item)
+    {
+        string json = JsonSerializer.Serialize(item);
+        RequestViewModel_NoExtension? registro = JsonSerializer.Deserialize<RequestViewModel_NoExtension>(json);
+
+        if (registro is not null)
+        {
+            RequestViewModel_NoExtension? result = await DialogService.OpenAsync<ExtensionEditor>
+                (
+                    "Actualizar Datos",
+                    new Dictionary<string, object>() {
+                            {"registro", registro},
+                            {"cat_ExtIdAreaDepto", cat_ExtIdAreaDepto}
+                        },
+                    new DialogOptions() { ShowClose = false, Width = "75%" }
+                );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+
+            if (result is not null)
+            {
+                HttpResponseMessage response = await servicioNoExtension.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
+                {
+                    items = await WebUtils.ListAll(servicioNoExtension);
+                }
+            }
+        }
+    }
+}

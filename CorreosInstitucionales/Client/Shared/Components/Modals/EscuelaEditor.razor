@@ -1,0 +1,66 @@
+﻿@inject Radzen.DialogService dialogService
+
+<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+    <div class="alert alert-info">
+        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+    </div>
+    <DataAnnotationsValidator/>
+    <div class="row"><!--ROW-->
+        <div class="col-6 mb-2">
+            <span class="fw-bold">IdEscuela</span>
+            <InputNumber @bind-Value="@registro.IdEscuela" class=" form-control" />
+            <ValidationMessage For="()=>registro.IdEscuela"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">EscNoEscuela</span>
+            <InputText @bind-Value="@registro.EscNoEscuela" class=" form-control" />
+            <ValidationMessage For="()=>registro.EscNoEscuela"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">EscNombreLargo</span>
+            <InputText @bind-Value="@registro.EscNombreLargo" class=" form-control" />
+            <ValidationMessage For="()=>registro.EscNombreLargo"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">EscNombreCorto</span>
+            <InputText @bind-Value="@registro.EscNombreCorto" class=" form-control" />
+            <ValidationMessage For="()=>registro.EscNombreCorto"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">EscLogo</span>
+            <InputText @bind-Value="@registro.EscLogo" class=" form-control" />
+            <ValidationMessage For="()=>registro.EscLogo"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">EscStatus<strong class="red" title="requerido">*</strong></span>
+            <InputCheckbox @bind-Value="@registro.EscStatus" class="required form-control" />
+            <ValidationMessage For="()=>registro.EscStatus"></ValidationMessage>
+        </div>
+    </div><!--ROW-->
+    
+    <div class="row">
+        <div class="offset-8 col-2 mb-2">
+            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+        </div>
+
+        <div class="col-2 mb-2">
+            <button type="submit" class="btn btn-primary form-control">
+                Guardar
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code
+{
+    [Parameter] public RequestViewModel_Escuela registro { get; set; } = new RequestViewModel_Escuela();
+    
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}

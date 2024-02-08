@@ -1,18 +1,12 @@
-﻿@using System.Text.Json
-@inject Radzen.DialogService dialogService
+﻿@inject Radzen.DialogService dialogService
 
 <EditForm Model=@registro OnValidSubmit="@OnValidForm">
     <div class="alert alert-info">
         Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
     </div>
-    <DataAnnotationsValidator/>
-    
-    <h1>Datos Personales</h1>
-
-    <h1>Datos de contacto</h1>
-        
-
-    <div class="row"><!--ROW-->
+    <DataAnnotationsValidator />
+    <div class="row">
+        <!--ROW-->
 
         <div class="col-6 mb-2">
             <span class="fw-bold">IdUsuario</span>
@@ -64,7 +58,7 @@
 
         <div class="col-6 mb-2">
             <span class="fw-bold">UsuFileSizeCurp</span>
-            @registro.UsuFileSizeCurp
+            <br />@registro.UsuFileSizeCurp
 
         </div>
 
@@ -94,7 +88,7 @@
 
         <div class="col-6 mb-2">
             <span class="fw-bold">UsuIdCarrera</span>
-            @registro.UsuIdCarrera
+            <br />@registro.UsuIdCarrera
 
         </div>
 
@@ -118,7 +112,7 @@
 
         <div class="col-6 mb-2">
             <span class="fw-bold">UsuFileSizeComprobanteInscripcion</span>
-            @registro.UsuFileSizeComprobanteInscripcion
+            <br />@registro.UsuFileSizeComprobanteInscripcion
 
         </div>
 
@@ -130,7 +124,7 @@
 
         <div class="col-6 mb-2">
             <span class="fw-bold">UsuIdAreaDepto</span>
-            @registro.UsuIdAreaDepto
+            <br />@registro.UsuIdAreaDepto
 
         </div>
 
@@ -160,7 +154,7 @@
 
         <div class="col-6 mb-2">
             <span class="fw-bold">UsuRecuperarContraseña</span>
-            @registro.UsuRecuperarContraseña
+            <br />@registro.UsuRecuperarContraseña
 
         </div>
 
@@ -178,13 +172,13 @@
 
         <div class="col-6 mb-2">
             <span class="fw-bold">UsuFechaHoraAlta</span>
-            @registro.UsuFechaHoraAlta
+            <br />@registro.UsuFechaHoraAlta
 
         </div>
 
         <div class="col-6 mb-2">
             <span class="fw-bold">UsuStatus</span>
-            @registro.UsuStatus
+            <br />@registro.UsuStatus
 
         </div>
 
@@ -223,44 +217,33 @@
                 }</InputSelect>
                 <ValidationMessage For="()=>registro.UsuIdTipoPersonal"></ValidationMessage>
             </div>
+
     </div><!--ROW-->
-    
+
     <div class="row">
-        <!--
-        <div class="col-8 mb-2">
-            <ValidationSummary />
-        </div>
-        -->
         <div class="offset-8 col-2 mb-2">
-            <button type="submit" class="btn btn-primary form-control">
-                Guardar
-            </button>
+            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
         </div>
 
         <div class="col-2 mb-2">
-            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+            <button type="submit" class="btn btn-primary form-control">
+                Guardar
+            </button>
         </div>
     </div>
 
 </EditForm>
 
 @code
-    {
+{
     [Parameter] public RequestDTO_Usuario registro { get; set; } = new RequestDTO_Usuario();
-    
-    public List<RequestViewModel_AreaDepto> cat_UsuIdAreaDepto { get; private set; } = new List<RequestViewModel_AreaDepto>();
-    public List<RequestViewModel_Carrera> cat_UsuIdCarrera { get; private set; } = new List<RequestViewModel_Carrera>();
-    public List<RequestViewModel_Rol> cat_UsuIdRol { get; private set; } = new List<RequestViewModel_Rol>();
-    public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; private set; } = new List<RequestViewModel_TipoPersonal>();
+
+    [Parameter] public List<RequestViewModel_AreaDepto> cat_UsuIdAreaDepto { get; set; } = new List<RequestViewModel_AreaDepto>();
+    [Parameter] public List<RequestViewModel_Carrera> cat_UsuIdCarrera { get; set; } = new List<RequestViewModel_Carrera>();
+    [Parameter] public List<RequestViewModel_Rol> cat_UsuIdRol { get; set; } = new List<RequestViewModel_Rol>();
+    [Parameter] public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; set; } = new List<RequestViewModel_TipoPersonal>();
+
 
     private void OnValidForm() => dialogService.Close(registro);
     private void OnCloseForm() => dialogService.Close(null);
-
-    protected override async Task OnInitializedAsync()
-    {
-        cat_UsuIdAreaDepto = await WebUtils.ListAll(servicioAreaDepto);
-        cat_UsuIdCarrera = await WebUtils.ListAll(servicioCarrera);
-        cat_UsuIdRol = await WebUtils.ListAll(servicioRoles);
-        cat_UsuIdTipoPersonal = await WebUtils.ListAll(servicioTipoPersonal);
-    }
 }

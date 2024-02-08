@@ -1,63 +1,82 @@
-﻿@page "/catalogos/usuarios"
+﻿@page "/catalogo/usuarios"
 @inject DialogService DialogService
 
 @using System.Text.Json
 
-@if (usuarios is not null)
-{
-    <table class="table table-hover shadow">
-        <thead>
+<table class="table table-hover shadow">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
             <tr>
-                <th>Nombre</th>
-                <th>ACCIONES</th>
+                <td>
+                    @item.UsuNombre
+                    @item.UsuPrimerApellido
+                    @item.UsuSegundoApellido
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                        Editar
+                    </button>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in usuarios)
-            {
-                <tr>
-                    <td>
-                        @item.UsuNombre
-                        @item.UsuPrimerApellido
-                        @item.UsuSegundoApellido
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
-                            Editar
-                        </button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+        }
+    </tbody>
+</table>
 
 <pre>
     @debug
 </pre>
 
 
+
 @code 
 {
     private string debug = "";
-    private List<RequestDTO_Usuario> usuarios = new List<RequestDTO_Usuario>();
+    private List<RequestDTO_Usuario> items = new List<RequestDTO_Usuario>();
 
-    protected override async Task OnInitializedAsync()
+    public List<RequestViewModel_AreaDepto> cat_UsuIdAreaDepto { get; private set; } = new List<RequestViewModel_AreaDepto>();
+    public List<RequestViewModel_Carrera> cat_UsuIdCarrera { get; private set; } = new List<RequestViewModel_Carrera>();
+    public List<RequestViewModel_Rol> cat_UsuIdRol { get; private set; } = new List<RequestViewModel_Rol>();
+    public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; private set; } = new List<RequestViewModel_TipoPersonal>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        usuarios = await WebUtils.ListAll(servicioUsuario);
+        if (firstRender)
+        {
+            items = await WebUtils.ListAll(servicioUsuario);
+
+            cat_UsuIdAreaDepto = await WebUtils.ListAll(servicioAreaDepto);
+            cat_UsuIdCarrera = await WebUtils.ListAll(servicioCarrera);
+            cat_UsuIdRol = await WebUtils.ListAll(servicioRoles);
+            cat_UsuIdTipoPersonal = await WebUtils.ListAll(servicioTipoPersonal);
+
+            StateHasChanged();
+        }
     }
 
-    private async Task Editar(RequestDTO_Usuario usuario)
+    private async Task Editar(RequestDTO_Usuario item)
     {
-        string json = JsonSerializer.Serialize(usuario);
+        string json = JsonSerializer.Serialize(item);
         RequestDTO_Usuario? registro = JsonSerializer.Deserialize<RequestDTO_Usuario>(json);
 
         if(registro is not null)
         {
             RequestDTO_Usuario? result = await DialogService.OpenAsync<UsuarioEditor>
             (
-                usuario.UsuNombre,
-                new Dictionary<string, object>() { { "registro", registro } },
+                "Actualizar Datos",
+                new Dictionary<string, object>() { 
+                    { "registro", registro } ,
+                    { "cat_UsuIdAreaDepto",cat_UsuIdAreaDepto},
+                    { "cat_UsuIdCarrera",cat_UsuIdCarrera},
+                    { "cat_UsuIdRol",cat_UsuIdRol},
+                    { "cat_UsuIdTipoPersonal",cat_UsuIdTipoPersonal}
+                },
                 new DialogOptions() { ShowClose = false, Width = "75%" }
             );
             //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
@@ -67,7 +86,7 @@
                 HttpResponseMessage response = await servicioUsuario.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    usuarios = await WebUtils.ListAll(servicioUsuario);
+                    items = await WebUtils.ListAll(servicioUsuario);
                 }
             }
         }

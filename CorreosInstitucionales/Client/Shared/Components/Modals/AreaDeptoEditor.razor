@@ -1,0 +1,95 @@
+﻿@inject Radzen.DialogService dialogService
+
+<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+    <div class="alert alert-info">
+        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+    </div>
+    <DataAnnotationsValidator/>
+    <div class="row"><!--ROW-->
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">IdAreaDepto</span>
+            <InputNumber @bind-Value="@registro.IdAreaDepto" class=" form-control" />
+            <ValidationMessage For="()=>registro.IdAreaDepto"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">AreNombreAreaDepto<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.AreNombreAreaDepto" class="required form-control" />
+            <ValidationMessage For="()=>registro.AreNombreAreaDepto"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">AreNoExtension</span>
+            <InputText @bind-Value="@registro.AreNoExtension" class=" form-control" />
+            <ValidationMessage For="()=>registro.AreNoExtension"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">AreIdEdificio<strong class="red" title="requerido">*</strong></span>
+            <InputNumber @bind-Value="@registro.AreIdEdificio" class="required form-control" />
+            <ValidationMessage For="()=>registro.AreIdEdificio"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">AreIdPiso<strong class="red" title="requerido">*</strong></span>
+            <InputNumber @bind-Value="@registro.AreIdPiso" class="required form-control" />
+            <ValidationMessage For="()=>registro.AreIdPiso"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">AreTitular</span>
+            <InputText @bind-Value="@registro.AreTitular" class=" form-control" />
+            <ValidationMessage For="()=>registro.AreTitular"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">AreStatus<strong class="red" title="requerido">*</strong></span>
+            <InputCheckbox @bind-Value="@registro.AreStatus" class="required form-control" />
+            <ValidationMessage For="()=>registro.AreStatus"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">AreIdEdificio</span>
+            <InputSelect @bind-Value="@registro.AreIdEdificio" class=" form-select">@foreach (var item in cat_AreIdEdificio)
+                {
+                    <option value="@item.IdEdificio">@item.EdiNombreOficial</option>
+                }</InputSelect>
+                <ValidationMessage For="()=>registro.AreIdEdificio"></ValidationMessage>
+            </div>
+
+            <div class="col-6 mb-2">
+                <span class="fw-bold">AreIdPiso</span>
+                <InputSelect @bind-Value="@registro.AreIdPiso" class=" form-select">@foreach (var item in cat_AreIdPiso)
+                {
+                    <option value="@item.IdPiso">@item.PisoDescripcion</option>
+                }</InputSelect>
+                <ValidationMessage For="()=>registro.AreIdPiso"></ValidationMessage>
+            </div>
+
+    </div><!--ROW-->
+    
+    <div class="row">
+        <div class="offset-8 col-2 mb-2">
+            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+        </div>
+
+        <div class="col-2 mb-2">
+            <button type="submit" class="btn btn-primary form-control">
+                Guardar
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code
+{
+    [Parameter] public RequestViewModel_AreaDepto registro { get; set; } = new RequestViewModel_AreaDepto();
+
+    [Parameter] public List<RequestViewModel_Edificio> cat_AreIdEdificio { get; set; } = new List<RequestViewModel_Edificio>();
+    [Parameter] public List<RequestViewModel_Piso> cat_AreIdPiso { get; set; } = new List<RequestViewModel_Piso>();
+
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}

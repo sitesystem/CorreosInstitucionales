@@ -1,0 +1,76 @@
+﻿@page "/catalogo/carreras"
+@inject DialogService DialogService
+
+@using System.Text.Json
+
+<table class="table table-hover shadow">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
+            <tr>
+                <td>
+                    @item.CarrNombre (@item.CarrClave)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                        Editar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@code
+{
+    //ÉSTE CÓDIGO VA EN LA PÁGINA DONDE SE ENCUENTRA EL LISTADO
+    private List<RequestViewModel_Carrera> items = new List<RequestViewModel_Carrera>();
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            items = await WebUtils.ListAll(servicioCarrera);
+
+
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task Editar(RequestViewModel_Carrera item)
+    {
+        string json = JsonSerializer.Serialize(item);
+        RequestViewModel_Carrera? registro = JsonSerializer.Deserialize<RequestViewModel_Carrera>(json);
+
+        if (registro is not null)
+        {
+            RequestViewModel_Carrera? result = await DialogService.OpenAsync<CarreraEditor>
+                (
+                    "Actualizar Datos",
+                    new Dictionary<string, object>() {
+                    {"registro", registro},
+
+                        },
+                    new DialogOptions() { ShowClose = false, Width = "75%" }
+                );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+
+            if (result is not null)
+            {
+                HttpResponseMessage response = await servicioCarrera.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
+                {
+                    items = await WebUtils.ListAll(servicioCarrera);
+                }
+            }
+        }
+    }
+}

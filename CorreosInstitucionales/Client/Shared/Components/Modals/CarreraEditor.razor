@@ -1,0 +1,54 @@
+﻿@inject Radzen.DialogService dialogService
+
+<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+    <div class="alert alert-info">
+        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+    </div>
+    <DataAnnotationsValidator/>
+    <div class="row"><!--ROW-->
+        <div class="col-6 mb-2">
+            <span class="fw-bold">IdCarrera</span>
+            <InputNumber @bind-Value="@registro.IdCarrera" class=" form-control" />
+            <ValidationMessage For="()=>registro.IdCarrera"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">CarrClave<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.CarrClave" class="required form-control" />
+            <ValidationMessage For="()=>registro.CarrClave"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">CarrNombre<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.CarrNombre" class="required form-control" />
+            <ValidationMessage For="()=>registro.CarrNombre"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">CarrStatus<strong class="red" title="requerido">*</strong></span>
+            <InputCheckbox @bind-Value="@registro.CarrStatus" class="required form-control" />
+            <ValidationMessage For="()=>registro.CarrStatus"></ValidationMessage>
+        </div>
+    </div><!--ROW-->
+    
+    <div class="row">
+        <div class="offset-8 col-2 mb-2">
+            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+        </div>
+
+        <div class="col-2 mb-2">
+            <button type="submit" class="btn btn-primary form-control">
+                Guardar
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code
+{
+    [Parameter] public RequestViewModel_Carrera registro { get; set; } = new RequestViewModel_Carrera();
+    
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}
