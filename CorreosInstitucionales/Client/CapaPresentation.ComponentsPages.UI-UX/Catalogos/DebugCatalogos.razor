@@ -77,17 +77,21 @@
     public string Render()
     {
         string razor = string.Empty;
-        string cs_vars = string.Empty;
-        string cs_loaders = string.Empty;
         string cs_code = string.Empty;
-
-        bool has_custom_code = false;
 
         UIControl control;
 
         UIObject item = items[selected_index];
         Type type = item.Value.GetType();
+
+        string obj_type = type.ToString().Split('.').Last();
         string service =  item.Service;
+
+        string cs_param_editor = string.Empty;
+
+        string cs_param_list = string.Empty;
+        string cs_load_list = string.Empty;
+        string cs_param_list_modal = string.Empty;
 
         foreach (PropertyInfo prop in type.GetProperties())
         {
@@ -95,30 +99,83 @@
             control.Build();
 
             razor += Environment.NewLine + control.Razor;
+            /*
+            * this.CodeParam = $"[Parameter] public List<{this.ClassName}> cat_{this.Name} {{ get; set; }}  = new List<{this.ClassName}>();";
+           this.CodeListVar = $"public List<{this.ClassName}> cat_{this.Name} {{ get; private set; }}  = new List<{this.ClassName}>();";
+           this.CodeListVar = $"\t\t\t\t{{\"cat_{this.Name}\",cat_{this.Name}}},";
 
+            */
             if(control.HasForeignKey)
             {
-                cs_vars += $"\t{control.Code}{Environment.NewLine}";
-                cs_loaders += $"\tcat_{control.Name} = await WebUtils.ListAll({GetService(items, control.VarType)});{Environment.NewLine}";
-
-                has_custom_code = true;
+                cs_param_editor += $"[Parameter] public List<{control.ClassName}> cat_{control.Name} {{ get; set; }}  = new List<{control.ClassName}>();{Environment.NewLine}\t";
+                cs_param_list += $"public List<{control.ClassName}> cat_{control.Name} {{ get; private set; }}  = new List<{control.ClassName}>();{Environment.NewLine}\t";
+                cs_load_list += $"cat_{control.Name} = await WebUtils.ListAll({GetService(items, control.VarType)});{Environment.NewLine}\t";
+                cs_param_list_modal = $"{{\"cat_{control.Name}\", cat_{control.Name}}}{Environment.NewLine}\t";
             }
         }
 
-        if(has_custom_code)
-        {
-            cs_code = $@"
+        
+        cs_code = $@"
 @code
 {{
-    {cs_vars}
-    protected override async Task OnInitializedAsync()
+    //ÉSTE CÓDIGO VA EN EL COMPONENTE DEL MODAL
+    [Parameter] public {obj_type} registro {{ get; set; }} = new {obj_type}();
+
+    {cs_param_editor}    
+
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}}
+
+@code
+{{
+    //ÉSTE CÓDIGO VA EN LA PÁGINA DONDE SE ENCUENTRA EL LISTADO
+    private List<{obj_type}> items = new List<{obj_type}>();
+
+    {cs_param_list}
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {{
-{cs_loaders}
+        if (firstRender)
+        {{
+            items = await WebUtils.ListAll({service});
+
+    {cs_load_list}
+
+            StateHasChanged();
+        }}
+    }}
+
+    private async Task Editar({obj_type} item)
+    {{
+        string json = JsonSerializer.Serialize(item);
+        {obj_type}? registro = JsonSerializer.Deserialize<{obj_type}>(json);
+
+        if(registro is not null)
+        {{
+        {obj_type}? result = await DialogService.OpenAsync<ComponentEditor>
+            (
+                ""Actualizar Datos"",
+                new Dictionary<string, object>() {{ 
+                    {{""registro"", registro}},
+{cs_param_list_modal}
+                }},
+                new DialogOptions() {{ ShowClose = false, Width = ""75%"" }}
+            );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+
+            if(result is not null)
+            {{
+                HttpResponseMessage response = await {service}.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
+                {{
+                    items = await WebUtils.ListAll({service});
+                }}
+            }}
+        }}
     }}
 }}
 ";
-        }
-
         razor_code = razor + Environment.NewLine + cs_code;
         return razor_code;
     }
@@ -175,9 +232,14 @@
         }
 
         public string       Debug   { get; private set; }
-        public string       Code    { get; private set; }
         public string       Razor   { get; private set; }
         public string       Content { get; private set; }
+
+        /*
+        public string       CodeParam    { get; private set; }
+        public string       CodeListVar  { get; private set; }
+        public string       CodeArgListVar { get; private set; }
+        */
 
         public string BuildOptionContent(Type t)
         {
@@ -214,9 +276,14 @@
             this.HasForeignKey = p.GetCustomAttribute<ForeignKeyAttribute>() is not null;
 
             this.Debug = string.Empty;
-            this.Code = string.Empty;
             this.Razor = string.Empty;
             this.Content = string.Empty;
+
+            /*
+            this.CodeParam = string.Empty;
+            this.CodeListVar = string.Empty;
+            this.CodeArgListVar = string.Empty;
+            */
 
             Dictionary<Type, ControlType> mappings = new Dictionary<Type, ControlType>()
             {
@@ -258,10 +325,10 @@
                     string.Empty;
 
             string tpl_content = @"<div class=""col-6 mb-2"">
-                <span class=""fw-bold"">{0}{1}</span>
-                {2}
-                {3}
-            </div>"+this.Debug+Environment.NewLine;
+    <span class=""fw-bold"">{0}{1}</span>
+    {2}
+    {3}
+</div>"+this.Debug+Environment.NewLine;
 
             if(this.IsNullable)
             {
@@ -291,9 +358,8 @@
             }
 
             css += " " + (is_multiselect ? "form-select" : "form-control");
-            
+
             string code_input = $"<{tag} @bind-Value=\"@registro.{this.Name}\" class=\"{css}\"" + (has_content ? $">{this.Content}</{tag}>" : "/>");
-            this.Code = $"public List<{this.ClassName}> cat_{this.Name} {{ get; private set; }}  = new List<{this.ClassName}>();";
             this.Razor = string.Format(tpl_content, this.Name, required, code_input, code_validation);
         }
     }
