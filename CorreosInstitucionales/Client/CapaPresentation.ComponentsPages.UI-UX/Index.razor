@@ -1,4 +1,5 @@
 ﻿@page "/Index"
+@using System.Globalization
 
 @attribute [Authorize]
 
@@ -80,26 +81,111 @@
 
 <AuthorizeView Policy="[Rol] Administrador">
 	<Authorized>
-        <RadzenCard class="p-0">
-            <RadzenStack Orientation="Orientation.Vertical" Gap="5px" JustifyContent="JustifyContent.Normal" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap" Style="height: 80vh">
-                <RadzenRow> 
-                    <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 28vw;">
-                        D
-                    </RadzenCard>
-                    <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 28vw;">
-                        D
-                    </RadzenCard>
-                    <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 28vw;">
-                            D
-                    </RadzenCard>
-                </RadzenRow>
-                <RadzenRow>
-                    <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 80vw;">
-                        D
-                    </RadzenCard>
-                </RadzenRow>
+        <RadzenCard class="p-5" Style="height:110vh;">
+            <RadzenFieldset AllowCollapse="false" ExpandTitle="Seguimiento de Solicitud" CollapseTitle="Seguimiento de Solicitud" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 " >
+                <HeaderTemplate>
+                    <span class="d-inline-flex align-items-center align-middle">
+                        <RadzenIcon Icon="query_stats" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Estádisticas</b>
+                    </span>
+                </HeaderTemplate>
+                <ChildContent>
+
+            <RadzenStack  Orientation="Orientation.Horizontal" Gap="10px" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Normal" Wrap="FlexWrap.NoWrap">
+                <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 25vw; vertical-align: middle;">
+                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;" class="rz-border-info-light">
+
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6 offset-lg-3 my-5">
+                                    <RadzenChart>
+                                        <RadzenDonutSeries Data="@revenue" CategoryProperty="Quarter" ValueProperty="Revenue" TotalAngle="180" StartAngle="180">
+                                            <ChildContent>
+                                                <RadzenSeriesDataLabels Visible="@showDataLabels" />
+                                            </ChildContent>
+                                            <TitleTemplate>
+                                                <div class="rz-donut-content">
+                                                    <div>Revenue</div>
+                                                    <div>for 2020</div>
+                                                </div>
+                                            </TitleTemplate>
+                                        </RadzenDonutSeries>
+                                    </RadzenChart>
+                                </div>
+                            </div>
+                        </div>
+                    </RadzenRow>
+                    
+                   
+
+                </RadzenCard>
+                <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 25vw;">
+                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;" class="rz-border-info-light">
+                            <RadzenChart Style="width: 25vw; height:25vh;">
+                                <RadzenColumnSeries Data="@revenue2020Column" CategoryProperty="Quarter" Title="2020" LineType="LineType.Dashed" ValueProperty="Revenue">
+                                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
+                                </RadzenColumnSeries>
+                                <RadzenColumnSeries Data="@revenue2019Column" CategoryProperty="Quarter" Title="2019" ValueProperty="Revenue">
+                                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
+                                </RadzenColumnSeries>
+                                <RadzenColumnOptions Radius="5" />
+                                <RadzenValueAxis Formatter="@FormatAsUSD">
+                                    <RadzenGridLines Visible="true" />
+                                    <RadzenAxisTitle Text="Revenue in USD" />
+                                </RadzenValueAxis>
+                            </RadzenChart>
+                    </RadzenRow>    
+                </RadzenCard>
+                <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 25vw;">
+                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;" class="rz-border-info-light">
+
+                                <RadzenChart >
+                                    <RadzenPieSeries Data="@revenuepie" Title="Revenue" CategoryProperty="Quarter" ValueProperty="Revenue">
+                                        <RadzenSeriesDataLabels Visible="@showDataLabels" />
+                                    </RadzenPieSeries>
+                                </RadzenChart>
+
+                    </RadzenRow>
+                </RadzenCard>
+               
+                
+
             </RadzenStack>
-            
+            <br />
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="10px" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Normal" Wrap="FlexWrap.NoWrap">
+                <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 60vh; width: 70vw;">
+                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 60vh; width: 70vw;" class="rz-border-info-light">
+                        
+
+                        <div Class="rz-p-0 rz-p-md-12">
+                            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" Class="rz-p-4 rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
+                                <RadzenCheckBox @bind-Value="@showDataLabels" Name="dataLabels"></RadzenCheckBox>
+                                <RadzenLabel Text="Show Data Labels" Component="dataLabels" />
+                            </RadzenStack>
+
+                            <RadzenChart Style="width: 65vw; height:vh;">
+                                <RadzenAreaSeries Smooth="true" Data="@revenue2019" CategoryProperty="Date" Title="2019" ValueProperty="Revenue" RenderingOrder="1">
+                                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
+                                </RadzenAreaSeries>
+                                <RadzenAreaSeries Smooth="true" Data="@revenue2020" CategoryProperty="Date" Title="2020" LineType="LineType.Dashed" ValueProperty="Revenue">
+                                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
+                                </RadzenAreaSeries>
+                                <RadzenCategoryAxis Padding="20" Formatter="@FormatAsMonth" />
+                                <RadzenValueAxis Formatter="@FormatAsUSD">
+                                    <RadzenGridLines Visible="true" />
+                                    <RadzenAxisTitle Text="Tickets" />
+                                </RadzenValueAxis>
+                            </RadzenChart>
+                        </div>
+
+                       
+                       
+                    </RadzenRow>
+                </RadzenCard>
+            </RadzenStack>
+
+                </ChildContent>
+            </RadzenFieldset>
+
         </RadzenCard>
 
         
@@ -376,4 +462,266 @@
             //oUsuario.
         }
     }
+
+    //Gráfica de area 
+   
+        
+        bool showDataLabels = false;
+        class DataItem
+        {
+            public string Date { get; set; }
+            public double Revenue { get; set; }
+        }
+
+        string FormatAsUSD(object value)
+        {
+            return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
+        }
+
+        string FormatAsMonth(object value)
+        {
+            if (value != null)
+            {
+                return Convert.ToDateTime(value).ToString("MMM");
+            }
+
+            return string.Empty;
+        }
+
+        DataItem[] revenue2019 = new DataItem[] {
+                        new DataItem
+                        {
+                        Date = ("2019-01-01"),
+                        Revenue = 234000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-02-01"),
+                        Revenue = 269000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-03-01"),
+                        Revenue = 233000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-04-01"),
+                        Revenue = 244000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-05-01"),
+                        Revenue = 214000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-06-01"),
+                        Revenue = 253000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-07-01"),
+                        Revenue = 274000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-08-01"),
+                        Revenue = 284000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-09-01"),
+                        Revenue = 273000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-10-01"),
+                        Revenue = 282000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-11-01"),
+                        Revenue = 289000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-12-01"),
+                        Revenue = 294000
+                        }
+                        };
+
+        DataItem[] revenue2020 = new DataItem[] {
+                        new DataItem
+                        {
+                        Date = ("2019-01-01"),
+                        Revenue = 334000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-02-01"),
+                        Revenue = 369000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-03-01"),
+                        Revenue = 333000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-04-01"),
+                        Revenue = 344000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-05-01"),
+                        Revenue = 314000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-06-01"),
+                        Revenue = 353000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-07-01"),
+                        Revenue = 374000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-08-01"),
+                        Revenue = 384000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-09-01"),
+                        Revenue = 373000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-10-01"),
+                        Revenue = 382000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-11-01"),
+                        Revenue = 389000
+                        },
+                        new DataItem
+                        {
+                        Date = ("2019-12-01"),
+                        Revenue = 394000
+                        }
+                        };
+// Gráfica de dona
+    class DataItemdonut
+    {
+        public string Quarter { get; set; }
+        public double Revenue { get; set; }
+    }
+
+    DataItemdonut[] revenue = new DataItemdonut[] {
+                                        new DataItemdonut
+                                        {
+                                        Quarter = "Q1",
+                                        Revenue = 30000
+                                        },
+                                        new DataItemdonut
+                                        {
+                                        Quarter = "Q2",
+                                        Revenue = 40000
+                                        },
+                                        new DataItemdonut
+                                        {
+                                        Quarter = "Q3",
+                                        Revenue = 50000
+                                        },
+                                        new DataItemdonut
+                                        {
+                                        Quarter = "Q4",
+                                        Revenue = 80000
+                                        },
+                                    };
+//Gráfica de columnas
+    class DataItemColumn
+    {
+        public string Quarter { get; set; }
+        public double Revenue { get; set; }
+    }
+    
+    DataItemColumn[] revenue2019Column = new DataItemColumn[] {
+        new DataItemColumn
+        {
+            Quarter = "Q1",
+            Revenue = 234000
+        },
+        new DataItemColumn
+        {
+            Quarter = "Q2",
+            Revenue = 284000
+        },
+        new DataItemColumn
+        {
+            Quarter = "Q3",
+            Revenue = 274000
+        },
+        new DataItemColumn
+        {
+            Quarter = "Q4",
+            Revenue = 294000
+        },
+    };
+
+    DataItemColumn[] revenue2020Column = new DataItemColumn[] {
+        new DataItemColumn
+        {
+            Quarter = "Q1",
+            Revenue = 254000
+        },
+        new DataItemColumn
+        {
+            Quarter = "Q2",
+            Revenue = 324000
+        },
+        new DataItemColumn
+        {
+            Quarter = "Q3",
+            Revenue = 354000
+        },
+        new DataItemColumn
+        {
+            Quarter = "Q4",
+            Revenue = 394000
+        },
+
+    };
+//Grafica de pastel
+    class DataItemPie
+    {
+        public string Quarter { get; set; }
+        public double Revenue { get; set; }
+    }
+
+    DataItemPie[] revenuepie = new DataItemPie[] {
+        new DataItemPie
+        {
+            Quarter = "Q1",
+            Revenue = 30000
+        },
+        new DataItemPie
+        {
+            Quarter = "Q2",
+            Revenue = 40000
+        },
+        new DataItemPie
+        {
+            Quarter = "Q3",
+            Revenue = 50000
+        },
+        new DataItemPie
+        {
+            Quarter = "Q4",
+            Revenue = 80000
+        },
+    };
 }
