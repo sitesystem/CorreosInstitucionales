@@ -99,12 +99,7 @@
             control.Build();
 
             razor += Environment.NewLine + control.Razor;
-            /*
-            * this.CodeParam = $"[Parameter] public List<{this.ClassName}> cat_{this.Name} {{ get; set; }}  = new List<{this.ClassName}>();";
-           this.CodeListVar = $"public List<{this.ClassName}> cat_{this.Name} {{ get; private set; }}  = new List<{this.ClassName}>();";
-           this.CodeListVar = $"\t\t\t\t{{\"cat_{this.Name}\",cat_{this.Name}}},";
-
-            */
+            
             if(control.HasForeignKey)
             {
                 cs_param_editor += $"[Parameter] public List<{control.ClassName}> cat_{control.Name} {{ get; set; }}  = new List<{control.ClassName}>();{Environment.NewLine}\t";
@@ -114,7 +109,7 @@
             }
         }
 
-        
+
         cs_code = $@"
 @code
 {{
@@ -149,11 +144,11 @@
     private async Task Editar({obj_type} item)
     {{
         string json = JsonSerializer.Serialize(item);
-        {obj_type}? registro = JsonSerializer.Deserialize<{obj_type}>(json);
+    {obj_type}? registro = JsonSerializer.Deserialize<{obj_type}>(json);
 
         if(registro is not null)
         {{
-        {obj_type}? result = await DialogService.OpenAsync<ComponentEditor>
+    {obj_type}? result = await DialogService.OpenAsync<ComponentEditor>
             (
                 ""Actualizar Datos"",
                 new Dictionary<string, object>() {{ 
@@ -235,12 +230,6 @@
         public string       Razor   { get; private set; }
         public string       Content { get; private set; }
 
-        /*
-        public string       CodeParam    { get; private set; }
-        public string       CodeListVar  { get; private set; }
-        public string       CodeArgListVar { get; private set; }
-        */
-
         public string BuildOptionContent(Type t)
         {
             if (!t.IsClass)
@@ -278,12 +267,6 @@
             this.Debug = string.Empty;
             this.Razor = string.Empty;
             this.Content = string.Empty;
-
-            /*
-            this.CodeParam = string.Empty;
-            this.CodeListVar = string.Empty;
-            this.CodeArgListVar = string.Empty;
-            */
 
             Dictionary<Type, ControlType> mappings = new Dictionary<Type, ControlType>()
             {
@@ -338,10 +321,10 @@
 
             string tag = "InputText";
             string css = string.Empty;
+            string css_control = "form-control";
             string required = string.Empty;
 
             bool has_content = false;
-            bool is_multiselect = false;
 
             if (this.IsRequired)
             {
@@ -351,15 +334,13 @@
 
             switch (this.Control)
             {
-                case ControlType.BOOL:  tag = "InputCheckbox";  break;
+                case ControlType.BOOL: tag = "InputCheckbox"; css_control = "form-check-input";  break;
                 case ControlType.DATE:  tag = "InputDate";      break;
                 case ControlType.NUMBER:tag = "InputNumber";    break;
-                case ControlType.LIST:  tag = "InputSelect"; has_content = true; is_multiselect = true; break;
+                case ControlType.LIST: tag = "InputSelect"; css_control = "form-select"; has_content = true; break;
             }
 
-            css += " " + (is_multiselect ? "form-select" : "form-control");
-
-            string code_input = $"<{tag} @bind-Value=\"@registro.{this.Name}\" class=\"{css}\"" + (has_content ? $">{this.Content}</{tag}>" : "/>");
+            string code_input = $"<{tag} @bind-Value=\"@registro.{this.Name}\" class=\" {css} {css_control}\"" + (has_content ? $">{this.Content}</{tag}>" : "/>");
             this.Razor = string.Format(tpl_content, this.Name, required, code_input, code_validation);
         }
     }

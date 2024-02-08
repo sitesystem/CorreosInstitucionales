@@ -1,36 +1,47 @@
 ﻿@page "/catalogo/areas_departamentos"
 @inject DialogService DialogService
-
 @using System.Text.Json
 
-<table class="table table-hover shadow">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>ACCIONES</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in items)
-        {
-            <tr>
-                <td>
-                    @item.AreNombreAreaDepto
-                </td>
-                <td>
-                    <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
-                        Editar
-                    </button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<PageTitle>@Title</PageTitle>
 
+<div class="p-4 rounded-1 bg-white shadow">
+    <h1>@Title</h1>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>
+                        @if (item.AreStatus)
+                        {
+                            @item.AreNombreAreaDepto
+                        }
+                        else
+                        {
+                            <del>@item.AreNombreAreaDepto</del>
+                        }
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code
 {
-    //ÉSTE CÓDIGO VA EN LA PÁGINA DONDE SE ENCUENTRA EL LISTADO
+    private string Title = "Catálogo de Áreas/Departamentos";
     private List<RequestViewModel_AreaDepto> items = new List<RequestViewModel_AreaDepto>();
 
     public List<RequestViewModel_Edificio> cat_AreIdEdificio { get; private set; } = new List<RequestViewModel_Edificio>();
@@ -45,7 +56,6 @@
 
             cat_AreIdEdificio = await WebUtils.ListAll(servicioEdificio);
             cat_AreIdPiso = await WebUtils.ListAll(servicioPiso);
-
 
             StateHasChanged();
         }
@@ -62,9 +72,9 @@
                 (
                     "Actualizar Datos",
                     new Dictionary<string, object>() {
-                    {"registro", registro},
-                    {"cat_AreIdPiso", cat_AreIdPiso}
-
+                            {"registro", registro},
+                            {"cat_AreIdPiso", cat_AreIdPiso},
+                            {"cat_AreIdEdificio", cat_AreIdEdificio}
                         },
                     new DialogOptions() { ShowClose = false, Width = "75%" }
                 );

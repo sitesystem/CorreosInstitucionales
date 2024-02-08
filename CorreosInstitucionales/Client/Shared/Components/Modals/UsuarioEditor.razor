@@ -8,38 +8,20 @@
     <div class="row">
         <!--ROW-->
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">IdUsuario</span>
-            <InputNumber @bind-Value="@registro.IdUsuario" class=" form-control" />
-            <ValidationMessage For="()=>registro.IdUsuario"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">UsuIdRol</span>
-            <InputNumber @bind-Value="@registro.UsuIdRol" class=" form-control" />
-            <ValidationMessage For="()=>registro.UsuIdRol"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">UsuIdTipoPersonal</span>
-            <InputNumber @bind-Value="@registro.UsuIdTipoPersonal" class=" form-control" />
-            <ValidationMessage For="()=>registro.UsuIdTipoPersonal"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">UsuNombre<strong class="red" title="requerido">*</strong></span>
+        <div class="col-4 mb-2">
+            <span class="fw-bold">Nombre (s)<strong class="red" title="requerido">*</strong></span>
             <InputText @bind-Value="@registro.UsuNombre" class="required form-control" />
             <ValidationMessage For="()=>registro.UsuNombre"></ValidationMessage>
         </div>
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">UsuPrimerApellido<strong class="red" title="requerido">*</strong></span>
+        <div class="col-4 mb-2">
+            <span class="fw-bold">Primer Apellido<strong class="red" title="requerido">*</strong></span>
             <InputText @bind-Value="@registro.UsuPrimerApellido" class="required form-control" />
             <ValidationMessage For="()=>registro.UsuPrimerApellido"></ValidationMessage>
         </div>
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">UsuSegundoApellido</span>
+        <div class="col-4 mb-2">
+            <span class="fw-bold">Segundo Apellido</span>
             <InputText @bind-Value="@registro.UsuSegundoApellido" class=" form-control" />
             <ValidationMessage For="()=>registro.UsuSegundoApellido"></ValidationMessage>
         </div>
@@ -59,7 +41,6 @@
         <div class="col-6 mb-2">
             <span class="fw-bold">UsuFileSizeCurp</span>
             <br />@registro.UsuFileSizeCurp
-
         </div>
 
         <div class="col-6 mb-2">
@@ -84,12 +65,6 @@
             <span class="fw-bold">UsuBoletaMaestria<strong class="red" title="requerido">*</strong></span>
             <InputText @bind-Value="@registro.UsuBoletaMaestria" class="required form-control" />
             <ValidationMessage For="()=>registro.UsuBoletaMaestria"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">UsuIdCarrera</span>
-            <br />@registro.UsuIdCarrera
-
         </div>
 
         <div class="col-6 mb-2">
@@ -120,12 +95,6 @@
             <span class="fw-bold">UsuNumeroEmpleado<strong class="red" title="requerido">*</strong></span>
             <InputText @bind-Value="@registro.UsuNumeroEmpleado" class="required form-control" />
             <ValidationMessage For="()=>registro.UsuNumeroEmpleado"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">UsuIdAreaDepto</span>
-            <br />@registro.UsuIdAreaDepto
-
         </div>
 
         <div class="col-6 mb-2">
@@ -176,11 +145,7 @@
 
         </div>
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">UsuStatus</span>
-            <br />@registro.UsuStatus
-
-        </div>
+        
 
         <div class="col-6 mb-2">
             <span class="fw-bold">UsuIdAreaDepto</span>
@@ -218,6 +183,10 @@
                 <ValidationMessage For="()=>registro.UsuIdTipoPersonal"></ValidationMessage>
             </div>
 
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuStatus</span>
+            <br />@registro.UsuStatus
+        </div>
     </div><!--ROW-->
 
     <div class="row">

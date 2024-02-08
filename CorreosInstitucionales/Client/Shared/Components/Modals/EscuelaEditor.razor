@@ -6,40 +6,33 @@
     </div>
     <DataAnnotationsValidator/>
     <div class="row"><!--ROW-->
-        <div class="col-6 mb-2">
-            <span class="fw-bold">IdEscuela</span>
-            <InputNumber @bind-Value="@registro.IdEscuela" class=" form-control" />
-            <ValidationMessage For="()=>registro.IdEscuela"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">EscNoEscuela</span>
+        <div class="col-2 mb-2">
+            <span class="fw-bold">Número de Escuela (?)</span>
             <InputText @bind-Value="@registro.EscNoEscuela" class=" form-control" />
             <ValidationMessage For="()=>registro.EscNoEscuela"></ValidationMessage>
         </div>
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">EscNombreLargo</span>
-            <InputText @bind-Value="@registro.EscNombreLargo" class=" form-control" />
-            <ValidationMessage For="()=>registro.EscNombreLargo"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">EscNombreCorto</span>
+        <div class="col-4 mb-2">
+            <span class="fw-bold">Nombre Corto</span>
             <InputText @bind-Value="@registro.EscNombreCorto" class=" form-control" />
             <ValidationMessage For="()=>registro.EscNombreCorto"></ValidationMessage>
         </div>
 
         <div class="col-6 mb-2">
-            <span class="fw-bold">EscLogo</span>
+            <span class="fw-bold">Nombre Largo</span>
+            <InputText @bind-Value="@registro.EscNombreLargo" class=" form-control" />
+            <ValidationMessage For="()=>registro.EscNombreLargo"></ValidationMessage>
+        </div>
+        
+        <div class="col-6 mb-2">
+            <span class="fw-bold">Logo</span>
             <InputText @bind-Value="@registro.EscLogo" class=" form-control" />
             <ValidationMessage For="()=>registro.EscLogo"></ValidationMessage>
         </div>
 
         <div class="col-6 mb-2">
-            <span class="fw-bold">EscStatus<strong class="red" title="requerido">*</strong></span>
-            <InputCheckbox @bind-Value="@registro.EscStatus" class="required form-control" />
-            <ValidationMessage For="()=>registro.EscStatus"></ValidationMessage>
+            <span class="fw-bold">Status</span>
+            <InputCheckbox @bind-Value="@registro.EscStatus" class="required form-check-input" />
         </div>
     </div><!--ROW-->
     
@@ -49,7 +42,7 @@
         </div>
 
         <div class="col-2 mb-2">
-            <button type="submit" class="btn btn-primary form-control">
+            <button type="submit" class="btn btn-success form-control">
                 Guardar
             </button>
         </div>

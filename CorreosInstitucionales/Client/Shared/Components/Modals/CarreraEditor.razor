@@ -6,28 +6,22 @@
     </div>
     <DataAnnotationsValidator/>
     <div class="row"><!--ROW-->
+        
         <div class="col-6 mb-2">
-            <span class="fw-bold">IdCarrera</span>
-            <InputNumber @bind-Value="@registro.IdCarrera" class=" form-control" />
-            <ValidationMessage For="()=>registro.IdCarrera"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">CarrClave<strong class="red" title="requerido">*</strong></span>
+            <span class="fw-bold">Clave<strong class="red" title="requerido">*</strong></span>
             <InputText @bind-Value="@registro.CarrClave" class="required form-control" />
             <ValidationMessage For="()=>registro.CarrClave"></ValidationMessage>
         </div>
 
         <div class="col-6 mb-2">
-            <span class="fw-bold">CarrNombre<strong class="red" title="requerido">*</strong></span>
+            <span class="fw-bold">Nombre<strong class="red" title="requerido">*</strong></span>
             <InputText @bind-Value="@registro.CarrNombre" class="required form-control" />
             <ValidationMessage For="()=>registro.CarrNombre"></ValidationMessage>
         </div>
 
         <div class="col-6 mb-2">
-            <span class="fw-bold">CarrStatus<strong class="red" title="requerido">*</strong></span>
-            <InputCheckbox @bind-Value="@registro.CarrStatus" class="required form-control" />
-            <ValidationMessage For="()=>registro.CarrStatus"></ValidationMessage>
+            <span class="fw-bold">Status</span>
+            <InputCheckbox @bind-Value="@registro.CarrStatus" class="required form-check-input" />
         </div>
     </div><!--ROW-->
     
@@ -37,7 +31,7 @@
         </div>
 
         <div class="col-2 mb-2">
-            <button type="submit" class="btn btn-primary form-control">
+            <button type="submit" class="btn btn-success form-control">
                 Guardar
             </button>
         </div>

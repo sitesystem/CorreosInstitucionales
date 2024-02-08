@@ -7,27 +7,20 @@
     <DataAnnotationsValidator/>
     <div class="row"><!--ROW-->
         <div class="col-6 mb-2">
-            <span class="fw-bold">IdLink</span>
-            <InputNumber @bind-Value="@registro.IdLink" class=" form-control" />
-            <ValidationMessage For="()=>registro.IdLink"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">LinkNombre</span>
+            <span class="fw-bold">Nombre</span>
             <InputText @bind-Value="@registro.LinkNombre" class=" form-control" />
             <ValidationMessage For="()=>registro.LinkNombre"></ValidationMessage>
         </div>
 
         <div class="col-6 mb-2">
-            <span class="fw-bold">LinkEnlace<strong class="red" title="requerido">*</strong></span>
+            <span class="fw-bold">Enlace (URL)<strong class="red" title="requerido">*</strong></span>
             <InputText @bind-Value="@registro.LinkEnlace" class="required form-control" />
             <ValidationMessage For="()=>registro.LinkEnlace"></ValidationMessage>
         </div>
 
         <div class="col-6 mb-2">
-            <span class="fw-bold">LinkStatus<strong class="red" title="requerido">*</strong></span>
-            <InputCheckbox @bind-Value="@registro.LinkStatus" class="required form-control" />
-            <ValidationMessage For="()=>registro.LinkStatus"></ValidationMessage>
+            <span class="fw-bold">Status</span>
+            <InputCheckbox @bind-Value="@registro.LinkStatus" class="required form-check-input" />
         </div>
     </div><!--ROW-->
     
@@ -37,7 +30,7 @@
         </div>
 
         <div class="col-2 mb-2">
-            <button type="submit" class="btn btn-primary form-control">
+            <button type="submit" class="btn btn-success form-control">
                 Guardar
             </button>
         </div>

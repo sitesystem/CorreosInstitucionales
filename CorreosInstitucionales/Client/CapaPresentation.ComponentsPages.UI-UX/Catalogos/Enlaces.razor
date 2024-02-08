@@ -1,35 +1,52 @@
 ﻿@page "/catalogo/enlaces"
 @inject DialogService DialogService
-
 @using System.Text.Json
 
-<table class="table table-hover shadow">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>ACCIONES</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in items)
-        {
+<PageTitle>@Title</PageTitle>
+
+<div class="p-4 rounded-1 bg-white shadow">
+    <h1>@Title</h1>
+
+    <table class="table table-hover">
+        <thead>
             <tr>
-                <td>
-                    @item.LinkNombre (<a href="@item.LinkEnlace" target="_blank">Ir a @item.LinkEnlace</a>)
-                </td>
-                <td>
-                    <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
-                        Editar
-                    </button>
-                </td>
+                <th>Nombre</th>
+                <th>ACCIONES</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>
+                        @if(item.LinkStatus)
+                        {
+                            <text>@item.LinkNombre<br />
+                                <a href="@item.LinkEnlace" target="_blank">Ir a @item.LinkEnlace</a>
+                            </text>
+                        }
+                        else
+                        {
+                            <del>
+                                @item.LinkNombre<br />
+                                <a href="@item.LinkEnlace" target="_blank">Ir a @item.LinkEnlace</a>
+                            </del>
+                        }
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code
 {
-    //ÉSTE CÓDIGO VA EN LA PÁGINA DONDE SE ENCUENTRA EL LISTADO
+    private string Title = "Catálogo de Enlaces";
     private List<RequestViewModel_Link> items = new List<RequestViewModel_Link>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -6,39 +6,25 @@
     </div>
     <DataAnnotationsValidator/>
     <div class="row"><!--ROW-->
-        <div class="col-6 mb-2">
-            <span class="fw-bold">IdExtension</span>
-            <InputNumber @bind-Value="@registro.IdExtension" class=" form-control" />
-            <ValidationMessage For="()=>registro.IdExtension"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">ExtNoExtension</span>
+        <div class="col-4 mb-2">
+            <span class="fw-bold">Extension</span>
             <InputText @bind-Value="@registro.ExtNoExtension" class=" form-control" />
             <ValidationMessage For="()=>registro.ExtNoExtension"></ValidationMessage>
         </div>
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">ExtIdAreaDepto</span>
-            <InputNumber @bind-Value="@registro.ExtIdAreaDepto" class=" form-control" />
-            <ValidationMessage For="()=>registro.ExtIdAreaDepto"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">ExtStatus<strong class="red" title="requerido">*</strong></span>
-            <InputCheckbox @bind-Value="@registro.ExtStatus" class="required form-control" />
-            <ValidationMessage For="()=>registro.ExtStatus"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">ExtIdAreaDepto</span>
+        <div class="col-8 mb-2">
+            <span class="fw-bold">Ubicación</span>
             <InputSelect @bind-Value="@registro.ExtIdAreaDepto" class=" form-select">@foreach (var item in cat_ExtIdAreaDepto)
                 {
                     <option value="@item.IdAreaDepto">@item.AreNombreAreaDepto</option>
                 }</InputSelect>
-                <ValidationMessage For="()=>registro.ExtIdAreaDepto"></ValidationMessage>
-            </div>
+            <ValidationMessage For="()=>registro.ExtIdAreaDepto"></ValidationMessage>
+        </div>
 
+        <div class="col-6 mb-2">
+            <span class="fw-bold">Status</span>
+            <InputCheckbox @bind-Value="@registro.ExtStatus" class="required form-check-input" />
+        </div>
     </div><!--ROW-->
     
     <div class="row">

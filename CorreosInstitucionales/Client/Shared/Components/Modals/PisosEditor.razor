@@ -6,23 +6,15 @@
     </div>
     <DataAnnotationsValidator/>
     <div class="row"><!--ROW-->
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">IdPiso</span>
-            <InputNumber @bind-Value="@registro.IdPiso" class=" form-control" />
-            <ValidationMessage For="()=>registro.IdPiso"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">PisoDescripcion<strong class="red" title="requerido">*</strong></span>
+        <div class="col-12 mb-2">
+            <span class="fw-bold">Descripcion<strong class="red" title="requerido">*</strong></span>
             <InputText @bind-Value="@registro.PisoDescripcion" class="required form-control" />
             <ValidationMessage For="()=>registro.PisoDescripcion"></ValidationMessage>
         </div>
 
         <div class="col-6 mb-2">
-            <span class="fw-bold">PisoStatus<strong class="red" title="requerido">*</strong></span>
-            <InputCheckbox @bind-Value="@registro.PisoStatus" class="required form-control" />
-            <ValidationMessage For="()=>registro.PisoStatus"></ValidationMessage>
+            <span class="fw-bold">Status</span>
+            <InputCheckbox @bind-Value="@registro.PisoStatus" class="required form-check-input" />
         </div>
     </div><!--ROW-->
     
@@ -32,7 +24,7 @@
         </div>
 
         <div class="col-2 mb-2">
-            <button type="submit" class="btn btn-primary form-control">
+            <button type="submit" class="btn btn-success form-control">
                 Guardar
             </button>
         </div>
