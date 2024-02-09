@@ -334,7 +334,7 @@
         </RadzenAlert>
 
         <!-- ******************************************************************* CARD RECAPTCHA ******************************************************************* -->
-        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="rz-mt-5">
+        @* <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" Class="rz-mt-5">
             <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="0px" Class="" Style="font-family:var(--rz-text-font-family);">
                 <RadzenCheckBox Name="@($@"aviso_privacidad_{TipoPersonal}")" TValue="bool" @bind-Value="@aceptar_aviso_privacidad" TriState="false" Change="@(args => aceptar_aviso_privacidad = args)" Disabled="false" ReadOnly="false" />
@@ -347,7 +347,7 @@
                     </svg>
                 </a>
             </RadzenStack>
-        </RadzenStack>
+        </RadzenStack> *@
 
         <div class="row">
             <div class="col-md-4 offset-md-4 rz-mt-3">
