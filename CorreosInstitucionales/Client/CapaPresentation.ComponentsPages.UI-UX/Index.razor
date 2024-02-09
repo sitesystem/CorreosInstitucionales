@@ -92,11 +92,14 @@
 
             <RadzenStack  Orientation="Orientation.Horizontal" Gap="10px" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Normal" Wrap="FlexWrap.NoWrap">
                 <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 25vw; vertical-align: middle;">
-                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;" class="rz-border-info-light">
-
-                        <div class="container">
+                            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;">
+                                @* class="rz-border-info-light" *@
+                                <h5 class="pt-1">Ciclo de vida de tickets por mes</h5>
+                        @* <div class="container">
                             <div class="row">
-                                <div class="col-sm-12 col-lg-6 offset-lg-3 my-5">
+                                        <div class="col-sm-12 col-lg-6 offset-lg-3 gy-3"> *@
+                                            @* my-5 *@
+                                            
                                     <RadzenChart>
                                         <RadzenDonutSeries Data="@revenue" CategoryProperty="Quarter" ValueProperty="Revenue" TotalAngle="180" StartAngle="180">
                                             <ChildContent>
@@ -110,17 +113,19 @@
                                             </TitleTemplate>
                                         </RadzenDonutSeries>
                                     </RadzenChart>
-                                </div>
+                                @* </div>
                             </div>
-                        </div>
+                        </div> *@
                     </RadzenRow>
                     
                    
 
                 </RadzenCard>
                 <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 25vw;">
-                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;" class="rz-border-info-light">
-                            <RadzenChart Style="width: 25vw; height:25vh;">
+                            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;">
+                                @* class="rz-border-info-light" *@
+                                <h5 class="pt-1">Número de tickets por día</h5>
+                            <RadzenChart Style="width: 22vw; height:25vh;">
                                 <RadzenColumnSeries Data="@revenue2020Column" CategoryProperty="Quarter" Title="2020" LineType="LineType.Dashed" ValueProperty="Revenue">
                                     <RadzenSeriesDataLabels Visible="@showDataLabels" />
                                 </RadzenColumnSeries>
@@ -136,9 +141,10 @@
                     </RadzenRow>    
                 </RadzenCard>
                 <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 25vw;">
-                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;" class="rz-border-info-light">
-
-                                <RadzenChart >
+                            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;">
+                                @* class="rz-border-info-light" *@
+                                <h5 class="pt-1">Encuestas de satisfacción</h5>
+                                <RadzenChart Style="height:27vh;">
                                     <RadzenPieSeries Data="@revenuepie" Title="Revenue" CategoryProperty="Quarter" ValueProperty="Revenue">
                                         <RadzenSeriesDataLabels Visible="@showDataLabels" />
                                     </RadzenPieSeries>
@@ -153,7 +159,8 @@
             <br />
             <RadzenStack Orientation="Orientation.Horizontal" Gap="10px" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Normal" Wrap="FlexWrap.NoWrap">
                 <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 60vh; width: 70vw;">
-                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 60vh; width: 70vw;" class="rz-border-info-light">
+                            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 60vh; width: 70vw;">
+                                @* class="rz-border-info-light" *@
                         
 
                         <div Class="rz-p-0 rz-p-md-12">
@@ -161,7 +168,7 @@
                                 <RadzenCheckBox @bind-Value="@showDataLabels" Name="dataLabels"></RadzenCheckBox>
                                 <RadzenLabel Text="Show Data Labels" Component="dataLabels" />
                             </RadzenStack>
-
+                                    <h4 >Volumen de tickets atendidos y pendientes</h4>
                             <RadzenChart Style="width: 65vw; height:vh;">
                                 <RadzenAreaSeries Smooth="true" Data="@revenue2019" CategoryProperty="Date" Title="2019" ValueProperty="Revenue" RenderingOrder="1">
                                     <RadzenSeriesDataLabels Visible="@showDataLabels" />
