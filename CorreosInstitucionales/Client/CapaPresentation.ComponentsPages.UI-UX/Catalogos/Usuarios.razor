@@ -1,0 +1,110 @@
+﻿@page "/catalogo/usuarios"
+@inject DialogService DialogService
+@using System.Text.Json
+
+<PageTitle>@Title</PageTitle>
+
+<div class="p-4 rounded-1 bg-white shadow">
+    <h1>@Title</h1>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>
+                        @if (item.UsuStatus ?? true)
+                        {
+                            <text>
+                                @item.UsuNombre
+                                @item.UsuPrimerApellido
+                                @item.UsuSegundoApellido
+                            </text>
+                        }
+                        else
+                        {
+                            <del>
+                                @item.UsuNombre
+                                @item.UsuPrimerApellido
+                                @item.UsuSegundoApellido
+                            </del>
+                        }
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+</div>
+
+@code 
+{
+    private string Title = "Usuarios";
+    private List<RequestDTO_Usuario> items = new List<RequestDTO_Usuario>();
+
+    public List<RequestViewModel_AreaDepto> cat_UsuIdAreaDepto { get; private set; } = new List<RequestViewModel_AreaDepto>();
+    public List<RequestViewModel_Carrera> cat_UsuIdCarrera { get; private set; } = new List<RequestViewModel_Carrera>();
+    public List<RequestViewModel_Rol> cat_UsuIdRol { get; private set; } = new List<RequestViewModel_Rol>();
+    public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; private set; } = new List<RequestViewModel_TipoPersonal>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            items = await WebUtils.ListAll(servicioUsuario);
+
+            cat_UsuIdAreaDepto = await WebUtils.ListAll(servicioAreaDepto);
+            cat_UsuIdCarrera = await WebUtils.ListAll(servicioCarrera);
+            cat_UsuIdRol = await WebUtils.ListAll(servicioRoles);
+            cat_UsuIdTipoPersonal = await WebUtils.ListAll(servicioTipoPersonal);
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task Editar(RequestDTO_Usuario item)
+    {
+        string json = JsonSerializer.Serialize(item);
+        RequestDTO_Usuario? registro = JsonSerializer.Deserialize<RequestDTO_Usuario>(json);
+
+        if(registro is not null)
+        {
+            RequestDTO_Usuario? result = await DialogService.OpenAsync<UsuarioEditor>
+            (
+                "Actualizar Datos",
+                new Dictionary<string, object>() { 
+                    { "registro", registro } ,
+                    { "cat_UsuIdAreaDepto",cat_UsuIdAreaDepto},
+                    { "cat_UsuIdCarrera",cat_UsuIdCarrera},
+                    { "cat_UsuIdRol",cat_UsuIdRol},
+                    { "cat_UsuIdTipoPersonal",cat_UsuIdTipoPersonal}
+                },
+                new DialogOptions() { ShowClose = false, Width = "75%" }
+            );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+
+            if(result is not null)
+            {
+                HttpResponseMessage response = await servicioUsuario.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
+                {
+                    items = await WebUtils.ListAll(servicioUsuario);
+                }
+            }
+        }
+    }
+
+    
+
+}

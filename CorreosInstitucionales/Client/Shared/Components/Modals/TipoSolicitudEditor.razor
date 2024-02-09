@@ -1,0 +1,41 @@
+﻿@inject Radzen.DialogService dialogService
+
+<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+    <div class="alert alert-info">
+        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+    </div>
+    <DataAnnotationsValidator/>
+    <div class="row"><!--ROW-->
+        <div class="col-12 mb-2">
+            <span class="fw-bold">Descripcion</span>
+            <InputText @bind-Value="@registro.TiposolDescripcion" class=" form-control" />
+            <ValidationMessage For="()=>registro.TiposolDescripcion"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">Status</span>
+            <InputCheckbox @bind-Value="@registro.TiposolStatus" class="required form-check-input" />
+        </div>
+    </div><!--ROW-->
+    
+    <div class="row">
+        <div class="offset-8 col-2 mb-2">
+            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+        </div>
+
+        <div class="col-2 mb-2">
+            <button type="submit" class="btn btn-success form-control">
+                Guardar
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code
+{
+    [Parameter] public RequestViewModel_TipoSolicitud registro { get; set; } = new RequestViewModel_TipoSolicitud();
+    
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}

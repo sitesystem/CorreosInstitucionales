@@ -1,0 +1,218 @@
+﻿@inject Radzen.DialogService dialogService
+
+<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+    <div class="alert alert-info">
+        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+    </div>
+    <DataAnnotationsValidator />
+    <div class="row">
+        <!--ROW-->
+
+        <div class="col-4 mb-2">
+            <span class="fw-bold">Nombre (s)<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuNombre" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuNombre"></ValidationMessage>
+        </div>
+
+        <div class="col-4 mb-2">
+            <span class="fw-bold">Primer Apellido<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuPrimerApellido" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuPrimerApellido"></ValidationMessage>
+        </div>
+
+        <div class="col-4 mb-2">
+            <span class="fw-bold">Segundo Apellido</span>
+            <InputText @bind-Value="@registro.UsuSegundoApellido" class=" form-control" />
+            <ValidationMessage For="()=>registro.UsuSegundoApellido"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuCurp<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuCurp" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuCurp"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuFileNameCurp<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuFileNameCurp" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuFileNameCurp"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuFileSizeCurp</span>
+            <br />@registro.UsuFileSizeCurp
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuNoCelularAnterior</span>
+            <InputText @bind-Value="@registro.UsuNoCelularAnterior" class=" form-control" />
+            <ValidationMessage For="()=>registro.UsuNoCelularAnterior"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuNoCelularNuevo<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuNoCelularNuevo" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuNoCelularNuevo"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuBoletaAlumno<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuBoletaAlumno" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuBoletaAlumno"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuBoletaMaestria<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuBoletaMaestria" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuBoletaMaestria"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuSemestre<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuSemestre" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuSemestre"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuAñoEgreso<strong class="red" title="requerido">*</strong></span>
+            <InputNumber @bind-Value="@registro.UsuAñoEgreso" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuAñoEgreso"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuFileNameComprobanteInscripcion<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuFileNameComprobanteInscripcion" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuFileNameComprobanteInscripcion"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuFileSizeComprobanteInscripcion</span>
+            <br />@registro.UsuFileSizeComprobanteInscripcion
+
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuNumeroEmpleado<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuNumeroEmpleado" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuNumeroEmpleado"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuNoExtension<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuNoExtension" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuNoExtension"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuCorreoPersonalCuentaAnterior</span>
+            <InputText @bind-Value="@registro.UsuCorreoPersonalCuentaAnterior" class=" form-control" />
+            <ValidationMessage For="()=>registro.UsuCorreoPersonalCuentaAnterior"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuCorreoPersonalCuentaNueva<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuCorreoPersonalCuentaNueva" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuCorreoPersonalCuentaNueva"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuContraseña<strong class="red" title="requerido">*</strong></span>
+            <InputText @bind-Value="@registro.UsuContraseña" class="required form-control" />
+            <ValidationMessage For="()=>registro.UsuContraseña"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuRecuperarContraseña</span>
+            <br />@registro.UsuRecuperarContraseña
+
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuCorreoInstitucionalCuenta</span>
+            <InputText @bind-Value="@registro.UsuCorreoInstitucionalCuenta" class=" form-control" />
+            <ValidationMessage For="()=>registro.UsuCorreoInstitucionalCuenta"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuCorreoInstitucionalContraseña</span>
+            <InputText @bind-Value="@registro.UsuCorreoInstitucionalContraseña" class=" form-control" />
+            <ValidationMessage For="()=>registro.UsuCorreoInstitucionalContraseña"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuFechaHoraAlta</span>
+            <br />@registro.UsuFechaHoraAlta
+
+        </div>
+
+        
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuIdAreaDepto</span>
+            <InputSelect @bind-Value="@registro.UsuIdAreaDepto" class=" form-select">@foreach (var item in cat_UsuIdAreaDepto)
+                {
+                    <option value="@item.IdAreaDepto">@item.AreNombreAreaDepto</option>
+                }</InputSelect>
+                <ValidationMessage For="()=>registro.UsuIdAreaDepto"></ValidationMessage>
+            </div>
+
+            <div class="col-6 mb-2">
+                <span class="fw-bold">UsuIdCarrera</span>
+                <InputSelect @bind-Value="@registro.UsuIdCarrera" class=" form-select">@foreach (var item in cat_UsuIdCarrera)
+                {
+                    <option value="@item.IdCarrera">@item.CarrNombre</option>
+                }</InputSelect>
+                <ValidationMessage For="()=>registro.UsuIdCarrera"></ValidationMessage>
+            </div>
+
+            <div class="col-6 mb-2">
+                <span class="fw-bold">UsuIdRol</span>
+                <InputSelect @bind-Value="@registro.UsuIdRol" class=" form-select">@foreach (var item in cat_UsuIdRol)
+                {
+                    <option value="@item.IdRol">@item.RolNombre</option>
+                }</InputSelect>
+                <ValidationMessage For="()=>registro.UsuIdRol"></ValidationMessage>
+            </div>
+
+            <div class="col-6 mb-2">
+                <span class="fw-bold">UsuIdTipoPersonal</span>
+                <InputSelect @bind-Value="@registro.UsuIdTipoPersonal" class=" form-select">@foreach (var item in cat_UsuIdTipoPersonal)
+                {
+                    <option value="@item.IdTipoPersonal">@item.TipoperNombre</option>
+                }</InputSelect>
+                <ValidationMessage For="()=>registro.UsuIdTipoPersonal"></ValidationMessage>
+            </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">UsuStatus</span>
+            <br />@registro.UsuStatus
+        </div>
+    </div><!--ROW-->
+
+    <div class="row">
+        <div class="offset-8 col-2 mb-2">
+            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+        </div>
+
+        <div class="col-2 mb-2">
+            <button type="submit" class="btn btn-primary form-control">
+                Guardar
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code
+{
+    [Parameter] public RequestDTO_Usuario registro { get; set; } = new RequestDTO_Usuario();
+
+    [Parameter] public List<RequestViewModel_AreaDepto> cat_UsuIdAreaDepto { get; set; } = new List<RequestViewModel_AreaDepto>();
+    [Parameter] public List<RequestViewModel_Carrera> cat_UsuIdCarrera { get; set; } = new List<RequestViewModel_Carrera>();
+    [Parameter] public List<RequestViewModel_Rol> cat_UsuIdRol { get; set; } = new List<RequestViewModel_Rol>();
+    [Parameter] public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; set; } = new List<RequestViewModel_TipoPersonal>();
+
+
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}

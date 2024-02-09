@@ -62,19 +62,36 @@
         new UIObject(new RequestViewModel_EstadoSolicitud(),"servicioEstadoSolicitud")
     };
 
+    string GetService(IEnumerable<UIObject> items, Type t)
+    {
+        UIObject? obj = items.Where(i => i.Value.GetType().Equals(t)).FirstOrDefault();
+
+        if(obj is not null)
+        {
+            return obj.Service;
+        }
+
+        return "UNDEFINED";
+    }
+
     public string Render()
     {
         string razor = string.Empty;
-        string cs_vars = string.Empty;
-        string cs_loaders = string.Empty;
-
-        bool has_custom_code = false;
+        string cs_code = string.Empty;
 
         UIControl control;
 
         UIObject item = items[selected_index];
         Type type = item.Value.GetType();
+
+        string obj_type = type.ToString().Split('.').Last();
         string service =  item.Service;
+
+        string cs_param_editor = string.Empty;
+
+        string cs_param_list = string.Empty;
+        string cs_load_list = string.Empty;
+        string cs_param_list_modal = string.Empty;
 
         foreach (PropertyInfo prop in type.GetProperties())
         {
@@ -82,25 +99,79 @@
             control.Build();
 
             razor += Environment.NewLine + control.Razor;
-
+            
             if(control.HasForeignKey)
             {
-                cs_vars += $"{Environment.NewLine}\t{control.Code}";
-                cs_loaders += $"{Environment.NewLine}\tcat_{control.Name} = await WebUtils.ListAll({control.Service});";
-
-                has_custom_code = true;
+                cs_param_editor += $"[Parameter] public List<{control.ClassName}> cat_{control.Name} {{ get; set; }}  = new List<{control.ClassName}>();{Environment.NewLine}\t";
+                cs_param_list += $"public List<{control.ClassName}> cat_{control.Name} {{ get; private set; }}  = new List<{control.ClassName}>();{Environment.NewLine}\t";
+                cs_load_list += $"cat_{control.Name} = await WebUtils.ListAll({GetService(items, control.VarType)});{Environment.NewLine}\t";
+                cs_param_list_modal = $"{{\"cat_{control.Name}\", cat_{control.Name}}}{Environment.NewLine}\t";
             }
         }
 
-        if(has_custom_code)
-        {
-            string fetch_code = @"";
-            
 
-            cs_vars = $"@code{Environment.NewLine}{{{cs_vars}{Environment.NewLine}{cs_loaders}{Environment.NewLine}}}{Environment.NewLine}";
-        }
+        cs_code = $@"
+@code
+{{
+    //ÉSTE CÓDIGO VA EN EL COMPONENTE DEL MODAL
+    [Parameter] public {obj_type} registro {{ get; set; }} = new {obj_type}();
 
-        razor_code = razor + Environment.NewLine + cs_vars;
+    {cs_param_editor}    
+
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}}
+
+@code
+{{
+    //ÉSTE CÓDIGO VA EN LA PÁGINA DONDE SE ENCUENTRA EL LISTADO
+    private List<{obj_type}> items = new List<{obj_type}>();
+
+    {cs_param_list}
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {{
+        if (firstRender)
+        {{
+            items = await WebUtils.ListAll({service});
+
+    {cs_load_list}
+
+            StateHasChanged();
+        }}
+    }}
+
+    private async Task Editar({obj_type} item)
+    {{
+        string json = JsonSerializer.Serialize(item);
+    {obj_type}? registro = JsonSerializer.Deserialize<{obj_type}>(json);
+
+        if(registro is not null)
+        {{
+    {obj_type}? result = await DialogService.OpenAsync<ComponentEditor>
+            (
+                ""Actualizar Datos"",
+                new Dictionary<string, object>() {{ 
+                    {{""registro"", registro}},
+{cs_param_list_modal}
+                }},
+                new DialogOptions() {{ ShowClose = false, Width = ""75%"" }}
+            );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+
+            if(result is not null)
+            {{
+                HttpResponseMessage response = await {service}.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
+                {{
+                    items = await WebUtils.ListAll({service});
+                }}
+            }}
+        }}
+    }}
+}}
+";
+        razor_code = razor + Environment.NewLine + cs_code;
         return razor_code;
     }
 
@@ -135,6 +206,7 @@
     private class UIControl
     {
         public ControlType  Control     { get; private set; }
+        public Type         VarType     { get; private set; }
         public string       Service     { get; private set; }
         public string       ClassName   { get; private set; }
         public string       Name        { get; private set; }
@@ -155,7 +227,6 @@
         }
 
         public string       Debug   { get; private set; }
-        public string       Code    { get; private set; }
         public string       Razor   { get; private set; }
         public string       Content { get; private set; }
 
@@ -179,13 +250,13 @@
         public UIControl(PropertyInfo p, string service)
         {
             Type? ttype = Nullable.GetUnderlyingType(p.PropertyType);
-            Type rtype  = ttype ?? p.PropertyType;
             ForeignKeyAttribute? fk = p.GetCustomAttribute<ForeignKeyAttribute>();
 
             this.Control    = ControlType.DISCARD;
+            this.VarType    = ttype ?? p.PropertyType; ;
             this.Service    = service;
             this.Name       = p.Name;
-            this.ClassName  = rtype.ToString().Split('.').Last();
+            this.ClassName  = this.VarType.ToString().Split('.').Last();
             this.IsNullable = ttype is not null;
             this.IsRequired = p.GetCustomAttribute<RequiredAttribute>() is not null;
             this.IsKey      = fk is not null;
@@ -194,7 +265,6 @@
             this.HasForeignKey = p.GetCustomAttribute<ForeignKeyAttribute>() is not null;
 
             this.Debug = string.Empty;
-            this.Code = string.Empty;
             this.Razor = string.Empty;
             this.Content = string.Empty;
 
@@ -212,16 +282,16 @@
                 {typeof(UInt128)    ,ControlType.NUMBER }
             };
 
-            if (mappings.ContainsKey(rtype))
+            if (mappings.ContainsKey(this.VarType))
             {
-                this.Control = mappings[rtype];
+                this.Control = mappings[this.VarType];
             }
 
             if(this.HasForeignKey)
             {
                 this.Control = ControlType.LIST;
                 this.Name = fk!.Name;
-                this.Content = BuildOptionContent(rtype);
+                this.Content = BuildOptionContent(this.VarType);
             }
         }
 
@@ -238,19 +308,20 @@
                     string.Empty;
 
             string tpl_content = @"<div class=""col-6 mb-2"">
-                <span class=""fw-bold"">{0}{1}</span>
-                {2}
-                {3}
-            </div>"+this.Debug+Environment.NewLine;
+    <span class=""fw-bold"">{0}{1}</span>
+    {2}
+    {3}
+</div>"+this.Debug+Environment.NewLine;
 
             if(this.IsNullable)
             {
-                this.Razor = string.Format(tpl_content, this.Name, string.Empty, "-NULLABLE-", string.Empty);
+                this.Razor = string.Format(tpl_content, this.Name, string.Empty, $"<br/>@registro.{this.Name}", string.Empty);
                 return;
             }
 
             string tag = "InputText";
             string css = string.Empty;
+            string css_control = "form-control";
             string required = string.Empty;
 
             bool has_content = false;
@@ -258,19 +329,18 @@
             if (this.IsRequired)
             {
                 required = "<strong class=\"red\" title=\"requerido\">*</strong>";
-                css = " required";
+                css = "required";
             }
 
             switch (this.Control)
             {
-                case ControlType.BOOL:  tag = "InputCheckbox";  break;
+                case ControlType.BOOL: tag = "InputCheckbox"; css_control = "form-check-input";  break;
                 case ControlType.DATE:  tag = "InputDate";      break;
                 case ControlType.NUMBER:tag = "InputNumber";    break;
-                case ControlType.LIST:  tag = "InputSelect"; has_content = true; break;
+                case ControlType.LIST: tag = "InputSelect"; css_control = "form-select"; has_content = true; break;
             }
 
-            string code_input = $"<{tag} @bind-Value=\"@registro.{this.Name}\" class=\"form-control{css}\"" + (has_content ? $">{this.Content}</{tag}>" : "/>");
-            this.Code = $"public List<{this.ClassName}> cat_{this.Name} {{ get; set; }}";
+            string code_input = $"<{tag} @bind-Value=\"@registro.{this.Name}\" class=\" {css} {css_control}\"" + (has_content ? $">{this.Content}</{tag}>" : "/>");
             this.Razor = string.Format(tpl_content, this.Name, required, code_input, code_validation);
         }
     }

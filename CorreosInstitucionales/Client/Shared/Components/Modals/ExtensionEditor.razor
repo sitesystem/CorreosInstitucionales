@@ -1,0 +1,53 @@
+﻿@inject Radzen.DialogService dialogService
+
+<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+    <div class="alert alert-info">
+        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+    </div>
+    <DataAnnotationsValidator/>
+    <div class="row"><!--ROW-->
+        <div class="col-4 mb-2">
+            <span class="fw-bold">Extension</span>
+            <InputText @bind-Value="@registro.ExtNoExtension" class=" form-control" />
+            <ValidationMessage For="()=>registro.ExtNoExtension"></ValidationMessage>
+        </div>
+
+        <div class="col-8 mb-2">
+            <span class="fw-bold">Ubicación</span>
+            <InputSelect @bind-Value="@registro.ExtIdAreaDepto" class=" form-select">@foreach (var item in cat_ExtIdAreaDepto)
+                {
+                    <option value="@item.IdAreaDepto">@item.AreNombreAreaDepto</option>
+                }</InputSelect>
+            <ValidationMessage For="()=>registro.ExtIdAreaDepto"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">Status</span>
+            <InputCheckbox @bind-Value="@registro.ExtStatus" class="required form-check-input" />
+        </div>
+    </div><!--ROW-->
+    
+    <div class="row">
+        <div class="offset-8 col-2 mb-2">
+            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+        </div>
+
+        <div class="col-2 mb-2">
+            <button type="submit" class="btn btn-primary form-control">
+                Guardar
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code
+{
+    [Parameter] public RequestViewModel_NoExtension registro { get; set; } = new RequestViewModel_NoExtension();
+
+    [Parameter] public List<RequestViewModel_AreaDepto> cat_ExtIdAreaDepto { get; set; } = new List<RequestViewModel_AreaDepto>();
+
+    
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}

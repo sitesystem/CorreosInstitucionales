@@ -9,7 +9,7 @@ namespace CorreosInstitucionales.Shared.Utils
 {
     public static class WebUtils
     {
-        public static async Task<List<T>> ListAll<T>(IGenericService<T> service, bool filterByStatus = true)
+        public static async Task<List<T>> ListAll<T>(IGenericService<T> service, bool filterByStatus = false)
         {
             var response = await service.GetAllDataAsync(filterByStatus);
 

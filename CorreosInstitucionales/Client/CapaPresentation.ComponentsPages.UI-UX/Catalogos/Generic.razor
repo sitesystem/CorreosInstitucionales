@@ -1,0 +1,85 @@
+﻿@page "/catalogo/generic"
+@inject DialogService DialogService
+
+@using System.Text.Json
+
+<table class="table table-hover shadow">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
+            <tr>
+                <td>
+                    @item.UsuNombre
+                    @item.UsuPrimerApellido
+                    @item.UsuSegundoApellido
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                        Editar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<pre>
+    @debug
+</pre>
+
+
+
+@code 
+{
+    private string debug = "";
+    private List<RequestDTO_Usuario> items = new List<RequestDTO_Usuario>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            items = await WebUtils.ListAll(servicioUsuario);
+
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task Editar(RequestDTO_Usuario item)
+    {
+        string json = JsonSerializer.Serialize(item);
+        RequestDTO_Usuario? registro = JsonSerializer.Deserialize<RequestDTO_Usuario>(json);
+
+        if(registro is not null)
+        {
+            RequestDTO_Usuario? result = await DialogService.OpenAsync<UsuarioEditor>
+            (
+                "Actualizar Datos",
+                new Dictionary<string, object>() { 
+                    { "registro", registro } ,
+                    
+                },
+                new DialogOptions() { ShowClose = false, Width = "75%" }
+            );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+
+            if(result is not null)
+            {
+                HttpResponseMessage response = await servicioUsuario.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
+                {
+                    items = await WebUtils.ListAll(servicioUsuario);
+                }
+            }
+        }
+    }
+
+    
+
+}

@@ -1,0 +1,84 @@
+﻿@page "/catalogo/edificios"
+@inject DialogService DialogService
+@using System.Text.Json
+
+<PageTitle>@Title</PageTitle>
+
+<div class="p-4 rounded-1 bg-white shadow">
+    <h1>@Title</h1>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>
+                        @if(item.EdiStatus)
+                        {
+                            <text>@item.EdiNombreOficial (@item.EdiNombreAlias)</text>
+                        }
+                        else
+                        {
+                            <del>@item.EdiNombreOficial (@item.EdiNombreAlias)</del>
+                        }
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@code
+{
+    private string Title = "Catálogo de Edificios";
+    private List<RequestViewModel_Edificio> items = new List<RequestViewModel_Edificio>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            items = await WebUtils.ListAll(servicioEdificio);
+            StateHasChanged();
+        }
+    }
+
+    private async Task Editar(RequestViewModel_Edificio item)
+    {
+        string json = JsonSerializer.Serialize(item);
+        RequestViewModel_Edificio? registro = JsonSerializer.Deserialize<RequestViewModel_Edificio>(json);
+
+        if (registro is not null)
+        {
+            RequestViewModel_Edificio? result = await DialogService.OpenAsync<EdificioEditor>
+                (
+                    "Actualizar Datos",
+                    new Dictionary<string, object>() {
+                            {"registro", registro}
+                        },
+                    new DialogOptions() { ShowClose = false, Width = "75%" }
+                );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+
+            if (result is not null)
+            {
+                HttpResponseMessage response = await servicioEdificio.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
+                {
+                    items = await WebUtils.ListAll(servicioEdificio);
+                }
+            }
+        }
+    }
+}

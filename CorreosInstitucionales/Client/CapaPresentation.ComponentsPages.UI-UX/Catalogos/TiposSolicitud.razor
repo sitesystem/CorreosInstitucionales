@@ -1,0 +1,88 @@
+﻿@page "/catalogo/tipos_solicitud"
+@inject DialogService DialogService
+@using System.Text.Json
+
+<PageTitle>@Title</PageTitle>
+
+<div class="p-4 rounded-1 bg-white shadow">
+    <h1>@Title</h1>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>
+                        @if(item.TiposolStatus)
+                        {
+                            @item.TiposolDescripcion
+                        }
+                        else
+                        {
+                            <del>@item.TiposolDescripcion</del>
+                        }
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code
+{
+    private string Title = "Catálogo de Tipos de Solicitud";
+    private List<RequestViewModel_TipoSolicitud> items = new List<RequestViewModel_TipoSolicitud>();
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            items = await WebUtils.ListAll(servicioTipoSolicitud);
+
+
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task Editar(RequestViewModel_TipoSolicitud item)
+    {
+        string json = JsonSerializer.Serialize(item);
+        RequestViewModel_TipoSolicitud? registro = JsonSerializer.Deserialize<RequestViewModel_TipoSolicitud>(json);
+
+        if (registro is not null)
+        {
+            RequestViewModel_TipoSolicitud? result = await DialogService.OpenAsync<TipoSolicitudEditor>
+                (
+                    "Actualizar Datos",
+                    new Dictionary<string, object>() {
+                    {"registro", registro},
+
+                        },
+                    new DialogOptions() { ShowClose = false, Width = "75%" }
+                );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+
+            if (result is not null)
+            {
+                HttpResponseMessage response = await servicioTipoSolicitud.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
+                {
+                    items = await WebUtils.ListAll(servicioTipoSolicitud);
+                }
+            }
+        }
+    }
+}
