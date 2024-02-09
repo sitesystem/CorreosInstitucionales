@@ -125,7 +125,7 @@
                             <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;">
                                 @* class="rz-border-info-light" *@
                                 <h5 class="pt-1">Número de tickets por día</h5>
-                            <RadzenChart Style="width: 22vw; height:25vh;">
+                            <RadzenChart Style="width: 22vw; height:25vh;" class="gy-1">
                                 <RadzenColumnSeries Data="@revenue2020Column" CategoryProperty="Quarter" Title="2020" LineType="LineType.Dashed" ValueProperty="Revenue">
                                     <RadzenSeriesDataLabels Visible="@showDataLabels" />
                                 </RadzenColumnSeries>

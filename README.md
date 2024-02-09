@@ -26,6 +26,20 @@
 > ## Catálogo de datos de la escuela
 > ## Catálogo de edificios
 > ## NO hay boton de regreso y redirige en automático al login
+> ## NO pleca de educación e IPN; en el cintillo que solo tenga IPN y el del plantel
+> ## En la cabeza de la card de inicio de sesión solo el logo de SACI
+> ## SISTEMA DE ATENCIÓN PARA CORREO INSTITUCIONALES universalizar el nombre
+> ## Carrusel de bootstrap quede 60 segundos
+> ## Carrusel modificable las fotografias captadas de un catálogo por el administrador
+> ## Catálogo de notas o alertas para modificar por el administrador
+> ## Control de aviso de privacidad
+> ## Primer apelido dejarlo no obligatorio
+> ## Poner link de compresión de pdf para reducir a máximo 2 MB
+> ## Agregar al catalgo de carreras las carreras faltantes son 7 carreras
+> ## Modificar la liga de comprobante de inscripción a tira de materias o comprobante de horario y cambiarlo a catálogo 
+> ## Agregar al correo que no pueden responder o hacer caso omiso al dicho correo, poner plantel que jale del catálogo 
+> ## Agregar whatsapp en SACI
+> ## Agregar manual de usuario
 
 
 
