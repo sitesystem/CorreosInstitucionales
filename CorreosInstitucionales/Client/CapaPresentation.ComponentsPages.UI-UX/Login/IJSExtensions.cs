@@ -2,14 +2,9 @@
 
 namespace CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
 {
-    public class IJSExtensions
+    public class IJSExtensions(IJSRuntime js)
     {
-        private readonly IJSRuntime _js;
-
-        public IJSExtensions(IJSRuntime js)
-        {
-            _js = js;
-        }
+        private readonly IJSRuntime _js = js;
 
         public ValueTask<object> SetInLocalStorage(string key, string content)
         {

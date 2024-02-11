@@ -6,7 +6,6 @@
 
 <AuthorizeView>
     <Authorized>
-        @* <p>Autorizado</p> *@
         <RadzenCard Variant="Variant.Filled" Class="mb-3">
             <RadzenRow Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="1rem" class="">
                 <RadzenColumn SizeXS="12" SizeSM="12" SizeMD="6" SizeLG="6">
@@ -46,15 +45,15 @@
                     </RadzenCard>
                     break;
             case 4: <RadzenCard Variant="Variant.Filled" Class="rz-pt-3">
-                        @* <Empleados ActionAddEdit="actualizar" oEditUsuario="oEditUsuario" IdTipoPersonal="4" TipoPersonal="administrativo" /> *@   @* Actualizar Registro Empleado Administrativo *@
+                        <Empleados ActionAddEdit="actualizar" oEditUsuario="oEditUsuario" IdTipoPersonal="4" TipoPersonal="administrativo" />   @* Actualizar Registro Empleado Administrativo *@
                     </RadzenCard>
                     break;
             case 5: <RadzenCard Variant="Variant.Filled" Class="rz-pt-3">
-                        @* <Empleados ActionAddEdit="actualizar" oEditUsuario="oEditUsuario" IdTipoPersonal="5" TipoPersonal="docente" /> *@          @* Actualizar Registro Empleado Docente *@
+                        <Empleados ActionAddEdit="actualizar" oEditUsuario="oEditUsuario" IdTipoPersonal="5" TipoPersonal="docente" />          @* Actualizar Registro Empleado Docente *@
                     </RadzenCard>
                     break;
             case 6: <RadzenCard Variant="Variant.Filled" Class="rz-pt-3">
-                        @* <Empleados ActionAddEdit="actualizar" oEditUsuario="oEditUsuario" IdTipoPersonal="5" TipoPersonal="docente" /> *@          @* Actualizar Registro Empleado Honorarios *@
+                        <Empleados ActionAddEdit="actualizar" oEditUsuario="oEditUsuario" IdTipoPersonal="6" TipoPersonal="honorarios" />       @* Actualizar Registro Empleado Honorarios *@
                     </RadzenCard>
                     break;
             default:

@@ -13,7 +13,7 @@
             <RadzenHeader class="rz-background-color-info-darker rz-border-radius-0 rz-py-0 rz-my-0" Style="border-bottom:0;">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px">
                     
-                    <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" Class="rz-m-0" />
+                    <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" class="rz-m-0" />
 
                     <RadzenCard Variant="Variant.Filled" Class="rz-p-2 rz-border-radius-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
@@ -28,7 +28,7 @@
                     </RadzenCard>
                     @{
                         string? rol = context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "1" ? "Administrador" : "Usuario";
-                        string? tipoPersonal = (oResponseTipoPersonal != null && oResponseTipoPersonal.Data != null) ? oResponseTipoPersonal.Data.TipoperNombre : null;
+                        string? tipoPersonal = oResponseTipoPersonal?.Data?.TipoperNombre ?? null;
                         string? name = context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value;
                         string? email = context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
                     }
@@ -42,26 +42,18 @@
                         </RadzenStack>
                     </RadzenCard>
 
-                    <RadzenCard Variant="Variant.Filled" Class="rz-p-3 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block rz-border-radius-0">
-                        <RadzenStack Gap="0px">
-                            <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
-                            <RadzenText TextStyle="TextStyle.Body1"><b>@name</b></RadzenText>
-                        </RadzenStack>
-                    </RadzenCard>
-
-                    <RadzenCard Variant="Variant.Filled" Class="rz-p-0 rz-border-radius-0">
+                    <RadzenCard Variant="Variant.Filled" Class="rz-p-0 d-block d-sm-block rz-border-radius-0">
                         <RadzenProfileMenu Class="">
                             <Template>
                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" Class="">
                                     <RadzenGravatar Email="@email" />
                                     <RadzenStack Gap="0px">
-                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Correo Electrónico Personal</RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">@name</RadzenText>
                                         <RadzenText TextStyle="TextStyle.Body1"><b>@email</b></RadzenText>
                                     </RadzenStack>
                                 </RadzenStack>
                             </Template>
                             <ChildContent>
-                                @* <RadzenProfileMenuItem Text="Perfil" Path="Pefil" Icon="person"></RadzenProfileMenuItem> *@
                                 <RadzenButton Variant="Variant.Text" Click="@(() => navigationManager.NavigateTo("/PerfilUsuario"))" Text="Perfil" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="account_circle" class="d-block text-start" style="width: 100%" />
                                 <RadzenButton Variant="Variant.Text" Click="@LogOut" Text="Cerrar Sesión" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="logout" class="d-block text-start" style="width: 100%" />
                             </ChildContent>
@@ -121,60 +113,11 @@
 {
     private bool sidebarExpanded = true;
 
-    void SidebarToggleClick() => sidebarExpanded = !sidebarExpanded;
-
-    // void CerrarSesion()
-    // {
-    //     Console.WriteLine("Hola");
-    // }
-
-    // private string themeName = "fluent";
-
-    // public class ThemeDetails
-    // {
-    //     public string? ID { get; set; }
-    //     public string? Text { get; set; }
-    // }
-
-    // private List<ThemeDetails> Themes = new List<ThemeDetails>()
-    // {
-    //     new ThemeDetails(){ ID = "bootstrap5", Text = "Bootstrap 5" },
-    //     new ThemeDetails(){ ID = "bootstrap5-dark", Text = "Bootstrap 5 Dark" },
-    //     new ThemeDetails(){ ID = "bootstrap4", Text = "Bootstrap 4" },
-    //     //new ThemeDetails(){ ID = "bootstrap4-dark", Text = "Bootstrap 4 Dark" },
-    //     new ThemeDetails(){ ID = "bootstrap", Text = "Bootstrap 3" },
-    //     new ThemeDetails(){ ID = "bootstrap-dark", Text = "Bootstrap 3 Dark" },
-    //     new ThemeDetails(){ ID = "material", Text = "Material UI" },
-    //     new ThemeDetails(){ ID = "material-dark", Text = "Material UI Dark" },
-    //     new ThemeDetails(){ ID = "tailwind", Text = "TailWind CSS"},
-    //     new ThemeDetails(){ ID = "tailwind-dark", Text = "TailWind CSS Dark" },
-    //     new ThemeDetails(){ ID = "fabric", Text = "Fabric" },
-    //     new ThemeDetails(){ ID = "fabric-dark", Text = "Fabric Dark" },
-    //     new ThemeDetails(){ ID = "fluent", Text = "Fluent" },
-    //     new ThemeDetails(){ ID = "fluent-dark", Text = "Fluent Dark" },
-    //     new ThemeDetails(){ ID = "highcontrast", Text = "High Contrast" }
-    // };
-
-    // public void OnThemeChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, ThemeDetails> args)
-    // {
-    //     JSRuntime.InvokeAsync<object>("setTheme", args.ItemData.ID);
-    // }
-
-    private bool sidebarCollapse = true;
-
-    private string? sidebarCssClass => sidebarCollapse ? "sidebar" : "sidebar collapse";
-
-    private void CollapseSidebar()
-    {
-        sidebarCollapse = !sidebarCollapse;
-    }
-
-    public Response<RequestViewModel_TipoPersonal>? oResponseTipoPersonal = new();
+    private Response<RequestViewModel_TipoPersonal>? oResponseTipoPersonal = new();
+    private Response<RequestDTO_Usuario>? oResponseUsuario = new();
 
     private string? authMessage;
     private List<Claim> claims = new();
-    private Response<RequestDTO_Usuario> oResponse = new();
-    private RequestDTO_Usuario oUsuario = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -185,29 +128,16 @@
         {
             authMessage = $"{user.Claims.FirstOrDefault(c => c.Type == "Name")?.Value} is authenticated.";
             claims = user.Claims.ToList();
-            var tipoPersonal = user.Claims.FirstOrDefault(c => c.Type == "TipoPersonal")?.Value;
-            oResponseTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(int.Parse(tipoPersonal));
+
+            var tipoPersonal = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "TipoPersonal")?.Value);
+            oResponseTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(tipoPersonal);
+            
             int id = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
-            oResponse = await servicioUsuario.GetDataByIdAsync(id);
-            oUsuario = oResponse.Data;
-            //oUsuario.
+            oResponseUsuario = await servicioUsuario.GetDataByIdAsync(id);
         }
         else
             navigationManager.NavigateTo("/");
     }
-
-    // private async Task DropDownSelect(MenuEventArgs args)
-    // {
-    //     if (args.Item.Id == "Perfil")
-    //     {
-    //         navigationManager.NavigateTo("/Perfil");
-    //     }
-    //     else if (args.Item.Id == "LogOut")
-    //     {
-    //         await loginService.Logout();
-    //         navigationManager.NavigateTo("/");
-    //     }
-    // }
 
     private async Task LogOut()
     {

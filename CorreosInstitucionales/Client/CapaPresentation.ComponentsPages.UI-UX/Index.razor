@@ -1,4 +1,4 @@
-﻿@page "/Index"
+﻿@page "/index"
 @using System.Globalization
 
 @attribute [Authorize]
@@ -11,8 +11,7 @@
 
 <AuthorizeView Policy="[Rol] Usuario Solicitante">
 	<Authorized>
-		@* <p>Autorizado</p>
-		<p>Seguimiento de Solicitud</p> *@
+		@* <p>Autorizado</p>*@
         <RadzenPanel>
             <RadzenFieldset AllowCollapse="false" ExpandTitle="Seguimiento de Solicitud" CollapseTitle="Seguimiento de Solicitud" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-3">
                 <HeaderTemplate>
@@ -117,9 +116,6 @@
                             </div>
                         </div> *@
                     </RadzenRow>
-                    
-                   
-
                 </RadzenCard>
                 <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 30vh; width: 25vw;">
                             <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;">
@@ -192,13 +188,10 @@
 
                 </ChildContent>
             </RadzenFieldset>
-
         </RadzenCard>
 
-        
-        
-        <p>Autorizado</p>
         <ButtonScrollToTop />
+
 	</Authorized>
 	<NotAuthorized>
 		<p>No Autorizado</p>
@@ -294,7 +287,7 @@
                                                         ButtonStyle="ButtonStyle.Success"
                                                         ButtonType="ButtonType.Submit"
                                                         IsBusy="@busyLoading"
-                                                  Icon="security"
+                                                        Icon="security"
                                                         Class="w-75 h-25 mt-3 rz-ripple"
                                                         Shade="Shade.Darker"
                                                         Disabled="@DisablePostButton"
@@ -347,8 +340,6 @@
     }
 
     @*///////////////////////////////////////////////  REGISTRAR NUEVA CONTRASEÑA  //////////////////////////////////////////////////////////////////////*@
-    
-
     public async Task OnValidHandled_ChangePassword()
     {
         try
@@ -415,8 +406,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-    ,
+                        </div>,
                             new Radzen.DialogOptions()
                         {
                             CloseDialogOnOverlayClick = false,
@@ -473,154 +463,155 @@
     //Gráfica de area 
    
         
-        bool showDataLabels = false;
-        class DataItem
+    bool showDataLabels = false;
+    class DataItem
+    {
+        public string Date { get; set; }
+        public double Revenue { get; set; }
+    }
+
+    string FormatAsUSD(object value)
+    {
+        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
+    }
+
+    string FormatAsMonth(object value)
+    {
+        if (value != null)
         {
-            public string Date { get; set; }
-            public double Revenue { get; set; }
+            return Convert.ToDateTime(value).ToString("MMM");
         }
 
-        string FormatAsUSD(object value)
-        {
-            return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
-        }
+        return string.Empty;
+    }
 
-        string FormatAsMonth(object value)
-        {
-            if (value != null)
-            {
-                return Convert.ToDateTime(value).ToString("MMM");
-            }
+    DataItem[] revenue2019 = new DataItem[] {
+                    new DataItem
+                    {
+                    Date = ("2019-01-01"),
+                    Revenue = 234000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-02-01"),
+                    Revenue = 269000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-03-01"),
+                    Revenue = 233000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-04-01"),
+                    Revenue = 244000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-05-01"),
+                    Revenue = 214000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-06-01"),
+                    Revenue = 253000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-07-01"),
+                    Revenue = 274000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-08-01"),
+                    Revenue = 284000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-09-01"),
+                    Revenue = 273000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-10-01"),
+                    Revenue = 282000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-11-01"),
+                    Revenue = 289000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-12-01"),
+                    Revenue = 294000
+                    }
+                    };
 
-            return string.Empty;
-        }
-
-        DataItem[] revenue2019 = new DataItem[] {
-                        new DataItem
-                        {
-                        Date = ("2019-01-01"),
-                        Revenue = 234000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-02-01"),
-                        Revenue = 269000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-03-01"),
-                        Revenue = 233000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-04-01"),
-                        Revenue = 244000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-05-01"),
-                        Revenue = 214000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-06-01"),
-                        Revenue = 253000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-07-01"),
-                        Revenue = 274000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-08-01"),
-                        Revenue = 284000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-09-01"),
-                        Revenue = 273000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-10-01"),
-                        Revenue = 282000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-11-01"),
-                        Revenue = 289000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-12-01"),
-                        Revenue = 294000
-                        }
-                        };
-
-        DataItem[] revenue2020 = new DataItem[] {
-                        new DataItem
-                        {
-                        Date = ("2019-01-01"),
-                        Revenue = 334000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-02-01"),
-                        Revenue = 369000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-03-01"),
-                        Revenue = 333000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-04-01"),
-                        Revenue = 344000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-05-01"),
-                        Revenue = 314000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-06-01"),
-                        Revenue = 353000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-07-01"),
-                        Revenue = 374000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-08-01"),
-                        Revenue = 384000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-09-01"),
-                        Revenue = 373000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-10-01"),
-                        Revenue = 382000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-11-01"),
-                        Revenue = 389000
-                        },
-                        new DataItem
-                        {
-                        Date = ("2019-12-01"),
-                        Revenue = 394000
-                        }
-                        };
-// Gráfica de dona
+    DataItem[] revenue2020 = new DataItem[] {
+                    new DataItem
+                    {
+                    Date = ("2019-01-01"),
+                    Revenue = 334000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-02-01"),
+                    Revenue = 369000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-03-01"),
+                    Revenue = 333000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-04-01"),
+                    Revenue = 344000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-05-01"),
+                    Revenue = 314000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-06-01"),
+                    Revenue = 353000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-07-01"),
+                    Revenue = 374000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-08-01"),
+                    Revenue = 384000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-09-01"),
+                    Revenue = 373000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-10-01"),
+                    Revenue = 382000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-11-01"),
+                    Revenue = 389000
+                    },
+                    new DataItem
+                    {
+                    Date = ("2019-12-01"),
+                    Revenue = 394000
+                    }
+                    };
+    
+    // Gráfica de dona
     class DataItemdonut
     {
         public string Quarter { get; set; }
@@ -649,7 +640,7 @@
                                         Revenue = 80000
                                         },
                                     };
-//Gráfica de columnas
+    //Gráfica de columnas
     class DataItemColumn
     {
         public string Quarter { get; set; }
@@ -702,7 +693,8 @@
         },
 
     };
-//Grafica de pastel
+
+    //Grafica de pastel
     class DataItemPie
     {
         public string Quarter { get; set; }

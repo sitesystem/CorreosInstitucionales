@@ -4,7 +4,7 @@
 
 @layout LoginLayout
 
-<PageTitle>SACI | Registro de Usuario</PageTitle>
+<PageTitle>SACI | Registro de Usuari@@</PageTitle>
 
 <RadzenComponents />
 
@@ -38,18 +38,18 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
                                 <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
                                 <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                            </svg> Registro del Usuario
+                            </svg> Registro de Usuari@@
                         </h5>
                     </RadzenText>
                     <RadzenButton Text="Regresar"
-                                    BusyText=""
-                                    ButtonStyle="ButtonStyle.Warning"
-                                    ButtonType="ButtonType.Button"
-                                    IsBusy="false"
-                                    Icon="arrow_back"
-                                    Class="rz-ripple"
-                                    Shade="Shade.Darker"
-                                    Click="@(() => navigationManager.NavigateTo("/"))" />
+                                  BusyText=""
+                                  ButtonStyle="ButtonStyle.Warning"
+                                  ButtonType="ButtonType.Button"
+                                  IsBusy="false"
+                                  Icon="arrow_back"
+                                  class="rz-ripple"
+                                  Shade="Shade.Darker"
+                                  Click="@(() => navigationManager.NavigateTo("/"))" />
                 </RadzenStack>
             </RadzenCard>
 
@@ -74,13 +74,13 @@
                         <RadzenTabs RenderMode="TabRenderMode.Client">
                             <Tabs>
                                 <RadzenTabsItem Text="Administrativo" Icon="badge" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
-                                    @* <Empleados IdTipoPersonal="4" TipoPersonal="administrativo" /> *@  @* Agregar Registro Empleado Administrativo *@
+                                    <Empleados ActionAddEdit="agregar" oEditUsuario="null" IdTipoPersonal="4" TipoPersonal="administrativo" />  @* Agregar Registro Empleado Administrativo *@
                                 </RadzenTabsItem>
                                 <RadzenTabsItem Text="Docente" Icon="badge" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
-                                    @* <Empleados IdTipoPersonal="5" TipoPersonal="docente" /> *@         @* Agregar Registro Empleado Docente *@
+                                    <Empleados ActionAddEdit="agregar" oEditUsuario="null" IdTipoPersonal="5" TipoPersonal="docente" />         @* Agregar Registro Empleado Docente *@
                                 </RadzenTabsItem>
                                 <RadzenTabsItem Text="Honorarios" Icon="badge" IconColor="@Colors.Base800" Style="font-family:var(--rz-text-font-family);">
-                                    @* <Empleados /> *@                                                              @* Agregar Registro Empleado Honorarios *@
+                                    <Empleados ActionAddEdit="agregar" oEditUsuario="null" IdTipoPersonal="6" TipoPersonal="honorarios" />      @* Agregar Registro Empleado Honorarios *@
                                 </RadzenTabsItem>
                             </Tabs>
                         </RadzenTabs>
@@ -124,11 +124,6 @@
 
 @code
 {
-    protected override async Task OnInitializedAsync()
-    {
-        
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

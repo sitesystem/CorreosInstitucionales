@@ -6,7 +6,6 @@ using Radzen;
 using System.Globalization;
 
 using CorreosInstitucionales.Client;
-using CorreosInstitucionales.Client.Shared;
 using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificios;
