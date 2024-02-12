@@ -40,6 +40,7 @@
 > ## Agregar al correo que no pueden responder o hacer caso omiso al dicho correo, poner plantel que jale del catálogo 
 > ## Agregar whatsapp en SACI
 > ## Agregar manual de usuario
+> ## Aviso de privacidad en el login
 
 
 
