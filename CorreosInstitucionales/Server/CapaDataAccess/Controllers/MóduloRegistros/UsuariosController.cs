@@ -222,12 +222,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         }
 
         [HttpPut("resetPassword/{correoPersonal}")]
-        public async Task<IActionResult> ResetPassword(string correoPersonal)
+        public async Task<IActionResult> ResetPassword(string correoPersonal, string curp)
         {
             Response<MpTbUsuario> oRespuesta = new();
             try
             {
-                MpTbUsuario? oUsuario = await _db.MpTbUsuarios.Where(u => u.UsuCorreoPersonalCuentaNueva == correoPersonal && u.UsuStatus == true)
+                MpTbUsuario? oUsuario = await _db.MpTbUsuarios.Where(u => u.UsuCorreoPersonalCuentaNueva == correoPersonal && u.UsuCurp == curp && u.UsuStatus == true)
                                                               .FirstOrDefaultAsync();
 
                 if (oUsuario != null)

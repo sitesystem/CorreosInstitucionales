@@ -133,6 +133,18 @@
                                         <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption"/></Helper>
                                     </RadzenFormField>
 
+                                    <RadzenFormField Text="CURP" Placeholder="" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-3" Disabled="false">
+                                        <Start><RadzenIcon Icon="document_scanner" /></Start>
+                                        <ChildContent>
+                                            <RadzenTextBox Name="curp_reset" @bind-Value="@oRecuperarContraseñaCorreo.Curp" MinLength="0" MaxLength="18" 
+                                            @oninput="@((e) => oRecuperarContraseñaCorreo.Curp = e.Value.ToString().ToUpper())"
+                                                           onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                        </ChildContent>
+                                        <Helper>
+                                            
+                                        </Helper>
+                                    </RadzenFormField>
+
                                     <div class="row">
                                         <div class="col-md-12 mt-5">
                                             <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
@@ -315,10 +327,15 @@
     public string contentRecuperarContraseñaBtn = "Recuperar Contraseña";
     public bool isSpinningHidden = true;
     
+    public Response<RequestViewModel_Link>? oLinkCURP = new();
+    private string srcCURP = string.Empty;
+
     public class RecuperarContraseñaCorreo
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string CorreoElectronicoPersonal { get; set; } = null!;
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public string Curp { get; set; } = null!;
     }
 
     public async Task RecuperarContraseña()
@@ -331,7 +348,7 @@
                 contentRecuperarContraseñaBtn = "Recuperando Contraseña...";
                 isSpinningHidden = false;
 
-                var respuesta = await servicioUsuario.ResetPassword(oRecuperarContraseñaCorreo.CorreoElectronicoPersonal);
+                var respuesta = await servicioUsuario.ResetPassword(oRecuperarContraseñaCorreo.CorreoElectronicoPersonal, oRecuperarContraseñaCorreo.Curp);
                 oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<RequestDTO_Usuario>>().Result;
 
                 errorMsgVisible = false;

@@ -55,12 +55,12 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
             return response;
         }
 
-        public async Task<HttpResponseMessage> ResetPassword(string correoPersonal)
+        public async Task<HttpResponseMessage> ResetPassword(string correoPersonal, string curp)
         {
             // var json = JsonSerializer.Serialize(correoPersonal);
             // var content = new StringContent(json, Encoding.UTF8, "application/json");
             // var response = await _httpClient.PutAsync(url, content);
-            var response = await _httpClient.PutAsJsonAsync($"{url}resetPassword/{correoPersonal}",
+            var response = await _httpClient.PutAsJsonAsync($"{url}resetPassword/{correoPersonal}/{curp}",
                  new JsonSerializerOptions()
                  {
                      PropertyNameCaseInsensitive = true

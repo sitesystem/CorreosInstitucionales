@@ -12,7 +12,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
     public interface IUsuarioService : IGenericService<RequestDTO_Usuario>
     {
         public Task<Response<RequestDTO_Usuario>?> ValidateByEmailCURP(string correo, string curp);
-        public Task<HttpResponseMessage> ResetPassword(string correoPersonal);
+        public Task<HttpResponseMessage> ResetPassword(string correoPersonal, string curp);
         public Task<HttpResponseMessage> ChangePassword(int id, string newPassword);
     }
 }
