@@ -43,15 +43,16 @@
 	<main class='container-fluid'><!-- style='display:grid; place-items:center;'-->
 		<section >
 			<article style='background-color: rgb(255, 255, 255); border-radius:10px; padding:5px;'>
-				<p style='font-size:calc(10px + 0.290625vw); text-align:justify;'>	Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
+				<p style='font-size:calc(10px + 0.290625vw); text-align:justify; color:black;'> <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>	
+				Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
 				Se le informa que su registro fué exitoso en la Plataforma <b>SACI (Sistema de Ayuda para Correos Institucionales)</b>
 				de la Unidad Académica (nombre de la escuela), por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>
 				</p>
 			</article>
 			
-			<article class='container-fluid' style='background-color: rgb(244,244,244); width:90vw; border-radius:10px; padding:5px; text-align:justify;'>				
+			<article align='center' class='container-fluid' style='background-color: rgb(244,244,244); width:90vw; border-radius:10px; padding:5px; text-align:justify;'>				
 				<div align='center'>
-						<table style='width:80vw; padding:5px; border: 1px solid black; border-collapse:collapse;' ><!-- style='width:50vw; '-->
+						<table style='padding:5px; border: 1px solid black; border-collapse:collapse;' ><!-- style='width:50vw; '-->
 							<thead>
 								<tr style='background-color: #dddddd;'>									
 									<th scope='col' colspan='2' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Credenciales de Acceso</th>
@@ -59,12 +60,12 @@
 							</thead>
 							<tbody>
 								<tr style='background-color: #ffffff;'>
-									<td style='font-size:calc(10px + 0.290625vw); border: 1px solid black;'>Usuario:</td>
-									<td style='font-size:calc(10px + 0.290625vw); border: 1px solid black;'><b>{oUsuario.UsuCorreoPersonalCuentaNueva}</b></td>
+									<td width='250px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Usuario:</td>
+									<td width='350px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'><b>{oUsuario.UsuCorreoPersonalCuentaNueva}</b></td>
 								</tr>
 								<tr style='background-color: #dddddd;'>
-									<td style='font-size:calc(10px + 0.290625vw); border: 1px solid black;'>Contraseña:</td>
-									<td style='font-size:calc(10px + 0.290625vw); border: 1px solid black;'><b>{oUsuario.UsuContraseña}</b></td>
+									<td width='250px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Contraseña:</td>
+									<td width='350px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'><b>{oUsuario.UsuContraseña}</b></td>
 								</tr>			
 								
 							</tbody>

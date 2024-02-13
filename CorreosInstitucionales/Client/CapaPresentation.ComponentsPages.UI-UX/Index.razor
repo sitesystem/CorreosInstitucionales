@@ -354,20 +354,21 @@
                         new RequestDTO_SendEmail()
                             {
                                 EmailTo = oResponse.Data.UsuCorreoPersonalCuentaNueva,
-                                Subject = "SACI CAMBIO DE CONTRASEÑA ATRAVES DE LA PLATAFORMA",
-                                Body = $@"<body><p style='font-size:calc(10px + 0.290625vw); text-align:justify; color:black;'>Estimad@: <br><b> {oResponse.Data.UsuNombre} {oResponse.Data.UsuPrimerApellido} {oResponse.Data.UsuSegundoApellido} </b><br><br>
+                                Subject = "SACI|CAMBIO DE CONTRASEÑA ATRAVES DE LA PLATAFORMA",
+                                Body = $@"<body><p style='font-size:calc(12px + 0.290625vw); text-align:justify; color:black;'> <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
+                                    Estimad@: <br><b> {oResponse.Data.UsuNombre} {oResponse.Data.UsuPrimerApellido} {oResponse.Data.UsuSegundoApellido} </b><br><br>
                                     Se le informa que generó de manera correcta la contraseña a la plataforma SACI (Sistema de Ayuda para Correos Institucionales) de la
-                                    unidad académica (nombre de la escuela). Por favor no responder a este correo.<br> </p>
+                                    unidad académica (nombre de la escuela).</p>
 
-                                <p style='font-size:calc(10px + 0.290625vw); text-align:justify; color:black;'>La contraseña que se género <br>
+                                <p style='font-size:calc(12px + 0.290625vw); text-align:justify; color:black;'>La contraseña que se género <br>
                                 la cual debe de tener la siguiente estructura:<br></p>
-                                    <ul style='font-size:calc(10px + 0.290625vw); text-align:justify; color:black;'>
+                                    <ul style='font-size:calc(12px + 0.290625vw); text-align:justify; color:black;'>
                                         <li>8 caracteres como mínimo</li>
                                         <li>Debe contener 1 número</li>
                                         <li>Contener una mayuscula</li>
                                         <li>Contener un carácter especial(#,$,!,?,etc.)</li>
                                     </ul>
-                                <p style='font-size:calc(10px + 0.290625vw); text-align:justify; color:black;'>Que tenga un excelente día.<br>
+                                <p style='font-size:calc(12px + 0.290625vw); text-align:justify; color:black;'>Que tenga un excelente día.<br>
                                 NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD DEL SERVICIO.</p></body>
                                 <footer>
 		                            <div align='center'>

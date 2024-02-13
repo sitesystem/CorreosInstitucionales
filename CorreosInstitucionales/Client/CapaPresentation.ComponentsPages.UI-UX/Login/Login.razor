@@ -344,13 +344,14 @@
                         {
                             EmailTo = oRecuperarContraseñaCorreo.CorreoElectronicoPersonal,
                             Subject = "SACI RECUPERACIÓN DE CONTRASEÑA",
-                            Body = $@"<p style='font-size:calc(10px + 0.290625vw); text-align:justify; color:black;'>Estimad@: <br><b> {oRespuesta.Data.UsuNombre} {oRespuesta.Data.UsuPrimerApellido} {oRespuesta.Data.UsuSegundoApellido} </b><br><br>
+                                Body = $@"<p style='font-size:calc(12px + 0.290625vw); text-align:justify; color:black;'> <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
+                                Estimad@: <br><b> {oRespuesta.Data.UsuNombre} {oRespuesta.Data.UsuPrimerApellido} {oRespuesta.Data.UsuSegundoApellido} </b><br><br>
                                 Se le informa que se recuperó con éxito sus credenciales a la plataforma SACI (Sistema de Ayuda para Correos Institucionales) de la
-                                unidad académica (nombre de la escuela), por este medio se le hace entrega de sus credenciales de acceso <br> </p>
-
-                                <article class='container-fluid' style='background-color: rgb(244,244,244); width:90vw; border-radius:10px; padding:5px; text-align:justify;'>	
+                                unidad académica (nombre de la escuela), por este medio se le hace entrega de sus credenciales de acceso<br></p>
                                 <div align='center'>
-						                <table style='width:80vw; padding:5px; border: 1px solid black; border-collapse:collapse;' >
+                                <article style='background-color: rgb(244,244,244); width:700px; border-radius:10px; padding:5px; text-align:center;'>
+                                <div align='center'>
+						                <table style='padding:5px; border: 1px solid black; border-collapse:collapse;' >
 							                <thead>
 								                <tr style='background-color: #dddddd;'>									
 									                <th scope='col' colspan='2' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Credenciales de Acceso</th>
@@ -358,28 +359,28 @@
 							                </thead>
 							                <tbody>
 								                <tr style='background-color: #ffffff;'>
-									                <td style='font-size:calc(10px + 0.290625vw); border: 1px solid black;'>Usuario:</td>
-									                <td style='font-size:calc(10px + 0.290625vw); border: 1px solid black;'><b>{oRespuesta.Data.UsuCorreoPersonalCuentaNueva}</b></td>
+									                <td width='250px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Usuario:</td>
+									                <td width='250px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'><b>{oRespuesta.Data.UsuCorreoPersonalCuentaNueva}</b></td>
 								                </tr>
 								                <tr style='background-color: #dddddd;'>
-									                <td style='font-size:calc(10px + 0.290625vw); border: 1px solid black;'>Contraseña:</td>
-									                <td style='font-size:calc(10px + 0.290625vw); border: 1px solid black;'><b>{oRespuesta.Message}</b></td>
+									                <td width='250px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Contraseña:</td>
+									                <td width='250px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'><b>{oRespuesta.Message}</b></td>
 								                </tr>			
 								
 							                </tbody>
 						                </table>
 				                </div>
-			                </article>
-
-                            <p style='font-size:calc(10px + 0.290625vw); text-align:justify; color:black;'>La contraseña que se le género es de forma temporal, por lo que al momento de accesar al sistema se le solicitará que cambie su contraseña,<br>
+			                    </article>
+                                </div>
+                            <p style='font-size:calc(12px + 0.290625vw); text-align:justify; color:black;'>La contraseña que se le género es de forma temporal, por lo que al momento de accesar al sistema se le solicitará que cambie su contraseña,<br>
                             la cual debe de tener la siguiente estructura:<br></p>
-                                <ul style='font-size:calc(10px + 0.290625vw); text-align:justify; color:black;'>
+                                <ul style='font-size:calc(12px + 0.290625vw); text-align:justify; color:black;'>
                                     <li>8 caracteres como mínimo</li>
                                     <li>Debe contener 1 número</li>
                                     <li>Contener una mayuscula</li>
                                     <li>Contener un carácter especial(#,$,!,?,etc.)</li>
                                 </ul>
-                            <p style='font-size:calc(10px + 0.290625vw); text-align:justify; color:black;'>Que tenga un excelente día.<br>
+                            <p style='font-size:calc(12px + 0.290625vw); text-align:justify; color:black;'>Que tenga un excelente día.<br>
                             NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD DEL SERVICIO.</p>
                             <footer>
 		                        <div align='center'>		
