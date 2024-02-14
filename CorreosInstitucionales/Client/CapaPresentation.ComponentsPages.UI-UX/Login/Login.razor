@@ -133,24 +133,22 @@
                                         <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption"/></Helper>
                                     </RadzenFormField>
 
-                                    <RadzenFormField Text="CURP" Placeholder="" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-3" Disabled="false">
+                                    <RadzenFormField Text="CURP" Placeholder="" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-4" Disabled="false">
                                         <Start><RadzenIcon Icon="document_scanner" /></Start>
                                         <ChildContent>
-                                            <RadzenTextBox Name="curp_reset" @bind-Value="@oRecuperarContraseñaCorreo.Curp" MinLength="0" MaxLength="18" 
-                                            @oninput="@((e) => oRecuperarContraseñaCorreo.Curp = e.Value.ToString().ToUpper())"
+                                            <RadzenTextBox Name="curp_reset" @bind-Value="@oRecuperarContraseñaCorreo.Curp" MinLength="0" MaxLength="18"
+                                                           @oninput="@((e) => oRecuperarContraseñaCorreo.Curp = e.Value.ToString().ToUpper())"
                                                            onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                                         </ChildContent>
-                                        <Helper>
-                                            
-                                        </Helper>
+                                        <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption" /></Helper>
                                     </RadzenFormField>
 
                                     <div class="row">
-                                        <div class="col-md-12 mt-5">
+                                        <div class="col-md-12 mt-4">
                                             <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                                         </div>
                                         <div class="col-md-12 d-grid gap-2 text-center">
-                                            <button type="submit" class="btn btn-success mt-5 mb-3" disabled="@DisablePostButton">
+                                            <button type="submit" class="btn btn-success mt-4 mb-3" disabled="@DisablePostButton">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
                                                     <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
                                                     <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5" />
@@ -317,7 +315,7 @@
     private ReCAPTCHA oReCAPTCHAComponent;
     // private bool ServerVerificatiing = false;
     private bool ValidReCAPTCHA = false;
-    private bool DisablePostButton => !ValidReCAPTCHA || string.IsNullOrEmpty(oRecuperarContraseñaCorreo.CorreoElectronicoPersonal) || !isSpinningHidden;
+    private bool DisablePostButton => !ValidReCAPTCHA || string.IsNullOrEmpty(oRecuperarContraseñaCorreo.CorreoElectronicoPersonal) || string.IsNullOrEmpty(oRecuperarContraseñaCorreo.Curp) || !isSpinningHidden;
     private void OnSuccess() => ValidReCAPTCHA = true;
     private void OnExpired() => ValidReCAPTCHA = false;
 

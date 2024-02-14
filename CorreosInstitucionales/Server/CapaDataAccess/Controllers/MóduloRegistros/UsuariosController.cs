@@ -221,7 +221,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             return Ok(oRespuesta);
         }
 
-        [HttpPut("resetPassword/{correoPersonal}")]
+        [HttpPut("resetPassword/{correoPersonal}/{curp}")]
         public async Task<IActionResult> ResetPassword(string correoPersonal, string curp)
         {
             Response<MpTbUsuario> oRespuesta = new();
@@ -246,7 +246,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     oRespuesta.Data = oUsuario;
                 }
                 else
-                    oRespuesta.Message = "No se encuentró registrado el Correo Electrónico. Si el problema persisite acudir a la Unidad Informática (UDI).";
+                    oRespuesta.Message = "No se encuentró registrado el Correo Electrónico y/o CURP. Si el problema persisite acudir a la Unidad Informática (UDI).";
             }
             catch (Exception ex)
             {
