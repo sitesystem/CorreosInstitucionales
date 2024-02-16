@@ -2,13 +2,13 @@
 </style>
 
 @*************************** Dashboard (Panel de Control) ***************************@
-<RadzenPanelMenuItem Text="Inicio (Panel de Control)" Icon="home" IconColor="@Colors.Primary" Path="Index" Style="font-variant: small-caps; font-size:16px;" class="nav-menu-hover" />
+<RadzenPanelMenuItem Text="Inicio (Panel de Control)" Icon="home" IconColor="@Colors.Primary" Path="Index" Style="font-size:16px;" class="nav-menu-hover" />
 <RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" class="nav-menu-hover" />
 
 <AuthorizeView Policy="[Rol] Usuario Solicitante">
     <Authorized>
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
-        <RadzenPanelMenuItem Text="@($@"SOLICITUDES DE TICKETS")" Icon="bookmarks" IconColor="@Colors.SecondaryLight" Expanded="@isExpanded" class="nav-menu-hover">
+        <RadzenPanelMenuItem Text="@($@"Solicitudes de Tickets")" Icon="bookmarks" IconColor="@Colors.SecondaryLight" Style="font-size:16px;" Expanded="@isExpanded" class="nav-menu-hover">
             @*************************** Levantamiento del Nuevo Ticket ***************************@
             <RadzenPanelMenuItem Text="Nueva Solicitud de Ticket" Icon="local_offer" IconColor="@Colors.Warning" Path="NuevaSolicitudTicket" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Pendientes y Atendidas ***************************@
@@ -24,14 +24,14 @@
 <AuthorizeView Policy="[Rol] Administrador">
     <Authorized>
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
-        <RadzenPanelMenuItem Text="Solicitudes (Tickets)" Icon="bookmarks" Expanded="true" class="nav-menu-hover">
+        <RadzenPanelMenuItem Text="Solicitudes (Tickets)" Icon="bookmarks" Style="font-size:16px;" Expanded="true" class="nav-menu-hover">
             @*************************** Solicitudes (Ticket's) Pendientes ***************************@
             <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" Path="SolicitudesPendientes" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Atendidas ***************************@
             <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" Path="SolicitudesAtendidas" class="nav-menu-hover" />
         </RadzenPanelMenuItem>
         @*************************** Módulo de Catálogos ***************************@
-        <RadzenPanelMenuItem Text="Catálogos" Icon="settings" Expanded="@isExpanded">
+        <RadzenPanelMenuItem Text="Catálogos" Icon="settings" Style="font-size:16px;" Expanded="@isExpanded">
             @*************************** catÁreasDeptos ***************************@
             <RadzenPanelMenuItem Text="Áreas / Departamentos" Icon="lan" Path="catalogo/areas_departamentos" class="rz-border-base-800" />
             @*************************** catExtensiones ***************************@
@@ -52,7 +52,7 @@
             <RadzenPanelMenuItem Text="Tipos de Personal" Icon="supervisor_account" Path="catalogo/tipos_personal" class="rz-border-base-800" />
         </RadzenPanelMenuItem>
         @*************************** tbUsuarios ***************************@
-        <RadzenPanelMenuItem Text="Usuarios" Icon="people_alt" Path="catalogo/usuarios" />
+        <RadzenPanelMenuItem Text="Lista de Usuarios" Icon="people_alt" Style="font-size:16px;" Path="catalogo/usuarios" />
     </Authorized>
     <Authorizing>
     </Authorizing>
@@ -61,9 +61,9 @@
 </AuthorizeView>
 
 @*************************** Perfil ***************************@
-<RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoDark" Path="PerfilUsuario" class="nav-menu-hover" />
+<RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoDark" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
 @*************************** Cerrar Sesión (LogOut) ***************************@
-<RadzenPanelMenuItem Text="Cerrar Sesión" Icon="logout" IconColor="@Colors.Danger" Click="@LogOut" class="nav-menu-hover" />
+<RadzenPanelMenuItem Text="Cerrar Sesión" Icon="logout" IconColor="@Colors.Danger" Style="font-size:16px;" Click="@LogOut" class="nav-menu-hover" />
 
 @code
 {
