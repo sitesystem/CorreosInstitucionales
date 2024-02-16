@@ -1,0 +1,25 @@
+﻿@inject Radzen.DialogService dialogService
+
+<div class="row mb-3">
+    <div class="col">
+        @mensaje
+    </div>
+</div>
+
+<div class="row">
+    <div class="offset-3 col-3">
+        <button type="button" class="btn btn-secondary form-control" @onclick=@(()=>dialogService.Close(false))>Cancelar</button>
+    </div>
+
+    <div class="col-3">
+        <button type="button" class="btn btn-primary form-control" @onclick=@(()=>dialogService.Close(true))>Aceptar</button>
+    </div>
+</div>
+
+@code
+{
+    [Parameter] public string mensaje { get; set; } = "¿Desea continuar?";
+
+    private void OnValidForm() => dialogService.Close(true);
+    private void OnCloseForm() => dialogService.Close(false);
+}
