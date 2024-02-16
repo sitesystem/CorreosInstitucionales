@@ -19,7 +19,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
-        public async Task<IActionResult> GetAllData(bool filterByStatus)
+        public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
         {
             Response<List<MpTbUsuario>> oResponse = new();
 

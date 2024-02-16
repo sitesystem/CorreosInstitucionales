@@ -15,7 +15,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
-        public async Task<IActionResult> GetAllData(int filterByStatus)
+        public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
         {
             Response<List<MtTbSolicitudesTicket>> oResponse = new();
 
@@ -23,8 +23,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             {
                 var list = new List<MtTbSolicitudesTicket>();
 
-                if (filterByStatus > 0)
-                    list = await _db.MtTbSolicitudesTickets.Where(st => st.SolIdEstadoSolicitud.Equals(filterByStatus)).ToListAsync();
+                if (filterByStatus)
+                    list = await _db.MtTbSolicitudesTickets.Where(st => !st.SolIdEstadoSolicitud.Equals(5)).ToListAsync();
                                     //   .OrderByDescending(x => x.Id)
                                     //   .Skip((actualPage - 1) * Utilities.REGISTERSPERPAGE)
                                     //   .Take(Utilities.REGISTERSPERPAGE)
