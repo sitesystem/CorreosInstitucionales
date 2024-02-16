@@ -44,7 +44,7 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListAll(servicioUsuario);
+            items = await WebUtils.ListByStatusAsync(servicioUsuario, false);
 
 
             StateHasChanged();
@@ -74,7 +74,7 @@
                 HttpResponseMessage response = await servicioUsuario.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListAll(servicioUsuario);
+                    items = await WebUtils.ListByStatusAsync(servicioUsuario, false);
                 }
             }
         }

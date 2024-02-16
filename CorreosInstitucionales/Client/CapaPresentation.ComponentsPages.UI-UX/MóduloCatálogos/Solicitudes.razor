@@ -1,0 +1,83 @@
+﻿@page "/catalogo/solicitudes"
+@inject DialogService DialogService
+
+@using System.Text.Json
+
+<table class="table table-hover shadow">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
+            <tr>
+                <td>
+                    @item.IdSolicitudTicket
+                    @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                    @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                    @item.SolIdUsuarioNavigation!.UsuNombre
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                        Editar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code
+{
+    //ÉSTE CÓDIGO VA EN LA PÁGINA DONDE SE ENCUENTRA EL LISTADO
+    private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
+
+    public List<RequestViewModel_EstadoSolicitud> cat_SolIdEstadoSolicitud { get; private set; } = new List<RequestViewModel_EstadoSolicitud>();
+    public List<RequestViewModel_TipoSolicitud> cat_SolIdTipoSolicitud { get; private set; } = new List<RequestViewModel_TipoSolicitud>();
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            items = await WebUtils.ListByStatusAsync(servicioSolicitud, false);
+
+            cat_SolIdEstadoSolicitud = await WebUtils.ListByStatusAsync(servicioEstadoSolicitud);
+            cat_SolIdTipoSolicitud = await WebUtils.ListByStatusAsync(servicioTipoSolicitud);
+            
+            StateHasChanged();
+        }
+    }
+
+    private async Task Editar(RequestDTO_Solicitud item)
+    {
+        string json = JsonSerializer.Serialize(item);
+        RequestDTO_Solicitud? registro = JsonSerializer.Deserialize<RequestDTO_Solicitud>(json);
+
+        if (registro is not null)
+        {
+            RequestDTO_Solicitud? result = await DialogService.OpenAsync<SolicitudEditor>
+                    (
+                        "Actualizar Datos",
+                        new Dictionary<string, object>() {
+                                {"registro", registro},
+                                {"cat_SolIdEstadoSolicitud", cat_SolIdEstadoSolicitud},
+                                {"cat_SolIdTipoSolicitud",cat_SolIdTipoSolicitud}
+                            },
+                        new DialogOptions() { ShowClose = false, Width = "75%" }
+                    );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+
+            if (result is not null)
+            {
+                HttpResponseMessage response = await servicioSolicitud.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
+                {
+                    items = await WebUtils.ListByStatusAsync(servicioSolicitud, false);
+                }
+            }
+        }
+    }
+}

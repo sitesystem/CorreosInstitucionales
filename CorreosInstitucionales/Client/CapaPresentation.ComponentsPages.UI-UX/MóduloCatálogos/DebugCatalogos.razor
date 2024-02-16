@@ -104,7 +104,7 @@
             {
                 cs_param_editor += $"[Parameter] public List<{control.ClassName}> cat_{control.Name} {{ get; set; }}  = new List<{control.ClassName}>();{Environment.NewLine}\t";
                 cs_param_list += $"public List<{control.ClassName}> cat_{control.Name} {{ get; private set; }}  = new List<{control.ClassName}>();{Environment.NewLine}\t";
-                cs_load_list += $"cat_{control.Name} = await WebUtils.ListAll({GetService(items, control.VarType)});{Environment.NewLine}\t";
+                cs_load_list += $"cat_{control.Name} = await WebUtils.ListByStatusAsync({GetService(items, control.VarType)});{Environment.NewLine}\t";
                 cs_param_list_modal = $"{{\"cat_{control.Name}\", cat_{control.Name}}}{Environment.NewLine}\t";
             }
         }
@@ -133,7 +133,7 @@
     {{
         if (firstRender)
         {{
-            items = await WebUtils.ListAll({service});
+            items = await WebUtils.ListAllAsync({service});
 
     {cs_load_list}
 
@@ -164,7 +164,7 @@
                 HttpResponseMessage response = await {service}.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {{
-                    items = await WebUtils.ListAll({service});
+                    items = await WebUtils.ListAllAsync({service});
                 }}
             }}
         }}

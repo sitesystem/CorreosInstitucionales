@@ -48,7 +48,7 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListAll(servicioPiso);
+            items = await WebUtils.ListByStatusAsync(servicioPiso, false);
             StateHasChanged();
         }
     }
@@ -75,7 +75,7 @@
                 HttpResponseMessage response = await servicioPiso.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListAll(servicioPiso);
+                    items = await WebUtils.ListByStatusAsync(servicioPiso, false);
                 }
             }
         }

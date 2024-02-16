@@ -52,10 +52,10 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListAll(servicioAreaDepto);
+            items = await WebUtils.ListByStatusAsync(servicioAreaDepto, false);
 
-            cat_AreIdEdificio = await WebUtils.ListAll(servicioEdificio);
-            cat_AreIdPiso = await WebUtils.ListAll(servicioPiso);
+            cat_AreIdEdificio = await WebUtils.ListByStatusAsync(servicioEdificio);
+            cat_AreIdPiso = await WebUtils.ListByStatusAsync(servicioPiso);
 
             StateHasChanged();
         }
@@ -85,7 +85,7 @@
                 HttpResponseMessage response = await servicioAreaDepto.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListAll(servicioAreaDepto);
+                    items = await WebUtils.ListByStatusAsync(servicioAreaDepto, false);
                 }
             }
         }
