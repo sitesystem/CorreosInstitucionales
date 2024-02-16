@@ -9,16 +9,24 @@ namespace CorreosInstitucionales.Shared.Utils
 {
     public static class WebUtils
     {
-        public static async Task<List<T>> ListAll<T>(IGenericService<T> service, bool filterByStatus = false)
+        public static async Task<List<T>> ListByStatusAsync<T>(IGenericService<T> service, bool filterByStatus = true)
         {
-            var response = await service.GetAllDataAsync(filterByStatus);
+            List<T> result = new List<T>();
 
-            if (response is not null)
+            try
             {
-                return response.Data ?? new List<T>();
+                var response = await service.GetAllDataByStatusAsync(filterByStatus);
+
+                if(response is not null && response.Data is not null)
+                {
+                    result = response.Data;
+                }
+            }catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR:{ex.Message}");
             }
 
-            return new List<T>();
+            return result;
         }
     }
 }

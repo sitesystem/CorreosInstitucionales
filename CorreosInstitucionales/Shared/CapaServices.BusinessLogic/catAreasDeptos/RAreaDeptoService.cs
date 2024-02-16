@@ -16,11 +16,11 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDepto
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
-        const string url = "/api/AreasDeptos/";
+        const string url = "/api/AreasDeptos";
 
-        public async Task<Response<List<RequestViewModel_AreaDepto>>?> GetAllDataAsync(bool filterByStatus)
+        public async Task<Response<List<RequestViewModel_AreaDepto>>?> GetAllDataByStatusAsync(bool filterByStatus)
         {
-            var response = await _httpClient.GetAsync($"{url}filterByStatus/{filterByStatus}");
+            var response = await _httpClient.GetAsync($"{url}/filterByStatus/{filterByStatus}");
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<Response<List<RequestViewModel_AreaDepto>>>(content, options: _options);
             return result;
@@ -28,7 +28,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDepto
 
         public async Task<Response<RequestViewModel_AreaDepto>?> GetDataByIdAsync(int? id)
         {
-            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_AreaDepto>>($"{url}filterById/{id}", options: _options);
+            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_AreaDepto>>($"{url}/filterById/{id}", options: _options);
             return result;
         }
 
@@ -52,7 +52,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDepto
 
         public async Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate)
         {
-            var response = await _httpClient.PutAsJsonAsync($"{url}editByIdStatus/{id}/{isActivate}",
+            var response = await _httpClient.PutAsJsonAsync($"{url}/editByIdStatus/{id}/{isActivate}",
                 new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true

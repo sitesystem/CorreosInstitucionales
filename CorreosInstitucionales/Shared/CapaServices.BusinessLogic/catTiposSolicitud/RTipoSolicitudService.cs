@@ -15,11 +15,11 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolic
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
-        const string url = "/api/TiposSolicitud/";
+        const string url = "/api/TiposSolicitud";
 
-        public async Task<Response<List<RequestViewModel_TipoSolicitud>>?> GetAllDataAsync(bool filterByStatus)
+        public async Task<Response<List<RequestViewModel_TipoSolicitud>>?> GetAllDataByStatusAsync(bool filterByStatus)
         {
-            var response = await _httpClient.GetAsync($"{url}filterByStatus/{filterByStatus}");
+            var response = await _httpClient.GetAsync($"{url}/filterByStatus/{filterByStatus}");
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<Response<List<RequestViewModel_TipoSolicitud>>>(content, options: _options);
             return result;
@@ -27,7 +27,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolic
 
         public async Task<Response<RequestViewModel_TipoSolicitud>?> GetDataByIdAsync(int? id)
         {
-            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_TipoSolicitud>>($"{url}filterById/{id}", options: _options);
+            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_TipoSolicitud>>($"{url}/filterById/{id}", options: _options);
             return result;
         }
 
@@ -51,7 +51,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolic
 
         public async Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate)
         {
-            var response = await _httpClient.PutAsJsonAsync($"{url}editByIdStatus/{id}/{isActivate}",
+            var response = await _httpClient.PutAsJsonAsync($"{url}/editByIdStatus/{id}/{isActivate}",
                 new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true

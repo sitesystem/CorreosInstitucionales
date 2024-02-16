@@ -15,19 +15,18 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificios
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
-        const string url = "/api/Edificios/";
+        const string url = "/api/Edificios";
 
-        public async Task<Response<List<RequestViewModel_Edificio>>?> GetAllDataAsync(bool filterByStatus)
+        public async Task<Response<List<RequestViewModel_Edificio>>?> GetAllDataByStatusAsync(bool filterByStatus)
         {
-            var response = await _httpClient.GetAsync($"{url}filterByStatus/{filterByStatus}");
+            var response = await _httpClient.GetAsync($"{url}/filterByStatus/{filterByStatus}");
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<Response<List<RequestViewModel_Edificio>>>(content, options: _options);
             return result;
         }
-
         public async Task<Response<RequestViewModel_Edificio>?> GetDataByIdAsync(int? id)
         {
-            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_Edificio>>($"{url}filterById/{id}", options: _options);
+            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_Edificio>>($"{url}/filterById/{id}", options: _options);
             return result;
         }
 
@@ -51,7 +50,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificios
 
         public async Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate)
         {
-            var response = await _httpClient.PutAsJsonAsync($"{url}editByIdStatus/{id}/{isActivate}",
+            var response = await _httpClient.PutAsJsonAsync($"{url}/editByIdStatus/{id}/{isActivate}",
                 new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true
