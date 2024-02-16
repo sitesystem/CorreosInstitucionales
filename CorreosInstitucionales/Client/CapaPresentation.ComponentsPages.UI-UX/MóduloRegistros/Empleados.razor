@@ -468,9 +468,9 @@ else
     {
         oLinkCURP = await servicioLink.GetDataByNameAsync("CURP");
         oLinkReducirTamañoArchivo = await servicioLink.GetDataByNameAsync("REDUCIR TAMAÑO ARCHIVO");
-        oAreasDeptos = await servicioAreaDepto.GetAllDataAsync(true);
+        oAreasDeptos = await servicioAreaDepto.GetAllDataByStatusAsync(true);
         oEscuela = await servicioEscuela.GetDataByIdAsync(1);
-        oNoExtensiones = await servicioNoExtension.GetAllDataAsync(true);
+        oNoExtensiones = await servicioNoExtension.GetAllDataByStatusAsync(true);
 
         if (ActionAddEdit == "agregar")
         {

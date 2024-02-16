@@ -546,7 +546,7 @@ else
         oLinkSAES = await servicioLink.GetDataByNameAsync("SAES");
         oLinkReducirTamañoArchivo = await servicioLink.GetDataByNameAsync("REDUCIR TAMAÑO ARCHIVO");
         oEscuela = await servicioEscuela.GetDataByIdAsync(1);
-        oCarreras = await servicioCarrera.GetAllDataAsync(true);
+        oCarreras = await servicioCarrera.GetAllDataByStatusAsync(true);
         
         if (ActionAddEdit == "agregar")
         {
