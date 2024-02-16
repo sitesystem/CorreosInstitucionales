@@ -31,7 +31,7 @@
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificios
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEscuelas
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEstadoSolicitud
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEstadosSolicitud
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisos
@@ -40,6 +40,7 @@
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catRoles
 
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbSolicitudesTickets
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
 
 @* Inyectar Interfaz de los Servicios *@
@@ -62,6 +63,9 @@
 @* Módulo de Registros *@
 @inject RUsuarioService servicioUsuario
 
+@* Módulo de Solicitudes *@
+@inject RSolicitudService servicioSolicitud
+
 @* Módulo de Catálogos *@
 @inject RAreaDeptoService servicioAreaDepto
 @inject RCarreraService servicioCarrera
@@ -74,4 +78,4 @@
 @inject RTipoSolicitudService servicioTipoSolicitud
 
 @inject RRolesService servicioRoles
-@inject REstadoSolicitudService servicioEstadoSolicitud
+@inject REstadosSolicitudService servicioEstadoSolicitud
