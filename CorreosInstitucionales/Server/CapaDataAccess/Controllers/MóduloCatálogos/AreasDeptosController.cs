@@ -9,7 +9,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
-    public class AreasDeptosController([FromKeyedServices("areaDeptoService")] IGenericService<McCatAreasDepto, RequestViewModel_AreaDepto> areaDeptoService) : ControllerBase
+    public class AreasDeptosController(DbCorreosInstitucionalesUpiicsaContext _db) : ControllerBase
     {
         private readonly IGenericService<McCatAreasDepto, RequestViewModel_AreaDepto> _areaDeptoService = areaDeptoService;
 
