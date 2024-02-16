@@ -25,6 +25,8 @@
     <Authorized>
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
         <RadzenPanelMenuItem Text="Solicitudes (Tickets)" Icon="bookmarks" Expanded="true" class="nav-menu-hover">
+            @*************************** Nueva Solicitude  ***************************@
+            <RadzenPanelMenuItem Text="Nueva Solicitud" Icon="sell" Path="NuevaSolicitudTicket" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Pendientes ***************************@
             <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" Path="SolicitudesPendientes" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Atendidas ***************************@
@@ -53,6 +55,7 @@
         </RadzenPanelMenuItem>
         @*************************** tbUsuarios ***************************@
         <RadzenPanelMenuItem Text="Usuarios" Icon="people_alt" Path="catalogo/usuarios" />
+        <RadzenPanelMenuItem Text="Solicitudes" Icon="ticket" Path="catalogo/solicitudes" />
     </Authorized>
     <Authorizing>
     </Authorizing>
