@@ -13,23 +13,23 @@
 
 <!-- Encabezado de Página (Header Fixed-Top) -->
 <header>
-    <nav class="navbar header fixed-top">
-        <div class="container">
-            <RadzenHeader class="rz-border-radius-0 rz-py-0" Style="border-bottom: 10px solid #076633;">
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" Class="w-100">
-                    <RadzenImage Path="./pleca_saci.png" Style="height:100px;" AlternateText="pleca saci" class="img-fluid rz-my-0" />
-                    <RadzenImage Path="./logo_ipn.png" Style="height:100px;" AlternateText="logo ipn" class="img-fluid rz-my-0" />
-                    <RadzenImage Path="./logo_upiicsa.png" Style="height:100px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />
-                    <RadzenImage Path="./logo_saci.png" Style="height:100px;" AlternateText="logo saci" class="img-fluid rz-my-0" />
-                    <RadzenImage Path="./pleca_ipn.png" Style="height:100px;" AlternateText="pleca ipn" class="img-fluid rz-my-0" />
-                </RadzenStack>
-            </RadzenHeader>
-        </div>
-    </nav>
+    <RadzenHeader class="rz-border-radius-0 rz-py-0 rz-background-color-base-100" Style="border-bottom: 8px solid #076633;">
+        <RadzenImage Path="./header_saci_2.png" Style="" AlternateText="SACI - Sistema de Atención para Correos Institucionales" class="img-fluid rz-my-0" />
+        @*
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="0px" Class="w-100">
+        <RadzenImage Path="./pleca_saci.png" Style="height:100px;" AlternateText="pleca saci" class="img-fluid rz-my-0" />
+        <RadzenImage Path="./logo_ipn.png" Style="height:100px;" AlternateText="logo ipn" class="img-fluid rz-my-0" />
+        <RadzenImage Path="./logo_upiicsa.png" Style="height:100px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />
+        <RadzenImage Path="./logo_saci.png" Style="height:100px;" AlternateText="logo saci" class="img-fluid rz-my-0" />
+        <RadzenImage Path="./pleca_ipn.png" Style="height:100px;" AlternateText="pleca ipn" class="img-fluid rz-my-0" />
+        </RadzenStack>
+        *@
+    </RadzenHeader>
 </header>
 <hr class="d-block rz-my-10 rz-color-base-100" />
+<hr class="d-none d-xxl-block rz-my-10 rz-color-base-100" />
 <div class="container rz-background-color-base-800 rz-p-3 rz-border-radius-1">
-    <div class="row align-items-center rz-mt-10 rz-mb-5">
+    <div class="row align-items-center">
         <div class="col">
             <RadzenCard Variant="Variant.Filled" class="rz-background-color-white rz-shadow-2 rz-border-radius-1 rz-py-2 rz-mb-3">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" Class="w-100">
@@ -90,7 +90,7 @@
         </div>
     </div>
 </div>
-<hr class="d-block rz-color-base-100 rz-my-5" />
+<hr class="d-block rz-color-base-100 rz-my-7" />
 <!-- Pie de Página (Footer Fixed-Bottom) -->
 <footer>
     <nav class="navbar bg-body-tertiary bg-dark fixed-bottom" data-bs-theme="dark">
