@@ -1,0 +1,101 @@
+﻿@inject Radzen.DialogService dialogService
+
+<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+    <div class="alert alert-info">
+        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+    </div>
+    <DataAnnotationsValidator/>
+    <div class="row"><!--ROW-->
+        <div class="col-6 mb-2">
+            <span class="fw-bold">IdSolicitudTicket</span>
+            <InputNumber @bind-Value="@registro.IdSolicitudTicket" class="  form-control" />
+            <ValidationMessage For="()=>registro.IdSolicitudTicket"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">SolIdTipoSolicitud</span>
+            <InputNumber @bind-Value="@registro.SolIdTipoSolicitud" class="  form-control" />
+            <ValidationMessage For="()=>registro.SolIdTipoSolicitud"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">SolIdUsuario</span>
+            <InputNumber @bind-Value="@registro.SolIdUsuario" class="  form-control" />
+            <ValidationMessage For="()=>registro.SolIdUsuario"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">SolCapturaEscaneoAntivirus</span>
+            <InputText @bind-Value="@registro.SolCapturaEscaneoAntivirus" class="  form-control" />
+            <ValidationMessage For="()=>registro.SolCapturaEscaneoAntivirus"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">SolCapturaCuentaBloqueada</span>
+            <InputText @bind-Value="@registro.SolCapturaCuentaBloqueada" class="  form-control" />
+            <ValidationMessage For="()=>registro.SolCapturaCuentaBloqueada"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">SolCapturaError</span>
+            <InputText @bind-Value="@registro.SolCapturaError" class="  form-control" />
+            <ValidationMessage For="()=>registro.SolCapturaError"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">SolFechaHoraCreacion</span>
+            <InputDate @bind-Value="@registro.SolFechaHoraCreacion" class="  form-control" />
+            <ValidationMessage For="()=>registro.SolFechaHoraCreacion"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">SolIdEstadoSolicitud</span>
+            <InputNumber @bind-Value="@registro.SolIdEstadoSolicitud" class="  form-control" />
+            <ValidationMessage For="()=>registro.SolIdEstadoSolicitud"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">SolIdEstadoSolicitud</span>
+            <InputSelect @bind-Value="@registro.SolIdEstadoSolicitud" class="  form-select">@foreach (var item in cat_SolIdEstadoSolicitud)
+                {
+                    <option value="@item.IdEstadoSolicitud">@item.EdosolNombreEstado</option>
+                }</InputSelect>
+                <ValidationMessage For="()=>registro.SolIdEstadoSolicitud"></ValidationMessage>
+            </div>
+
+            <div class="col-6 mb-2">
+                <span class="fw-bold">SolIdTipoSolicitud</span>
+                <InputSelect @bind-Value="@registro.SolIdTipoSolicitud" class="  form-select">@foreach (var item in cat_SolIdTipoSolicitud)
+                {
+                    <option value="@item.IdTipoSolicitud">@item.TiposolDescripcion</option>
+                }</InputSelect>
+                <ValidationMessage For="()=>registro.SolIdTipoSolicitud"></ValidationMessage>
+            </div>
+
+
+    </div><!--ROW-->
+    <!--
+    <div class="row">
+        <div class="offset-8 col-2 mb-2">
+            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+        </div>
+
+        <div class="col-2 mb-2">
+            <button type="submit" class="btn btn-primary form-control">
+                Guardar
+            </button>
+        </div>
+    </div>
+    -->
+</EditForm>
+
+@code
+{
+    [Parameter] public RequestDTO_Solicitud registro { get; set; } = new RequestDTO_Solicitud();
+
+    [Parameter] public List<RequestViewModel_EstadoSolicitud> cat_SolIdEstadoSolicitud { get; set; } = new List<RequestViewModel_EstadoSolicitud>();
+    [Parameter] public List<RequestViewModel_TipoSolicitud> cat_SolIdTipoSolicitud { get; set; } = new List<RequestViewModel_TipoSolicitud>();
+    
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}

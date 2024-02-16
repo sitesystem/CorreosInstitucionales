@@ -49,7 +49,7 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListAll(servicioEdificio);
+            items = await WebUtils.ListByStatusAsync(servicioEdificio, false);
             StateHasChanged();
         }
     }
@@ -76,7 +76,7 @@
                 HttpResponseMessage response = await servicioEdificio.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListAll(servicioEdificio);
+                    items = await WebUtils.ListByStatusAsync(servicioEdificio, false);
                 }
             }
         }

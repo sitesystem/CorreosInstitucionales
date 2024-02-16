@@ -15,11 +15,11 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPerso
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
-        const string url = "/api/TiposPersonal/";
+        const string url = "/api/TiposPersonal";
 
-        public async Task<Response<List<RequestViewModel_TipoPersonal>>?> GetAllDataAsync(bool filterByStatus)
+        public async Task<Response<List<RequestViewModel_TipoPersonal>>?> GetAllDataByStatusAsync(bool filterByStatus)
         {
-            var response = await _httpClient.GetAsync($"{url}filterByStatus/{filterByStatus}");
+            var response = await _httpClient.GetAsync($"{url}/filterByStatus/{filterByStatus}");
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<Response<List<RequestViewModel_TipoPersonal>>>(content, options: _options);
             return result;
@@ -27,7 +27,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPerso
 
         public async Task<Response<RequestViewModel_TipoPersonal>?> GetDataByIdAsync(int? id)
         {
-            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_TipoPersonal>>($"{url}filterById/{id}", options: _options);
+            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_TipoPersonal>>($"{url}/filterById/{id}", options: _options);
             return result;
         }
 
@@ -51,7 +51,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPerso
 
         public async Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate)
         {
-            var response = await _httpClient.PutAsJsonAsync($"{url}editByIdStatus/{id}/{isActivate}",
+            var response = await _httpClient.PutAsJsonAsync($"{url}/editByIdStatus/{id}/{isActivate}",
                 new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true

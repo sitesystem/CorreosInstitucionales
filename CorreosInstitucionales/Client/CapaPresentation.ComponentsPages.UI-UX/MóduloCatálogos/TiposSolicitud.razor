@@ -49,7 +49,7 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListAll(servicioTipoSolicitud);
+            items = await WebUtils.ListByStatusAsync(servicioTipoSolicitud, false);
 
 
 
@@ -80,7 +80,7 @@
                 HttpResponseMessage response = await servicioTipoSolicitud.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListAll(servicioTipoSolicitud);
+                    items = await WebUtils.ListByStatusAsync(servicioTipoSolicitud, false);
                 }
             }
         }

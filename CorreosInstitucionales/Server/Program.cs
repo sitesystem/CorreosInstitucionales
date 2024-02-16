@@ -118,7 +118,6 @@ builder.Services.AddAuthentication(auth =>
 
 // Dependency Injection (Inyectar e Implementar la Interfaz)
 builder.Services.AddScoped<ILoginAuthService, RLoginAuthService>();
-builder.Services.AddKeyedScoped<IGenericService<McCatAreasDepto, RequestViewModel_AreaDepto>, RGenericService>("areaDeptoService");
 builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
 
 /******************************************************************************************************/

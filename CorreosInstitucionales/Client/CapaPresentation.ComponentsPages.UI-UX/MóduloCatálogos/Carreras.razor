@@ -51,7 +51,7 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListAll(servicioCarrera);
+            items = await WebUtils.ListByStatusAsync(servicioCarrera, false);
             StateHasChanged();
         }
     }
@@ -79,7 +79,7 @@
                 HttpResponseMessage response = await servicioCarrera.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListAll(servicioCarrera);
+                    items = await WebUtils.ListByStatusAsync(servicioCarrera, false);
                 }
             }
         }

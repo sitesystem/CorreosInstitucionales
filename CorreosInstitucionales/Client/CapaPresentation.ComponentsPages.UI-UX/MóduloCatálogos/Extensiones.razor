@@ -51,9 +51,9 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListAll(servicioNoExtension);
+            items = await WebUtils.ListByStatusAsync(servicioNoExtension, false);
 
-            cat_ExtIdAreaDepto = await WebUtils.ListAll(servicioAreaDepto);
+            cat_ExtIdAreaDepto = await WebUtils.ListByStatusAsync(servicioAreaDepto);
 
 
             StateHasChanged();
@@ -83,7 +83,7 @@
                 HttpResponseMessage response = await servicioNoExtension.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListAll(servicioNoExtension);
+                    items = await WebUtils.ListByStatusAsync(servicioNoExtension, false);
                 }
             }
         }

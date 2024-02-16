@@ -53,7 +53,7 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListAll(servicioLink);
+            items = await WebUtils.ListByStatusAsync(servicioLink, false);
 
 
 
@@ -84,7 +84,7 @@
                 HttpResponseMessage response = await servicioLink.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListAll(servicioLink);
+                    items = await WebUtils.ListByStatusAsync(servicioLink, false);
                 }
             }
         }

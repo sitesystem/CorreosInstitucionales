@@ -15,18 +15,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
-        public async Task<IActionResult> GetAllData(bool filterByStatus)
+        public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
         {
             Response<List<McCatRole>> oResponse = new();
 
             try
             {
-                var list = new List<McCatRole>();
 
-                //if (filterByStatus)
-                //    list = await db.MceCatRoles.Where(r => r..Equals(filterByStatus)).ToListAsync();
-                //else
-                list = await _db.McCatRoles.ToListAsync();
+                var list = await _db.McCatRoles.ToListAsync();
 
                 oResponse.Success = 1;
                 oResponse.Data = list;

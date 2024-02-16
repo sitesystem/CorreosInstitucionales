@@ -10,7 +10,7 @@ using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificios;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEscuelas;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEstadoSolicitud;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEstadosSolicitud;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisos;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catRoles;
@@ -21,6 +21,7 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 using CorreosInstitucionales.Client.Shared.Components.Utils;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbSolicitudesTickets;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -46,12 +47,15 @@ builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
 // Inyección de Dependencias - Módulo de Registro del Usuario
 builder.Services.AddScoped<RUsuarioService>();
 
+// Inyección de Dependencias - Módulo de Registro de Solicitud
+builder.Services.AddScoped<RSolicitudService>();
+
 // Inyección de Dependencias - Módulo de Catálogos
 builder.Services.AddScoped<RAreaDeptoService>();
 builder.Services.AddScoped<RCarreraService>();
 builder.Services.AddScoped<REdificioService>();
 builder.Services.AddScoped<REscuelaService>();
-builder.Services.AddScoped<REstadoSolicitudService>();
+builder.Services.AddScoped<REstadosSolicitudService>();
 builder.Services.AddScoped<RLinkService>();
 builder.Services.AddScoped<RNoExtensionService>();
 builder.Services.AddScoped<RRolesService>();

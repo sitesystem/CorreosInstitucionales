@@ -51,7 +51,7 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListAll(servicioEscuela);
+            items = await WebUtils.ListByStatusAsync(servicioEscuela, false);
 
 
 
@@ -82,7 +82,7 @@
                 HttpResponseMessage response = await servicioEscuela.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListAll(servicioEscuela);
+                    items = await WebUtils.ListByStatusAsync(servicioEscuela, false);
                 }
             }
         }
