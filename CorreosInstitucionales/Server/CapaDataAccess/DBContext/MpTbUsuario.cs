@@ -205,9 +205,8 @@ public partial class MpTbUsuario
     /// <summary>
     /// Estatus { 0 = Inactivo, 1 = Activo }
     /// </summary>
-    [Required]
     [Column("usuStatus")]
-    public bool? UsuStatus { get; set; }
+    public bool UsuStatus { get; set; }
 
     [JsonIgnore]
     [InverseProperty("SolIdUsuarioNavigation")]
@@ -223,9 +222,9 @@ public partial class MpTbUsuario
 
     [ForeignKey("UsuIdRol")]
     [InverseProperty("MpTbUsuarios")]
-    public virtual McCatRole UsuIdRolNavigation { get; set; } = null!;
+    public virtual McCatRole? UsuIdRolNavigation { get; set; } = null!;
 
     [ForeignKey("UsuIdTipoPersonal")]
     [InverseProperty("MpTbUsuarios")]
-    public virtual McCatTiposPersonal UsuIdTipoPersonalNavigation { get; set; } = null!;
+    public virtual McCatTiposPersonal? UsuIdTipoPersonalNavigation { get; set; } = null!;
 }

@@ -57,7 +57,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-                var list = await _db.McCatNoExtensions
+                var item = await _db.McCatNoExtensions
                                     .Include(e => e.ExtIdAreaDeptoNavigation)
                                     .ThenInclude(a => a.AreIdEdificioNavigation)
                                     .Include(e => e.ExtIdAreaDeptoNavigation)
@@ -65,7 +65,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                                     .FirstOrDefaultAsync(e => e.IdExtension == id);
 
                 oResponse.Success = 1;
-                oResponse.Data = list;
+                oResponse.Data = item;
             }
             catch (Exception ex)
             {
@@ -87,7 +87,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                     IdExtension = model.IdExtension,
                     ExtNoExtension = model.ExtNoExtension,
                     ExtIdAreaDepto = model.ExtIdAreaDepto,
-                    ExtStatus = model.ExtStatus,
+                    ExtStatus = true, // model.ExtStatus,
                     ExtIdAreaDeptoNavigation = null,
                 };
 

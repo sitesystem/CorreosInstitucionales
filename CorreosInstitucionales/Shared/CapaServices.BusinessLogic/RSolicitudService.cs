@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 
-namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbSolicitudesTickets
+namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 {
     public class RSolicitudService(HttpClient httpClient) : IGenericService<RequestDTO_Solicitud>
     {
@@ -31,33 +31,50 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbSolicitudes
             return result;
         }
 
-        public async Task<HttpResponseMessage> AddDataAsync(RequestDTO_Solicitud oUsuario)
+        public async Task<Response<RequestDTO_Solicitud>?> GetDataByIdUsuarioStatusAsync(int filterByIdUsuarioStatus)
+        {
+            var result = await _httpClient.GetFromJsonAsync<Response<RequestDTO_Solicitud>>($"{url}/filterByIdUsuarioStatus/{filterByIdUsuarioStatus}", options: _options);
+            return result;
+        }
+
+        public async Task<HttpResponseMessage> AddDataAsync(RequestDTO_Solicitud oSolicitud)
         {
             // var json = JsonSerializer.Serialize(oUsuario);
             // var content = new StringContent(json, Encoding.UTF8, "application/json");
             // var response = await _httpClient.PostAsync(url, content);
-            var response = await _httpClient.PostAsJsonAsync(url, oUsuario, options: _options);
+            var response = await _httpClient.PostAsJsonAsync(url, oSolicitud, options: _options);
             return response;
         }
 
-        public async Task<HttpResponseMessage> EditDataAsync(RequestDTO_Solicitud oUsuario)
+        public async Task<HttpResponseMessage> EditDataAsync(RequestDTO_Solicitud oSolicitud)
         {
             // var json = JsonSerializer.Serialize(oUsuario);
             // var content = new StringContent(json, Encoding.UTF8, "application/json");
             // var response = await _httpClient.PutAsync(url, content);
-            var response = await _httpClient.PutAsJsonAsync(url, oUsuario, options: _options);
+            var response = await _httpClient.PutAsJsonAsync(url, oSolicitud, options: _options);
             return response;
         }
 
-        public async Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate)
+        public async Task<HttpResponseMessage> EditStatusByIdAsync(int id, int status)
         {
-            var response = await _httpClient.PutAsJsonAsync($"{url}/editByIdStatus/{id}/{isActivate}",
+            var response = await _httpClient.PutAsJsonAsync($"{url}/editStatusById/{id}/{status}",
                 new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
             return response;
+        }
+
+        public async Task<HttpResponseMessage> EncuestaCalidadAsync(RequestDTO_EncuestaCalidad oSolicitudEncuestaCalidad)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"{url}/encuesta/calidad", oSolicitudEncuestaCalidad, options: _options);
+            return response;
+        }
+
+        public Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate)
+        {
+            throw new NotImplementedException();
         }
     }
 }

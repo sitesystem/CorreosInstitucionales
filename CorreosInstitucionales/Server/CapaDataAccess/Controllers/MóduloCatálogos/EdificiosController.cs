@@ -123,7 +123,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
             try
             {
                 McCatEdificio? oEdificio = await _db.McCatEdificios.FindAsync(id);
-                //db.Remove(oPersona);
+                // _db.Remove(oPersona);
 
                 if (oEdificio != null)
                 {

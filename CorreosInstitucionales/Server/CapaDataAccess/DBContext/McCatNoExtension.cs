@@ -32,9 +32,8 @@ public partial class McCatNoExtension
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>
-    [Required]
     [Column("extStatus")]
-    public bool? ExtStatus { get; set; }
+    public bool ExtStatus { get; set; }
 
     [ForeignKey("ExtIdAreaDepto")]
     [InverseProperty("McCatNoExtensions")]

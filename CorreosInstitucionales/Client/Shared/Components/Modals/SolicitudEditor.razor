@@ -93,8 +93,9 @@
 {
     [Parameter] public RequestDTO_Solicitud registro { get; set; } = new RequestDTO_Solicitud();
 
-    [Parameter] public List<RequestViewModel_EstadoSolicitud> cat_SolIdEstadoSolicitud { get; set; } = new List<RequestViewModel_EstadoSolicitud>();
-    [Parameter] public List<RequestViewModel_TipoSolicitud> cat_SolIdTipoSolicitud { get; set; } = new List<RequestViewModel_TipoSolicitud>();
+    [Parameter] public List<RequestViewModel_EstadoSolicitud> cat_SolIdEstadoSolicitud { get; set; } = new();
+    [Parameter] public List<RequestViewModel_TipoSolicitud> cat_SolIdTipoSolicitud { get; set; } = new();
+    [Parameter] public List<RequestDTO_Usuario> cat_SolIdUsuario { get; set; } = new();
     
     private void OnValidForm() => dialogService.Close(registro);
     private void OnCloseForm() => dialogService.Close(null);

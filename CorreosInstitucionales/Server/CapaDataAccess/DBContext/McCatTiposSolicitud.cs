@@ -25,9 +25,8 @@ public partial class McCatTiposSolicitud
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>
-    [Required]
     [Column("tiposolStatus")]
-    public bool? TiposolStatus { get; set; }
+    public bool TiposolStatus { get; set; }
 
     [JsonIgnore]
     [InverseProperty("SolIdTipoSolicitudNavigation")]

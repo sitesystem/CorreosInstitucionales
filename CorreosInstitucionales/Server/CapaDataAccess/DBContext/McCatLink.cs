@@ -34,7 +34,6 @@ public partial class McCatLink
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>
-    [Required]
     [Column("linkStatus")]
-    public bool? LinkStatus { get; set; }
+    public bool LinkStatus { get; set; }
 }

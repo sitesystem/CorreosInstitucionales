@@ -1,34 +1,261 @@
 ﻿@page "/NuevaSolicitudTicket"
-@* attribute [Authorize(Policy = "[Rol] Usuario Solicitante")] *@
 
-<PageTitle>@Title</PageTitle>
+@attribute [Authorize(Policy = "[Rol] Usuario Solicitante")]
 
-<SolicitudEditor registro="registro" 
+<PageTitle>SACI | Nueva Solicitud-Ticket</PageTitle>
+
+<style type="text/css">
+    .circle-border {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        color: green;
+        width: 60px;
+        height: 60px;
+        border: 5px solid rgb(215,215,215);
+        border-radius: 50%;
+    }
+</style>
+
+@* <SolicitudEditor registro="registro" 
     cat_SolIdEstadoSolicitud="cat_SolIdEstadoSolicitud"
     cat_SolIdTipoSolicitud="cat_SolIdTipoSolicitud"
     cat_SolIdUsuario="cat_SolIdUsuario"
-/>
+/> *@
+
+<RadzenCard Variant="Variant.Filled" Class="mb-3">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.NoWrap" Gap="20px" class="">
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-tag-fill" viewBox="0 0 16 16">
+            <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+        </svg>
+        <RadzenText TextStyle="TextStyle.H3" class="rz-color-base-800">Nueva Solicitud-Ticket</RadzenText>
+    </RadzenStack>
+</RadzenCard>
+
+@if (oTiposSolicitud is not null && oTiposSolicitud.Data != null)
+{
+    <RadzenRow AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Gap="1rem" class="">
+        <RadzenColumn Size="12">
+            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="15px" class="">
+                <RadzenCard Variant="Variant.Filled" class="">
+                    <RadzenFieldset AllowCollapse="true" ExpandTitle="Levantar Nueva Solicitud-Ticket" CollapseTitle="Levantar Nueva Solicitud-Ticket" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3">
+                        <HeaderTemplate>
+                            <span class="d-inline-flex align-items-center align-middle">
+                                <RadzenIcon Icon="sell" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Levantar Nueva Solicitud-Ticket</b>
+                            </span>
+                        </HeaderTemplate>
+                        <ChildContent>
+                            <EditForm Model="@oSolicitudTicket" OnValidSubmit="@OnValidHandled_Registrar" OnInvalidSubmit="@OnInvalidHandled_ScrollToTop">
+                                
+                                <DataAnnotationsValidator />
+
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6">
+                                        <RadzenFormField Text="Motivo de la Solicitud" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
+                                            <ChildContent>
+                                                <RadzenListBox Context="contexto"
+                                                               Name="@($@"tipo_solicitud_list")"
+                                                               @bind-Value="@oSolicitudTicket.SolIdTipoSolicitud"
+                                                               TValue="int"
+                                                               Data="@oTiposSolicitud.Data"
+                                                               ValueProperty="IdTipoSolicitud"
+                                                               TextProperty="TiposolDescripcion"
+                                                               Multiple="false"
+                                                               AllowClear="true"
+                                                               AllowFiltering="true"
+                                                               AllowVirtualization="true"
+                                                               Placeholder="Selecciona una opción"
+                                                               FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                                               FilterOperator="StringFilterOperator.Contains"
+                                                               Style="width: 100%; height:300px"
+                                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Selecciona una opción" }})">
+                                                    <Template>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square-fill text-success" viewBox="0 0 16 16">
+                                                            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z" />
+                                                        </svg>&ensp;
+                                                        @((contexto as RequestViewModel_TipoSolicitud)?.TiposolDescripcion)
+                                                    </Template>
+                                                </RadzenListBox>
+                                            </ChildContent>
+                                            <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolIdTipoSolicitud)" />
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6">
+                                        <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.Div" TextAlign="TextAlign.JustifyAll">
+                                            <a href="@oLinkReducirTamañoArchivo.Data.LinkEnlace" target="_blank" class="icon-link icon-link-hover">
+                                                Comprimir y/o reducir el tamaño del <strong>Archivo PDF (Máx. 2MB)</strong>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
+                                                    <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+                                                </svg>
+                                            </a>
+                                        </RadzenText>
+
+                                        <RadzenFormField Text="Archivo de la Captura del Escaneo de Antivirus" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
+                                            <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                @* image/*, .pdf, .doc, .docx *@
+                                                @* <RadzenUpload @ref="oUploadFile_CURP" Url="" Accept=".pdf"
+                                            Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                            Change=@(args => OnChangeFiles(args, CURP))
+                                            Error=@(args => OnErrorFiles(args, "FileInput"))
+                                            InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                            Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                            Complete="@(args => OnCompleteFiles(args))" /> *@
+                                            </ChildContent>
+                                            <Helper></Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaEscaneoAntivirus)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus)" />
+
+                                        <RadzenFormField Text="Archivo de la Captura de la Cuenta Bloqueada" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
+                                            <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                @* image/*, .pdf, .doc, .docx *@
+                                                @* <RadzenUpload @ref="oUploadFile_CURP" Url="" Accept=".pdf"
+                                            Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                            Change=@(args => OnChangeFiles(args, CURP))
+                                            Error=@(args => OnErrorFiles(args, "FileInput"))
+                                            InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                            Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                            Complete="@(args => OnCompleteFiles(args))" /> *@
+                                            </ChildContent>
+                                            <Helper></Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaCuentaBloqueada)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada)" />
+
+                                        <RadzenFormField Text="Archivo de la Captura del Error" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
+                                            <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                @* image/*, .pdf, .doc, .docx *@
+                                                @* <RadzenUpload @ref="oUploadFile_CURP" Url="" Accept=".pdf"
+                                            Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                            Change=@(args => OnChangeFiles(args, CURP))
+                                            Error=@(args => OnErrorFiles(args, "FileInput"))
+                                            InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                            Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                            Complete="@(args => OnCompleteFiles(args))" /> *@
+                                            </ChildContent>
+                                            <Helper></Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaError)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaError)" />
+
+                                        <RadzenFormField Text="Observaciones" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
+                                            <Start><RadzenIcon Icon="message" IconColor="@Colors.Base400" /></Start>
+                                            <ChildContent>
+                                                <RadzenTextArea Name="@($@"observaciones")" Placeholder="Escribir un comentario, nota o aclaración..."
+                                                                @bind-Value="@oSolicitudTicket.SolObservacionesSolicitud" Cols="30" Rows="3"
+                                                                MinLength="1" MaxLength="300" class="w-100" aria-label="TextArea" Disabled="false" />
+                                            </ChildContent>
+                                            <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolObservacionesSolicitud)" />
+                                    </div>
+                                </div>
+
+                            </EditForm>
+                        </ChildContent>
+                    </RadzenFieldset>
+                </RadzenCard>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+}
+else
+{
+    <LoadingComponent />
+}
 
 @code
-    {
-    string Title = "Registro de Solicitud";
-    RequestDTO_Solicitud registro = new RequestDTO_Solicitud();
+{
+    @*///////////////////////////////////////////////  INICIALIZAR OBJETOS Y OBTENER DATA ASYNC  ///////////////////////////////////////////////*@
+    private Response<RequestDTO_Usuario>? oResponseUsuario = new();
+    private Response<List<RequestViewModel_TipoSolicitud>?> oTiposSolicitud = new();
+    private RequestDTO_Solicitud oSolicitudTicket = new();
 
-    public List<RequestViewModel_EstadoSolicitud> cat_SolIdEstadoSolicitud { get; private set; } = new List<RequestViewModel_EstadoSolicitud>();
-    public List<RequestViewModel_TipoSolicitud> cat_SolIdTipoSolicitud { get; private set; } = new List<RequestViewModel_TipoSolicitud>();
-    public List<RequestDTO_Usuario> cat_SolIdUsuario { get; private set; } = new List<RequestDTO_Usuario>();
+    public Response<RequestViewModel_Link>? oLinkReducirTamañoArchivo = new();
+    private Response<RequestViewModel_Escuela>? oEscuela = new();
+
+    // public List<RequestViewModel_EstadoSolicitud> cat_SolIdEstadoSolicitud { get; private set; } = new();
+    // public List<RequestViewModel_TipoSolicitud> cat_SolIdTipoSolicitud { get; private set; } = new();
+    // public List<RequestDTO_Usuario> cat_SolIdUsuario { get; private set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await servicioAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            int idTipoPersonal = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "TipoPersonal")?.Value);
+            int idUsuario = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
+
+            oTiposSolicitud = await servicioTipoSolicitud.GetAllDataByStatusAsync(true);
+            oLinkReducirTamañoArchivo = await servicioLink.GetDataByNameAsync("REDUCIR TAMAÑO ARCHIVO");
+            oEscuela = await servicioEscuela.GetDataByIdAsync(1);
+
+            if (idTipoPersonal != 2)
+                oTiposSolicitud.Data = oTiposSolicitud.Data.Where(ts => ts.IdTipoSolicitud != 4).ToList();
+
+            oResponseUsuario = await servicioUsuario.GetDataByIdAsync(idUsuario);
+
+            @* DATOS ID DE LA SOLICITUD-TICKET *@
+            oSolicitudTicket.IdSolicitudTicket = 0;
+            oSolicitudTicket.SolToken = Guid.NewGuid().ToString();
+            @* DATOS DE LA SOLICITUD-TICKET *@
+            oSolicitudTicket.SolIdTipoSolicitud = 0;
+            oSolicitudTicket.SolIdUsuario = oResponseUsuario.Data.IdUsuario;
+            oSolicitudTicket.SolCapturaEscaneoAntivirus = "";
+            oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 1L;
+            oSolicitudTicket.SolCapturaCuentaBloqueada = "";
+            oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada = 1L;
+            oSolicitudTicket.SolCapturaError = "";
+            oSolicitudTicket.SolFileSizeCapturaError = 1L;
+            oSolicitudTicket.SolObservacionesSolicitud = "";
+            oSolicitudTicket.SolIdEstadoSolicitud = 1;
+            oSolicitudTicket.SolValidacionDatos = false;
+            @* DATOS ENCUESTA DE CALIDAD DE LA SOLICITUD-TICKET *@
+            oSolicitudTicket.SolEncuestaCalidadCalificacion = 0;
+            oSolicitudTicket.SolEncuestaCalidadComentarios = "";
+            oSolicitudTicket.SolFechaHoraEncuesta = DateTime.Now;
+            @* DATOS FECHA Y HORA DE LA SOLICITUD-TICKET *@
+            oSolicitudTicket.SolFechaHoraCreacion = DateTime.Now;
+        }
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            registro.SolIdEstadoSolicitud = 1;
-            registro.SolIdTipoSolicitud = 1;
-            registro.SolIdUsuario = 0;
-            cat_SolIdEstadoSolicitud = await WebUtils.ListByStatusAsync(servicioEstadoSolicitud);
-            cat_SolIdTipoSolicitud = await WebUtils.ListByStatusAsync(servicioTipoSolicitud);
-            
+            // cat_SolIdEstadoSolicitud = await WebUtils.ListByStatusAsync(servicioEstadoSolicitud);
+            // cat_SolIdTipoSolicitud = await WebUtils.ListByStatusAsync(servicioTipoSolicitud);
             StateHasChanged();
+        }
+    }
+
+    @*///////////////////////////////////////////////  VALIDAR CAMPOS DEL FORMULARIO CON DATA_NOTATIONS  ///////////////////////////////////////////////*@
+    private async Task OnInvalidHandled_ScrollToTop()
+    {
+        await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
+        await JSRuntime.InvokeVoidAsync("eval", $@"document.getElementById('tipo_solicitud_list').select()");
+    }
+
+    public async Task OnValidHandled_Registrar()
+    {
+        try
+        {
+        }
+        catch (HttpRequestException e)
+        {
+            await JSRuntime.InvokeAsync<object>("alert", e.Message);
+        }
+        finally
+        {
+            // busyLoading = false;
         }
     }
 }

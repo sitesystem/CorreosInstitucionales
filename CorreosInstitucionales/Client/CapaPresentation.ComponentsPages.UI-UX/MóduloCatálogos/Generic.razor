@@ -1,7 +1,8 @@
 ﻿@page "/catalogo/generic"
-@inject DialogService DialogService
 
-@using System.Text.Json
+@attribute [Authorize(Policy = "[Rol] Ambos")]
+
+@inject DialogService DialogService
 
 <table class="table table-hover shadow">
     <thead>
@@ -32,8 +33,6 @@
 <pre>
     @debug
 </pre>
-
-
 
 @code 
 {
@@ -79,7 +78,4 @@
             }
         }
     }
-
-    
-
 }

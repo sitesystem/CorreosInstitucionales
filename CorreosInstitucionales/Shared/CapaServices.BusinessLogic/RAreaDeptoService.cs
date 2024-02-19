@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -9,49 +10,43 @@ using System.Threading.Tasks;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 
-namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
+namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 {
-    public class RLinkService(HttpClient httpClient) : IGenericService<RequestViewModel_Link>
+    public class RAreaDeptoService(HttpClient httpClient) : IGenericService<RequestViewModel_AreaDepto>
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
-        const string url = "/api/Links";
+        const string url = "/api/AreasDeptos";
 
-        public async Task<Response<List<RequestViewModel_Link>>?> GetAllDataByStatusAsync(bool filterByStatus)
+        public async Task<Response<List<RequestViewModel_AreaDepto>>?> GetAllDataByStatusAsync(bool filterByStatus)
         {
             var response = await _httpClient.GetAsync($"{url}/filterByStatus/{filterByStatus}");
             var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Response<List<RequestViewModel_Link>>>(content, options: _options);
+            var result = JsonSerializer.Deserialize<Response<List<RequestViewModel_AreaDepto>>>(content, options: _options);
             return result;
         }
 
-        public async Task<Response<RequestViewModel_Link>?> GetDataByIdAsync(int? id)
+        public async Task<Response<RequestViewModel_AreaDepto>?> GetDataByIdAsync(int? id)
         {
-            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_Link>>($"{url}/filterById/{id}", options: _options);
+            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_AreaDepto>>($"{url}/filterById/{id}", options: _options);
             return result;
         }
 
-        public async Task<Response<RequestViewModel_Link>?> GetDataByNameAsync(string name)
+        public async Task<HttpResponseMessage> AddDataAsync(RequestViewModel_AreaDepto oAreaDepto)
         {
-            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_Link>>($"{url}/filterByNombre/{name}", options: _options);
-            return result;
-        }
-
-        public async Task<HttpResponseMessage> AddDataAsync(RequestViewModel_Link oLink)
-        {
-            //var json = JsonSerializer.Serialize(oLink);
+            //var json = JsonSerializer.Serialize(oAreaDepto);
             //var content = new StringContent(json, Encoding.UTF8, "application/json");
             //var response = await _httpClient.PostAsync(url, content);
-            var response = await _httpClient.PostAsJsonAsync(url, oLink, options: _options);
+            var response = await _httpClient.PostAsJsonAsync(url, oAreaDepto, options: _options);
             return response;
         }
 
-        public async Task<HttpResponseMessage> EditDataAsync(RequestViewModel_Link oLink)
+        public async Task<HttpResponseMessage> EditDataAsync(RequestViewModel_AreaDepto oAreaDepto)
         {
-            //var json = JsonSerializer.Serialize(oLink);
+            //var json = JsonSerializer.Serialize(oAreaDepto);
             //var content = new StringContent(json, Encoding.UTF8, "application/json");
             //var response = await _httpClient.PutAsync(url, content);
-            var response = await _httpClient.PutAsJsonAsync(url, oLink, options: _options);
+            var response = await _httpClient.PutAsJsonAsync(url, oAreaDepto, options: _options);
             return response;
         }
 

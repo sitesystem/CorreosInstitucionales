@@ -45,9 +45,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-                var list = await _db.McCatTiposSolicituds.FindAsync(id);
+                var item = await _db.McCatTiposSolicituds.FindAsync(id);
                 oResponse.Success = 1;
-                oResponse.Data = list;
+                oResponse.Data = item;
             }
             catch (Exception ex)
             {

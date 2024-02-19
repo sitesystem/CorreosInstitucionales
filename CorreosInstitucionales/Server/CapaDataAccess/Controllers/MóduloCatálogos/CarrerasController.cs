@@ -10,9 +10,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
-    public class CarrerasController(DbCorreosInstitucionalesUpiicsaContext _db) : ControllerBase
+    public class CarrerasController(DbCorreosInstitucionalesUpiicsaContext db) : ControllerBase
     {
-        private readonly DbCorreosInstitucionalesUpiicsaContext _db = _db;
+        private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
@@ -27,6 +27,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                     list = await _db.McCatCarreras.Where(c => c.CarrStatus.Equals(filterByStatus)).ToListAsync();
                 else
                     list = await _db.McCatCarreras.ToListAsync();
+
+                if (list == null)
+                    return BadRequest(oResponse);
 
                 oResponse.Success = 1;
                 oResponse.Data = list;

@@ -21,9 +21,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-
                 var list = await _db.McCatRoles.ToListAsync();
-
                 oResponse.Success = 1;
                 oResponse.Data = list;
             }
@@ -42,9 +40,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-                var list = await _db.McCatRoles.FindAsync(id);
+                var item = await _db.McCatRoles.FindAsync(id);
                 oResponse.Success = 1;
-                oResponse.Data = list;
+                oResponse.Data = item;
             }
             catch (Exception ex)
             {

@@ -53,17 +53,16 @@ public partial class McCatAreasDepto
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>
-    [Required]
     [Column("areStatus")]
-    public bool? AreStatus { get; set; }
+    public bool AreStatus { get; set; }
 
     [ForeignKey("AreIdEdificio")]
     [InverseProperty("McCatAreasDeptos")]
-    public virtual McCatEdificio AreIdEdificioNavigation { get; set; } = null!;
+    public virtual McCatEdificio? AreIdEdificioNavigation { get; set; } = null!;
 
     [ForeignKey("AreIdPiso")]
     [InverseProperty("McCatAreasDeptos")]
-    public virtual McCatPiso AreIdPisoNavigation { get; set; } = null!;
+    public virtual McCatPiso? AreIdPisoNavigation { get; set; } = null!;
 
     [JsonIgnore]
     [InverseProperty("ExtIdAreaDeptoNavigation")]

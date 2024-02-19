@@ -1,0 +1,38 @@
+﻿@page "/Inicio"
+
+@attribute [Authorize(Policy = "[Rol] Ambos")]
+
+<PageTitle>SACI | Inicio</PageTitle>
+
+<style type="text/css">
+</style>
+@* <SurveyPrompt Title="How is Blazor working for you?" /> *@
+
+<AuthorizeView Policy="[Rol] Usuario Solicitante">
+	<Authorized>
+        <TimeLine />
+	</Authorized>
+	<NotAuthorized>
+		@* <p>No Autorizado</p> *@
+	</NotAuthorized>
+	<Authorizing>
+		<p>Autorizando...</p>
+	</Authorizing>
+</AuthorizeView>
+
+<AuthorizeView Policy="[Rol] Administrador">
+	<Authorized>
+        <Dashboard />
+	</Authorized>
+	<NotAuthorized>
+		@* <p>No Autorizado</p> *@
+	</NotAuthorized>
+	<Authorizing>
+		<p>Autorizando...</p>
+	</Authorizing>
+</AuthorizeView>
+
+@code
+{
+
+}

@@ -5,33 +5,33 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 
-namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitud
+
+namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 {
-    public class RTipoSolicitudService(HttpClient httpClient) : IGenericService<RequestViewModel_TipoSolicitud>
+    public class REstadosSolicitudService(HttpClient httpClient) : IGenericService<RequestViewModel_EstadoSolicitud>
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
-        const string url = "/api/TiposSolicitud";
+        const string url = "/api/EstadosSolicitud";
 
-        public async Task<Response<List<RequestViewModel_TipoSolicitud>>?> GetAllDataByStatusAsync(bool filterByStatus)
+        public async Task<Response<List<RequestViewModel_EstadoSolicitud>>?> GetAllDataByStatusAsync(bool filterByStatus)
         {
             var response = await _httpClient.GetAsync($"{url}/filterByStatus/{filterByStatus}");
             var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Response<List<RequestViewModel_TipoSolicitud>>>(content, options: _options);
+            var result = JsonSerializer.Deserialize<Response<List<RequestViewModel_EstadoSolicitud>>>(content, options: _options);
             return result;
         }
 
-        public async Task<Response<RequestViewModel_TipoSolicitud>?> GetDataByIdAsync(int? id)
+        public async Task<Response<RequestViewModel_EstadoSolicitud>?> GetDataByIdAsync(int? id)
         {
-            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_TipoSolicitud>>($"{url}/filterById/{id}", options: _options);
+            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_EstadoSolicitud>>($"{url}/filterById/{id}", options: _options);
             return result;
         }
 
-        public async Task<HttpResponseMessage> AddDataAsync(RequestViewModel_TipoSolicitud oTipoSolicitud)
+        public async Task<HttpResponseMessage> AddDataAsync(RequestViewModel_EstadoSolicitud oTipoSolicitud)
         {
             //var json = JsonSerializer.Serialize(oTipoSolicitud);
             //var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -40,7 +40,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolic
             return response;
         }
 
-        public async Task<HttpResponseMessage> EditDataAsync(RequestViewModel_TipoSolicitud oTipoSolicitud)
+        public async Task<HttpResponseMessage> EditDataAsync(RequestViewModel_EstadoSolicitud oTipoSolicitud)
         {
             //var json = JsonSerializer.Serialize(oTipoSolicitud);
             //var content = new StringContent(json, Encoding.UTF8, "application/json");

@@ -2,51 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 
-namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos
+namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 {
-    public class RAreaDeptoService(HttpClient httpClient) : IGenericService<RequestViewModel_AreaDepto>
+    public class RCarreraService(HttpClient httpClient) : IGenericService<RequestViewModel_Carrera>
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
-        const string url = "/api/AreasDeptos";
+        const string url = "/api/Carreras";
 
-        public async Task<Response<List<RequestViewModel_AreaDepto>>?> GetAllDataByStatusAsync(bool filterByStatus)
+        public async Task<Response<List<RequestViewModel_Carrera>>?> GetAllDataByStatusAsync(bool filterByStatus)
         {
             var response = await _httpClient.GetAsync($"{url}/filterByStatus/{filterByStatus}");
             var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Response<List<RequestViewModel_AreaDepto>>>(content, options: _options);
+            var result = JsonSerializer.Deserialize<Response<List<RequestViewModel_Carrera>>>(content, options: _options);
             return result;
         }
 
-        public async Task<Response<RequestViewModel_AreaDepto>?> GetDataByIdAsync(int? id)
+        public async Task<Response<RequestViewModel_Carrera>?> GetDataByIdAsync(int? id)
         {
-            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_AreaDepto>>($"{url}/filterById/{id}", options: _options);
+            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_Carrera>>($"{url}/filterById/{id}", options: _options);
             return result;
         }
 
-        public async Task<HttpResponseMessage> AddDataAsync(RequestViewModel_AreaDepto oAreaDepto)
+        public async Task<HttpResponseMessage> AddDataAsync(RequestViewModel_Carrera oCarrera)
         {
-            //var json = JsonSerializer.Serialize(oAreaDepto);
+            //var json = JsonSerializer.Serialize(oCarrera);
             //var content = new StringContent(json, Encoding.UTF8, "application/json");
             //var response = await _httpClient.PostAsync(url, content);
-            var response = await _httpClient.PostAsJsonAsync(url, oAreaDepto, options: _options);
+            var response = await _httpClient.PostAsJsonAsync(url, oCarrera, options: _options);
             return response;
         }
 
-        public async Task<HttpResponseMessage> EditDataAsync(RequestViewModel_AreaDepto oAreaDepto)
+        public async Task<HttpResponseMessage> EditDataAsync(RequestViewModel_Carrera oCarrera)
         {
-            //var json = JsonSerializer.Serialize(oAreaDepto);
+            //var json = JsonSerializer.Serialize(oCarrera);
             //var content = new StringContent(json, Encoding.UTF8, "application/json");
             //var response = await _httpClient.PutAsync(url, content);
-            var response = await _httpClient.PutAsJsonAsync(url, oAreaDepto, options: _options);
+            var response = await _httpClient.PutAsJsonAsync(url, oCarrera, options: _options);
             return response;
         }
 

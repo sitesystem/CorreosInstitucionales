@@ -12,8 +12,8 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
     {
         public Task<Response<List<T>>?> GetAllDataByStatusAsync(bool filterByStatus);
         public Task<Response<T>?> GetDataByIdAsync(int? id);
-        public Task<HttpResponseMessage> AddDataAsync(T oAreaDepto);
-        public Task<HttpResponseMessage> EditDataAsync(T oAreaDepto);
+        public Task<HttpResponseMessage> AddDataAsync(T oObject);
+        public Task<HttpResponseMessage> EditDataAsync(T oObject);
         public Task<HttpResponseMessage> EnableDisableDataByIdAsync(int id, bool isActivate);
     }
 }

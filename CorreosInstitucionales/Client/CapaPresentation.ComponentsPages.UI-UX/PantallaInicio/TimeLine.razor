@@ -1,0 +1,61 @@
+﻿<RadzenPanel>
+    <RadzenFieldset AllowCollapse="false" ExpandTitle="Seguimiento de Solicitud" CollapseTitle="Seguimiento de Solicitud" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-3">
+        <HeaderTemplate>
+            <span class="d-inline-flex align-items-center align-middle">
+                <RadzenIcon Icon="history" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Seguimiento de Solicitud</b>
+            </span>
+        </HeaderTemplate>
+        <ChildContent>
+            <div class="rz-p-0 rz-p-md-12">
+                <RadzenTimeline Orientation="Orientation.Horizontal" LinePosition="LinePosition.Start" style="--rz-timeline-line-width: 36px; max-width: 600px; margin: 0 auto;">
+                    <Items>
+                        <RadzenTimelineItem PointVariant="Variant.Flat" PointSize="PointSize.Large" PointStyle="PointStyle.Info">
+                            <PointContent><RadzenIcon Icon="check" /></PointContent>
+                            <ChildContent>
+                                <RadzenText TextStyle="TextStyle.Subtitle1" Class="rz-m-0">Envio de Solicitud</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body2" Class="rz-m-0"></RadzenText>
+                            </ChildContent>
+                        </RadzenTimelineItem>
+                        <RadzenTimelineItem PointVariant="Variant.Flat" PointSize="PointSize.Large" PointStyle="PointStyle.Info">
+                            <PointContent><RadzenIcon Icon="check" /></PointContent>
+                            <ChildContent>
+                                <RadzenText TextStyle="TextStyle.Subtitle1" Class="rz-m-0">Solicitud Pendiente</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body2" Class="rz-m-0"></RadzenText>
+                            </ChildContent>
+                        </RadzenTimelineItem>
+                        <RadzenTimelineItem PointVariant="Variant.Text" PointSize="PointSize.Large" PointStyle="PointStyle.Info">
+                            <PointContent><RadzenIcon Icon="more_horiz" /></PointContent>
+                            <ChildContent>
+                                <RadzenText TextStyle="TextStyle.Subtitle1" Class="rz-m-0">Solicitud en Proceso</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body2" Class="rz-m-0"></RadzenText>
+                            </ChildContent>
+                        </RadzenTimelineItem>
+                        <RadzenTimelineItem PointVariant="Variant.Text" PointSize="PointSize.Large" PointStyle="PointStyle.Info">
+                            <ChildContent>
+                                <RadzenText TextStyle="TextStyle.Subtitle1" Class="rz-m-0">Solicitud Atendida</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body2" Class="rz-m-0"></RadzenText>
+                            </ChildContent>
+                        </RadzenTimelineItem>
+                        <RadzenTimelineItem PointVariant="Variant.Text" PointSize="PointSize.Large" PointStyle="PointStyle.Info">
+                            <ChildContent>
+                                <RadzenText TextStyle="TextStyle.Subtitle1" Class="rz-m-0">Envio de Correo</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body2" Class="rz-m-0"></RadzenText>
+                            </ChildContent>
+                        </RadzenTimelineItem>
+                    </Items>
+                </RadzenTimeline>
+            </div>
+        </ChildContent>
+    </RadzenFieldset>
+</RadzenPanel>
+
+<div class="rz-p-0 rz-p-md-12">
+    <RadzenStack Orientation="Orientation.Horizontal" FlexWrap="FlexWrap.Wrap" Gap="1rem" Class="rz-p-4 rz-mb-6">
+
+    </RadzenStack>
+</div>
+
+@code
+{
+
+}

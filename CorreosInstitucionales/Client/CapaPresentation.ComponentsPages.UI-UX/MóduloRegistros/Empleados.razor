@@ -275,7 +275,7 @@
                             </ChildContent>
                             <Helper>
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify"
-                                            Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de Correo Electrónico Personal, levanta una Solicitud (Ticket)." : "Dominios (gmail, outlook, hotmail, yahoo, msn)." )}")" />
+                                            Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de Correo Electrónico Personal, levanta una Solicitud (Ticket)." : "Dominios válidos (gmail, outlook, hotmail, yahoo, msn)." )}")" />
                             </Helper>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
@@ -575,14 +575,14 @@ else
     // Hacer visible las Contraseñas con el ícono eye
     private bool VisibleContraseña = true;
     private bool VisibleConfirmarContraseña = true;
-    private void ToggleContraseña() => VisibleContraseña = !VisibleContraseña;
-    private void ToggleConfirmarContraseña() => VisibleConfirmarContraseña = !VisibleConfirmarContraseña;
+    private async Task ToggleContraseña() => VisibleContraseña = !VisibleContraseña;
+    private async Task ToggleConfirmarContraseña() => VisibleConfirmarContraseña = !VisibleConfirmarContraseña;
 
     // Comparar las Contraseñas
     private string UsuContraseña = string.Empty;
     private string UsuConfirmarContraseña = string.Empty;
     public bool flagErrorPasswords = false;
-    private void CompararContraseñas()
+    private async Task CompararContraseñas()
     {
         if (ActionAddEdit == "agregar")
             flagErrorPasswords = !string.Equals(oUsuario.UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal) ? true : false;
@@ -597,8 +597,8 @@ else
     private ReCAPTCHA oReCAPTCHAComponent;
     // private bool ServerVerificatiing = false;
     private bool ValidReCAPTCHA = false;
-    private void OnSuccess() => ValidReCAPTCHA = true;
-    private void OnExpired() => ValidReCAPTCHA = false;
+    private async Task OnSuccess() => ValidReCAPTCHA = true;
+    private async Task OnExpired() => ValidReCAPTCHA = false;
 
     @*///////////////////////////////////////////////  VALIDAR CAMPOS DEL FORMULARIO CON DATA_NOTATIONS  ///////////////////////////////////////////////*@
     private async Task OnInvalidHandled_ScrollToTop()
@@ -612,7 +612,7 @@ else
     private RadzenUpload oUploadFile_CURP = new();
     private IEnumerable<FileInfo>? oFileInfoCURP { get; set; }
 
-    void OnChangeFiles(UploadChangeEventArgs args, string name)
+    async Task OnChangeFiles(UploadChangeEventArgs args, string name)
     {
         foreach (var file in args.Files)
         {
@@ -625,9 +625,9 @@ else
         }
     }
 
-    void OnErrorFiles(UploadErrorEventArgs args, string name) => Console.WriteLine($"{args.Message}");
+    async Task OnErrorFiles(UploadErrorEventArgs args, string name) => Console.WriteLine($"{args.Message}");
 
-    void OnProgressFiles(UploadProgressArgs args, string name)
+    async Task OnProgressFiles(UploadProgressArgs args, string name)
     {
         // Console.WriteLine($"{args.Progress}% '{name}' / {args.Loaded} of {args.Total} bytes.");
 
@@ -640,7 +640,7 @@ else
         }
     }
 
-    void OnCompleteFiles(UploadCompleteEventArgs args) => Console.WriteLine($"Server response: {args.RawResponse}");
+    async Task OnCompleteFiles(UploadCompleteEventArgs args) => Console.WriteLine($"Server response: {args.RawResponse}");
 
     @*///////////////////////////////////////////////  AVISO DE PRIVACIDAD PARA LA PROTECCIÓN DE DATOS PERSONALES  ////////////////////////////////////*@
     private bool aceptar_aviso_privacidad = false;

@@ -33,9 +33,8 @@ public partial class McCatTiposPersonal
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>
-    [Required]
     [Column("tipoperStatus")]
-    public bool? TipoperStatus { get; set; }
+    public bool TipoperStatus { get; set; }
 
     [JsonIgnore]
     [InverseProperty("UsuIdTipoPersonalNavigation")]

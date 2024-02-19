@@ -27,9 +27,8 @@ public partial class McCatPiso
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>
-    [Required]
     [Column("pisoStatus")]
-    public bool? PisoStatus { get; set; }
+    public bool PisoStatus { get; set; }
 
     [JsonIgnore]
     [InverseProperty("AreIdPisoNavigation")]

@@ -1,13 +1,13 @@
 ﻿@page "/PerfilUsuario"
 
-@attribute [Authorize]
+@attribute [Authorize(Policy = "[Rol] Ambos")]
 
 <PageTitle>SACI | Perfil de Usuario</PageTitle>
 
 <AuthorizeView>
     <Authorized>
         <RadzenCard Variant="Variant.Filled" Class="mb-3">
-            <RadzenRow Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="1rem" class="">
+            <RadzenRow AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="1rem" class="">
                 <RadzenColumn SizeXS="12" SizeSM="12" SizeMD="6" SizeLG="6">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.Wrap" Gap="20px" Class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-person-circle rz-color-base-800" viewBox="0 0 16 16">
@@ -73,7 +73,6 @@
 {
     public Response<RequestDTO_Usuario>? oResponseUsuario = new();
     public RequestDTO_Usuario? oEditUsuario = new();
-    private string? authMessage;
 
     protected override async Task OnInitializedAsync()
     {

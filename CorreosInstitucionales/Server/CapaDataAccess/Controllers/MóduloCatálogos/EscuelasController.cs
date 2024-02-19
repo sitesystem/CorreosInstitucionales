@@ -46,9 +46,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-                var list = await _db.McCatEscuelas.FindAsync(id);
+                var item = await _db.McCatEscuelas.FindAsync(id);
                 oResponse.Success = 1;
-                oResponse.Data = list;
+                oResponse.Data = item;
             }
             catch (Exception ex)
             {
@@ -99,10 +99,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
                 if (oEscuela != null)
                 {
+                    oEscuela.EscLogo = model.EscLogo;
                     oEscuela.EscNoEscuela = model.EscNoEscuela;
                     oEscuela.EscNombreLargo = model.EscNombreLargo;
                     oEscuela.EscNombreCorto = model.EscNombreCorto;
-                    oEscuela.EscLogo = model.EscLogo;
                     oEscuela.EscStatus = model.EscStatus;
 
                     _db.Entry(oEscuela).State = EntityState.Modified;

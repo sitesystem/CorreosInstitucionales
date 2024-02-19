@@ -1,15 +1,8 @@
 ﻿@page "/SeguimientoTickets"
 
-@attribute [Authorize]
+@attribute [Authorize(Policy = "[Rol] Usuario Solicitante")]
 
-<PageTitle>SITI | Seguimiento de Tickets</PageTitle>
-
-@* <SfBreadcrumb EnableActiveItemNavigation="true" EnableNavigation="false">
-    <BreadcrumbItems>
-        <BreadcrumbItem Text="Módulo de Solicitudes Tickets" IconCss="e-icons e-bookmark" Disabled="true" />
-        <BreadcrumbItem Text="Seguimiento de Ticket's" IconCss="e-icons e-clock" Disabled="true" />
-    </BreadcrumbItems>
-</SfBreadcrumb> *@
+<PageTitle>SACI | Seguimiento de Solicitudes-Tickets</PageTitle>
 
 <h3 style="font-variant: small-caps;">
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-hourglass-split" viewBox="0 0 16 16">
@@ -18,7 +11,6 @@
 </h3>
 
 <style type="text/css">
-
 </style>
 
 @if (true)

@@ -19,7 +19,7 @@
 {
     <EditForm Model="@oUsuario" OnValidSubmit="@OnValidHandled_Registrar" OnInvalidSubmit="@OnInvalidHandled_ScrollToTop">
 
-        <DataAnnotationsValidator/>
+        <DataAnnotationsValidator />
 
         <!-- ******************************************************************* AVISOS ******************************************************************* -->
         <RadzenAlert Title="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false" class="rz-mt-0 rz-mb-3"
@@ -118,7 +118,7 @@
                     </div>
 
                     <div class="col-md-4 col-lg-4 mb-3">
-                        <RadzenFormField Text="Archivo del CURP" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="Archivo del CURP" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
                                 <RadzenUpload @ref="oUploadFile_CURP" Url="" Accept=".pdf"
@@ -177,7 +177,6 @@
                                 {
                                     <RadzenMask Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="15"
                                                 Mask="@($@"**********")" CharacterPattern="[A-Z0-9]" Placeholder="@($@"****{oEscuela.Data.EscNoEscuela}****")" Pattern="^\\d{4}60\\d{4}$" />
-                                    <RadzenRegexValidator Component="@($@"boleta_{TipoPersonal}")" Text="ZIP code must be 5 digits" Pattern="\d{5}" Popup=true Style="position: absolute" />
                                 }
                                 else if (IdTipoPersonal == 3)
                                 {
@@ -200,15 +199,15 @@
                     </div>
 
                     <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Carrera" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="Carrera" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
                             <Start><RadzenIcon Icon="school" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
                                 <RadzenDropDown Name="@($@"college_career_{TipoPersonal}")"
                                                 @bind-Value="@oUsuario.UsuIdCarrera"
                                                 TValue="int?"
+                                                Data="@oCarreras.Data"
                                                 ValueProperty="IdCarrera"
                                                 TextProperty="CarrNombre"
-                                                Data="@oCarreras.Data"
                                                 AllowClear="true"
                                                 AllowFiltering="true"
                                                 FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
@@ -316,7 +315,7 @@
                             <RadzenFormField Text="Año de Egreso" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Disabled="false" Visible="@flagEsEgresado">
                                 <Start><RadzenIcon Icon="dialpad" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                 <ChildContent>
-                                    <RadzenNumeric Name="@($@"año_egreso_{TipoPersonal}")" TValue="int" @bind-Value="@oUsuario.UsuAñoEgreso" Change=@(args => oUsuario.UsuAñoEgreso = args)
+                                    <RadzenNumeric Name="@($@"año_egreso_{TipoPersonal}")" TValue="int?" @bind-Value="@oUsuario.UsuAñoEgreso" Change=@(args => oUsuario.UsuAñoEgreso = args)
                                                    AutoComplete="true" Placeholder="@($@"1950-{year}")"
                                                    TextAlign="TextAlign.Center" Min="1950" Max="@year" ShowUpDown="true" Step="1" Format="" />
                                 </ChildContent>
@@ -350,7 +349,7 @@
                             </ChildContent>
                             <Helper>
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify"
-                                            Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de Correo Electrónico Personal, levanta una Solicitud (Ticket)." : "Dominios (gmail, outlook, hotmail, yahoo, msn)." )}")" />
+                                            Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de Correo Electrónico Personal, levanta una Solicitud (Ticket)." : "Dominios válidos (gmail, outlook, hotmail, yahoo, msn)." )}")" />
                             </Helper>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
@@ -397,7 +396,7 @@
                     </div>
 
                     <div class="col-md-4 col-lg-4 mb-3">
-                        <RadzenFormField Text="Confirmar Contraseña" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="Confirmar Contraseña" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
                             <Start><RadzenIcon Icon="lock" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
                                 <RadzenTextBox Name="@($@"confirmar_contraseña_{TipoPersonal}")" @bind-Value="@UsuConfirmarContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20"
@@ -419,6 +418,7 @@
                             </End>
                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                         </RadzenFormField>
+
                         <RadzenAlert Title="Ingresa las contraseñas" Text="Verificar que coincidan." AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker"
                                      ShowIcon="true" AllowClose="false" class="mb-0" @bind-Visible="flagErrorPasswords" />
                     </div>
@@ -511,6 +511,8 @@
                           Variant="Variant.Filled" />
         </RadzenStack>
     </EditForm>
+
+    <ButtonScrollToTop />
 }
 else
 {
@@ -696,7 +698,7 @@ else
     private bool flagEsEgresado;
     private bool flagEsEgresadoDisabled;
     private bool onChangeSelectBarEgresado = false;
-    private void ChangeSelectBarEgresado()
+    public async Task ChangeSelectBarEgresado()
     {
         oUsuario.UsuIdTipoPersonal = !flagEsEgresado ? 1 : 2;
         oUsuario.UsuAñoEgreso = 1950;
@@ -710,14 +712,14 @@ else
     // Hacer visible las Contraseñas con el ícono eye
     private bool VisibleContraseña = true;
     private bool VisibleConfirmarContraseña = true;
-    private void ToggleContraseña() => VisibleContraseña = !VisibleContraseña;
-    private void ToggleConfirmarContraseña() => VisibleConfirmarContraseña = !VisibleConfirmarContraseña;
+    private async Task ToggleContraseña() => VisibleContraseña = !VisibleContraseña;
+    private async Task ToggleConfirmarContraseña() => VisibleConfirmarContraseña = !VisibleConfirmarContraseña;
 
     // Comparar las Contraseñas
     private string UsuContraseña = string.Empty;
     private string UsuConfirmarContraseña = string.Empty;
     public bool flagErrorPasswords = false;
-    private void CompararContraseñas()
+    private async Task CompararContraseñas()
     {
         if (ActionAddEdit == "agregar")
             flagErrorPasswords = !string.Equals(oUsuario.UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal) ? true : false;
@@ -732,8 +734,8 @@ else
     private ReCAPTCHA oReCAPTCHAComponent;
     // private bool ServerVerificatiing = false;
     private bool ValidReCAPTCHA = false;
-    private void OnSuccess() => ValidReCAPTCHA = true;
-    private void OnExpired() => ValidReCAPTCHA = false;
+    private async Task OnSuccess() => ValidReCAPTCHA = true;
+    private async Task OnExpired() => ValidReCAPTCHA = false;
 
     @*///////////////////////////////////////////////  VALIDAR CAMPOS DEL FORMULARIO CON DATA_NOTATIONS  ///////////////////////////////////////////////*@
     private async Task OnInvalidHandled_ScrollToTop()
@@ -749,7 +751,7 @@ else
     private IEnumerable<FileInfo>? oFileInfoCURP { get; set; }
     private IEnumerable<FileInfo>? oFileInfoComprobanteInscripcion { get; set; }
 
-    void OnChangeFiles(UploadChangeEventArgs args, string name)
+    async Task OnChangeFiles(UploadChangeEventArgs args, string name)
     {
         foreach (var file in args.Files)
         {
@@ -768,9 +770,9 @@ else
         }
     }
 
-    void OnErrorFiles(UploadErrorEventArgs args, string name) => Console.WriteLine($"{args.Message}");
+    async Task OnErrorFiles(UploadErrorEventArgs args, string name) => Console.WriteLine($"{args.Message}");
 
-    void OnProgressFiles(UploadProgressArgs args, string name)
+    async Task OnProgressFiles(UploadProgressArgs args, string name)
     {
         // Console.WriteLine($"{args.Progress}% '{name}' / {args.Loaded} of {args.Total} bytes.");
 
@@ -783,7 +785,7 @@ else
         }
     }
 
-    void OnCompleteFiles(UploadCompleteEventArgs args) => Console.WriteLine($"Server response: {args.RawResponse}");
+    async Task OnCompleteFiles(UploadCompleteEventArgs args) => Console.WriteLine($"Server response: {args.RawResponse}");
 
     @*///////////////////////////////////////////////  AVISO DE PRIVACIDAD PARA LA PROTECCIÓN DE DATOS PERSONALES  ////////////////////////////////////*@
     private bool aceptar_aviso_privacidad = false;
@@ -851,7 +853,8 @@ else
 	                                <main class='container-fluid'>
 		                                <section>
 			                                <article style='background-color: rgb(255, 255, 255); border-radius:10px; padding:5px;'>
-				                                <p style='font-size:calc(12px + 0.290625vw); text-align:justify; color:black;'>	<b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
+				                                <p style='text-align:justify; color:black;'>
+                                                    <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
 				                                    Se le informa que su {agregar_actualizar} fué exitoso en la Plataforma <b>SACI (Sistema de Ayuda para Correos Institucionales)</b>
 				                                    de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
                                                     {entrega_credenciales_acceso}<br>
@@ -1187,8 +1190,7 @@ else
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Año de Egreso:</RadzenText>
                                         <RadzenText TextStyle="TextStyle.Body1"><b>@(flagEsEgresado ? oUsuario.UsuAñoEgreso : "N/A")</b></RadzenText>
                                     </RadzenStack>
-                                    <RadzenAlert Title="Atención:" Text=""
-                                                 AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker"
+                                    <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker"
                                                  ShowIcon="true" AllowClose="false" class="mb-0" Visible="@(!string.IsNullOrEmpty(UsuContraseña) || onChangeSelectBarEgresado)">
                                                  <ul>
                                                      @if (!string.IsNullOrEmpty(UsuContraseña))

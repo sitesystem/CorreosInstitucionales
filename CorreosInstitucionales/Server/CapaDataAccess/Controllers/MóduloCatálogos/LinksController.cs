@@ -46,9 +46,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-                var list = await _db.McCatLinks.FindAsync(id);
+                var item = await _db.McCatLinks.FindAsync(id);
                 oResponse.Success = 1;
-                oResponse.Data = list;
+                oResponse.Data = item;
             }
             catch (Exception ex)
             {
@@ -57,16 +57,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
             return Ok(oResponse);
         }
 
-        [HttpGet("filterByNombre/{name}")]
-        public async Task<IActionResult> GetDataByNombre(string name)
+        [HttpGet("filterByName/{name}")]
+        public async Task<IActionResult> GetDataByName(string name)
         {
             Response<McCatLink> oResponse = new();
 
             try
             {
-                var list = await _db.McCatLinks.Where(l => l.LinkNombre == name).FirstOrDefaultAsync();
+                var item = await _db.McCatLinks.Where(l => l.LinkNombre == name).FirstOrDefaultAsync();
                 oResponse.Success = 1;
-                oResponse.Data = list;
+                oResponse.Data = item;
             }
             catch (Exception ex)
             {

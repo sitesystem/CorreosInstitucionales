@@ -35,9 +35,8 @@ public partial class McCatEdificio
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>
-    [Required]
     [Column("ediStatus")]
-    public bool? EdiStatus { get; set; }
+    public bool EdiStatus { get; set; }
 
     [JsonIgnore]
     [InverseProperty("AreIdEdificioNavigation")]

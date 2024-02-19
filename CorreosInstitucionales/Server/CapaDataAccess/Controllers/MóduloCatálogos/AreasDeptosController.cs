@@ -11,9 +11,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
-    public class AreasDeptosController(DbCorreosInstitucionalesUpiicsaContext _db) : ControllerBase
+    public class AreasDeptosController(DbCorreosInstitucionalesUpiicsaContext db) : ControllerBase
     {
-        private readonly DbCorreosInstitucionalesUpiicsaContext _db = _db;
+        private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
@@ -51,7 +51,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
             try
             {
                 var item = await _db.McCatAreasDeptos.FindAsync(id);
-
                 oResponse.Success = 1;
                 oResponse.Data = item;
             }
@@ -67,23 +66,22 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
         public async Task<IActionResult> AddData(RequestViewModel_AreaDepto model)
         {
             Response<object> oResponse = new();
-            McCatAreasDepto item = new McCatAreasDepto()
-            {
-                AreIdEdificio = model.AreIdEdificio,
-                AreIdPiso = model.AreIdPiso,
-                AreNombreAreaDepto = model.AreNombreAreaDepto,
-                AreNoExtension = model.AreNoExtension,
-                AreTitular = model.AreTitular,
-                AreStatus = true
-            };
-
+            
             try
             {
-                model.AreStatus = true;
+                McCatAreasDepto oAreaDepto = new()
+                {
+                    IdAreaDepto = model.IdAreaDepto,
+                    AreNombreAreaDepto = model.AreNombreAreaDepto,
+                    AreNoExtension = model.AreNoExtension,
+                    AreTitular = model.AreTitular,
+                    AreIdEdificio = model.AreIdEdificio,
+                    AreIdPiso = model.AreIdPiso,
+                    AreStatus = true, // model.AreStatus
+                };
 
-                await _db.McCatAreasDeptos.AddAsync(item);
+                await _db.McCatAreasDeptos.AddAsync(oAreaDepto);
                 await _db.SaveChangesAsync();
-
 
                 oResponse.Success = 1;
             }
@@ -102,18 +100,18 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-                McCatAreasDepto? item = await _db.McCatAreasDeptos.FindAsync(model.IdAreaDepto);
+                McCatAreasDepto? oAreaDepto = await _db.McCatAreasDeptos.FindAsync(model.IdAreaDepto);
 
-                if (item != null)
+                if (oAreaDepto != null)
                 {
-                    item.AreIdEdificio = model.AreIdEdificio;
-                    item.AreIdPiso = model.AreIdPiso;
-                    item.AreNombreAreaDepto = model.AreNombreAreaDepto;
-                    item.AreNoExtension = model.AreNoExtension;
-                    item.AreTitular = model.AreTitular;
-                    item.AreStatus = true;
+                    oAreaDepto.AreNombreAreaDepto = model.AreNombreAreaDepto;
+                    oAreaDepto.AreNoExtension = model.AreNoExtension;
+                    oAreaDepto.AreTitular = model.AreTitular;
+                    oAreaDepto.AreIdEdificio = model.AreIdEdificio;
+                    oAreaDepto.AreIdPiso = model.AreIdPiso;
+                    oAreaDepto.AreStatus = model.AreStatus;
 
-                    _db.Entry(item).State = EntityState.Modified;
+                    _db.Entry(oAreaDepto).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
                 }
 
@@ -135,13 +133,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-                McCatAreasDepto? item = await _db.McCatAreasDeptos.FindAsync(id);
+                McCatAreasDepto? oAreaDepto = await _db.McCatAreasDeptos.FindAsync(id);
                 
-                if(item != null)
+                if (oAreaDepto != null)
                 {
-                    item.AreStatus = isActivate;
-
-                    _db.Entry(item).State = EntityState.Modified;
+                    oAreaDepto.AreStatus = isActivate;
+                    _db.Entry(oAreaDepto).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
                 }
 

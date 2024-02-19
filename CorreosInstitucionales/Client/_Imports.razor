@@ -6,9 +6,12 @@
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.AspNetCore.Components.WebAssembly.Http
 @using Microsoft.JSInterop
+@using System.ComponentModel.DataAnnotations
+@using System.Globalization
 @using System.Net.Http
 @using System.Net.Http.Json
 @using System.Security.Claims;
+@using System.Text.Json
 
 @using Radzen
 @using Radzen.Blazor
@@ -17,7 +20,6 @@
 @using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX
 @using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
 @using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistros
-
 @using CorreosInstitucionales.Client.Shared
 @using CorreosInstitucionales.Client.Shared.Components
 @using CorreosInstitucionales.Client.Shared.Components.Modals
@@ -25,23 +27,9 @@
 
 @using CorreosInstitucionales.Shared.CapaEntities.Request
 @using CorreosInstitucionales.Shared.CapaEntities.Response
-@using CorreosInstitucionales.Shared.Utils;
-
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catAreasDeptos
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catCarreras
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEdificios
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEscuelas
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catEstadosSolicitud
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catLinks
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catNoExtensiones
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catPisos
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposPersonal
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catTiposSolicitud
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.catRoles
-
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbSolicitudesTickets
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
+@using CorreosInstitucionales.Shared.Utils;
 
 @* Inyectar Interfaz de los Servicios *@
 @inject AuthenticationStateProvider servicioAuthenticationStateProvider
@@ -71,11 +59,10 @@
 @inject RCarreraService servicioCarrera
 @inject REdificioService servicioEdificio
 @inject REscuelaService servicioEscuela
+@inject REstadosSolicitudService servicioEstadoSolicitud
 @inject RLinkService servicioLink
 @inject RNoExtensionService servicioNoExtension
 @inject RPisoService servicioPiso
+@inject RRolesService servicioRol
 @inject RTipoPersonalService servicioTipoPersonal
 @inject RTipoSolicitudService servicioTipoSolicitud
-
-@inject RRolesService servicioRoles
-@inject REstadosSolicitudService servicioEstadoSolicitud

@@ -1,6 +1,8 @@
 ﻿@page "/catalogo/usuarios"
+
+@attribute [Authorize(Policy = "[Rol] Ambos")]
+
 @inject DialogService DialogService
-@using System.Text.Json
 
 <PageTitle>@Title</PageTitle>
 
@@ -19,7 +21,7 @@
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Frozen="false" Title="Nombre" Filterable="true" Sortable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    @if (item.UsuStatus ?? true)
+                    @if (item.UsuStatus)
                     {
                         <text>
                             @item.UsuNombre
@@ -86,7 +88,7 @@
 
             cat_UsuIdAreaDepto = await WebUtils.ListByStatusAsync(servicioAreaDepto);
             cat_UsuIdCarrera = await WebUtils.ListByStatusAsync(servicioCarrera);
-            cat_UsuIdRol = await WebUtils.ListByStatusAsync(servicioRoles);
+            cat_UsuIdRol = await WebUtils.ListByStatusAsync(servicioRol);
             cat_UsuIdTipoPersonal = await WebUtils.ListByStatusAsync(servicioTipoPersonal);
 
             StateHasChanged();
@@ -149,7 +151,4 @@
             }
         }
     }
-
-    
-
 }

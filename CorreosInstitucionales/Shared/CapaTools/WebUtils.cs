@@ -1,9 +1,10 @@
-﻿using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
 
 namespace CorreosInstitucionales.Shared.Utils
 {
@@ -11,19 +12,18 @@ namespace CorreosInstitucionales.Shared.Utils
     {
         public static async Task<List<T>> ListByStatusAsync<T>(IGenericService<T> service, bool filterByStatus = true)
         {
-            List<T> result = new List<T>();
+            List<T> result = new();
 
             try
             {
                 var response = await service.GetAllDataByStatusAsync(filterByStatus);
 
                 if(response is not null && response.Data is not null)
-                {
                     result = response.Data;
-                }
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine($"ERROR:{ex.Message}");
+                Console.WriteLine($"ERROR: {ex.Message} ");
             }
 
             return result;

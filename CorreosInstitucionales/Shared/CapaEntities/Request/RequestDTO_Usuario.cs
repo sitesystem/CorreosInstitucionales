@@ -66,7 +66,6 @@ public class RequestDTO_Usuario
     [MinLength(18, ErrorMessage = "El CURP introducido debe ser mínimo de 18 caracteres.")]
     public string UsuCurp { get; set; } = null!;
 
-
     /// <summary>
     /// Nombre del Archivo PDF del CURP del Usuario
     /// </summary>
@@ -139,7 +138,7 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuAñoEgreso")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo AÑO DE EGRESO requerido.")]
-    public int UsuAñoEgreso { get; set; }
+    public int? UsuAñoEgreso { get; set; }
 
     /// <summary>
     /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP
@@ -209,7 +208,7 @@ public class RequestDTO_Usuario
     /// Bandera { 0 = Inicia Sesión, 1 = Pide cambiar contraseña temporal }
     /// </summary>
     [Column("usuRecuperarContraseña")]
-    public bool? UsuRecuperarContraseña { get; set; }
+    public bool UsuRecuperarContraseña { get; set; }
 
     /*******************************  DATOS DEL CORREO INSTITUCIONAL  *******************************/
     /// <summary>
@@ -239,7 +238,7 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuStatus")]
     [Required]
-    public bool? UsuStatus { get; set; }
+    public bool UsuStatus { get; set; }
 
     /*******************************  DATOS FK NAVIGATION  *******************************/
     //[JsonIgnore]

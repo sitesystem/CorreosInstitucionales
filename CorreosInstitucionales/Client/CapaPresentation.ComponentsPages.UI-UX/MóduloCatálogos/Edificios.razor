@@ -1,6 +1,8 @@
 ﻿@page "/catalogo/edificios"
+
+@attribute [Authorize(Policy = "[Rol] Ambos")]
+
 @inject DialogService DialogService
-@using System.Text.Json
 
 <PageTitle>@Title</PageTitle>
 

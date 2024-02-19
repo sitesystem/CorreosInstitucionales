@@ -11,7 +11,25 @@
                             navigationManager.NavigateTo("/");
                         else
                         {
-                            <p class="alert alert-danger">No esta autorizado para ver esta pagina</p>
+                            <PageTitle>No encontrado</PageTitle>
+                            <RadzenAlert Variant="Variant.Filled"
+                                         AlertStyle="AlertStyle.Danger"
+                                         Size="AlertSize.Small"
+                                         Shade="Shade.Darker"
+                                         ShowIcon="true"
+                                         AllowClose="false"
+                                         Title="Error"
+                                         class=""
+                                         Text="No esta autorizado para ver esta Página Web o Dirección URL NO EXISTENTE" />
+                            <RadzenButton Text="Ir al Inicio"
+                                          BusyText=""
+                                          ButtonStyle="ButtonStyle.Warning"
+                                          ButtonType="ButtonType.Button"
+                                          IsBusy="false"
+                                          Icon="arrow_back"
+                                          class="rz-ripple"
+                                          Shade="Shade.Darker"
+                                          Click="@(() => navigationManager.NavigateTo("/"))" />
                         }
                     }
                 </NotAuthorized>

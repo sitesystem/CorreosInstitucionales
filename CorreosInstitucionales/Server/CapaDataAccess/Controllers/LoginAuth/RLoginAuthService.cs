@@ -23,7 +23,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
 
             string spassword = Encrypt.GetSHA256(model.UsuContraseña);
             var usuario = await _db.MpTbUsuarios
-                                   .Where(d => d.UsuCorreoPersonalCuentaNueva == model.UsuCorreoPersonal && d.UsuContraseña == spassword && d.UsuStatus.Equals(true))
+                                   .Where(l => l.UsuCorreoPersonalCuentaNueva == model.UsuCorreoPersonal && l.UsuContraseña == spassword && l.UsuStatus.Equals(true))
                                    .FirstOrDefaultAsync();
             if (usuario != null)
             {
@@ -85,7 +85,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
                             new("Name", usuario.UsuNombre.ToString() + " " + usuario.UsuPrimerApellido.ToString() + " " + usuario.UsuSegundoApellido?.ToString()),
                             new("Email", usuario.UsuCorreoPersonalCuentaNueva.ToString()),
                             new("Rol", usuario.UsuIdRol.ToString()),
-                            new("TipoPersonal", usuario.UsuIdTipoPersonal.ToString())
+                            new("TipoPersonal", usuario.UsuIdTipoPersonal.ToString()),
+                            new("RecuperarContraseña", usuario.UsuRecuperarContraseña.ToString().ToLower())
                         }
                     ),
                 Expires = DateTime.UtcNow.AddMonths(1),

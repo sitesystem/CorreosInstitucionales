@@ -5,11 +5,10 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 
-namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.tbUsuarios
+namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 {
     public class RUsuarioService(HttpClient httpClient) : IGenericService<RequestDTO_Usuario>
     {

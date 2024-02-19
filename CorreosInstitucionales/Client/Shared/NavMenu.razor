@@ -1,19 +1,20 @@
 ﻿<style type="text/css">
 </style>
 
-@*************************** Dashboard (Panel de Control) ***************************@
-<RadzenPanelMenuItem Text="Inicio (Panel de Control)" Icon="home" IconColor="@Colors.Primary" Path="Index" Style="font-size:16px;" class="nav-menu-hover" />
-<RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" class="nav-menu-hover" />
-
 <AuthorizeView Policy="[Rol] Usuario Solicitante">
     <Authorized>
+        @*************************** Dashboard (Panel de Control) ***************************@
+        <RadzenPanelMenuItem Text="Inicio (Panel de Control)" Icon="home" IconColor="@Colors.White" Path="Inicio" Style="font-size:16px;" class="nav-menu-hover" />
+        <RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" class="nav-menu-hover" />
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
-        <RadzenPanelMenuItem Text="@($@"Solicitudes de Tickets")" Icon="bookmarks" IconColor="@Colors.SecondaryLight" Style="font-size:16px;" Expanded="@isExpanded" class="nav-menu-hover">
+        <RadzenPanelMenuItem Text="@($@"Solicitudes de Tickets")" Icon="bookmarks" IconColor="@Colors.Primary" Style="font-size:16px;" Expanded="@isExpanded" class="nav-menu-hover">
             @*************************** Levantamiento del Nuevo Ticket ***************************@
             <RadzenPanelMenuItem Text="Nueva Solicitud de Ticket" Icon="local_offer" IconColor="@Colors.Warning" Path="NuevaSolicitudTicket" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Pendientes y Atendidas ***************************@
             <RadzenPanelMenuItem Text="Seguimiento de Solicitudes de Tickets" Icon="bookmark" IconColor="@Colors.Success" Path="/SeguimientoTickets" class="nav-menu-hover" />
         </RadzenPanelMenuItem>
+        @*************************** Perfil ***************************@
+        <RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoDark" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
     </Authorized>
     <Authorizing>
     </Authorizing>
@@ -23,36 +24,41 @@
 
 <AuthorizeView Policy="[Rol] Administrador">
     <Authorized>
+        @*************************** Dashboard (Panel de Control) ***************************@
+        <RadzenPanelMenuItem Text="Inicio (Panel de Control)" Icon="home" IconColor="@Colors.White" Path="Inicio" Style="font-size:16px;" class="nav-menu-hover" />
+        <RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" class="nav-menu-hover" />
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
-        <RadzenPanelMenuItem Text="Solicitudes (Tickets)" Icon="bookmarks" Style="font-size:16px;" Expanded="true" class="nav-menu-hover">
+        <RadzenPanelMenuItem Text="Solicitudes de (Tickets)" Icon="bookmarks" IconColor="@Colors.Primary" Style="font-size:16px;" Expanded="true" class="nav-menu-hover">
             @*************************** Solicitudes (Ticket's) Pendientes ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" Path="SolicitudesPendientes" class="nav-menu-hover" />
+            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" IconColor="@Colors.Warning" Path="SolicitudesPendientes" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Atendidas ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" Path="SolicitudesAtendidas" class="nav-menu-hover" />
+            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" IconColor="@Colors.Success" Path="SolicitudesAtendidas" class="nav-menu-hover" />
         </RadzenPanelMenuItem>
         @*************************** Módulo de Catálogos ***************************@
-        <RadzenPanelMenuItem Text="Catálogos" Icon="settings" Style="font-size:16px;" Expanded="@isExpanded">
+        <RadzenPanelMenuItem Text="Catálogos" Icon="settings" IconColor="@Colors.Base400" Style="font-size:16px;" Expanded="@isExpanded">
             @*************************** catÁreasDeptos ***************************@
-            <RadzenPanelMenuItem Text="Áreas / Departamentos" Icon="lan" Path="catalogo/areas_departamentos" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Áreas / Departamentos" Icon="lan" IconColor="@Colors.Base400" Path="catalogo/areas_departamentos" class="rz-border-base-800" />
             @*************************** catExtensiones ***************************@
-            <RadzenPanelMenuItem Text="Números de Extensión" Icon="phone" Path="catalogo/extensiones" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Números de Extensión" Icon="phone" IconColor="@Colors.Base400" Path="catalogo/extensiones" class="rz-border-base-800" />
             @*************************** catEdificios ***************************@
-            <RadzenPanelMenuItem Text="Edificios" Icon="domain" Path="catalogo/edificios" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Edificios" Icon="domain" IconColor="@Colors.Base400" Path="catalogo/edificios" class="rz-border-base-800" />
             @*************************** catPisosNiveles ***************************@
-            <RadzenPanelMenuItem Text="Pisos (Niveles)" Icon="stairs" Path="catalogo/pisos" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Pisos (Niveles)" Icon="stairs" IconColor="@Colors.Base400" Path="catalogo/pisos" class="rz-border-base-800" />
             @*************************** catLinks ***************************@
-            <RadzenPanelMenuItem Text="Enlaces Web (Links)" Icon="insert_link" Path="catalogo/enlaces" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Enlaces Web (Links)" Icon="insert_link" IconColor="@Colors.Base400" Path="catalogo/enlaces" class="rz-border-base-800" />
             @*************************** catCarreras ***************************@
-            <RadzenPanelMenuItem Text="Carreras / Licenciaturas" Icon="school" Path="catalogo/carreras" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Carreras / Licenciaturas" Icon="school" IconColor="@Colors.Base400" Path="catalogo/carreras" class="rz-border-base-800" />
             @*************************** catDatosEscuela ***************************@
-            <RadzenPanelMenuItem Text="Datos de la Escuela" Icon="apartment" Path="catalogo/escuelas" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Datos de la Escuela" Icon="apartment" IconColor="@Colors.Base400" Path="catalogo/escuelas" class="rz-border-base-800" />
             @*************************** catTiposSolicitudTicket ***************************@
-            <RadzenPanelMenuItem Text="Tipos de Solicitud" Icon="assignment" Path="catalogo/tipos_solicitud" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Tipos de Solicitud" Icon="assignment" IconColor="@Colors.Base400" Path="catalogo/tipos_solicitud" class="rz-border-base-800" />
             @*************************** catTiposPersonal ***************************@
             <RadzenPanelMenuItem Text="Tipos de Personal" Icon="supervisor_account" Path="catalogo/tipos_personal" class="rz-border-base-800" />
         </RadzenPanelMenuItem>
         @*************************** tbUsuarios ***************************@
-        <RadzenPanelMenuItem Text="Lista de Usuarios" Icon="people_alt" Style="font-size:16px;" Path="catalogo/usuarios" />
+        <RadzenPanelMenuItem Text="Lista de Usuarios" Icon="people_alt" IconColor="@Colors.Secondary" Style="font-size:16px;" Path="catalogo/usuarios" />
+        @*************************** Perfil ***************************@
+        <RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoDark" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
     </Authorized>
     <Authorizing>
     </Authorizing>
@@ -60,8 +66,6 @@
     </NotAuthorized>
 </AuthorizeView>
 
-@*************************** Perfil ***************************@
-<RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoDark" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
 @*************************** Cerrar Sesión (LogOut) ***************************@
 <RadzenPanelMenuItem Text="Cerrar Sesión" Icon="logout" IconColor="@Colors.Danger" Style="font-size:16px;" Click="@LogOut" class="nav-menu-hover" />
 

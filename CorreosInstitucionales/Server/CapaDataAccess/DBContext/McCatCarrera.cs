@@ -35,9 +35,8 @@ public partial class McCatCarrera
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>
-    [Required]
     [Column("carrStatus")]
-    public bool? CarrStatus { get; set; }
+    public bool CarrStatus { get; set; }
 
     [JsonIgnore]
     [InverseProperty("UsuIdCarreraNavigation")]

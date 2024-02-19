@@ -50,7 +50,6 @@ public partial class McCatEscuela
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>
-    [Required]
     [Column("escStatus")]
-    public bool? EscStatus { get; set; }
+    public bool EscStatus { get; set; }
 }
