@@ -1,81 +1,129 @@
 ﻿@inject Radzen.DialogService dialogService
 
 <EditForm Model=@registro OnValidSubmit="@OnValidForm">
-    <div class="alert alert-info">
-        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
-    </div>
     <DataAnnotationsValidator/>
-    <div class="row"><!--ROW-->
-        <div class="col-6 mb-2">
-            <span class="fw-bold">IdSolicitudTicket</span>
-            <InputNumber @bind-Value="@registro.IdSolicitudTicket" class="  form-control" />
-            <ValidationMessage For="()=>registro.IdSolicitudTicket"></ValidationMessage>
-        </div>
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">SolIdTipoSolicitud</span>
-            <InputNumber @bind-Value="@registro.SolIdTipoSolicitud" class="  form-control" />
-            <ValidationMessage For="()=>registro.SolIdTipoSolicitud"></ValidationMessage>
-        </div>
+    @if(!registro_nuevo)
+    {
+        <section class="my-3">
+            <div class="row">
+                <div class="col-4 text-center">
+                    <span class="fw-bold">Ticket</span>
+                    <br /><span class="h1">@registro.IdSolicitudTicket</span>
+                </div>
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">SolIdUsuario</span>
-            <InputNumber @bind-Value="@registro.SolIdUsuario" class="  form-control" />
-            <ValidationMessage For="()=>registro.SolIdUsuario"></ValidationMessage>
-        </div>
+                <div class="col-4 text-center">
+                    <span class="fw-bold">Fecha Creación</span>
+                    <br />@registro.SolFechaHoraCreacion
+                </div>
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">SolCapturaEscaneoAntivirus</span>
-            <InputText @bind-Value="@registro.SolCapturaEscaneoAntivirus" class="  form-control" />
-            <ValidationMessage For="()=>registro.SolCapturaEscaneoAntivirus"></ValidationMessage>
-        </div>
+                <div class="col-4">
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">SolCapturaCuentaBloqueada</span>
-            <InputText @bind-Value="@registro.SolCapturaCuentaBloqueada" class="  form-control" />
-            <ValidationMessage For="()=>registro.SolCapturaCuentaBloqueada"></ValidationMessage>
-        </div>
+                    <span class="fw-bold">Estado de Solicitud</span>
+                    <InputSelect @bind-Value="@registro.SolIdEstadoSolicitud" class="  form-select">
+                        @foreach (var item in cat_SolIdEstadoSolicitud)
+                        {
+                            <option value="@item.IdEstadoSolicitud">@item.EdosolNombreEstado</option>
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+        </section>
+    }
+    
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">SolCapturaError</span>
-            <InputText @bind-Value="@registro.SolCapturaError" class="  form-control" />
-            <ValidationMessage For="()=>registro.SolCapturaError"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">SolFechaHoraCreacion</span>
-            <InputDate @bind-Value="@registro.SolFechaHoraCreacion" class="  form-control" />
-            <ValidationMessage For="()=>registro.SolFechaHoraCreacion"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">SolIdEstadoSolicitud</span>
-            <InputNumber @bind-Value="@registro.SolIdEstadoSolicitud" class="  form-control" />
-            <ValidationMessage For="()=>registro.SolIdEstadoSolicitud"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">SolIdEstadoSolicitud</span>
-            <InputSelect @bind-Value="@registro.SolIdEstadoSolicitud" class="  form-select">@foreach (var item in cat_SolIdEstadoSolicitud)
-                {
-                    <option value="@item.IdEstadoSolicitud">@item.EdosolNombreEstado</option>
-                }</InputSelect>
-                <ValidationMessage For="()=>registro.SolIdEstadoSolicitud"></ValidationMessage>
+    <section class="my-3">
+        <h1>Solicitud</h1>
+        <div class="row mb-3">
+            <div class="col-4">
+                <span class="fw-bold">Tipo Solicitud</span>
+                <InputSelect @bind-Value="@registro.SolIdTipoSolicitud" class="  form-select">
+                    @foreach (var item in cat_SolIdTipoSolicitud)
+                    {
+                        <option value="@item.IdTipoSolicitud">@item.TiposolDescripcion</option>
+                    }
+                </InputSelect>
             </div>
 
-            <div class="col-6 mb-2">
-                <span class="fw-bold">SolIdTipoSolicitud</span>
-                <InputSelect @bind-Value="@registro.SolIdTipoSolicitud" class="  form-select">@foreach (var item in cat_SolIdTipoSolicitud)
+            <div class="col-8">
+                <span class="fw-bold">Solicitante</span>
+                <InputSelect @bind-Value="@registro.SolIdUsuario" class="  form-select">
+                    @foreach (var item in cat_SolIdUsuario)
+                    {
+                        <option value="@item.IdUsuario">@item.UsuNombre  @item.UsuPrimerApellido @item.UsuSegundoApellido</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-6">
+                <RadzenUpload Url="storage/uploads" Icon="upload" Accept="application/pdf"></RadzenUpload>
+                @if(registro.SolIdTipoSolicitud == 1)
                 {
-                    <option value="@item.IdTipoSolicitud">@item.TiposolDescripcion</option>
-                }</InputSelect>
-                <ValidationMessage For="()=>registro.SolIdTipoSolicitud"></ValidationMessage>
+                    <span class="fw-bold">Captura de Cuenta Bloqueada</span>
+                    
+                    <InputText @bind-Value="@registro.SolCapturaCuentaBloqueada" class="  form-control" />
+                    <ValidationMessage For="()=>registro.SolCapturaCuentaBloqueada"></ValidationMessage>
+                }
+                else
+                {
+                    <span class="fw-bold">Captura Error</span>
+                    <InputText @bind-Value="@registro.SolCapturaError" class="  form-control" />
+                    <ValidationMessage For="()=>registro.SolCapturaError"></ValidationMessage>
+                }
             </div>
 
+            <div class="col-6">
+                <span class="fw-bold">Captura de Escaneo de Antivirus</span>
+                <InputText @bind-Value="@registro.SolCapturaEscaneoAntivirus" class="  form-control" />
+                <ValidationMessage For="()=>registro.SolCapturaEscaneoAntivirus"></ValidationMessage>
+            </div>
 
-    </div><!--ROW-->
-    <!--
-    <div class="row">
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <span class="fw-bold">Observaciones</span>
+                <InputTextArea @bind-Value="@registro.SolObservacionesSolicitud" class="form-control" style="height:200px" />
+                <ValidationMessage For="()=>registro.SolObservacionesSolicitud"></ValidationMessage>
+            </div>
+        </div>
+    </section>
+    
+    @if(!registro_nuevo || registro.SolEncuestaCalidadCalificacion is not null)
+    {
+        <section class="my-3">
+            <h1>Encuesta de Calidad</h1>
+            <div class="row">
+                <div class="col-4 text-center">
+                    <span class="fw-bold">Calificación</span>
+                    <br />@registro.SolEncuestaCalidadCalificacion
+
+                </div>
+
+                <div class="col-4">
+                    <span class="fw-bold">Comentarios</span>
+                    <br />@registro.SolEncuestaCalidadComentarios
+                </div>
+
+                <div class="col-4 text-center">
+                    <span class="fw-bold">Contestada el:</span> @registro.SolFechaHoraEncuesta
+                </div>
+            </div>
+        </section>
+    }
+
+    @if(registro.SolEncuestaCalidadCalificacion is null)
+    {
+        <div class="row my-3">
+            <div class="col">
+                Encuesta de calidad: @registro.SolToken
+            </div>
+        </div>
+    }
+
+    <div class="row my-3">
         <div class="offset-8 col-2 mb-2">
             <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
         </div>
@@ -86,7 +134,7 @@
             </button>
         </div>
     </div>
-    -->
+    
 </EditForm>
 
 @code
@@ -96,7 +144,9 @@
     [Parameter] public List<RequestViewModel_EstadoSolicitud> cat_SolIdEstadoSolicitud { get; set; } = new();
     [Parameter] public List<RequestViewModel_TipoSolicitud> cat_SolIdTipoSolicitud { get; set; } = new();
     [Parameter] public List<RequestDTO_Usuario> cat_SolIdUsuario { get; set; } = new();
-    
+
+    [Parameter] public bool registro_nuevo { get; set; } = false;
+
     private void OnValidForm() => dialogService.Close(registro);
     private void OnCloseForm() => dialogService.Close(null);
 }

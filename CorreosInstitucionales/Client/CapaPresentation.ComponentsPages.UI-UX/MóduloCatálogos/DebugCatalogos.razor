@@ -133,7 +133,7 @@
     {{
         if (firstRender)
         {{
-            items = await WebUtils.ListAllAsync({service});
+            items = await WebUtils.ListByStatusAsync({service});
 
     {cs_load_list}
 
@@ -164,7 +164,7 @@
                 HttpResponseMessage response = await {service}.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {{
-                    items = await WebUtils.ListAllAsync({service});
+                    items = await WebUtils.ListByStatusAsync({service});
                 }}
             }}
         }}

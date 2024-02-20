@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloCatálogos;
+using System.Linq.Dynamic.Core;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatálogos
 {
@@ -53,6 +54,31 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                 var item = await _db.McCatAreasDeptos.FindAsync(id);
                 oResponse.Success = 1;
                 oResponse.Data = item;
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
+        [HttpGet("filterByExtension/{extension}")]
+        public async Task<IActionResult> GetDataByExtension(string extension)
+        {
+            Response<McCatAreasDepto?> oResponse = new();
+
+            try
+            {
+                McCatAreasDepto? result = await _db.McCatAreasDeptos.FirstOrDefaultAsync
+                (
+                    a =>
+                        a.AreNoExtension != null &&
+                        a.AreNoExtension.Equals(extension)
+                );
+
+                oResponse.Success = 1;
+                oResponse.Data = result;
             }
             catch (Exception ex)
             {

@@ -1,0 +1,75 @@
+﻿@page "/catalogo/estados_solicitud"
+
+@attribute [Authorize(Policy = "[Rol] Ambos")]
+
+@inject DialogService DialogService
+
+<table class="table table-hover shadow">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
+            <tr>
+                <td>
+                    @item.EdosolNombreEstado
+                    @item.EdosolDescripcion
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
+                        Editar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code
+{
+    //ÉSTE CÓDIGO VA EN LA PÁGINA DONDE SE ENCUENTRA EL LISTADO
+    private List<RequestViewModel_EstadoSolicitud> items = new List<RequestViewModel_EstadoSolicitud>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            items = await WebUtils.ListByStatusAsync(servicioEstadoSolicitud);
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task Editar(RequestViewModel_EstadoSolicitud item)
+    {
+        string json = JsonSerializer.Serialize(item);
+        RequestViewModel_EstadoSolicitud? registro = JsonSerializer.Deserialize<RequestViewModel_EstadoSolicitud>(json);
+
+        if (registro is not null)
+        {
+            RequestViewModel_EstadoSolicitud? result = await DialogService.OpenAsync<EstadosSolicitudEditor>
+                    (
+                        "Actualizar Datos",
+                        new Dictionary<string, object>() {
+                    {"registro", registro},
+
+                            },
+                        new DialogOptions() { ShowClose = false, Width = "75%" }
+                    );
+            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+
+            if (result is not null)
+            {
+                HttpResponseMessage response = await servicioEstadoSolicitud.EditDataAsync(registro);
+                if (response.IsSuccessStatusCode)
+                {
+                    items = await WebUtils.ListByStatusAsync(servicioEstadoSolicitud);
+                }
+            }
+        }
+    }
+}
