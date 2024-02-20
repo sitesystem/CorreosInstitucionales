@@ -4,41 +4,102 @@
 
 @inject DialogService DialogService
 
-<table class="table table-hover shadow">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>ACCIONES</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in items)
-        {
-            <tr>
-                <td>
-                    @item.IdSolicitudTicket
-                    @item.SolIdUsuarioNavigation!.UsuPrimerApellido
-                    @item.SolIdUsuarioNavigation!.UsuSegundoApellido
-                    @item.SolIdUsuarioNavigation!.UsuNombre
-                </td>
-                <td>
-                    <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
-                        Editar
-                    </button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<PageTitle>@Title</PageTitle>
+
+<div class="p-4 rounded-1 bg-white shadow">
+    <h1>@Title</h1>
+    @if(cargado)
+    {
+    <div class="row my-3">
+        <div class="offset-10 col-2">
+            <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
+                    Agregar...
+            </button>
+        </div>
+    </div>
+    }else{
+        <div class="row">
+            <div class="col text-center h1">
+                <img src="logo_saci.png" class="loading_img" />
+                <br />
+                Cargando...
+            </div>
+        </div>
+    }
+    
+    <RadzenDataGrid 
+        AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" 
+        FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" 
+        PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+        Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+        Visible=@cargado
+        SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems
+    >
+        <Columns>
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Frozen="false" Title="Tipo" Filterable="true" Sortable="true" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Frozen="false" Title="Estado" Filterable="true" Sortable="true" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Frozen="false" Title="Nombre" Filterable="true" Sortable="true" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @if (item.SolIdEstadoSolicitud != 6)
+                    {
+                        <text>
+                            @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                            @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                            @item.SolIdUsuarioNavigation!.UsuNombre
+                        </text>
+                    }
+                    else
+                    {
+                        <del>
+                            @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                            @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                            @item.SolIdUsuarioNavigation!.UsuNombre
+                        </del>
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Context="item" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false" FrozenPosition="FrozenColumnPosition.Right">
+                <Template Context="item">
+                    <RadzenButton 
+                        title="Editar..."
+                        Icon="edit" 
+                        ButtonStyle="ButtonStyle.Info" 
+                        Variant="Variant.Filled" 
+                        Size="ButtonSize.Medium" 
+                        Click="@(async ()=> await Editar(item))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</div>
 
 @code
 {
-    //ÉSTE CÓDIGO VA EN LA PÁGINA DONDE SE ENCUENTRA EL LISTADO
+    private string Title = "Solicitudes";
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
+    IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
 
-    public List<RequestViewModel_EstadoSolicitud> cat_SolIdEstadoSolicitud { get; private set; } = new List<RequestViewModel_EstadoSolicitud>();
-    public List<RequestViewModel_TipoSolicitud> cat_SolIdTipoSolicitud { get; private set; } = new List<RequestViewModel_TipoSolicitud>();
-    
+    public List<RequestViewModel_EstadoSolicitud> cat_SolIdEstadoSolicitud { get; set; } = new();
+    public List<RequestViewModel_TipoSolicitud> cat_SolIdTipoSolicitud { get; set; } = new();
+    public List<RequestDTO_Usuario> cat_SolIdUsuario { get; set; } = new();
+
+    private bool cargado { get; set; } = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -47,8 +108,56 @@
 
             cat_SolIdEstadoSolicitud = await WebUtils.ListByStatusAsync(servicioEstadoSolicitud);
             cat_SolIdTipoSolicitud = await WebUtils.ListByStatusAsync(servicioTipoSolicitud);
-            
+            cat_SolIdUsuario = await WebUtils.ListByStatusAsync(servicioUsuario);
+
+            cargado = true;
             StateHasChanged();
+        }
+    }
+
+    private void MensajeCarga()
+    {
+        DialogService.OpenAsync<Carga>(
+                "Cargando...",
+                new Dictionary<string, object>(),
+                new DialogOptions() { ShowClose = false, Width = "200px" }
+            );
+    }
+
+    private async Task Agregar()
+    {
+        RequestDTO_Solicitud registro = new()
+        {
+             SolIdEstadoSolicitud = 1
+        };
+
+        RequestDTO_Solicitud? result = await DialogService.OpenAsync<SolicitudEditor>
+            (
+                "Agregar Solicitud",
+                new Dictionary<string, object>()
+                {
+                    { "registro", registro } ,
+                    { "cat_SolIdEstadoSolicitud",cat_SolIdEstadoSolicitud},
+                    { "cat_SolIdTipoSolicitud",cat_SolIdTipoSolicitud},
+                    { "cat_SolIdUsuario",cat_SolIdUsuario},
+                    { "registro_nuevo", true}
+                },
+                new DialogOptions() { ShowClose = false, Width = "75%" }
+            );
+
+        if (result is not null)
+        {
+            MensajeCarga();
+
+            HttpResponseMessage response = await servicioSolicitud.AddDataAsync(registro);
+
+            if (response.IsSuccessStatusCode)
+            {
+                items = await WebUtils.ListByStatusAsync(servicioSolicitud, false);
+                selectedItems = items.Where(i => (i.IdSolicitudTicket == result.IdSolicitudTicket)).ToList();
+            }
+
+            DialogService.Close();
         }
     }
 
@@ -64,8 +173,9 @@
                         "Actualizar Datos",
                         new Dictionary<string, object>() {
                                 {"registro", registro},
-                                {"cat_SolIdEstadoSolicitud", cat_SolIdEstadoSolicitud},
-                                {"cat_SolIdTipoSolicitud",cat_SolIdTipoSolicitud}
+                                { "cat_SolIdEstadoSolicitud",cat_SolIdEstadoSolicitud},
+                                { "cat_SolIdTipoSolicitud",cat_SolIdTipoSolicitud},
+                                { "cat_SolIdUsuario",cat_SolIdUsuario}
                             },
                         new DialogOptions() { ShowClose = false, Width = "75%" }
                     );

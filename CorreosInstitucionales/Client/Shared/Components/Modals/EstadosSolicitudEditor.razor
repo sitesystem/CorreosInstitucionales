@@ -1,0 +1,50 @@
+﻿@inject Radzen.DialogService dialogService
+
+<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+    <div class="alert alert-info">
+        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+    </div>
+    <DataAnnotationsValidator/>
+    <div class="row"><!--ROW-->
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">IdEstadoSolicitud</span>
+            <InputNumber @bind-Value="@registro.IdEstadoSolicitud" class="  form-control" />
+            <ValidationMessage For="()=>registro.IdEstadoSolicitud"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">EdosolNombreEstado</span>
+            <InputText @bind-Value="@registro.EdosolNombreEstado" class="  form-control" />
+            <ValidationMessage For="()=>registro.EdosolNombreEstado"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">EdosolDescripcion</span>
+            <InputText @bind-Value="@registro.EdosolDescripcion" class="  form-control" />
+            <ValidationMessage For="()=>registro.EdosolDescripcion"></ValidationMessage>
+        </div>
+
+    </div><!--ROW-->
+    
+    <div class="row">
+        <div class="offset-8 col-2 mb-2">
+            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+        </div>
+
+        <div class="col-2 mb-2">
+            <button type="submit" class="btn btn-primary form-control">
+                Guardar
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code
+{
+    [Parameter] public RequestViewModel_EstadoSolicitud registro { get; set; } = new RequestViewModel_EstadoSolicitud();
+    
+    private void OnValidForm() => dialogService.Close(registro);
+    private void OnCloseForm() => dialogService.Close(null);
+}

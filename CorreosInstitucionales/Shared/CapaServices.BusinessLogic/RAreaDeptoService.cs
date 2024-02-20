@@ -32,6 +32,12 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
+        public async Task<Response<RequestViewModel_AreaDepto?>?> GetDataByExtensionAsync(string extension)
+        {
+            var result = await _httpClient.GetFromJsonAsync<Response<RequestViewModel_AreaDepto?>>($"{url}/filterByExtension/{extension}", options: _options);
+            return result;
+        }
+
         public async Task<HttpResponseMessage> AddDataAsync(RequestViewModel_AreaDepto oAreaDepto)
         {
             //var json = JsonSerializer.Serialize(oAreaDepto);

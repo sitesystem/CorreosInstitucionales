@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloCatálogos;
+using System.Linq.Dynamic.Core;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
 {
@@ -26,12 +27,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
                 if (filterByStatus)
                     list = await _db.MtTbSolicitudesTickets
-                                    .Where(st => !st.SolIdEstadoSolicitud.Equals(4)).ToListAsync();
-                                    // .OrderByDescending(x => x.Id)
-                                    // .Skip((actualPage - 1) * Utilities.REGISTERSPERPAGE)
-                                    // .Take(Utilities.REGISTERSPERPAGE)
+                        .Where(st => !st.SolIdEstadoSolicitud.Equals(4))
+                        .Include(u=>u.SolIdUsuarioNavigation)
+                        .Include(st=>st.SolIdEstadoSolicitudNavigation)
+                        .Include(st=>st.SolIdTipoSolicitud)
+                        .ToListAsync();
                 else
-                    list = await _db.MtTbSolicitudesTickets.ToListAsync();
+                    list = await _db.MtTbSolicitudesTickets
+                        .Include(u => u.SolIdUsuarioNavigation)
+                        .Include(st => st.SolIdEstadoSolicitudNavigation)
+                        .Include(st => st.SolIdTipoSolicitudNavigation)
+                        .ToListAsync();
 
                 oResponse.Success = 1;
                 oResponse.Data = list;

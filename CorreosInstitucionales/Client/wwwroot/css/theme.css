@@ -6,11 +6,31 @@
 
 .required
 {
-    border-bottom:2px solid red;
+    border-bottom:1px solid red;
 }
 
 .red
 {
     font-weight:bold;
     color:red;
+}
+
+.loading_img 
+{
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    animation: jumping 1s infinite;
+    transition-timing-function: ease-in;
+}
+
+@keyframes jumping
+{
+    0% { transform: translateX(-32px) scaleY(100%) }
+    20% { transform: translateX(-16px) scaleY(50%) }
+    40% { transform: translateX(-16px) scaleY(50%) }
+    50% { transform: translateX(32px) scaleY(50%) }
+    60% { transform: translateX(32px) scaleY(110%) }
+    80% { transform: translateX(32px) scaleY(90%) }
+    100% { transform: translateX(-32px) scaleY(100%) }
 }

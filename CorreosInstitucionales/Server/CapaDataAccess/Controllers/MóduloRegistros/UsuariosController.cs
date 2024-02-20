@@ -107,7 +107,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     // DATOS PERSONALES
                     UsuNombre = model.UsuNombre.ToUpper(),
                     UsuPrimerApellido = model.UsuPrimerApellido.ToUpper(),
-                    UsuSegundoApellido = model.UsuSegundoApellido.ToUpper(),
+                    UsuSegundoApellido = model.UsuSegundoApellido == null ? null: model.UsuSegundoApellido.ToUpper(),
                     UsuCurp = model.UsuCurp.ToUpper(),
                     UsuFileNameCurp = model.UsuFileNameCurp,
                     UsuNoCelularAnterior = null,
