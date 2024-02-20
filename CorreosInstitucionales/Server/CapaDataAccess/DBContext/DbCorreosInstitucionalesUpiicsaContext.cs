@@ -46,9 +46,10 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        //=> optionsBuilder.UseSqlServer("Server=www.developers.upiicsa.ipn.mx;Database=db_CorreosInstitucionales_UPIICSA;User ID=correos_institucionales;Password=correos_institucionales;Trusted_Connection=False;TrustServerCertificate=True;");
-        => optionsBuilder.UseSqlServer(_config.GetConnectionString("SQLServer"));
-        //=> optionsBuilder.UseSqlServer(_config.GetSection("ConnectionStrings:SQLServer").Value);
+    //=> optionsBuilder.UseSqlServer("Server=www.developers.upiicsa.ipn.mx;Database=db_CorreosInstitucionales_UPIICSA;User ID=correos_institucionales;Password=correos_institucionales;Trusted_Connection=False;TrustServerCertificate=True;");
+    //=> optionsBuilder.UseSqlServer("Server=localhost;Database=db_CorreosInstitucionales_UPIICSA;Trusted_Connection=True;TrustServerCertificate=True;");
+    => optionsBuilder.UseSqlServer(_config.GetConnectionString("SQLServer"));
+    //=> optionsBuilder.UseSqlServer(_config.GetSection("ConnectionStrings:SQLServer").Value);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -280,9 +281,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
             entity.Property(e => e.SolCapturaCuentaBloqueada).HasComment("Nombre del Archivo PDF de la Captura de la Cuenta Bloqueada");
             entity.Property(e => e.SolCapturaError).HasComment("Nombre del Archivo PDF de la Captura del Error");
             entity.Property(e => e.SolCapturaEscaneoAntivirus).HasComment("Nombre del Archivo PDF de la Captura del Escaneo del Antivirus");
-            entity.Property(e => e.SolEncuestaCalidadCalificacion)
-                .HasDefaultValue(0)
-                .HasComment("Calificación de la Encuesta de Calidad con emojis caritas o estrellas.");
+            entity.Property(e => e.SolEncuestaCalidadCalificacion).HasComment("Calificación de la Encuesta de Calidad con emojis caritas o estrellas.");
             entity.Property(e => e.SolEncuestaCalidadComentarios).HasComment("Comentarios, observaciones o notas por la atención de la Solicitud-Ticket.");
             entity.Property(e => e.SolFechaHoraCreacion)
                 .HasDefaultValueSql("(getdate())")
@@ -298,9 +297,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
                 .HasDefaultValue(1)
                 .HasComment("FK ID del Usuario Solicitante");
             entity.Property(e => e.SolObservacionesSolicitud).HasComment("Observación y/o comentario del problema de la Solicitud-Ticket.");
-            entity.Property(e => e.SolToken)
-                .HasDefaultValue("-")
-                .HasComment("Magic Link con Token para Encuestra de Calidad");
+            entity.Property(e => e.SolToken).HasComment("Magic Link con Token para Encuestra de Calidad");
             entity.Property(e => e.SolValidacionDatos).HasComment("Validación de Datos por el Administrador { 0 - No Validados, 1 - Validados }");
 
             entity.HasOne(d => d.SolIdEstadoSolicitudNavigation).WithMany(p => p.MtTbSolicitudesTickets)

@@ -95,7 +95,7 @@ public partial class MtTbSolicitudesTicket
     /// Fecha Hora de la respuesta a la Encuesta de Calidad de la Solicitud-Ticket.
     /// </summary>
     [Column("solFechaHoraEncuesta", TypeName = "datetime")]
-    public DateTime SolFechaHoraEncuesta { get; set; }
+    public DateTime? SolFechaHoraEncuesta { get; set; }
 
     /// <summary>
     /// Fecha Hora de la creación de la Solicitud-Ticket.
@@ -105,13 +105,13 @@ public partial class MtTbSolicitudesTicket
 
     [ForeignKey("SolIdEstadoSolicitud")]
     [InverseProperty("MtTbSolicitudesTickets")]
-    public virtual McCatEstadosSolicitud? SolIdEstadoSolicitudNavigation { get; set; } = null!;
+    public virtual McCatEstadosSolicitud SolIdEstadoSolicitudNavigation { get; set; } = null!;
 
     [ForeignKey("SolIdTipoSolicitud")]
     [InverseProperty("MtTbSolicitudesTickets")]
-    public virtual McCatTiposSolicitud? SolIdTipoSolicitudNavigation { get; set; } = null!;
+    public virtual McCatTiposSolicitud SolIdTipoSolicitudNavigation { get; set; } = null!;
 
     [ForeignKey("SolIdUsuario")]
     [InverseProperty("MtTbSolicitudesTickets")]
-    public virtual MpTbUsuario? SolIdUsuarioNavigation { get; set; } = null!;
+    public virtual MpTbUsuario SolIdUsuarioNavigation { get; set; } = null!;
 }

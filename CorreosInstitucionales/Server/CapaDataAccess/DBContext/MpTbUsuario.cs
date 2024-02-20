@@ -222,9 +222,9 @@ public partial class MpTbUsuario
 
     [ForeignKey("UsuIdRol")]
     [InverseProperty("MpTbUsuarios")]
-    public virtual McCatRole? UsuIdRolNavigation { get; set; } = null!;
+    public virtual McCatRole UsuIdRolNavigation { get; set; } = null!;
 
     [ForeignKey("UsuIdTipoPersonal")]
     [InverseProperty("MpTbUsuarios")]
-    public virtual McCatTiposPersonal? UsuIdTipoPersonalNavigation { get; set; } = null!;
+    public virtual McCatTiposPersonal UsuIdTipoPersonalNavigation { get; set; } = null!;
 }

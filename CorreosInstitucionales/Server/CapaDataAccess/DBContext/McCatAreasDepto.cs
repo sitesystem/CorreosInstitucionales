@@ -58,11 +58,11 @@ public partial class McCatAreasDepto
 
     [ForeignKey("AreIdEdificio")]
     [InverseProperty("McCatAreasDeptos")]
-    public virtual McCatEdificio? AreIdEdificioNavigation { get; set; } = null!;
+    public virtual McCatEdificio AreIdEdificioNavigation { get; set; } = null!;
 
     [ForeignKey("AreIdPiso")]
     [InverseProperty("McCatAreasDeptos")]
-    public virtual McCatPiso? AreIdPisoNavigation { get; set; } = null!;
+    public virtual McCatPiso AreIdPisoNavigation { get; set; } = null!;
 
     [JsonIgnore]
     [InverseProperty("ExtIdAreaDeptoNavigation")]

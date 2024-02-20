@@ -73,10 +73,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 var list = new List<MtTbSolicitudesTicket>();
 
                 int solicitudNoAtendida = await _db.MtTbSolicitudesTickets
-                                                 .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioStatus) && !st.SolIdEstadoSolicitud.Equals(4))
-                                                 .CountAsync();
+                                                   .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioStatus) && (!st.SolIdEstadoSolicitud.Equals(5) || !st.SolIdEstadoSolicitud.Equals(6)))
+                                                   .CountAsync();
                 if (solicitudNoAtendida > 0)
-                    oResponse.Message = "NO PUEDE SOLICITAR";
+                    oResponse.Message = "NO PUEDE SOLICITAR, PENDIENTE DE CONTESTAR ENCUESTA DE CALIDAD";
                 else
                 {
                     oResponse.Success = 1;

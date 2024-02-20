@@ -730,13 +730,6 @@ else
         }
     }
 
-    @*///////////////////////////////////////////////  VALIDAR ReCAPTCHA  ////////////////////////////////////////////////////////////////////////*@
-    private ReCAPTCHA oReCAPTCHAComponent;
-    // private bool ServerVerificatiing = false;
-    private bool ValidReCAPTCHA = false;
-    private async Task OnSuccess() => ValidReCAPTCHA = true;
-    private async Task OnExpired() => ValidReCAPTCHA = false;
-
     @*///////////////////////////////////////////////  VALIDAR CAMPOS DEL FORMULARIO CON DATA_NOTATIONS  ///////////////////////////////////////////////*@
     private async Task OnInvalidHandled_ScrollToTop()
     {
@@ -786,6 +779,13 @@ else
     }
 
     async Task OnCompleteFiles(UploadCompleteEventArgs args) => Console.WriteLine($"Server response: {args.RawResponse}");
+
+    @*///////////////////////////////////////////////  VALIDAR ReCAPTCHA  ////////////////////////////////////////////////////////////////////////*@
+    private ReCAPTCHA oReCAPTCHAComponent;
+    // private bool ServerVerificatiing = false;
+    private bool ValidReCAPTCHA = false;
+    private async Task OnSuccess() => ValidReCAPTCHA = true;
+    private async Task OnExpired() => ValidReCAPTCHA = false;
 
     @*///////////////////////////////////////////////  AVISO DE PRIVACIDAD PARA LA PROTECCIÓN DE DATOS PERSONALES  ////////////////////////////////////*@
     private bool aceptar_aviso_privacidad = false;
@@ -869,7 +869,7 @@ else
 						                                <table style='text-align:justify;'>
 							                                <thead>
 								                                <tr>
-									                                <th scope='col' colspan='2' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Datos personales</th>
+									                                <th scope='col' colspan='2' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Datos del Registro</th>
 								                                </tr>
 							                                </thead>
 							                                <tbody>
@@ -953,6 +953,8 @@ else
 
                     if (oRespuesta.Success == 1)
                     {
+                        idResponse = int.Parse(oRespuesta.Message);
+
                         @*//  ENVÍO DE CORREO ELECTRÓNICO PARA AVISO DE REGISTRO EXITOSO  //*@
                         await servicioSendEmail.SendEmailAsync(
                             new RequestDTO_SendEmail()
@@ -963,8 +965,6 @@ else
                             });
                     
                         @*//  UPLOAD FILES  //*@
-                        idResponse = int.Parse(oRespuesta.Message);
-
                         oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
                         oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
 
@@ -995,7 +995,7 @@ else
                                             <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
                                         </svg>
                                     </span>
-                                    <RadzenText TextStyle="TextStyle.Body1" class="text-success"><b>¡Registro Exitoso del Usuario!</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="text-success"><b>¡Registro Exitoso de Usuari@@!</b></RadzenText>
                                 </RadzenStack>
                                 <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="">
                                     <RadzenStack Gap="0px">
@@ -1069,7 +1069,8 @@ else
                                 EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
                                 Subject = "ERROR DE REGISTRO EN SACI",
                                 Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                    "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br> Por favor no responder a este correo, acuda a la unidad de informática de tu escuela<br>"
+                                       "Registro NO exitoso en el <b>Sistema de Atención para Correos Institucionales (SACI)</b><br>" +
+                                       "Por favor no responder a este correo, acuda a la unidad de informática de tu escuela<br>"
                             });
                     }
                 }
