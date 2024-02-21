@@ -7,14 +7,14 @@
         <RadzenPanelMenuItem Text="Inicio (Panel de Control)" Icon="home" IconColor="@Colors.White" Path="Inicio" Style="font-size:16px;" class="nav-menu-hover" />
         <RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" class="nav-menu-hover" />
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
-        <RadzenPanelMenuItem Text="@($@"Solicitudes de Tickets")" Icon="bookmarks" IconColor="@Colors.Primary" Style="font-size:16px;" Expanded="@isExpanded" class="nav-menu-hover">
+        <RadzenPanelMenuItem Text="@($@"Solicitudes de Tickets")" Icon="bookmarks" IconColor="@Colors.PrimaryLight" Style="font-size:16px;" Expanded="@isExpanded" class="nav-menu-hover">
             @*************************** Levantamiento del Nuevo Ticket ***************************@
             <RadzenPanelMenuItem Text="Nueva Solicitud de Ticket" Icon="local_offer" IconColor="@Colors.Warning" Path="NuevaSolicitudTicket" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Pendientes y Atendidas ***************************@
-            <RadzenPanelMenuItem Text="Seguimiento de Solicitudes de Tickets" Icon="bookmark" IconColor="@Colors.Success" Path="/SeguimientoTickets" class="nav-menu-hover" />
+            <RadzenPanelMenuItem Text="Seguimiento de Solicitudes de Tickets" Icon="bookmark" IconColor="@Colors.SuccessLight" Path="/SeguimientoTickets" class="nav-menu-hover" />
         </RadzenPanelMenuItem>
         @*************************** Perfil ***************************@
-        <RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoDark" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
+        <RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoLight" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
     </Authorized>
     <Authorizing>
     </Authorizing>
@@ -28,11 +28,11 @@
         <RadzenPanelMenuItem Text="Inicio (Panel de Control)" Icon="home" IconColor="@Colors.White" Path="Inicio" Style="font-size:16px;" class="nav-menu-hover" />
         <RadzenPanelMenuItem Text="Módulos" style="font-variant: small-caps; font-size:16px;" class="nav-menu-hover" />
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
-        <RadzenPanelMenuItem Text="Solicitudes de (Tickets)" Icon="bookmarks" IconColor="@Colors.Primary" Style="font-size:16px;" Expanded="true" class="nav-menu-hover">
+        <RadzenPanelMenuItem Text="Solicitudes de (Tickets)" Icon="bookmarks" IconColor="@Colors.PrimaryLight" Style="font-size:16px;" Expanded="true" class="nav-menu-hover">
             @*************************** Solicitudes (Ticket's) Pendientes ***************************@
             <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" IconColor="@Colors.Warning" Path="SolicitudesPendientes" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Atendidas ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" IconColor="@Colors.Success" Path="SolicitudesAtendidas" class="nav-menu-hover" />
+            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" IconColor="@Colors.SuccessLight" Path="SolicitudesAtendidas" class="nav-menu-hover" />
         </RadzenPanelMenuItem>
         @*************************** Módulo de Catálogos ***************************@
         <RadzenPanelMenuItem Text="Catálogos" Icon="settings" IconColor="@Colors.Base400" Style="font-size:16px;" Expanded="@isExpanded">
@@ -61,9 +61,9 @@
 
         </RadzenPanelMenuItem>
         @*************************** tbUsuarios ***************************@
-        <RadzenPanelMenuItem Text="Lista de Usuarios" Icon="people_alt" IconColor="@Colors.Secondary" Style="font-size:16px;" Path="catalogo/usuarios" />
+        <RadzenPanelMenuItem Text="Lista de Usuarios" Icon="people_alt" IconColor="@Colors.SecondaryLight" Style="font-size:16px;" Path="catalogo/usuarios" />
         @*************************** Perfil ***************************@
-        <RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoDark" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
+        <RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoLight" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
     </Authorized>
     <Authorizing>
     </Authorizing>
