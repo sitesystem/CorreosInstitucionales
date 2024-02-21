@@ -231,7 +231,7 @@
                             <ChildContent>
                                 <RadzenDropDown Name="@($@"semester_{TipoPersonal}")"
                                                 @bind-Value="@oUsuario.UsuSemestre"
-                                                TValue="string?"
+                                                TValue="string"
                                                 ValueProperty="Key"
                                                 TextProperty="Value"
                                                 Data="@oSemestres"
@@ -331,7 +331,7 @@
             </SummaryTemplate>
         </RadzenFieldset>
         
-        <!-- ******************************************************************* CARD DATOS DE LA CUENTA ******************************************************************* -->
+        <!-- ******************************************************************* CARD DATOS DE LA CUENTA SACI ******************************************************************* -->
         <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos de la Cuenta SACI" CollapseTitle="Datos de la Cuenta SACI" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-3">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
@@ -349,7 +349,7 @@
                             </ChildContent>
                             <Helper>
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify"
-                                            Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de Correo Electrónico Personal, levanta una Solicitud (Ticket)." : "Dominios válidos (gmail, outlook, hotmail, yahoo, msn)." )}")" />
+                                            Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de Correo Electrónico Personal, levanta una Solicitud (Ticket)." : "Dominios válidos (gmail, outlook, hotmail, yahoo, msn, etc.)." )}")" />
                             </Helper>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />

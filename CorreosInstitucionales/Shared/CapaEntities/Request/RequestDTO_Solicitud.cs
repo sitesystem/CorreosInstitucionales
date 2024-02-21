@@ -36,6 +36,19 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         [Column("solIdUsuario")]
         public int SolIdUsuario { get; set; }
 
+        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo inválido. (Formato: xxxxxx@xxx.xx)")]
+        [StringLength(100)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO PERSONAL NUEVO requerido.")]
+        public string? SolCorreoPersonalCuentaNueva { get; set; }
+
+        /// <summary>
+        /// Número Celular Anterior del Usuario
+        /// </summary>
+        [StringLength(20)]
+        [MinLength(14, ErrorMessage = "Verifique el No. DE CELULAR NUEVO que tenga al menos 10 dígitos.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR NUEVO requerido.")]
+        public string? SolNoCelularNuevo { get; set; }
+
         /// <summary>
         /// Nombre del Archivo PDF de la Captura del Escaneo del Antivirus
         /// </summary>

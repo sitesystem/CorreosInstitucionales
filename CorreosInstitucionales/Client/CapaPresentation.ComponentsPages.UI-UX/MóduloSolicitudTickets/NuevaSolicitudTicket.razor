@@ -85,8 +85,33 @@
                                     </div>
 
                                     <!-- ******************************************************************* ARCHIVOS PDF CAPTURAS ******************************************************************* -->
-                                    <div class="col-md-6 col-lg-6 mt-3">
-                                        <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.Div" TextAlign="TextAlign.JustifyAll">
+                                    <div class="col-md-6 col-lg-6">
+
+                                        <RadzenFormField Text="Correo Electrónico Personal Nuevo" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3">
+                                            <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                <RadzenTextBox Name="new_EmailPersonal" @bind-Value="@oSolicitudTicket.SolCorreoPersonalCuentaNueva" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="100"
+                                                               Disabled="false" ReadOnly="false" />
+                                            </ChildContent>
+                                            <Helper>
+                                                <RadzenText Text="Dominios válidos (gmail, outlook, hotmail, yahoo, msn, etc.)." TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" />
+                                            </Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCorreoPersonalCuentaNueva)" />
+
+                                        <RadzenFormField Text="@($@"Número de Celular Nuevo")" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
+                                            <Start><RadzenIcon Icon="phone_iphone" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                <RadzenMask Name="@($@"newPhoneNumber")" @bind-Value="@oSolicitudTicket.SolNoCelularNuevo" MinLength="0" MaxLength="20" style="border-bottom: 3px solid red;"
+                                                            Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" Disabled="false" ReadOnly="false" />
+                                            </ChildContent>
+                                            <Helper>
+                                                <RadzenText Text="Sólo No. de Celular con 10 dígitos." TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" />
+                                            </Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolNoCelularNuevo)" />
+
+                                        <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.Div" TextAlign="TextAlign.JustifyAll" class="mt-2 mb-0">
                                             <a href="@oLinkReducirTamañoArchivo.Data.LinkEnlace" target="_blank" class="icon-link icon-link-hover">
                                                 Comprimir y/o reducir el tamaño del <strong>Archivo PDF (Máx. 2MB)</strong>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
@@ -160,7 +185,7 @@
                         </RadzenFieldset>
 
                         <!-- ******************************************************************* ReCAPTCHA Y BOTÓN ENVIAR ******************************************************************* -->
-                        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" class="rz-mt-5">
+                        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" class="rz-mt-4">
                             <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                             <ValidationSummary class="rz-my-0" />
                             <RadzenButton Text="Enviar Solicitud-Ticket"
