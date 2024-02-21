@@ -6,24 +6,36 @@
 
 <PageTitle>@Title</PageTitle>
 
-<div class="p-4 rounded-1 bg-white shadow">
-    <h1>@Title</h1>
+    <div class="p-4 rounded-1 bg-white shadow">
+        <h1>@Title</h1>
 
-    <div class="row my-2">
-        <div class="offset-10 col-2">
-            <button type="button" class="btn btn-primary form-control" @onclick="Agregar" >
-                Nuevo...
-            </button>
+    @if (cargado)
+    {
+        <div class="row my-3">
+            <div class="offset-10 col-2">
+                <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
+                    Agregar...
+                </button>
+            </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="row my-4">
+            <div class="col text-center">
+                <img src="logo_saci.png" class="loading_img" />
+                <br />
+                Cargando...
+            </div>
+        </div>
+    }
 
-    <RadzenDataGrid 
-        AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" 
-        FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" 
-        PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"            
-        Data="@items" TItem="RequestDTO_Usuario" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
-        SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems
-    >
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
+                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@items" TItem="RequestDTO_Usuario" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems
+                    Visible=@cargado>
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="IdUsuario" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
@@ -48,35 +60,38 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Context="item" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false" FrozenPosition="FrozenColumnPosition.Right">
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="UsuCorreoPersonalCuentaNueva" Filterable="false" Title="Correo Personal" TextAlign="TextAlign.End" />
+
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="UsuCorreoInstitucionalCuenta" Filterable="false" Title="Correo Institucional" TextAlign="TextAlign.End" />
+
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Context="item"
+                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false"
+                                  Visible=@puede_editar>
                 <Template Context="item">
-                    <RadzenButton 
-                        title="Editar..."
-                        Icon="edit" 
-                        ButtonStyle="ButtonStyle.Info" 
-                        Variant="Variant.Filled" 
-                        Size="ButtonSize.Medium" 
-                        Click="@(async ()=> await Editar(item))" @onclick:stopPropagation="true">
+                    <RadzenButton title="Editar..."
+                                  Icon="edit"
+                                  ButtonStyle="ButtonStyle.Info"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Click="@(async ()=> await Editar(item))" @onclick:stopPropagation="true">
                     </RadzenButton>
 
-                    <RadzenButton 
-                        title="Deshabilitar"
-                        Icon="delete"
-                        ButtonStyle="ButtonStyle.Danger" 
-                        Variant="Variant.Filled"
-                        Size="ButtonSize.Medium"
-                        Visible="item.UsuStatus.Equals(true)"
-                        Click="@(async ()=> await CambiarStatus(item, false))" @onclick:stopPropagation="true">
+                    <RadzenButton title="Deshabilitar"
+                                  Icon="delete"
+                                  ButtonStyle="ButtonStyle.Danger"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Visible="item.UsuStatus.Equals(true)"
+                                  Click="@(async ()=> await CambiarStatus(item, false))" @onclick:stopPropagation="true">
                     </RadzenButton>
 
-                    <RadzenButton 
-                        title="Habilitar"
-                        ButtonStyle="ButtonStyle.Success" 
-                        Icon="autorenew"
-                        Variant="Variant.Filled"
-                        Size="ButtonSize.Medium" 
-                        Visible="item.UsuStatus.Equals(false)"
-                        Click="@(async ()=> await CambiarStatus(item, true))" @onclick:stopPropagation="true">
+                    <RadzenButton title="Habilitar"
+                                  ButtonStyle="ButtonStyle.Success"
+                                  Icon="autorenew"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Visible="item.UsuStatus.Equals(false)"
+                                  Click="@(async ()=> await CambiarStatus(item, true))" @onclick:stopPropagation="true">
                     </RadzenButton>
 
                 </Template>
@@ -85,34 +100,57 @@
     </RadzenDataGrid>
 </div>
 
-@code 
+@code
 {
     private string Title = "Usuarios";
+    private bool cargado { get; set; } = false;
+
     private List<RequestDTO_Usuario> items = new List<RequestDTO_Usuario>();
+    private IList<RequestDTO_Usuario> selectedItems = new List<RequestDTO_Usuario>();
+
+    private bool puede_editar { get; set; } = true;
+    private bool puede_agregar { get; set; } = false;
 
     public List<RequestViewModel_AreaDepto> cat_UsuIdAreaDepto { get; private set; } = new List<RequestViewModel_AreaDepto>();
     public List<RequestViewModel_Carrera> cat_UsuIdCarrera { get; private set; } = new List<RequestViewModel_Carrera>();
     public List<RequestViewModel_Rol> cat_UsuIdRol { get; private set; } = new List<RequestViewModel_Rol>();
     public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; private set; } = new List<RequestViewModel_TipoPersonal>();
-
-    IList<RequestDTO_Usuario> selectedItems = new List<RequestDTO_Usuario>();
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            MensajeCarga();
-
             items = await WebUtils.ListByStatusAsync(servicioUsuario, false);
-
-            cat_UsuIdAreaDepto = await WebUtils.ListByStatusAsync(servicioAreaDepto);
-            cat_UsuIdCarrera = await WebUtils.ListByStatusAsync(servicioCarrera);
-            cat_UsuIdRol = await WebUtils.ListByStatusAsync(servicioRol);
-            cat_UsuIdTipoPersonal = await WebUtils.ListByStatusAsync(servicioTipoPersonal);
-
-            DialogService.Close();
+            cargado = true;
             StateHasChanged();
         }
+    }
+
+    private async Task CargarLista(int? selecccionar_id = null)
+    {
+        items = await WebUtils.ListByStatusAsync(servicioUsuario, false);
+
+        if (selecccionar_id is not null)
+        {
+            selectedItems = items.Where(i => (i.IdUsuario == selecccionar_id)).ToList();
+        }
+    }
+
+    private async Task<RequestDTO_Usuario?> MostrarFormulario(RequestDTO_Usuario registro)
+    {
+        return await DialogService.OpenAsync<UsuarioEditor>
+                (
+                    "Actualizar Datos",
+                    new Dictionary<string, object>()
+                                        {
+                        {"registro", registro}
+                                        },
+                    new DialogOptions()
+                        {
+                            ShowClose = false,
+                            Width = "75%",
+                            CssClass = "dialog_simple"
+                        }
+                );
     }
 
     private void MensajeCarga()
@@ -126,98 +164,55 @@
 
     private async Task Agregar()
     {
-        RequestDTO_Usuario registro = new()
-        {
-            UsuFileNameCurp = "dummy.pdf",
-            UsuFileSizeCurp = 1,
-            UsuFileNameComprobanteInscripcion = "dummy.pdf",
-            UsuFileSizeComprobanteInscripcion = 1,
-            UsuBoletaAlumno = "0000600000",
-            UsuBoletaMaestria = "B000000",
-            UsuIdCarrera = 1,
-            UsuSemestre = "0",
-            UsuAñoEgreso = 0,
-            UsuNumeroEmpleado = "0",
-            UsuIdAreaDepto = 1,
-            UsuNoExtension = "0",
-            UsuStatus = true
-        };
+        RequestDTO_Usuario registro = new();
 
-        RequestDTO_Usuario? result = await DialogService.OpenAsync<UsuarioEditor>
-            (
-                "Agregar Usuario",
-                new Dictionary<string, object>() 
-                {
-                    { "registro", registro } ,
-                    { "cat_UsuIdAreaDepto",cat_UsuIdAreaDepto},
-                    { "cat_UsuIdCarrera",cat_UsuIdCarrera},
-                    { "cat_UsuIdRol",cat_UsuIdRol},
-                    { "cat_UsuIdTipoPersonal",cat_UsuIdTipoPersonal}
-                },
-                new DialogOptions() { ShowClose = false, Width = "75%" }
-            );
+        RequestDTO_Usuario? result = await MostrarFormulario(registro);
 
         if (result is not null)
         {
             MensajeCarga();
 
             HttpResponseMessage response = await servicioUsuario.AddDataAsync(registro);
-
             if (response.IsSuccessStatusCode)
             {
-                items = await WebUtils.ListByStatusAsync(servicioUsuario, false);
-                selectedItems = items.Where(i => (i.IdUsuario == result.IdUsuario)).ToList();
+                await CargarLista(result.IdUsuario);
             }
 
             DialogService.Close();
         }
-    }
+    }// AGREGAR
 
     private async Task Editar(RequestDTO_Usuario item)
     {
         string json = JsonSerializer.Serialize(item);
         RequestDTO_Usuario? registro = JsonSerializer.Deserialize<RequestDTO_Usuario>(json);
 
-        if(registro is not null)
+        if (registro is not null)
         {
-            RequestDTO_Usuario? result = await DialogService.OpenAsync<UsuarioEditor>
-            (
-                "Actualizar Datos",
-                new Dictionary<string, object>() { 
-                    { "registro", registro } ,
-                    { "cat_UsuIdAreaDepto",cat_UsuIdAreaDepto},
-                    { "cat_UsuIdCarrera",cat_UsuIdCarrera},
-                    { "cat_UsuIdRol",cat_UsuIdRol},
-                    { "cat_UsuIdTipoPersonal",cat_UsuIdTipoPersonal}
-                },
-                new DialogOptions() { ShowClose = false, Width = "75%" }
-            );
+            RequestDTO_Usuario? result = await MostrarFormulario(registro);
 
-            if(result is not null)
+            if (result is not null)
             {
-                MensajeCarga();
                 HttpResponseMessage response = await servicioUsuario.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListByStatusAsync(servicioUsuario, false);
-                    selectedItems = items.Where(i => (i.IdUsuario == result.IdUsuario)).ToList();
+                    await CargarLista(item.IdUsuario);
                 }
-                DialogService.Close();
             }
         }
-    }
+    }//EDITAR
 
     private async Task CambiarStatus(RequestDTO_Usuario item, bool status)
     {
-        string des = status?"":"des";
+        string des = status ? "" : "des";
 
         bool result = await DialogService.OpenAsync<ConfirmarDlg>
             (
                 "Confirmar",
                 new Dictionary<string, object>()
-                {
-                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.UsuPrimerApellido} {item.UsuSegundoApellido} {item.UsuNombre}?" } 
-                },
+                                            {
+                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.UsuNombre} {item.UsuPrimerApellido} {item.UsuSegundoApellido}?" }
+                                            },
                 new DialogOptions() { ShowClose = false }
             );
 
@@ -226,9 +221,8 @@
             HttpResponseMessage response = await servicioUsuario.EnableDisableDataByIdAsync(item.IdUsuario, status);
             if (response.IsSuccessStatusCode)
             {
-                items = await WebUtils.ListByStatusAsync(servicioUsuario, false);
-                selectedItems = items.Where(i => (i.IdUsuario == item.IdUsuario)).ToList();
+                await CargarLista(item.IdUsuario);
             }
         }
-    }
+    }//CAMBIAR STATUS
 }

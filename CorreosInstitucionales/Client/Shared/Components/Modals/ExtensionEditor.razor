@@ -20,22 +20,19 @@
                 }</InputSelect>
             <ValidationMessage For="()=>registro.ExtIdAreaDepto"></ValidationMessage>
         </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">Status</span>
-            <InputCheckbox @bind-Value="@registro.ExtStatus" class="required form-check-input" />
-        </div>
     </div><!--ROW-->
     
-    <div class="row">
-        <div class="offset-8 col-2 mb-2">
-            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
-        </div>
+    <div class="container-fluid mt-3 py-3 bg-silver">
+        <div class="row">
+            <div class="offset-4 col-4">
+                <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+            </div>
 
-        <div class="col-2 mb-2">
-            <button type="submit" class="btn btn-primary form-control">
-                Guardar
-            </button>
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary form-control">
+                    Guardar
+                </button>
+            </div>
         </div>
     </div>
 

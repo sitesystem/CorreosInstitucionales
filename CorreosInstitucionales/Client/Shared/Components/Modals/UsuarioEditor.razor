@@ -7,7 +7,7 @@
     <DataAnnotationsValidator />
     <ValidationSummary/>
 
-    <section>
+    <section class="my-2">
         <h1>Datos de Cuenta</h1>
 
         <div class="row">
@@ -40,7 +40,7 @@
         </div><!--ROW-->
     </section>
 
-    <section>
+    <section class="my-2">
         <h1>Datos personales</h1>
 
         <div class="row">
@@ -71,7 +71,7 @@
     </section>
 
 
-    <section>
+    <section class="my-2">
         <h1>Datos de contacto</h1>
         <div class="row">
             <div class="col-6">
@@ -93,8 +93,9 @@
         </div>
     </section>
 
-
-    <section>
+    @if(es_alumno || es_empleado)
+    {
+    <section class="my-2">
         <h1>Información General</h1>
         <div class="row">
             @if (es_alumno)
@@ -106,7 +107,7 @@
                 </div>
 
                 <div class="col-6">
-                    <span class="fw-bold">UsuIdCarrera</span>
+                    <span class="fw-bold">Carrera</span>
                     <InputSelect @bind-Value="@registro.UsuIdCarrera" class=" form-select">
                         @foreach (var item in cat_UsuIdCarrera)
                         {
@@ -168,8 +169,12 @@
             }
         </div>
     </section>
+    }
     
-    <section>
+    
+    @if(!string.IsNullOrEmpty(registro.UsuCorreoInstitucionalCuenta))
+    {
+    <section class="my-2">
         <h1>Cuenta Institucional</h1>
         <div class="row">
             <div class="col-6">
@@ -185,19 +190,21 @@
             </div>
         </div>
     </section>
+    }
+    
+    <div class="container-fluid mt-3 py-3 bg-silver">
+        <div class="row">
+            <div class="offset-8 col-2">
+                <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+            </div>
 
-    <div class="row">
-        <div class="offset-8 col-2 mb-2">
-            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
-        </div>
-
-        <div class="col-2 mb-2">
-            <button type="submit" class="btn btn-primary form-control">
-                Guardar
-            </button>
+            <div class="col-2">
+                <button type="submit" class="btn btn-primary form-control">
+                    Guardar
+                </button>
+            </div>
         </div>
     </div>
-
 </EditForm>
 
 @code
@@ -210,14 +217,14 @@
     [Parameter] public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; set; } = new List<RequestViewModel_TipoPersonal>();
 
     int[] ids_tipo_personal_alumnos = new int[] { 1, 2 };
-    int[] ids_tipo_peronal_personal = new int[] { 5, 6, 7 };
+    int[] ids_tipo_peronal_personal = new int[] { 5, 6 };
 
     private bool es_alumno { get { return ids_tipo_personal_alumnos.Contains(registro.UsuIdTipoPersonal); } }
 
     private bool es_egresado { get {  return registro.UsuIdTipoPersonal == 2 || es_alumno_maestria; } }
     private bool es_alumno_maestria { get { return registro.UsuIdTipoPersonal == 3; }}
     private bool es_empleado { get { return ids_tipo_peronal_personal.Contains(registro.UsuIdTipoPersonal); }}
-
+    
     private void OnValidForm() => dialogService.Close(registro);
     private void OnCloseForm() => dialogService.Close(null);
 }

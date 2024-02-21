@@ -6,19 +6,19 @@
     </div>
     <DataAnnotationsValidator/>
     <div class="row"><!--ROW-->
-        <div class="col-2 mb-2">
+        <div class="col-4 mb-2">
             <span class="fw-bold">Número de Escuela (?)</span>
             <InputText @bind-Value="@registro.EscNoEscuela" class=" form-control" />
             <ValidationMessage For="()=>registro.EscNoEscuela"></ValidationMessage>
         </div>
 
-        <div class="col-4 mb-2">
+        <div class="col-8 mb-2">
             <span class="fw-bold">Nombre Corto</span>
             <InputText @bind-Value="@registro.EscNombreCorto" class=" form-control" />
             <ValidationMessage For="()=>registro.EscNombreCorto"></ValidationMessage>
         </div>
 
-        <div class="col-6 mb-2">
+        <div class="col-12 mb-2">
             <span class="fw-bold">Nombre Largo</span>
             <InputText @bind-Value="@registro.EscNombreLargo" class=" form-control" />
             <ValidationMessage For="()=>registro.EscNombreLargo"></ValidationMessage>
@@ -29,22 +29,19 @@
             <InputText @bind-Value="@registro.EscLogo" class=" form-control" />
             <ValidationMessage For="()=>registro.EscLogo"></ValidationMessage>
         </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">Status</span>
-            <InputCheckbox @bind-Value="@registro.EscStatus" class="required form-check-input" />
-        </div>
     </div><!--ROW-->
     
-    <div class="row">
-        <div class="offset-8 col-2 mb-2">
-            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
-        </div>
+    <div class="container-fluid mt-3 py-3 bg-silver">
+        <div class="row">
+            <div class="offset-4 col-4">
+                <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+            </div>
 
-        <div class="col-2 mb-2">
-            <button type="submit" class="btn btn-success form-control">
-                Guardar
-            </button>
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary form-control">
+                    Guardar
+                </button>
+            </div>
         </div>
     </div>
 
