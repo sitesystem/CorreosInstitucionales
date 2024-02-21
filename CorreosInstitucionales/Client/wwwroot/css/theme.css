@@ -15,16 +15,24 @@
     color:red;
 }
 
-.loading_img 
+.dialog_simple .rz-dialog-content {
+    padding-bottom: 0;
+}
+
+.bg-silver
 {
+    background-color:#ccc;
+}
+
+.loading_img {
     display: inline-block;
     width: 64px;
     height: 64px;
-    animation: jumping 1s infinite;
+    animation: send 1s infinite;
     transition-timing-function: ease-in;
 }
 
-@keyframes jumping
+@keyframes send
 {
     0% { transform: translateX(-32px) scaleY(100%) }
     20% { transform: translateX(-16px) scaleY(50%) }

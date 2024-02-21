@@ -6,60 +6,178 @@
 
 <PageTitle>@Title</PageTitle>
 
-<div class="p-4 rounded-1 bg-white shadow">
-    <h1>@Title</h1>
+    <div class="p-4 rounded-1 bg-white shadow">
+        <h1>@Title</h1>
 
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>ACCIONES</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in items)
-            {
-                <tr>
-                    <td>
-                        @if(item.EscStatus)
-                        {
-                            <text>@item.EscNombreLargo (@item.EscNombreCorto)</text>
-                        }
-                        else
-                        {
-                            <del>@item.EscNombreLargo (@item.EscNombreCorto)</del>
-                        }
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
-                            Editar
-                        </button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="row my-3">
+        @if (cargado && puede_agregar)
+        {
+
+            <div class="offset-10 col-2">
+                <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
+                    Agregar...
+                </button>
+            </div>
+        }
+
+        @if ((!cargado))
+        {
+            <div class="col text-center">
+                <img src="logo_saci.png" class="loading_img" />
+                <br />
+                Cargando...
+            </div>
+
+        }
+    </div>
+
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
+                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@items" TItem="RequestViewModel_Escuela" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems
+                    Visible=@cargado>
+        <Columns>
+            <RadzenDataGridColumn TItem="RequestViewModel_Escuela" Property="IdEscuela" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+
+            <RadzenDataGridColumn TItem="RequestViewModel_Escuela" Property="EscNoEscuela" Filterable="false" Title="Clave" Width="80px" TextAlign="TextAlign.Center" />
+
+            <RadzenDataGridColumn TItem="RequestViewModel_Escuela" Title="Nombre" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @if (item.EscStatus)
+                    {
+                        <text>
+                            @item.EscNombreCorto 
+                            (@item.EscNombreLargo)
+                        </text>
+                    }
+                    else
+                    {
+                        <del>
+                            @item.EscNombreCorto
+                            (@item.EscNombreLargo)
+                        </del>
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestViewModel_Escuela" Context="item"
+                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false"
+                                  Visible=@puede_editar>
+
+                <Template Context="item">
+                    <RadzenButton title="Editar..."
+                                  Icon="edit"
+                                  ButtonStyle="ButtonStyle.Info"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Click="@(async ()=> await Editar(item))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+
+                    <RadzenButton title="Deshabilitar"
+                                  Icon="delete"
+                                  ButtonStyle="ButtonStyle.Danger"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Visible="item.EscStatus.Equals(true)"
+                                  Click="@(async ()=> await CambiarStatus(item, false))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+
+                    <RadzenButton title="Habilitar"
+                                  ButtonStyle="ButtonStyle.Success"
+                                  Icon="autorenew"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Visible="item.EscStatus.Equals(false)"
+                                  Click="@(async ()=> await CambiarStatus(item, true))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+
 </div>
 
 
 @code
 {
     private string Title = "Catálogo de Escuelas";
+    private bool cargado { get; set; } = false;
+
+    private bool puede_editar { get; set; } = true;
+    private bool puede_agregar { get; set; } = false;
+
     private List<RequestViewModel_Escuela> items = new List<RequestViewModel_Escuela>();
-
-
+    private IList<RequestViewModel_Escuela> selectedItems = new List<RequestViewModel_Escuela>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            items = await WebUtils.ListByStatusAsync(servicioEscuela, false);
+            await CargarLista();
 
-
-
+            cargado = true;
             StateHasChanged();
         }
     }
+
+    private async Task CargarLista(int? selecccionar_id = null)
+    {
+        items = await WebUtils.ListByStatusAsync(servicioEscuela, false);
+
+        if (selecccionar_id is not null)
+        {
+            selectedItems = items.Where(i => (i.IdEscuela == selecccionar_id)).ToList();
+        }
+    }
+
+    private async Task<RequestViewModel_Escuela?> MostrarFormulario(RequestViewModel_Escuela registro)
+    {
+        return await DialogService.OpenAsync<EscuelaEditor>
+                (
+                    "Actualizar Datos",
+                    new Dictionary<string, object>()
+                            {
+                        {"registro", registro}
+                            },
+                    new DialogOptions()
+                        {
+                            ShowClose = false,
+                            Width = "50%",
+                            CssClass = "dialog_simple"
+                        }
+                );
+    }
+
+    private void MensajeCarga()
+    {
+        DialogService.OpenAsync<Carga>(
+                "Cargando...",
+                new Dictionary<string, object>(),
+                new DialogOptions() { ShowClose = false, Width = "64px" }
+            );
+    }
+
+    private async Task Agregar()
+    {
+        RequestViewModel_Escuela registro = new();
+
+        RequestViewModel_Escuela? result = await MostrarFormulario(registro);
+
+        if (result is not null)
+        {
+            MensajeCarga();
+
+            HttpResponseMessage response = await servicioEscuela.AddDataAsync(registro);
+            if (response.IsSuccessStatusCode)
+            {
+                await CargarLista(result.IdEscuela);
+            }
+
+            DialogService.Close();
+        }
+    }// AGREGAR
 
     private async Task Editar(RequestViewModel_Escuela item)
     {
@@ -68,25 +186,40 @@
 
         if (registro is not null)
         {
-            RequestViewModel_Escuela? result = await DialogService.OpenAsync<EscuelaEditor>
-                (
-                    "Actualizar Datos",
-                    new Dictionary<string, object>() {
-                    {"registro", registro},
-
-                        },
-                    new DialogOptions() { ShowClose = false, Width = "75%" }
-                );
-            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+            RequestViewModel_Escuela? result = await MostrarFormulario(registro);
 
             if (result is not null)
             {
                 HttpResponseMessage response = await servicioEscuela.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListByStatusAsync(servicioEscuela, false);
+                    await CargarLista(item.IdEscuela);
                 }
             }
         }
-    }
+    }//EDITAR
+
+    private async Task CambiarStatus(RequestViewModel_Escuela item, bool status)
+    {
+        string des = status ? "" : "des";
+
+        bool result = await DialogService.OpenAsync<ConfirmarDlg>
+            (
+                "Confirmar",
+                new Dictionary<string, object>()
+                                {
+                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.EscNombreCorto} ({item.EscNombreLargo})?" }
+                                },
+                new DialogOptions() { ShowClose = false }
+            );
+
+        if (result)
+        {
+            HttpResponseMessage response = await servicioUsuario.EnableDisableDataByIdAsync(item.IdEscuela, status);
+            if (response.IsSuccessStatusCode)
+            {
+                await CargarLista(item.IdEscuela);
+            }
+        }
+    }//CAMBIAR STATUS
 }

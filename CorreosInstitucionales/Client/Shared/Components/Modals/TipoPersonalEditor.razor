@@ -6,33 +6,30 @@
     </div>
     <DataAnnotationsValidator/>
     <div class="row"><!--ROW-->
-        <div class="col-4 mb-2">
+        <div class="col-12 mb-2">
             <span class="fw-bold">Nombre</span>
             <InputText @bind-Value="@registro.TipoperNombre" class=" form-control" />
             <ValidationMessage For="()=>registro.TipoperNombre"></ValidationMessage>
         </div>
 
-        <div class="col-8 mb-2">
+        <div class="col-12 mb-2">
             <span class="fw-bold">Descripcion</span>
-            <InputText @bind-Value="@registro.TipoperDescripcion" class=" form-control" />
+            <InputTextArea @bind-Value="@registro.TipoperDescripcion" class=" form-control" />
             <ValidationMessage For="()=>registro.TipoperDescripcion"></ValidationMessage>
-        </div>
-
-        <div class="col-6 mb-2">
-            <span class="fw-bold">Status</span>
-            <InputCheckbox @bind-Value="@registro.TipoperStatus" class="required form-check-input" />
         </div>
     </div><!--ROW-->
     
-    <div class="row">
-        <div class="offset-8 col-2 mb-2">
-            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
-        </div>
+    <div class="container-fluid mt-3 py-3 bg-silver">
+        <div class="row">
+            <div class="offset-4 col-4">
+                <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+            </div>
 
-        <div class="col-2 mb-2">
-            <button type="submit" class="btn btn-success form-control">
-                Guardar
-            </button>
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary form-control">
+                    Guardar
+                </button>
+            </div>
         </div>
     </div>
 

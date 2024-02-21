@@ -5,7 +5,7 @@
 
     @if(!registro_nuevo)
     {
-        <section class="my-3">
+        <section class="my-2">
             <div class="row">
                 <div class="col-4 text-center">
                     <span class="fw-bold">Ticket</span>
@@ -32,7 +32,7 @@
     }
     
 
-    <section class="my-3">
+    <section class="my-2">
         <h1>Solicitud</h1>
         <div class="row mb-3">
             <div class="col-4">
@@ -93,7 +93,7 @@
     
     @if(!registro_nuevo || registro.SolEncuestaCalidadCalificacion is not null)
     {
-        <section class="my-3">
+        <section class="my-2">
             <h1>Encuesta de Calidad</h1>
             <div class="row">
                 <div class="col-4 text-center">
@@ -116,25 +116,26 @@
 
     @if(registro.SolEncuestaCalidadCalificacion is null)
     {
-        <div class="row my-3">
+        <div class="row my-2">
             <div class="col">
                 Encuesta de calidad: @registro.SolToken
             </div>
         </div>
     }
 
-    <div class="row my-3">
-        <div class="offset-8 col-2 mb-2">
-            <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
-        </div>
+    <div class="container-fluid mt-3 py-3 bg-silver">
+        <div class="row">
+            <div class="offset-8 col-2">
+                <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+            </div>
 
-        <div class="col-2 mb-2">
-            <button type="submit" class="btn btn-primary form-control">
-                Guardar
-            </button>
+            <div class="col-2">
+                <button type="submit" class="btn btn-primary form-control">
+                    Guardar
+                </button>
+            </div>
         </div>
     </div>
-    
 </EditForm>
 
 @code

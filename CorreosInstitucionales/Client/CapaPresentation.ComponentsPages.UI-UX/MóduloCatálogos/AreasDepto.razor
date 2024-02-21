@@ -9,42 +9,104 @@
 <div class="p-4 rounded-1 bg-white shadow">
     <h1>@Title</h1>
 
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>ACCIONES</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in items)
-            {
-                <tr>
-                    <td>
-                        @if (item.AreStatus)
-                        {
+    <div class="row my-3">
+    @if (cargado && puede_agregar)
+    {
+        
+        <div class="offset-10 col-2">
+            <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
+                Agregar...
+            </button>
+        </div>
+    }
+
+    @if((!cargado))
+    {
+        <div class="col text-center">
+            <img src="logo_saci.png" class="loading_img" />
+            <br />
+            Cargando...
+        </div>
+        
+    }
+    </div>
+
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
+                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@items" TItem="RequestViewModel_AreaDepto" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems
+                    Visible=@cargado>
+        <Columns>
+            <RadzenDataGridColumn TItem="RequestViewModel_AreaDepto" Property="IdAreaDepto" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+
+            <RadzenDataGridColumn TItem="RequestViewModel_AreaDepto" Property="AreNoExtension" Title="Extensión" Filterable="false" Sortable="true" TextAlign="TextAlign.Center" />
+
+            <RadzenDataGridColumn TItem="RequestViewModel_AreaDepto" Title="Nombre" Filterable="false" Sortable="true" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @if (item.AreStatus)
+                    {
+                        <text>
                             @item.AreNombreAreaDepto
-                        }
-                        else
-                        {
-                            <del>@item.AreNombreAreaDepto</del>
-                        }
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary form-control" @onclick="async ()=> await Editar(item)">
-                            Editar
-                        </button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                        </text>
+                    }
+                    else
+                    {
+                        <del>
+                            @item.AreNombreAreaDepto
+                        </del>
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn 
+                TItem="RequestViewModel_AreaDepto" Context="item" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false"
+                Visible=@puede_editar
+            >
+                <Template Context="item">
+                    <RadzenButton title="Editar..."
+                                  Icon="edit"
+                                  ButtonStyle="ButtonStyle.Info"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Click="@(async ()=> await Editar(item))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+
+                    <RadzenButton title="Deshabilitar"
+                                  Icon="delete"
+                                  ButtonStyle="ButtonStyle.Danger"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Visible="item.AreStatus.Equals(true)"
+                                  Click="@(async ()=> await CambiarStatus(item, false))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+
+                    <RadzenButton title="Habilitar"
+                                  ButtonStyle="ButtonStyle.Success"
+                                  Icon="autorenew"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Visible="item.AreStatus.Equals(false)"
+                                  Click="@(async ()=> await CambiarStatus(item, true))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+
 </div>
 
 @code
 {
     private string Title = "Catálogo de Áreas/Departamentos";
+    private bool cargado { get; set; } = false;
+
+    private bool puede_editar { get; set; } = true;
+    private bool puede_agregar { get; set; } = true;
+
     private List<RequestViewModel_AreaDepto> items = new List<RequestViewModel_AreaDepto>();
+    private IList<RequestViewModel_AreaDepto> selectedItems = new List<RequestViewModel_AreaDepto>();
 
     public List<RequestViewModel_Edificio> cat_AreIdEdificio { get; private set; } = new List<RequestViewModel_Edificio>();
     public List<RequestViewModel_Piso> cat_AreIdPiso { get; private set; } = new List<RequestViewModel_Piso>();
@@ -54,14 +116,74 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListByStatusAsync(servicioAreaDepto, false);
+            await CargarLista();
 
             cat_AreIdEdificio = await WebUtils.ListByStatusAsync(servicioEdificio);
             cat_AreIdPiso = await WebUtils.ListByStatusAsync(servicioPiso);
 
+            cargado = true;
             StateHasChanged();
         }
     }
+
+    private async Task CargarLista(int? selecccionar_id = null)
+    {
+        items = await WebUtils.ListByStatusAsync(servicioAreaDepto, false);
+
+        if (selecccionar_id is not null)
+        {
+            selectedItems = items.Where(i => (i.IdAreaDepto == selecccionar_id)).ToList();
+        }
+    }
+
+    private async Task<RequestViewModel_AreaDepto?> MostrarFormulario(RequestViewModel_AreaDepto registro, bool nuevo = false)
+    {
+        return await DialogService.OpenAsync<AreaDeptoEditor>
+                (
+                    nuevo?"Agregar Registro":"Actualizar Datos",
+                    new Dictionary<string, object>() 
+                    {
+                        {"registro", registro},
+                        {"cat_AreIdPiso", cat_AreIdPiso},
+                        {"cat_AreIdEdificio", cat_AreIdEdificio}
+                    },
+                    new DialogOptions() 
+                    { 
+                        ShowClose = false, 
+                        Width = "50%", 
+                        CssClass = "dialog_simple" 
+                    }
+                );
+    }
+
+    private void MensajeCarga()
+    {
+        DialogService.OpenAsync<Carga>(
+                "Cargando...",
+                new Dictionary<string, object>(),
+                new DialogOptions() { ShowClose = false, Width = "64px" }
+            );
+    }
+
+    private async Task Agregar()
+    {
+        RequestViewModel_AreaDepto registro = new();
+
+        RequestViewModel_AreaDepto? result = await MostrarFormulario(registro, true);
+
+        if (result is not null)
+        {
+            MensajeCarga();
+
+            HttpResponseMessage response = await servicioAreaDepto.AddDataAsync(registro);
+            if (response.IsSuccessStatusCode)
+            {
+                await CargarLista(result.IdAreaDepto);
+            }
+
+            DialogService.Close();
+        }
+    }// AGREGAR
 
     private async Task Editar(RequestViewModel_AreaDepto item)
     {
@@ -70,26 +192,40 @@
 
         if (registro is not null)
         {
-            RequestViewModel_AreaDepto? result = await DialogService.OpenAsync<AreaDeptoEditor>
-                (
-                    "Actualizar Datos",
-                    new Dictionary<string, object>() {
-                            {"registro", registro},
-                            {"cat_AreIdPiso", cat_AreIdPiso},
-                            {"cat_AreIdEdificio", cat_AreIdEdificio}
-                        },
-                    new DialogOptions() { ShowClose = false, Width = "75%" }
-                );
-            //CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true,
+            RequestViewModel_AreaDepto? result = await MostrarFormulario(registro);
 
             if (result is not null)
             {
                 HttpResponseMessage response = await servicioAreaDepto.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    items = await WebUtils.ListByStatusAsync(servicioAreaDepto, false);
+                    await CargarLista(item.IdAreaDepto);
                 }
             }
         }
-    }
+    }//EDITAR
+
+    private async Task CambiarStatus(RequestViewModel_AreaDepto item, bool status)
+    {
+        string des = status ? "" : "des";
+
+        bool result = await DialogService.OpenAsync<ConfirmarDlg>
+            (
+                "Confirmar",
+                new Dictionary<string, object>()
+                    {
+                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.AreNombreAreaDepto}?" }
+                    },
+                new DialogOptions() { ShowClose = false }
+            );
+
+        if (result)
+        {
+            HttpResponseMessage response = await servicioUsuario.EnableDisableDataByIdAsync(item.IdAreaDepto, status);
+            if (response.IsSuccessStatusCode)
+            {
+                await CargarLista(item.IdAreaDepto);
+            }
+        }
+    }//CAMBIAR STATUS
 }
