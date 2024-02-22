@@ -1,4 +1,8 @@
-﻿<RadzenCard class="p-5" Style="height:110vh;">
+﻿@using CorreosInstitucionales.Shared
+
+@inject REstadisticasService estadisticas
+
+<RadzenCard class="p-5" Style="height:110vh;">
     <RadzenFieldset AllowCollapse="false" ExpandTitle="Seguimiento de Solicitud" CollapseTitle="Seguimiento de Solicitud" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 ">
         <HeaderTemplate>
             <span class="d-inline-flex align-items-center align-middle">
@@ -98,15 +102,45 @@
     </RadzenFieldset>
 </RadzenCard>
 
+<RadzenChart>
+    <RadzenDonutSeries Data="@estado_solicitudes" CategoryProperty="Text" ValueProperty="Value" TotalAngle="180" StartAngle="180">
+        <ChildContent>
+            <RadzenSeriesDataLabels Visible="@showDataLabels" />
+        </ChildContent>
+    </RadzenDonutSeries>
+</RadzenChart>
+
 @code
 {
     //Gráfica de area
     bool showDataLabels = false;
+
     class DataItem
     {
         public string Date { get; set; }
         public double Revenue { get; set; }
     }
+
+    DateTime inicio = DateTime.Now.AddMonths(-1);
+    DateTime fin    = DateTime.Now;
+
+    List<IntDataItem> estado_solicitudes = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Response<List<IntDataItem>>? response = await estadisticas.GetEstadosSolicitud(inicio, fin);
+
+            if(response is not null && response.Data is not null)
+            {
+                estado_solicitudes = response.Data;
+            }
+
+            StateHasChanged();
+        }
+    }
+
 
     string FormatAsUSD(object value)
     {

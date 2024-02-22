@@ -6,6 +6,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloCatálogos;
 using System.Linq.Dynamic.Core;
+using System.Net.NetworkInformation;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
 {
@@ -27,7 +28,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
                 if (filterByStatus)
                     list = await _db.MtTbSolicitudesTickets
-                                    .Where(st => !st.SolIdEstadoSolicitud.Equals(4))
+                                    .Where(st => st.SolIdEstadoSolicitud != 6)
                                     .Include(u=>u.SolIdUsuarioNavigation)
                                     .Include(st=>st.SolIdEstadoSolicitudNavigation)
                                     .Include(st=>st.SolIdTipoSolicitud)
@@ -38,6 +39,88 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                                     .Include(st => st.SolIdEstadoSolicitudNavigation)
                                     .Include(st => st.SolIdTipoSolicitudNavigation)
                                     .ToListAsync();
+
+                oResponse.Success = 1;
+                oResponse.Data = list;
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
+        [HttpGet("filterByProgress/{progress}")]
+        public async Task<IActionResult> GetAllDataByProgress(int progress)
+        {
+            //int[] status = new int[] { 1, 2, 3 };
+            /*
+                progress        SolIdEstadoSolicitud
+                1 pendiente     1,2
+                2 progreso      3
+                3 terminado     4,5
+                4 cancelado     6
+             */
+            Response<List<MtTbSolicitudesTicket>> oResponse = new();
+            
+            try
+            {
+                var list = new List<MtTbSolicitudesTicket>();
+                /*
+                list = await _db.MtTbSolicitudesTickets
+                            .Where(
+                                st => status.Contains(st.SolIdEstadoSolicitud)
+                            )
+                            .Include(st => st.SolIdUsuarioNavigation)
+                            .Include(st => st.SolIdEstadoSolicitudNavigation)
+                            .Include(st => st.SolIdTipoSolicitudNavigation)
+                            .ToListAsync();
+                */
+                switch (progress)
+                {
+                    case 1:
+                        list = await _db.MtTbSolicitudesTickets
+                            .Where(
+                                st => 
+                                    st.SolIdEstadoSolicitud == 1 ||
+                                    st.SolIdEstadoSolicitud == 2
+                            )
+                            .Include(st => st.SolIdUsuarioNavigation)
+                            .Include(st => st.SolIdEstadoSolicitudNavigation)
+                            .Include(st => st.SolIdTipoSolicitudNavigation)
+                            .ToListAsync();
+                        break;
+
+                    case 2:
+                        list = await _db.MtTbSolicitudesTickets
+                            .Where(
+                                st =>
+                                    st.SolIdEstadoSolicitud == 3
+                            )
+                            .Include(st => st.SolIdUsuarioNavigation)
+                            .Include(st => st.SolIdEstadoSolicitudNavigation)
+                            .Include(st => st.SolIdTipoSolicitudNavigation)
+                            .ToListAsync();
+                        break;
+
+                    case 3:
+                        list = await _db.MtTbSolicitudesTickets
+                            .Where(
+                                st =>
+                                    st.SolIdEstadoSolicitud == 6
+                            )
+                            .Include(st => st.SolIdUsuarioNavigation)
+                            .Include(st => st.SolIdEstadoSolicitudNavigation)
+                            .Include(st => st.SolIdTipoSolicitudNavigation)
+                            .ToListAsync();
+                        break;
+
+                    case 4: 
+                        break;
+                }
+                    
+                    //*/
 
                 oResponse.Success = 1;
                 oResponse.Data = list;

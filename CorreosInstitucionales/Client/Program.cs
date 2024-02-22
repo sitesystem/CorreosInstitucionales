@@ -50,6 +50,9 @@ builder.Services.AddScoped<RPisoService>();
 builder.Services.AddScoped<RTipoPersonalService>();
 builder.Services.AddScoped<RTipoSolicitudService>();
 
+// Inyección de Dependencias - Módulo de Estadísticas
+builder.Services.AddScoped<REstadisticasService>();
+
 // Radzen Components and Services
 builder.Services.AddRadzenComponents();
 // builder.Services.AddScoped<ContextMenuService>();
