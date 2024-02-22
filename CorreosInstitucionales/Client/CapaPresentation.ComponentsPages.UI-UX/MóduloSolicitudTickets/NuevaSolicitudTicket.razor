@@ -254,7 +254,7 @@ else
     private Response<RequestDTO_Usuario>? oResponseUsuario = new();
     private Response<List<RequestViewModel_TipoSolicitud>>? oTiposSolicitud = new();
     private RequestDTO_Solicitud oSolicitudTicket = new();
-    private Response<RequestViewModel_TipoPersonal> oTipoPersonal = new();
+    private Response<RequestViewModel_TipoPersonal>? oTipoPersonal = new();
     private Response<RequestViewModel_Link>? oLinkReducirTamañoArchivo = new();
     private Response<RequestViewModel_Escuela>? oEscuela = new();
     private int idTipoPersonal;
@@ -273,6 +273,7 @@ else
             idTipoPersonal = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "TipoPersonal")?.Value);
             int idUsuario = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
 
+            oResponseUsuario = await servicioUsuario.GetDataByIdAsync(idUsuario);
             oTiposSolicitud = await servicioTipoSolicitud.GetAllDataByStatusAsync(true);
             oTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(idTipoPersonal);
             oLinkReducirTamañoArchivo = await servicioLink.GetDataByNameAsync("REDUCIR TAMAÑO ARCHIVO");
@@ -280,8 +281,6 @@ else
 
             if (idTipoPersonal != 2)
                 oTiposSolicitud.Data = oTiposSolicitud.Data.Where(ts => ts.IdTipoSolicitud != 4).ToList();
-
-            oResponseUsuario = await servicioUsuario.GetDataByIdAsync(idUsuario);
 
             @* DATOS ID DE LA SOLICITUD-TICKET *@
             oSolicitudTicket.IdSolicitudTicket = 0;
@@ -402,6 +401,8 @@ else
             oTipoSolicitud = await servicioTipoSolicitud.GetDataByIdAsync(oSolicitudTicket.SolIdTipoSolicitud);
 
             var verification = await servicioSolicitud.GetDataByIdUsuarioStatusAsync(oResponseUsuario.Data.IdUsuario);
+
+            Console.WriteLine(oResponseUsuario.Data.IdUsuario);
 
             if (ValidReCAPTCHA && verification?.Success == 1)
             {
@@ -590,7 +591,7 @@ else
                                               ButtonType="ButtonType.Button"
                                               IsBusy="false"
                                               Icon="cancel"
-                                              Class="rz-ripple rz-my-0 w-100"
+                                              Class="rz-color-white rz-ripple rz-my-0 w-100"
                                               Shade="Shade.Darker"
                                               Click="@(() => navigationManager.NavigateTo("/"))" />
                             </RadzenStack>
@@ -657,7 +658,7 @@ else
         }
         finally
         {
-            // busyLoading = false;
+            busyLoading = false;
         }
     }
 }

@@ -37,6 +37,12 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
+        public async Task<Response<List<RequestDTO_Solicitud>>?> GetDataByIdUsuarioAsync(int filterByIdUsuario)
+        {
+            var result = await _httpClient.GetFromJsonAsync<Response<List<RequestDTO_Solicitud>>>($"{url}/filterByIdUsuario/{filterByIdUsuario}", options: _options);
+            return result;
+        }
+
         public async Task<HttpResponseMessage> AddDataAsync(RequestDTO_Solicitud oSolicitud)
         {
             // var json = JsonSerializer.Serialize(oUsuario);

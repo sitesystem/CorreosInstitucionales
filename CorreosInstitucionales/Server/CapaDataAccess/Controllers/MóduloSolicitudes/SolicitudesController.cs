@@ -27,17 +27,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
                 if (filterByStatus)
                     list = await _db.MtTbSolicitudesTickets
-                        .Where(st => !st.SolIdEstadoSolicitud.Equals(4))
-                        .Include(u=>u.SolIdUsuarioNavigation)
-                        .Include(st=>st.SolIdEstadoSolicitudNavigation)
-                        .Include(st=>st.SolIdTipoSolicitud)
-                        .ToListAsync();
+                                    .Where(st => !st.SolIdEstadoSolicitud.Equals(4))
+                                    .Include(u=>u.SolIdUsuarioNavigation)
+                                    .Include(st=>st.SolIdEstadoSolicitudNavigation)
+                                    .Include(st=>st.SolIdTipoSolicitud)
+                                    .ToListAsync();
                 else
                     list = await _db.MtTbSolicitudesTickets
-                        .Include(u => u.SolIdUsuarioNavigation)
-                        .Include(st => st.SolIdEstadoSolicitudNavigation)
-                        .Include(st => st.SolIdTipoSolicitudNavigation)
-                        .ToListAsync();
+                                    .Include(u => u.SolIdUsuarioNavigation)
+                                    .Include(st => st.SolIdEstadoSolicitudNavigation)
+                                    .Include(st => st.SolIdTipoSolicitudNavigation)
+                                    .ToListAsync();
 
                 oResponse.Success = 1;
                 oResponse.Data = list;
@@ -76,10 +76,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
             try
             {
-                var list = new List<MtTbSolicitudesTicket>();
-
                 int solicitudNoAtendida = await _db.MtTbSolicitudesTickets
-                                                   .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioStatus) && (!st.SolIdEstadoSolicitud.Equals(5) || !st.SolIdEstadoSolicitud.Equals(6)))
+                                                   .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioStatus) && !st.SolIdEstadoSolicitud.Equals(5) && !st.SolIdEstadoSolicitud.Equals(6))
                                                    .CountAsync();
                 if (solicitudNoAtendida > 0)
                     oResponse.Message = "NO PUEDE SOLICITAR, PENDIENTE DE CONTESTAR ENCUESTA DE CALIDAD";
@@ -90,6 +88,32 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 }
 
                 oResponse.Data = null;
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
+        [HttpGet("filterByIdUsuario/{filterByIdUsuario}")]
+        public async Task<IActionResult> GetDataByIdUsuario(int filterByIdUsuario)
+        {
+            Response<List<MtTbSolicitudesTicket>> oResponse = new();
+
+            try
+            {
+                var list = new List<MtTbSolicitudesTicket>();
+
+                list = await _db.MtTbSolicitudesTickets
+                                .Where(st => st.SolIdUsuario.Equals(filterByIdUsuario))
+                                .Include(ts => ts.SolIdTipoSolicitudNavigation)
+                                .Include(u => u.SolIdUsuarioNavigation)
+                                .Include(e => e.SolIdEstadoSolicitudNavigation)
+                                .ToListAsync();
+                oResponse.Success = 1;
+                oResponse.Data = list;
             }
             catch (Exception ex)
             {
