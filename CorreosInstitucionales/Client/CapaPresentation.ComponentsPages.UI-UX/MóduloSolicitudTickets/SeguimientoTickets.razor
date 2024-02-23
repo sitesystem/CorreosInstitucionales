@@ -31,27 +31,52 @@
     <AuthorizeView>
         <Authorized>
             @* <p>Autorizado</p> *@
-            <RadzenDataGrid @ref="oSolicitudesTicketsRef" Data="@oSolicitudesTickets.Data" @bind-Value="@selectedItems" TItem="RequestDTO_Solicitud"
-                            AllowVirtualization="true" AllowFiltering="true" AllowColumnResize="true" AllowColumnReorder="true" AllowAlternatingRows="true" AllowPaging="true" AllowSorting="true" AllowColumnPicking="true"
+            <RadzenDataGrid @ref="oSolicitudesTicketsRef" Data="@oSolicitudesTickets.Data" @bind-Value="@selectedItems" TItem="RequestDTO_Solicitud" Density="@Density"
+                            AllowFiltering="true" AllowColumnResize="true" AllowColumnReorder="true" AllowAlternatingRows="true" AllowSorting="true" AllowColumnPicking="true"
+                            AllowPaging="true" PageSize="10" PagerPosition="PagerPosition.TopAndBottom" PagerHorizontalAlign="HorizontalAlign.Justify" PagerAlwaysVisible="true"
+                            PageSizeOptions="@pageSizeOptions" ShowPagingSummary="true" PagingSummaryFormat="Displaying page {0} of {1} <b>(total {2} records)</b>" Page="@OnPage"
+                            AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowVirtualization="true"
                             FilterMode="FilterMode.Advanced" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="LogicalFilterOperator.Or"
-                            PageSize="10" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true" ColumnWidth="300px" SelectionMode="DataGridSelectionMode.Single">
+                            ColumnWidth="200px" SelectionMode="DataGridSelectionMode.Single">
+                <HeaderTemplate>
+                    <RadzenSelectBar @bind-Value="@Density" TextProperty="Text" ValueProperty="Value"
+                                     Data="@(Enum.GetValues(typeof(Density)).Cast<Density>().Select(t => new { Text = $"{t}", Value = t }))" Size="ButtonSize.Small" />
+                </HeaderTemplate>
                 <Columns>
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="false" Title="#TICKET" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion" Title="Motivo Solicitud" Frozen="true" Width="160px" />
-
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Usuario" Property="SolIdUsuario" Frozen="true" Sortable="true" Filterable="true" Width="80px" TextAlign="TextAlign.Center">
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="# TICKET" Property="IdSolicitudTicket"
+                                          Filterable="true" Frozen="true" Reorderable="true" Resizable="false" Sortable="true" TextAlign="TextAlign.Center" Width="60px" />
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Motivo / Incidencia de la Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion"
+                                          Filterable="true" Frozen="true" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="150px" />
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Observaciones" Property="SolObservacionesSolicitud"
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="150px" />
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Validación de Datos" Property="SolValidacionDatos"
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="80px">
                         <Template Context="data">
                             @* <RadzenImage Path="@data.Photo" class="rz-gravatar" AlternateText="@(data.FirstName + " " + data.LastName)" /> *@
-                            @($@"{data.SolIdUsuarioNavigation.UsuNombre} {data.SolIdUsuarioNavigation.UsuPrimerApellido} {data.SolIdUsuarioNavigation.UsuSegundoApellido}")
+                            <RadzenCheckBox Value="@(data.SolValidacionDatos)" Name="dataValid" TriState="false" Disabled="false" ReadOnly="true" />
+                            <RadzenLabel Text="@($@"{(data.SolValidacionDatos ? "Válidos" : "Sin Validar")}")" Component="dataValid" Style="margin-left: 5px; vertical-align: middle;" />
                         </Template>
                     </RadzenDataGridColumn>
-
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="SolObservacionesSolicitud" Title="Observaciones" Width="200px" />
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="SolIdEstadoSolicitudNavigation.EdosolNombreEstado" Title="Estado" Width="100px" />
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="SolFechaHoraCreacion" Title="Fecha / Hora de Creación" FormatString="{0:d}" Width="120px" />
-                    @* <td>@item.SolEncuestaCalidadCalificacion</td>
-                    <td>@item.SolEncuestaCalidadComentarios</td>
-                    <td>@item.SolFechaHoraEncuesta</td> *@
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Property="SolIdEstadoSolicitudNavigation.EdosolNombreEstado"
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="80px">
+                        <Template Context="data">
+                            <RadzenBadge BadgeStyle="BadgeStyle.Info" IsPill="false" Shade="Shade.Light" Variant="Variant.Filled">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                    <RadzenIcon Icon="check" /> @data.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado
+                                </RadzenStack>
+                            </RadzenBadge>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Fecha / Hora de Creación" Property="SolFechaHoraCreacion"
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" FormatString="{0:d}" Width="100px" />
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Property="SolEncuestaCalidadCalificacion"
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Justify" Width="100px">
+                        <Template Context="data">
+                            <RadzenText TextStyle="TextStyle.Subtitle2" class="mb-0">@data.SolEncuestaCalidadComentarios</RadzenText>
+                            <RadzenText TextStyle="TextStyle.Caption">@data.SolFechaHoraEncuesta</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    @* <td>@item.SolEncuestaCalidadCalificacion</td> *@
                 </Columns>
             </RadzenDataGrid>
         </Authorized>
@@ -74,6 +99,8 @@ else
     private Response<List<RequestDTO_Solicitud>>? oSolicitudesTickets = new();
     private RadzenDataGrid<RequestDTO_Solicitud>? oSolicitudesTicketsRef = new();
     IList<RequestDTO_Solicitud> selectedItems;
+    IEnumerable<int> pageSizeOptions = new int[] { 10, 20, 30 };
+    Density Density = Density.Default;
 
     protected override async Task OnInitializedAsync()
     {
@@ -87,5 +114,10 @@ else
             oSolicitudesTickets = await servicioSolicitud.GetDataByIdUsuarioAsync(idUsuario);
             selectedItems = new List<RequestDTO_Solicitud>() { oSolicitudesTickets.Data.FirstOrDefault() };
         }
+    }
+
+    async Task OnPage(PagerEventArgs args)
+    {
+        //
     }
 }
