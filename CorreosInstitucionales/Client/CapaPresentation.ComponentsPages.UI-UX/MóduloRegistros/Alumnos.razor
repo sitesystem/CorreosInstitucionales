@@ -131,12 +131,12 @@
                             </ChildContent>
                             <End>
                                 <RadzenButton Icon="visibility"
-                                                Click="@(() => ShowDialogModal_iFrame(srcCURP, "Archivo PDF del CURP"))"
-                                                Variant="Variant.Text"
-                                                Size="ButtonSize.Small"
-                                                ButtonStyle="ButtonStyle.Secondary"
-                                                Shade="Shade.Dark"
-                                                Visible="@(ActionAddEdit == "actualizar" ? true : false)" />
+                                              Click="@(() => ShowDialogModal_iFrame(srcCURP, "Archivo PDF del CURP"))"
+                                              Variant="Variant.Text"
+                                              Size="ButtonSize.Small"
+                                              ButtonStyle="ButtonStyle.Secondary"
+                                              Shade="Shade.Dark"
+                                              Visible="@(ActionAddEdit == "actualizar" ? true : false)" />
                             </End>
                             <Helper>
                                 <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.Div" TextAlign="TextAlign.JustifyAll">
@@ -266,12 +266,12 @@
                             </ChildContent>
                             <End>
                                 <RadzenButton Icon="visibility"
-                                                Click="@(() => ShowDialogModal_iFrame(srcComprobanteInscripcion, $@"{( (IdTipoPersonal == 1 || IdTipoPersonal == 2) ? "Archivo PDF del Comprobante de Inscripción" : "Archivo PDF del SIP-10" )}"))"
-                                                Variant="Variant.Text"
-                                                Size="ButtonSize.Small"
-                                                ButtonStyle="ButtonStyle.Secondary"
-                                                Shade="Shade.Dark"
-                                                Visible="@(ActionAddEdit == "actualizar" ? true : false)" />
+                                              Click="@(() => ShowDialogModal_iFrame(srcComprobanteInscripcion, $@"{( (IdTipoPersonal == 1 || IdTipoPersonal == 2) ? "Archivo PDF del Comprobante de Inscripción" : "Archivo PDF del SIP-10" )}"))"
+                                              Variant="Variant.Text"
+                                              Size="ButtonSize.Small"
+                                              ButtonStyle="ButtonStyle.Secondary"
+                                              Shade="Shade.Dark"
+                                              Visible="@(ActionAddEdit == "actualizar" ? true : false)" />
                             </End>
                             <Helper>
                                 <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" TextAlign="TextAlign.JustifyAll">
@@ -1346,7 +1346,7 @@ else
                                       IsBusy="false"
                                       Icon="download"
                                       class="rz-ripple rz-my-0 w-100"
-                                      Shade="Shade.Darker" />
+                                      Shade="Shade.Dark" />
                     </a>
                 </RadzenStack>
             </RadzenStack>,

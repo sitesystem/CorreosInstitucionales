@@ -111,6 +111,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                                 .Include(ts => ts.SolIdTipoSolicitudNavigation)
                                 .Include(u => u.SolIdUsuarioNavigation)
                                 .Include(e => e.SolIdEstadoSolicitudNavigation)
+                                .OrderByDescending(st => st.IdSolicitudTicket)
                                 .ToListAsync();
                 oResponse.Success = 1;
                 oResponse.Data = list;
