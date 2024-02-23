@@ -629,11 +629,11 @@ else
             {
                 await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>Validación de Datos<span>", ds =>
                     @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="">
-                        <RadzenAlert Title="No puede solicitar un ticket por alguno de los siguientes motivos:" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false"
+                        <RadzenAlert Title="No puede solicitar un ticket por alguno de los siguientes motivos:" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Dark" ShowIcon="true" AllowClose="false"
                                      Visible="true" Class="rz-border-radius-1">
-                                     <ul>
-                                        <li>Existe una <strong>Solicitud de Ticket</strong> PENDIENTE o EN PROCESO de ser atendidas.</li>
-                                        <li>Existe una <strong>Solicitud de Ticket</strong> PENDIENTE de ser contestada la encuesta de calidad.</li>
+                                     <ul class="mt-3">
+                                        <li>Existe una <strong>Solicitud-Ticket</strong> PENDIENTE o EN PROCESO de ser atendidas.</li>
+                                        <li>Existe una <strong>Solicitud-Ticket</strong> PENDIENTE de contestar la encuesta de calidad.</li>
                                      </ul>
                         </RadzenAlert>
                     </RadzenStack>,
