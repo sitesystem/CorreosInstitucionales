@@ -16,10 +16,11 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
         const string url = "/api/estadisticas";
 
 
-        public async Task<Response<List<IntDataItem>>?> GetEstadosSolicitud(DateTime inicio, DateTime fin)
+
+        public async Task<Response<List<IntDataItem>>?> GetStatByName(string name, DateTime inicio, DateTime fin)
         {
             var response = await _httpClient.GetAsync(
-                $"{url}/progreso/{inicio.Year}_{inicio.Month}_{inicio.Day}-{fin.Year}_{fin.Month}_{fin.Day}"
+                $"{url}/{name}/{inicio.Year}_{inicio.Month}_{inicio.Day}-{fin.Year}_{fin.Month}_{fin.Day}"
                 );
 
             var content = await response.Content.ReadAsStringAsync();
@@ -27,5 +28,15 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
+        public async Task<Response<Dictionary<string,List<IntDataItem>>>?> GetDictionaryStatsByName(string name, DateTime inicio, DateTime fin)
+        {
+            var response = await _httpClient.GetAsync(
+                $"{url}/{name}/{inicio.Year}_{inicio.Month}_{inicio.Day}-{fin.Year}_{fin.Month}_{fin.Day}"
+                );
+
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<Response<Dictionary<string,List<IntDataItem>>>>(content, options: _options);
+            return result;
+        }
     }
 }

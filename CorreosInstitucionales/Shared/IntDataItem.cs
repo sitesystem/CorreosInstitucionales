@@ -24,5 +24,10 @@ namespace CorreosInstitucionales.Shared
             this.Text = t;
         }
 
+        public override string ToString()
+        {
+            return $"{Text} = {Value}";
+        }
+
     }
 }
