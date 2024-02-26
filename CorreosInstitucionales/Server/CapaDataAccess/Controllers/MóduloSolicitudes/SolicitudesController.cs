@@ -67,16 +67,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             try
             {
                 var list = new List<MtTbSolicitudesTicket>();
-                /*
-                list = await _db.MtTbSolicitudesTickets
-                            .Where(
-                                st => status.Contains(st.SolIdEstadoSolicitud)
-                            )
-                            .Include(st => st.SolIdUsuarioNavigation)
-                            .Include(st => st.SolIdEstadoSolicitudNavigation)
-                            .Include(st => st.SolIdTipoSolicitudNavigation)
-                            .ToListAsync();
-                */
+                
                 switch (progress)
                 {
                     case 1:
@@ -130,6 +121,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                         break;
                 }//SWITCH
 
+                oResponse.Data = list;
                 oResponse.Success = 1;
             }
             catch (Exception ex)

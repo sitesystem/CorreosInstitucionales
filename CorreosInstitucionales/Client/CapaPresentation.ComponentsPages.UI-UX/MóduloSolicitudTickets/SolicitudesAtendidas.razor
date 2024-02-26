@@ -46,7 +46,7 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Filterable="false" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Filterable="false" TextAlign="TextAlign.Center">
                 <Template Context="item">
                     @if (item.SolEncuestaCalidadCalificacion is null)
                     {
@@ -54,11 +54,9 @@
                     }
                     else
                     {
-                        <div class="text-center">
-                            <img class="d-inline mb-2" src="img/calidad/@(item.SolEncuestaCalidadCalificacion).png" />
-                            <br>
-                            @item.SolEncuestaCalidadComentarios
-                        </div>    
+                        <img class="d-inline mb-2" src="img/calidad/@(item.SolEncuestaCalidadCalificacion).png" />
+                        <br>
+                        @item.SolEncuestaCalidadComentarios
                     }
 
                 </Template>
