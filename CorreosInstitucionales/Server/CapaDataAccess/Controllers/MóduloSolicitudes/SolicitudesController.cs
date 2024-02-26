@@ -108,7 +108,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                         list = await _db.MtTbSolicitudesTickets
                             .Where(
                                 st =>
-                                    st.SolIdEstadoSolicitud == 6
+                                    st.SolIdEstadoSolicitud == 4 ||
+                                    st.SolIdEstadoSolicitud == 5
                             )
                             .Include(st => st.SolIdUsuarioNavigation)
                             .Include(st => st.SolIdEstadoSolicitudNavigation)
@@ -116,7 +117,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                             .ToListAsync();
                         break;
 
-                    case 4: 
+                    case 4:
+                        list = await _db.MtTbSolicitudesTickets
+                            .Where(
+                                st =>
+                                    st.SolIdEstadoSolicitud == 6
+                            )
+                            .Include(st => st.SolIdUsuarioNavigation)
+                            .Include(st => st.SolIdEstadoSolicitudNavigation)
+                            .Include(st => st.SolIdTipoSolicitudNavigation)
+                            .ToListAsync();
                         break;
                 }
                     

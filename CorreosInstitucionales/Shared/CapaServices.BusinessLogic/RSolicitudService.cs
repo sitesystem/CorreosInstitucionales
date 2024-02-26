@@ -25,6 +25,14 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
+        public async Task<Response<List<RequestDTO_Solicitud>>?> GetAllDataByProgressAsync(int progress)
+        {
+            var response = await _httpClient.GetAsync($"{url}/filterByProgress/{progress}");
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<Response<List<RequestDTO_Solicitud>>>(content, options: _options);
+            return result;
+        }
+
         public async Task<Response<RequestDTO_Solicitud>?> GetDataByIdAsync(int? id)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<RequestDTO_Solicitud>>($"{url}/filterById/{id}", options: _options);
