@@ -1,39 +1,106 @@
 ﻿@page "/SolicitudesAtendidas"
-
 @attribute [Authorize(Policy = "[Rol] Administrador")]
+<PageTitle>@Title</PageTitle>
 
-<PageTitle>SITI | Solicitudes Atendidas</PageTitle>
 
-<h3 style="font-variant: small-caps;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-hourglass-split" viewBox="0 0 16 16">
-        <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z" />
-    </svg> Solicitudes Atendidas
-</h3>
+<div class="p-4 rounded-1 bg-white shadow">
+    <h1>@Title</h1>
 
-<style type="text/css">
+    @if (!cargado || generando)
+    {
+        <div class="row my-4">
+            <div class="col text-center">
+                <img src="logo_saci.png" class="loading_img" />
+                <br />
+                Trabajando...
+            </div>
+        </div>
+    }
 
-</style>
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
+                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    Visible=@cargado
+                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems>
+        <Columns>
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
-@if (true)
-{
-    <AuthorizeView>
-        <Authorized>
-            <p>Autorizado</p>
-        </Authorized>
-        <NotAuthorized>
-            <p>No Autorizado</p>
-        </NotAuthorized>
-        <Authorizing>
-            <p>Autorizando..</p>
-        </Authorizing>
-    </AuthorizeView>
-}
-else
-{
-    @* <SfSpinner Type="SpinnerType.Tailwind" Size="50" Label="Cargando..." Visible="true" CssClass="e-spin-overlay" /> *@
-}
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Tipo" Filterable="true" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                    @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                    @item.SolIdUsuarioNavigation!.UsuNombre
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @if (item.SolEncuestaCalidadCalificacion is null)
+                    {
+                        <text>(Pendiente de Contestar)</text>
+                    }
+                    else
+                    {
+                        <div class="text-center">
+                            <img class="d-inline mb-2" src="img/calidad/@(item.SolEncuestaCalidadCalificacion).png" />
+                            <br>
+                            @item.SolEncuestaCalidadComentarios
+                        </div>    
+                    }
+
+                </Template>
+            </RadzenDataGridColumn>
+
+        </Columns>
+    </RadzenDataGrid>
+</div>
 
 @code
 {
+    private string Title = "Solicitudes Pendientes";
+    private bool cargado { get; set; } = false;
+    private bool generando = false;
+
+    private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
+    private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await CargarLista();
+
+            cargado = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task CargarLista(int? selecccionar_id = null)
+    {
+        Response<List<RequestDTO_Solicitud>>? request = await servicioSolicitud.GetAllDataByProgressAsync(3);
+
+        if (request is not null && request.Data is not null)
+        {
+            items = request.Data;
+        }
+
+        if (selecccionar_id is not null)
+        {
+            selectedItems = items.Where(i => (i.IdSolicitudTicket == selecccionar_id)).ToList();
+        }
+    }
 
 }

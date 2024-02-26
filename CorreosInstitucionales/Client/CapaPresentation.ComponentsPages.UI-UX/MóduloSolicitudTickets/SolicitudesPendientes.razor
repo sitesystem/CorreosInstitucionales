@@ -1,23 +1,131 @@
 ﻿@page "/SolicitudesPendientes"
-
-
 @attribute [Authorize(Policy = "[Rol] Administrador")]
+
 <PageTitle>@Title</PageTitle>
 
-<button class="btn btn-primary" @onclick="Descargar">
-    Descargar
-</button>
+
+<div class="p-4 rounded-1 bg-white shadow">
+    <h1>@Title</h1>
+
+    <div class="row my-4">
+        <div class="offset-10 col-2">
+            @if(string.IsNullOrEmpty(link))
+            {
+                <button class="btn btn-primary form-control" @onclick="Descargar">
+                    Generar Archivo
+                </button>
+            }else{
+                <a href="@link">Archivo de Exportación</a>
+            }
+        </div>
+    </div>
+
+    @if (!cargado)
+    {
+        <div class="row my-4">
+            <div class="col text-center">
+                <img src="logo_saci.png" class="loading_img" />
+                <br />
+                Trabajando...
+            </div>
+        </div>
+    }
+
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
+                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    Visible=@cargado
+                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems>
+        <Columns>
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Tipo" Filterable="true" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    @if (item.SolIdEstadoSolicitud != 6)
+                    {
+                        <text>
+                            @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                            @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                            @item.SolIdUsuarioNavigation!.UsuNombre
+                        </text>
+                    }
+                    else
+                    {
+                        <del>
+                            @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                            @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                            @item.SolIdUsuarioNavigation!.UsuNombre
+                        </del>
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+
+        </Columns>
+    </RadzenDataGrid>
+</div>
+
 
 @code{
-    
-    private string Title = "Catálogo de Áreas/Departamentos";
+    private string Title = "Solicitudes Pendientes";
     private bool cargado { get; set; } = false;
-    
+    private bool generando = false;
+    private string link = string.Empty;
 
-    private void Descargar()
+    private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
+    private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        
-        
-        
+        if (firstRender)
+        {
+            await CargarLista();
+
+            cargado = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task CargarLista(int? selecccionar_id = null)
+    {
+        Response<List<RequestDTO_Solicitud>>? request = await servicioSolicitud.GetAllDataByProgressAsync(1);
+
+        if(request is not null && request.Data is not null)
+        {
+            items = request.Data;
+        }
+
+        if (selecccionar_id is not null)
+        {
+            selectedItems = items.Where(i => (i.IdSolicitudTicket == selecccionar_id)).ToList();
+        }
+    }
+
+    private async void Descargar()
+    {
+        cargado = false;
+        StateHasChanged();
+
+        Response<string>? oResponse = await servicioArchivos.NewFile("xlsx", "pendientes");
+
+        if(oResponse is not null && oResponse.Data is not null)
+        {
+            link = oResponse.Data;
+        }
+
+        cargado = true;
+        StateHasChanged();
     }
 }

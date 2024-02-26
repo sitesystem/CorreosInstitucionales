@@ -2,14 +2,17 @@
 
 @inject REstadisticasService estadisticas
 
-@if ((!cargado))
+@if (!cargado)
 {
-    <div class="col text-center">
-        <img src="logo_saci.png" class="loading_img" />
-        <br />
-        Cargando...
+    <div class="p-4 rounded-1 bg-white shadow">
+        <div class="row">
+            <div class="col text-center">
+                <img src="logo_saci.png" class="loading_img" />
+                <br />
+                Cargando...
+            </div>
+        </div>
     </div>
-
 }
 
 <RadzenCard>
@@ -112,22 +115,22 @@
                             <h4>Volumen de tickets atendidos y pendientes</h4>
                             <RadzenChart Style="width: 65vw; height:vh;">
                                 
-                                <RadzenStackedColumnSeries Data="@volumen_pendientes" CategoryProperty="Text" Title="Pendientes" ValueProperty="Value" RenderingOrder="1">
+                                <RadzenStackedAreaSeries Smooth="true" Data="@volumen_pendientes" CategoryProperty="Text" Title="Pendientes" ValueProperty="Value" RenderingOrder="1">
                                     <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                                </RadzenStackedColumnSeries>
+                                </RadzenStackedAreaSeries>
 
-                                <RadzenStackedColumnSeries Data="@volumen_proceso" CategoryProperty="Text" Title="En Proceso" LineType="LineType.Dashed" ValueProperty="Value">
+                                <RadzenStackedAreaSeries Smooth="@true" Data="@volumen_proceso" CategoryProperty="Text" Title="En Proceso" LineType="LineType.Dashed" ValueProperty="Value">
                                     <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                                </RadzenStackedColumnSeries>
+                                </RadzenStackedAreaSeries>
 
 
-                                <RadzenStackedColumnSeries Data="@volumen_atendidos" CategoryProperty="Text" Title="Atendidas" LineType="LineType.Dashed" ValueProperty="Value">
+                                <RadzenStackedAreaSeries Smooth="@true" Data="@volumen_atendidos" CategoryProperty="Text" Title="Atendidas" LineType="LineType.Dashed" ValueProperty="Value">
                                     <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                                </RadzenStackedColumnSeries>
+                                </RadzenStackedAreaSeries>
 
-                                <RadzenStackedColumnSeries Data="@volumen_cancelados" CategoryProperty="Text" Title="Canceladas" LineType="LineType.Dashed" ValueProperty="Value">
+                                <RadzenStackedAreaSeries Smooth="@true" Data="@volumen_cancelados" CategoryProperty="Text" Title="Canceladas" LineType="LineType.Dashed" ValueProperty="Value">
                                     <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                                </RadzenStackedColumnSeries>
+                                </RadzenStackedAreaSeries>
 
                                 <RadzenCategoryAxis Padding="20"/>
                                 <RadzenValueAxis>
