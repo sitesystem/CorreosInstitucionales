@@ -197,3 +197,14 @@ a, .btn-link {
         display: none;
     }
 }
+
+.circle-border {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    color: green;
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgb(215,215,215);
+    border-radius: 50%;
+}

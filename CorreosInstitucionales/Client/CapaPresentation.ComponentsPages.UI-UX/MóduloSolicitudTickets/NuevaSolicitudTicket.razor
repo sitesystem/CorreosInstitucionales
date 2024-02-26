@@ -32,7 +32,7 @@
     </RadzenStack>
 </RadzenCard>
 
-@if (oTiposSolicitud is not null && oTiposSolicitud.Data != null)
+@if (oTiposSolicitud is not null && oTiposSolicitud.Data != null && oResponseUsuario != null && oResponseUsuario.Data is not null)
 {
     <RadzenRow AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Gap="1rem" class="">
         <RadzenColumn Size="12">
@@ -41,11 +41,18 @@
 
                     <!-- ******************************************************************* AVISOS ******************************************************************* -->
                     <RadzenAlert Title="" AlertStyle="AlertStyle.Secondary" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Default" ShowIcon="true" AllowClose="false" class="rz-mt-0 rz-mb-3" Visible="true">
-                        <b>ATENCIÓN.</b> Importante tener en cuenta lo siguiente:
+                        <b>ATENCIÓN.</b> Importante tener en cuenta lo siguiente para levantar tu Solicitud de Ticket:
                         <ul class="my-0">
-                            <li>
-                                Con tu Correo Institucional al ingresar en otra aplicación externa a las que te brinda Microsoft.
-                            </li>
+                            <li>Actualizar tu Archivo PDF del CURP.</li>
+                            @if (idTipoPersonal == 1 || idTipoPersonal == 2)
+                            {
+                                <li>Actualizar tu Comprobante de Horario (Tira de Materias).</li>
+                            }
+                            else if (idTipoPersonal == 3)
+                            {
+                                <li>Actualizar tu Comprobante de Inscripción (SIP-10).</li>
+                            }
+                            <li>Con tu Correo Institucional sólo se te puede apoyar en accesos a aplicaciones que te brinda Microsoft, no así en aplicaciones externas.</li>
                         </ul>
                     </RadzenAlert>
 
@@ -55,7 +62,7 @@
                     </RadzenAlert>
 
                     <RadzenAlert Title="" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.ExtraSmall" Shade="Shade.Dark" ShowIcon="true" AllowClose="false" class="rz-mb-4 rz-px-3">
-                        <b>NOTA:</b> Los campos subrayados de rojo son <strong>obligatorios y sin acentos.</strong>
+                        <b>NOTA:</b> Los campos subrayados de rojo son <strong>obligatorios.</strong>
                     </RadzenAlert>
 
                     <EditForm Model="@oSolicitudTicket" OnValidSubmit="@OnValidHandled_Registrar" OnInvalidSubmit="@OnInvalidHandled_ScrollToTop">
@@ -107,16 +114,19 @@
                                             <Start><RadzenIcon Icon="message" IconColor="@Colors.Base400" /></Start>
                                             <ChildContent>
                                                 <RadzenTextArea Name="@($@"observaciones")" Placeholder="Escribe un motivo, comentario, nota o aclaración adicional para la Solicitud-Ticket..."
-                                                                @bind-Value="@oSolicitudTicket.SolObservacionesSolicitud" Cols="30" Rows="2" style="border-bottom: 3px solid red;"
-                                                                MinLength="1" MaxLength="300" class="w-100" aria-label="TextArea" Disabled="false" ReadOnly="false" />
+                                                                @bind-Value="@oSolicitudTicket.SolObservacionesSolicitud" @oninput="@(e => oSolicitudTicket.SolObservacionesSolicitud = e.Value.ToString())"
+                                                                Cols="30" Rows="2" style="border-bottom: 3px solid red;" MinLength="1" MaxLength="300" class="w-100" aria-label="TextArea" Disabled="false" ReadOnly="false" />
                                             </ChildContent>
                                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                                         </RadzenFormField>
+                                        <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.Body1" class="rz-m-0">
+                                            <b>@(300 - oSolicitudTicket?.SolObservacionesSolicitud?.Length)</b> caracteres restantes de <b>300</b> permitidos.
+                                        </RadzenText>
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolObservacionesSolicitud)" />
                                     </div>
 
-                                    <!-- ******************************************************************* ARCHIVOS PDF CAPTURAS ******************************************************************* -->
-                                    <div class="col-md-6 col-lg-6">
+                                    <!-- ******************************************************************* ARCHIVOS PDF CAPTURAS Y OTROS DATOS ******************************************************************* -->
+                                    <div class="col-md-6 col-lg-6 mb-3">
 
                                         <RadzenFormField Text="Correo Electrónico Personal Actual" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3">
                                             <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
@@ -160,7 +170,7 @@
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolNoCelularNuevo)" />
 
                                         <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.Div" TextAlign="TextAlign.JustifyAll" class="mt-3 mb-0">
-                                            <a href="@oLinkReducirTamañoArchivo.Data.LinkEnlace" target="_blank" class="icon-link icon-link-hover alert alert-info w-100">
+                                            <a href="@oLinkReducirTamañoArchivo?.Data?.LinkEnlace" target="_blank" class="icon-link icon-link-hover alert alert-info w-100">
                                                 Comprimir y/o reducir el tamaño del <strong>Archivo PDF (Máx. 2MB)</strong>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
                                                     <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
@@ -173,12 +183,12 @@
                                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
                                                 <RadzenUpload @ref="oUploadFile_SolCapturaEscaneoAntivirus" Url="" Accept=".pdf"
-                                                                Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
-                                                                Change=@(args => OnChangeFiles(args, CapturaEscaneoAntivirus))
-                                                                Error=@(args => OnErrorFiles(args, "FileInput"))
-                                                                InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
-                                                                Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
-                                                                Complete="@(args => OnCompleteFiles(args))" />
+                                                              Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                                              Change=@(args => OnChangeFiles(args, CapturaEscaneoAntivirus))
+                                                              Error=@(args => OnErrorFiles(args, "FileInput"))
+                                                              InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                                              Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                                              Complete="@(args => OnCompleteFiles(args))" />
                                             </ChildContent>
                                             <Helper></Helper>
                                         </RadzenFormField>
@@ -189,12 +199,12 @@
                                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
                                                 <RadzenUpload @ref="oUploadFile_SolCapturaCuentaBloqueada" Url="" Accept=".pdf"
-                                                                Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
-                                                                Change=@(args => OnChangeFiles(args, CapturaCuentaBloqueada))
-                                                                Error=@(args => OnErrorFiles(args, "FileInput"))
-                                                                InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
-                                                                Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
-                                                                Complete="@(args => OnCompleteFiles(args))" />
+                                                              Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                                              Change=@(args => OnChangeFiles(args, CapturaCuentaBloqueada))
+                                                              Error=@(args => OnErrorFiles(args, "FileInput"))
+                                                              InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                                              Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                                              Complete="@(args => OnCompleteFiles(args))" />
                                             </ChildContent>
                                             <Helper></Helper>
                                         </RadzenFormField>
@@ -205,12 +215,12 @@
                                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
                                                 <RadzenUpload @ref="oUploadFile_SolCapturaError" Url="" Accept=".pdf"
-                                                                Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
-                                                                Change=@(args => OnChangeFiles(args, CapturaError))
-                                                                Error=@(args => OnErrorFiles(args, "FileInput"))
-                                                                InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
-                                                                Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
-                                                                Complete="@(args => OnCompleteFiles(args))" />
+                                                              Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                                              Change=@(args => OnChangeFiles(args, CapturaError))
+                                                              Error=@(args => OnErrorFiles(args, "FileInput"))
+                                                              InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                                              Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                                              Complete="@(args => OnCompleteFiles(args))" />
                                             </ChildContent>
                                             <Helper></Helper>
                                         </RadzenFormField>
@@ -295,7 +305,7 @@ else
             oSolicitudTicket.SolCapturaError = "";
             oSolicitudTicket.SolFileSizeCapturaError = 0L;
             oSolicitudTicket.SolObservacionesSolicitud = "";
-            oSolicitudTicket.SolIdEstadoSolicitud = 1;
+            oSolicitudTicket.SolIdEstadoSolicitud = 2;
             oSolicitudTicket.SolValidacionDatos = false;
             @* DATOS ENCUESTA DE CALIDAD DE LA SOLICITUD-TICKET *@
             oSolicitudTicket.SolEncuestaCalidadCalificacion = null;
@@ -505,15 +515,6 @@ else
 		                        </div>
 	                        </footer>
                         </body>";
-                    
-                    @*//  ENVÍO DE CORREO ELECTRÓNICO PARA AVISO DE REGISTRO DE SOLICITUD-TICKET EXITOSO  //*@
-                    await servicioSendEmail.SendEmailAsync(
-                                        new RequestDTO_SendEmail()
-                        {
-                            EmailTo = oResponseUsuario.Data.UsuCorreoPersonalCuentaNueva,
-                            Subject = "SACI | SOLICITUD-TICKET",
-                            Body = msgEmail
-                        });
 
                     @*//  UPLOAD FILES  //*@
                     if (oFileInfoSolCapturaEscaneoAntivirus is not null)
@@ -585,6 +586,13 @@ else
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Fecha y Hora de Creación:</RadzenText>
                                     <RadzenText TextStyle="TextStyle.Body1"><b>@DateTime.Now.ToString()</b></RadzenText>
                                 </RadzenStack>
+                                    <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light"
+                                                 ShowIcon="true" AllowClose="false" class="mb-0" Visible="true">
+                                        <ul>
+                                            <li>Se le enviará un correo con los datos de apertura del Ticket <b>#@idResponse.</b></li>
+                                            <li>Se mostrará el Seguimiento de la Solicitud del Ticket <b>#@idResponse.</b></li>
+                                        </ul>
+                                    </RadzenAlert>
                                 <RadzenButton Text="Cerrar"
                                               BusyText=""
                                               ButtonStyle="ButtonStyle.Warning"
@@ -608,6 +616,15 @@ else
                             Draggable = true,
                             CssClass = "custom-dialog-class",
                             WrapperCssClass = "custom-dialog-wrapper-class"
+                        });
+
+                    @*//  ENVÍO DE CORREO ELECTRÓNICO PARA AVISO DE REGISTRO DE SOLICITUD-TICKET EXITOSO  //*@
+                    await servicioSendEmail.SendEmailAsync(
+                        new RequestDTO_SendEmail()
+                        {
+                            EmailTo = oResponseUsuario.Data.UsuCorreoPersonalCuentaNueva,
+                            Subject = $@"SACI | SOLICITUD-TICKET #{idResponse}",
+                            Body = msgEmail
                         });
 
                     navigationManager.NavigateTo("/Inicio");

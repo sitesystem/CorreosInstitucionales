@@ -15,7 +15,7 @@
                     
                     <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" class="rz-m-0" />
 
-                    <RadzenCard Variant="Variant.Filled" Class="rz-p-2 rz-border-radius-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
+                    <RadzenCard Variant="Variant.Filled" @onclick="@(() => navigationManager.NavigateTo("/Inicio"))" Style="cursor:pointer;" class="rz-p-2 rz-pt-3 rz-border-radius-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" class="">
                             <RadzenImage Path="./logo_saci.png" Style="height:30px;" AlternateText="logo saci" />
                             <RadzenStack Gap="0px">
@@ -37,7 +37,7 @@
                             <RadzenImage Path="./logo_ipn.png" Style="height: 30px;" />
                             <RadzenStack Gap="0px">
                                 <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">@rol:</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@tipoPersonal</b></RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body1"><b>@tipoPersonal</b></RadzenText>
                             </RadzenStack>
                         </RadzenStack>
                     </RadzenCard>
@@ -83,7 +83,7 @@
 
             <RadzenBody style="background: url('../fondo.jpg') repeat center center fixed;">
                 <RadzenColumn Size="12">
-                    <article class="content px-4" style="background: url('../fondo.jpg') repeat center center fixed;">
+                    <article class="content" style="background: url('../fondo.jpg') repeat center center fixed;">
                         @Body
                     </article>
                 </RadzenColumn>

@@ -63,7 +63,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 4 cancelado     6
              */
             Response<List<MtTbSolicitudesTicket>> oResponse = new();
-            
+
             try
             {
                 var list = new List<MtTbSolicitudesTicket>();
@@ -82,7 +82,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     case 1:
                         list = await _db.MtTbSolicitudesTickets
                             .Where(
-                                st => 
+                                st =>
                                     st.SolIdEstadoSolicitud == 1 ||
                                     st.SolIdEstadoSolicitud == 2
                             )
@@ -128,11 +128,36 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                             .Include(st => st.SolIdTipoSolicitudNavigation)
                             .ToListAsync();
                         break;
-                }
-                    
-                    //*/
+                }//SWITCH
 
                 oResponse.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
+        [HttpGet("filterByIdUsuario/{filterByIdUsuario}")]
+        public async Task<IActionResult> GetAllDataByIdUsuario(int filterByIdUsuario)
+        {
+            Response<List<MtTbSolicitudesTicket>> oResponse = new();
+
+            try
+            {
+                var list = new List<MtTbSolicitudesTicket>();
+
+                list = await _db.MtTbSolicitudesTickets
+                                .Where(st => st.SolIdUsuario.Equals(filterByIdUsuario))
+                                .Include(ts => ts.SolIdTipoSolicitudNavigation)
+                                .Include(u => u.SolIdUsuarioNavigation)
+                                .Include(e => e.SolIdEstadoSolicitudNavigation)
+                                .OrderByDescending(st => st.IdSolicitudTicket)
+                                .ToListAsync();
+                oResponse.Success = 1;
+                oResponse.Message = list.Count.ToString();
                 oResponse.Data = list;
             }
             catch (Exception ex)
@@ -170,7 +195,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             try
             {
                 int solicitudNoAtendida = await _db.MtTbSolicitudesTickets
-                                                   .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioStatus) && !st.SolIdEstadoSolicitud.Equals(5) && !st.SolIdEstadoSolicitud.Equals(6))
+                                                   .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioStatus) &&
+                                                          !st.SolIdEstadoSolicitud.Equals(5) && !st.SolIdEstadoSolicitud.Equals(6))
                                                    .CountAsync();
                 if (solicitudNoAtendida > 0)
                     oResponse.Message = "NO PUEDE SOLICITAR, PENDIENTE DE CONTESTAR ENCUESTA DE CALIDAD";
@@ -190,24 +216,24 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             return Ok(oResponse);
         }
 
-        [HttpGet("filterByIdUsuario/{filterByIdUsuario}")]
-        public async Task<IActionResult> GetDataByIdUsuario(int filterByIdUsuario)
+        [HttpGet("filterByIdUsuarioLastTicket/{filterByIdUsuarioLastTicket}")]
+        public async Task<IActionResult> GetDataByIdUsuarioLastTicket(int filterByIdUsuarioLastTicket)
         {
-            Response<List<MtTbSolicitudesTicket>> oResponse = new();
+            Response<MtTbSolicitudesTicket> oResponse = new();
 
             try
             {
-                var list = new List<MtTbSolicitudesTicket>();
+                var item = await _db.MtTbSolicitudesTickets
+                                    .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioLastTicket) &&
+                                           st.SolIdEstadoSolicitud != 5 && st.SolIdEstadoSolicitud != 6)
+                                    .Include(ts => ts.SolIdTipoSolicitudNavigation)
+                                    .Include(u => u.SolIdUsuarioNavigation)
+                                    .Include(e => e.SolIdEstadoSolicitudNavigation)
+                                    .OrderByDescending(st => st.IdSolicitudTicket)
+                                    .FirstOrDefaultAsync();
 
-                list = await _db.MtTbSolicitudesTickets
-                                .Where(st => st.SolIdUsuario.Equals(filterByIdUsuario))
-                                .Include(ts => ts.SolIdTipoSolicitudNavigation)
-                                .Include(u => u.SolIdUsuarioNavigation)
-                                .Include(e => e.SolIdEstadoSolicitudNavigation)
-                                .OrderByDescending(st => st.IdSolicitudTicket)
-                                .ToListAsync();
                 oResponse.Success = 1;
-                oResponse.Data = list;
+                oResponse.Data = item;
             }
             catch (Exception ex)
             {

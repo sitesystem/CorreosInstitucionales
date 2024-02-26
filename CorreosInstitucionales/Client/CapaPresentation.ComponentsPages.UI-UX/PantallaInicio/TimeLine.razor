@@ -1,61 +1,303 @@
-﻿<RadzenPanel>
-    <RadzenFieldset AllowCollapse="false" ExpandTitle="Seguimiento de Solicitud" CollapseTitle="Seguimiento de Solicitud" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-3">
-        <HeaderTemplate>
-            <span class="d-inline-flex align-items-center align-middle">
-                <RadzenIcon Icon="history" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Seguimiento de Solicitud</b>
-            </span>
-        </HeaderTemplate>
-        <ChildContent>
-            <div class="rz-p-0 rz-p-md-12">
-                <RadzenTimeline Orientation="Orientation.Horizontal" LinePosition="LinePosition.Start" style="--rz-timeline-line-width: 36px; max-width: 600px; margin: 0 auto;">
-                    <Items>
-                        <RadzenTimelineItem PointVariant="Variant.Flat" PointSize="PointSize.Large" PointStyle="PointStyle.Info">
-                            <PointContent><RadzenIcon Icon="check" /></PointContent>
-                            <ChildContent>
-                                <RadzenText TextStyle="TextStyle.Subtitle1" Class="rz-m-0">Envio de Solicitud</RadzenText>
-                                <RadzenText TextStyle="TextStyle.Body2" Class="rz-m-0"></RadzenText>
-                            </ChildContent>
-                        </RadzenTimelineItem>
-                        <RadzenTimelineItem PointVariant="Variant.Flat" PointSize="PointSize.Large" PointStyle="PointStyle.Info">
-                            <PointContent><RadzenIcon Icon="check" /></PointContent>
-                            <ChildContent>
-                                <RadzenText TextStyle="TextStyle.Subtitle1" Class="rz-m-0">Solicitud Pendiente</RadzenText>
-                                <RadzenText TextStyle="TextStyle.Body2" Class="rz-m-0"></RadzenText>
-                            </ChildContent>
-                        </RadzenTimelineItem>
-                        <RadzenTimelineItem PointVariant="Variant.Text" PointSize="PointSize.Large" PointStyle="PointStyle.Info">
-                            <PointContent><RadzenIcon Icon="more_horiz" /></PointContent>
-                            <ChildContent>
-                                <RadzenText TextStyle="TextStyle.Subtitle1" Class="rz-m-0">Solicitud en Proceso</RadzenText>
-                                <RadzenText TextStyle="TextStyle.Body2" Class="rz-m-0"></RadzenText>
-                            </ChildContent>
-                        </RadzenTimelineItem>
-                        <RadzenTimelineItem PointVariant="Variant.Text" PointSize="PointSize.Large" PointStyle="PointStyle.Info">
-                            <ChildContent>
-                                <RadzenText TextStyle="TextStyle.Subtitle1" Class="rz-m-0">Solicitud Atendida</RadzenText>
-                                <RadzenText TextStyle="TextStyle.Body2" Class="rz-m-0"></RadzenText>
-                            </ChildContent>
-                        </RadzenTimelineItem>
-                        <RadzenTimelineItem PointVariant="Variant.Text" PointSize="PointSize.Large" PointStyle="PointStyle.Info">
-                            <ChildContent>
-                                <RadzenText TextStyle="TextStyle.Subtitle1" Class="rz-m-0">Envio de Correo</RadzenText>
-                                <RadzenText TextStyle="TextStyle.Body2" Class="rz-m-0"></RadzenText>
-                            </ChildContent>
-                        </RadzenTimelineItem>
-                    </Items>
-                </RadzenTimeline>
-            </div>
-        </ChildContent>
-    </RadzenFieldset>
-</RadzenPanel>
+﻿@if (oUsuario is not null && oUsuario.Data != null)
+{
+    <RadzenPanel Visible="@(existenSolicitudes)">
+        <RadzenFieldset AllowCollapse="false" ExpandTitle="Seguimiento de Solicitud" CollapseTitle="Seguimiento de Solicitud" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-0 py-0">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="hourglass_top" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Seguimiento de la Solicitud de Ticket</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                <div class="row gap-0 mt-1 mb-0">
+                    <div class="col-md-1 text-center">
+                        <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" class="">#TICKET:</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" Style="border:3px solid rgb(215,215,215); border-radius:25px;" class="text-danger p-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-tag-fill rz-color-success" viewBox="0 0 16 16">
+                                <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                            </svg>
+                            <b>@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b>
+                        </RadzenText>
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Center" Style="font-variant: small-caps;" class="text-danger" Text="@(oSolicitudLastTicket?.Data?.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado)" />
+                    </div>
 
-<div class="rz-p-0 rz-p-md-12">
-    <RadzenStack Orientation="Orientation.Horizontal" FlexWrap="FlexWrap.Wrap" Gap="1rem" Class="rz-p-4 rz-mb-6">
+                    <div class="col-md-3 text-center">
+                        <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Justify" class="">MOTIVO / INCIDENCIA:</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class=""><b>@(oSolicitudLastTicket?.Data?.SolIdTipoSolicitudNavigation?.TiposolDescripcion)</b></RadzenText>
+                    </div>
 
-    </RadzenStack>
-</div>
+                    <div class="col-md-3 text-center">
+                        <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Justify" class="">OBSERVACIONES / COMENTARIOS:</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class=""><b>@(oSolicitudLastTicket?.Data?.SolObservacionesSolicitud)</b></RadzenText>
+                    </div>
+
+                    <div class="col-md-2 text-center">
+                        <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" class="">DATOS:</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class=""><b>@($@"{(oSolicitudLastTicket.Data.SolValidacionDatos ? "Váidos" : "Sin validar")}")</b></RadzenText>
+                    </div>
+
+                    <div class="col-md-3 text-center">
+                        <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" class="">FECHAR Y HORA DE CREACIÓN:</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class=""><b>@(oSolicitudLastTicket.Data.SolFechaHoraCreacion.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'"))</b></RadzenText>
+                    </div>
+                </div>
+
+                <!-- ... Contenido para pantallas pequeñas móviles -->
+                <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none">
+
+                    <RadzenProgressBarCircular Min="0" Max="100" Unit="%" Value="66" ShowValue="true" ProgressBarStyle="ProgressBarStyle.Info" Mode="ProgressBarMode.Determinate" Size="ProgressBarCircularSize.Large" class="w-100 text-center my-2">
+                        <Template><small><b>66%</b><br />Progreso</small></Template>
+                    </RadzenProgressBarCircular>
+
+                    <RadzenTimeline Orientation="Orientation.Vertical" LinePosition="LinePosition.Start" Reverse="false"
+                                    style="--rz-timeline-line-width:10px; --rz-timeline-axis-size:80px; max-width:100%; margin:auto;">
+                        <Items>
+
+                            <RadzenTimelineItem PointVariant="Variant.Flat" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
+                                <PointContent><RadzenIcon Icon="check" /></PointContent>
+                                <ChildContent>
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
+                                        <RadzenBadge BadgeStyle="BadgeStyle.Secondary" IsPill="true" Shade="Shade.Default" Variant="Variant.Filled" class="w-100">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                                <RadzenIcon Icon="assignment_turned_in" IconColor="@Colors.White" IconStyle="IconStyle.Warning" Style="font-size:20px;" /> ALTA
+                                            </RadzenStack>
+                                        </RadzenBadge>
+                                        <RadzenText Text="Paso 1" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
+                                        <RadzenText Text="Se ha levantado y aperturado una Solicitud de Ticket." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Justify" class="rz-m-0"><b>@(oSolicitudLastTicket?.Data?.SolFechaHoraCreacion.ToString("dd/MM/yyyy 'a las' HH:mm:ss 'hrs.'"))</b></RadzenText>
+                                    </RadzenStack>
+                                </ChildContent>
+                            </RadzenTimelineItem>
+
+                            <RadzenTimelineItem PointVariant="Variant.Flat" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
+                                <PointContent><RadzenIcon Icon="check" IconColor="@Colors.White" IconStyle="IconStyle.Danger" /></PointContent>
+                                <ChildContent>
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
+                                        <RadzenBadge BadgeStyle="BadgeStyle.Warning" IsPill="true" Shade="Shade.Default" Variant="Variant.Filled" class="w-100">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                                <RadzenIcon Icon="hourglass_top" IconColor="@Colors.White" IconStyle="IconStyle.Warning" Style="font-size:20px;" /> PENDIENTE
+                                            </RadzenStack>
+                                        </RadzenBadge>
+                                        <RadzenText Text="Paso 2" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
+                                        <RadzenText Text="Solicitud-Ticket colocada en la Bandeja de Espera para su pronta atención." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                    </RadzenStack>
+                                </ChildContent>
+                            </RadzenTimelineItem>
+
+                            <RadzenTimelineItem PointVariant="Variant.Filled" PointStyle="PointStyle.Info" PointSize="PointSize.Large" PointShadow="10">
+                                <PointContent><RadzenIcon Icon="arrow_forward" /></PointContent>
+                                <ChildContent>
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
+                                        <RadzenBadge BadgeStyle="BadgeStyle.Info" IsPill="true" Shade="Shade.Light" Variant="Variant.Filled" class="w-100">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                                <RadzenIcon Icon="settings" IconColor="@Colors.White" IconStyle="IconStyle.Warning" Style="font-size:20px;" /> EN PROCESO
+                                            </RadzenStack>
+                                        </RadzenBadge>
+                                        <RadzenText Text="Paso 3" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
+                                        <RadzenText Text="Revisando y validando tus datos. La Solicitud de Ticket se envía a Área Central para la Generación o Recuperación de las Credenciales del Correo Institucional." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                    </RadzenStack>
+                                </ChildContent>
+                            </RadzenTimelineItem>
+
+                            <RadzenTimelineItem PointVariant="Variant.Outlined" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
+                                <PointContent><RadzenIcon Icon="hourglass_top" /></PointContent>
+                                <ChildContent>
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
+                                        <RadzenBadge BadgeStyle="BadgeStyle.Success" IsPill="true" Shade="Shade.Light" Variant="Variant.Filled" class="w-100">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                                <RadzenIcon Icon="task_alt" IconColor="@Colors.White" IconStyle="IconStyle.Warning" Style="font-size:20px;" /> ATENDIDA
+                                            </RadzenStack>
+                                        </RadzenBadge>
+                                        <RadzenText Text="Paso 4" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
+                                        <RadzenText Text="Las Credenciales del Correo Institucional se han subido a la Plataforma SACI y enviadas a su Correo Personal." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                    </RadzenStack>
+                                </ChildContent>
+                            </RadzenTimelineItem>
+                        </Items>
+                    </RadzenTimeline>
+                </div>
+
+                <!-- ... Contenido para pantallas grandes ... -->
+                <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
+
+                    <div class="col-md-10 offset-1">
+                        @* <RadzenSlider TValue="IEnumerable<int>" Min="0" Max="100" Range="true" Value="@(new int[] { 0, 66 })" Step="1" Disabled="false" Visible="true" class="w-100 my-3" /> *@
+                        <RadzenProgressBar Min="0" Max="100" Unit="%" Value="66" ShowValue="true" ProgressBarStyle="ProgressBarStyle.Primary" Mode="ProgressBarMode.Determinate" Visible="true" class="mt-2" />
+                    </div>
+
+                    <RadzenTimeline Orientation="Orientation.Horizontal" LinePosition="LinePosition.Start" Reverse="false"
+                                    style="--rz-timeline-line-width:10px; --rz-timeline-axis-size:80px; max-width:100%; margin:auto;">
+                        <Items>
+
+                            <RadzenTimelineItem PointVariant="Variant.Flat" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
+                                <PointContent><RadzenIcon Icon="check" /></PointContent>
+                                <ChildContent>
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
+                                        <RadzenBadge BadgeStyle="BadgeStyle.Secondary" IsPill="true" Shade="Shade.Default" Variant="Variant.Filled" class="w-100">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                                <RadzenIcon Icon="assignment_turned_in" IconColor="@Colors.White" IconStyle="IconStyle.Warning" Style="font-size:20px;" /> ALTA
+                                            </RadzenStack>
+                                        </RadzenBadge>
+                                        <RadzenText Text="Paso 1" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
+                                        <RadzenText Text="Se ha levantado y aperturado una Solicitud de Ticket." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Justify" class="rz-m-0"><b>@(oSolicitudLastTicket?.Data?.SolFechaHoraCreacion.ToString("dd/MM/yyyy '-' HH:mm:ss 'hrs.'"))</b></RadzenText>
+                                    </RadzenStack>
+                                </ChildContent>
+                            </RadzenTimelineItem>
+
+                            <RadzenTimelineItem PointVariant="Variant.Flat" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
+                                <PointContent><RadzenIcon Icon="check" IconColor="@Colors.White" IconStyle="IconStyle.Danger" /></PointContent>
+                                <ChildContent>
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
+                                        <RadzenBadge BadgeStyle="BadgeStyle.Warning" IsPill="true" Shade="Shade.Default" Variant="Variant.Filled" class="w-100">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                                <RadzenIcon Icon="hourglass_top" IconColor="@Colors.White" IconStyle="IconStyle.Warning" Style="font-size:20px;" /> PENDIENTE
+                                            </RadzenStack>
+                                        </RadzenBadge>
+                                        <RadzenText Text="Paso 2" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
+                                        <RadzenText Text="Solicitud-Ticket colocada en la Bandeja de Espera para su pronta atención." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                    </RadzenStack>
+                                </ChildContent>
+                            </RadzenTimelineItem>
+
+                            <RadzenTimelineItem PointVariant="Variant.Filled" PointStyle="PointStyle.Info" PointSize="PointSize.Large" PointShadow="10">
+                                <PointContent><RadzenIcon Icon="arrow_downward" /></PointContent>
+                                <ChildContent>
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
+                                        <RadzenBadge BadgeStyle="BadgeStyle.Info" IsPill="true" Shade="Shade.Light" Variant="Variant.Filled" class="w-100">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                                <RadzenIcon Icon="settings" IconColor="@Colors.White" IconStyle="IconStyle.Warning" Style="font-size:20px;" /> EN PROCESO
+                                            </RadzenStack>
+                                        </RadzenBadge>
+                                        <RadzenText Text="Paso 3" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
+                                        <RadzenText Text="Revisando y validando tus datos. La Solicitud de Ticket se envía a Área Central para la Generación o Recuperación de las Credenciales del Correo Institucional." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                    </RadzenStack>
+                                </ChildContent>
+                            </RadzenTimelineItem>
+
+                            <RadzenTimelineItem PointVariant="Variant.Outlined" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
+                                <PointContent><RadzenIcon Icon="hourglass_top" /></PointContent>
+                                <ChildContent>
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
+                                        <RadzenBadge BadgeStyle="BadgeStyle.Success" IsPill="true" Shade="Shade.Light" Variant="Variant.Filled" class="w-100">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                                <RadzenIcon Icon="task_alt" IconColor="@Colors.White" IconStyle="IconStyle.Warning" Style="font-size:20px;" /> ATENDIDA
+                                            </RadzenStack>
+                                        </RadzenBadge>
+                                        <RadzenText Text="Paso 4" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
+                                        <RadzenText Text="Las Credenciales del Correo Institucional se han subido a la Plataforma SACI y enviadas a su Correo Personal." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                    </RadzenStack>
+                                </ChildContent>
+                            </RadzenTimelineItem>
+                        </Items>
+                    </RadzenTimeline>
+                </div>
+            </ChildContent>
+        </RadzenFieldset>
+    </RadzenPanel>
+
+    <RadzenAlert Title="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Default" ShowIcon="true" AllowClose="false" Visible="true" class="my-3">
+        <b>NOTA:</b> Para visualizar tus <strong>Credenciales del Correo Institucional</strong>, favor de responder la siguiente encuesta.
+    </RadzenAlert>
+
+    <RadzenPanel Visible="true">
+        <RadzenFieldset AllowCollapse="false" ExpandTitle="Encuesta de Satisfacción" CollapseTitle="Encuesta de Satisfacción" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 py-0">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="hourglass_top" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Encuesta de Satisfacción</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                <div class="row gap-0">
+                    <div class="col-md-6 col-lg-6">
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceEvenly" Wrap="FlexWrap.NoWrap" Gap="10px" class="">
+                            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0px" class="">
+                                <RadzenText Text="Paso 5" TextAlign="TextAlign.Center" TextStyle="TextStyle.Subtitle1" Visible="true" />
+                                <RadzenText Text="@($@"Califica la calidad del servicio atendido:")" TextAlign="TextAlign.Center" TextStyle="TextStyle.Body1" Visible="true" />
+                                <RadzenRating Value="0" Stars="5" Change="@(args => Console.WriteLine(args))" Placeholder="1-5" Disabled="false" ReadOnly="false" />
+                            </RadzenStack>
+                            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0px" class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-emoji-laughing-fill text-warning" viewBox="0 0 16 16">
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5c0 .501-.164.396-.415.235C6.42 6.629 6.218 6.5 6 6.5s-.42.13-.585.235C5.164 6.896 5 7 5 6.5 5 5.672 5.448 5 6 5s1 .672 1 1.5m5.331 3a1 1 0 0 1 0 1A5 5 0 0 1 8 13a5 5 0 0 1-4.33-2.5A1 1 0 0 1 4.535 9h6.93a1 1 0 0 1 .866.5m-1.746-2.765C10.42 6.629 10.218 6.5 10 6.5s-.42.13-.585.235C9.164 6.896 9 7 9 6.5c0-.828.448-1.5 1-1.5s1 .672 1 1.5c0 .501-.164.396-.415.235" />
+                                </svg>
+                                <small><b>Excelente</b></small>
+                            </RadzenStack>
+                        </RadzenStack>
+                    </div>
+                    <div class="col-md-6 col-lg-6">
+                        <RadzenFormField Text="Observaciones" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100">
+                            <Start><RadzenIcon Icon="message" IconColor="@Colors.Base400" /></Start>
+                            <ChildContent>
+                                                @* @bind-Value="@oSolicitudTicket.SolObservacionesSolicitud" @oninput="@(e => oSolicitudTicket.SolObservacionesSolicitud = e.Value.ToString())" *@
+                                <RadzenTextArea Name="@($@"observaciones")" Placeholder="Escribe un comentario, nota o aclaración por el servicio de la Solicitud-Ticket atendida..."
+                                                Cols="30" Rows="1" style="border-bottom: 3px solid red;" MinLength="1" MaxLength="300" class="w-100" aria-label="TextArea" Disabled="false" ReadOnly="false" />
+                            </ChildContent>
+                            <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
+                        </RadzenFormField>
+                        <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.Body1" class="rz-m-0">
+                            @* <b>@(300 - oSolicitudTicket?.SolObservacionesSolicitud?.Length)</b> caracteres restantes de <b>300</b> permitidos. *@
+                        </RadzenText>
+                        @* <ValidationMessage For="@(() => oSolicitudTicket.SolObservacionesSolicitud)" /> *@
+
+                        <RadzenButton Text="Calificar Encuesta de Calidad"
+                                      BusyText="Calificando Encuesta de Calidad..."
+                                      ButtonStyle="ButtonStyle.Success"
+                                      ButtonType="ButtonType.Submit"
+                                      IsBusy="false"
+                                      Icon="star"
+                                      class="w-100 rz-ripple mt-3 mb-0"
+                                      Shade="Shade.Default"
+                                      Disabled="false"
+                                      Size="ButtonSize.Medium"
+                                      Variant="Variant.Filled" />
+                    </div>
+                </div>
+            </ChildContent>
+        </RadzenFieldset>
+    </RadzenPanel>
+
+    <RadzenCard Variant="Variant.Filled" Visible="@(!existenSolicitudes)" Style="max-width: 500px" class="rz-mx-auto rz-py-12">
+        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" class="">
+            <RadzenImage Path="logo_saci.png" Style="width:100px; height:100px;" />
+            <RadzenText TextStyle="TextStyle.H3" Style="font-variant: small-caps;">Credenciales</RadzenText>
+
+            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="0px" class="rz-my-6">
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-my-0">Correo Electrónico Institucional:</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1" class="rz-my-0"><b>@(oUsuario?.Data?.UsuCorreoInstitucionalCuenta)</b></RadzenText>
+            </RadzenStack>
+
+            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="0px" class="">
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0">Contraseña:</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1" class="rz-my-0"><b>@(oUsuario?.Data?.UsuCorreoInstitucionalContraseña)</b></RadzenText>
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenCard>
+}
+else
+{
+    <LoadingComponent />
+}
 
 @code
 {
+    private Response<RequestDTO_Usuario>? oUsuario = new();
+    private Response<RequestDTO_Solicitud>? oSolicitudLastTicket = new();
+    private bool existenSolicitudes => oSolicitudLastTicket?.Data is not null ? true : false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadingPage();
+    }
+
+    private async Task LoadingPage()
+    {
+        var authState = await servicioAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            int id = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
+            oUsuario = await servicioUsuario.GetDataByIdAsync(id);
+            oSolicitudLastTicket = await servicioSolicitud.GetDataByIdUsuarioLastTicket(id);
+        }
+    }
 }

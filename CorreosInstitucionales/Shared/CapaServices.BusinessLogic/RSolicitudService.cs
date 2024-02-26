@@ -25,6 +25,12 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
+        public async Task<Response<List<RequestDTO_Solicitud>>?> GetAllDataByIdUsuarioAsync(int filterByIdUsuario)
+        {
+            var result = await _httpClient.GetFromJsonAsync<Response<List<RequestDTO_Solicitud>>>($"{url}/filterByIdUsuario/{filterByIdUsuario}", options: _options);
+            return result;
+        }
+
         public async Task<Response<List<RequestDTO_Solicitud>>?> GetAllDataByProgressAsync(int progress)
         {
             var response = await _httpClient.GetAsync($"{url}/filterByProgress/{progress}");
@@ -45,9 +51,9 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
-        public async Task<Response<List<RequestDTO_Solicitud>>?> GetDataByIdUsuarioAsync(int filterByIdUsuario)
+        public async Task<Response<RequestDTO_Solicitud>?> GetDataByIdUsuarioLastTicket(int? id)
         {
-            var result = await _httpClient.GetFromJsonAsync<Response<List<RequestDTO_Solicitud>>>($"{url}/filterByIdUsuario/{filterByIdUsuario}", options: _options);
+            var result = await _httpClient.GetFromJsonAsync<Response<RequestDTO_Solicitud>>($"{url}/filterByIdUsuarioLastTicket/{id}", options: _options);
             return result;
         }
 

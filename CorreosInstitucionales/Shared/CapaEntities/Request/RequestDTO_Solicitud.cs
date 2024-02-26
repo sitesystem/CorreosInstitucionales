@@ -36,9 +36,9 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         [Column("solIdUsuario")]
         public int SolIdUsuario { get; set; }
 
-        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo inválido. (Formato: xxxxxx@xxx.xx)")]
         [StringLength(100)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO PERSONAL NUEVO requerido.")]
+        [RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO PERSONAL inválido. (Formato: xxxxxx@xxx.xx)")]
         public string? SolCorreoPersonalCuentaNueva { get; set; }
 
         /// <summary>

@@ -14,9 +14,11 @@
 {
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
+        await JSRuntime.InvokeVoidAsync("onscroll");
+
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("onscroll");
         }
     }
 }
