@@ -28,6 +28,9 @@ builder.Services.AddScoped<JwtAuthenticatorProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticatorProvider>(provider => provider.GetRequiredService<JwtAuthenticatorProvider>());
 builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider => provider.GetRequiredService<JwtAuthenticatorProvider>());
 
+// Inyección de Dependencias - Módulo de Archivos
+builder.Services.AddScoped<RArchivosService>();
+
 // Inyección de Dependencias - Módulo de Send Email
 builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
 
