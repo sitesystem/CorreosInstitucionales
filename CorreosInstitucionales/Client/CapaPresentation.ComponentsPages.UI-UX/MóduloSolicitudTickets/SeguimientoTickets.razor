@@ -19,10 +19,12 @@
 
 <RadzenCard Variant="Variant.Filled" Class="mb-3">
     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.NoWrap" Gap="20px" class="">
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-hourglass-split" viewBox="0 0 16 16">
-            <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+            <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z" />
+            <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z" />
+            <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5" />
         </svg>
-        <RadzenText TextStyle="TextStyle.H3" class="rz-color-base-800">Seguimiento de Solicitudes de Ticket's</RadzenText>
+        <RadzenText TextStyle="TextStyle.H3" class="rz-color-base-800">Historial de las Solicitudes de Ticket's</RadzenText>
     </RadzenStack>
 </RadzenCard>
 
@@ -46,9 +48,7 @@
                             ColumnWidth="500px" SelectionMode="DataGridSelectionMode.Single">
                 <HeaderTemplate>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
-                        <RadzenIcon Icon="history" />
-                        <RadzenText Text="Historial" TextAlign="TextAlign.Start" TextStyle="TextStyle.Subtitle1" />
-                        <RadzenSelectBar @bind-Value="@Density" TextProperty="Text" ValueProperty="Value"
+                        <RadzenSelectBar @bind-Value="@Density" TextProperty="Text" ValueProperty="Value" Visible="false"
                                          Data="@(Enum.GetValues(typeof(Density)).Cast<Density>().Select(t => new { Text = $"{t}", Value = t }))" Size="ButtonSize.Small">
                             @* <Items>
                                 <RadzenSelectBarItem Value="true" Text="Sí" Icon="check_circle" IconColor="@Colors.SuccessDarker" />
@@ -59,16 +59,42 @@
                 </HeaderTemplate>
                 <Columns>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="# TICKET" Property="IdSolicitudTicket"
-                                          Filterable="true" Frozen="true" Reorderable="true" Resizable="false" Sortable="true" TextAlign="TextAlign.Center" Width="150px" />
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Motivo / Incidencia de la Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="300px" />
+                                          Filterable="true" Frozen="true" Reorderable="true" Resizable="false" Sortable="true" TextAlign="TextAlign.Center" Width="140px">
+                        <Template Context="data">
+                            <h3 class="text-wrap">@data.IdSolicitudTicket</h3>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Motivo de la Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion"
+                                          Filterable="true" Frozen="true" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="210px">
+                        <HeaderTemplate>
+                            <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
+                                  title="<b>Motivo de la Solicitud-Ticket</b>" data-bs-content="Problema o incidencia requerido por usuario para atención.">
+                                  MOTIVO DE LA SOLICITUD
+                            </span>
+                        </HeaderTemplate>
+                        <Template Context="data">
+                            <div class="text-wrap">@data.SolIdTipoSolicitudNavigation?.TiposolDescripcion</div>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Observaciones" Property="SolObservacionesSolicitud"
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="170px">
+                        <HeaderTemplate>
+                            <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
+                                  title="<b>Observaciones</b>" data-bs-content="Mención de observaciones, comentarios, notas, aclaraciones adicionales por parte del usuario.">
+                                  OBSERVACIONES
+                            </span>
+                        </HeaderTemplate>
+                        <Template Context="data">
+                            <div class="text-wrap">@data.SolObservacionesSolicitud</div>
+                        </Template>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Archivos PDF" Property=""
                                           Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="210px">
                         <Template Context="data">
                             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
                                 <RadzenButton Text="Captura Escaneo Antivirus"
                                               Size="ButtonSize.ExtraSmall"
-                                              ButtonStyle="ButtonStyle.Info"
+                                              ButtonStyle="ButtonStyle.Secondary"
                                               ButtonType="ButtonType.Button"
                                               Variant="Variant.Flat"
                                               Icon="visibility"
@@ -78,7 +104,7 @@
                                               Visible="true" />
                                 <RadzenButton Text="Captura Cuenta Bloqueada"
                                               Size="ButtonSize.ExtraSmall"
-                                              ButtonStyle="ButtonStyle.Info"
+                                              ButtonStyle="ButtonStyle.Secondary"
                                               ButtonType="ButtonType.Button"
                                               Variant="Variant.Flat"
                                               Icon="visibility"
@@ -88,21 +114,25 @@
                                               Visible="true" />
                                 <RadzenButton Text="Captura Error"
                                               Size="ButtonSize.ExtraSmall"
-                                              ButtonStyle="ButtonStyle.Info"
+                                              ButtonStyle="ButtonStyle.Secondary"
                                               ButtonType="ButtonType.Button"
                                               Variant="Variant.Flat"
                                               Icon="visibility"
                                               class="rz-ripple rz-my-0 w-100"
                                               Click="@(() => ShowDialogModal_iFrame($@"/Repositorio/Solicitudes-Tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaError}", "Archivo PDF de la Captura de Error"))"
-                                              Shade="Shade.Light"
+                                              Shade="Shade.Darker"
                                               Visible="true" />
                             </RadzenStack>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Observaciones / Comentarios / Notas" Property="SolObservacionesSolicitud"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="300px" />
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Datos:" Property="SolValidacionDatos"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="100px">
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Validación de Datos" Property="SolValidacionDatos"
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="120px">
+                        <HeaderTemplate>
+                            <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
+                                  title="<b>Validación de Datos</b>" data-bs-content="Se revisan y validan sus datos para darle seguimiento al proceso de atención.">
+                                  DATOS
+                            </span>
+                        </HeaderTemplate>
                         <Template Context="data">
                             @* <RadzenImage Path="@data.Photo" class="rz-gravatar" AlternateText="@(data.FirstName + " " + data.LastName)" /> *@
                             <RadzenCheckBox Value="@(data.SolValidacionDatos)" Name="dataValid" TriState="false" Disabled="false" ReadOnly="true" />
@@ -110,63 +140,131 @@
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Property="SolIdEstadoSolicitudNavigation.EdosolNombreEstado"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="190px">
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="250px">
                         <Template Context="data">
                             @{
                                 if(data.SolIdEstadoSolicitud == 2)
                                 {
-                                    <RadzenBadge BadgeStyle="BadgeStyle.Info" IsPill="false" Shade="Shade.Light" Variant="Variant.Filled" class="text-white">
-                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Warning" IsPill="false" Shade="Shade.Default" Variant="Variant.Filled" class="w-100">
+                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
                                             <RadzenIcon Icon="hourglass_top" IconColor="@Colors.White" /> @data.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado
                                         </RadzenStack>
                                     </RadzenBadge>
                                 }
                                 else if (data.SolIdEstadoSolicitud == 3)
                                 {
-                                    <RadzenBadge BadgeStyle="BadgeStyle.Secondary" IsPill="false" Shade="Shade.Default" Variant="Variant.Filled">
-                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Info" IsPill="false" Shade="Shade.Light" Variant="Variant.Filled" class="w-100">
+                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
                                             <RadzenIcon Icon="settings" IconColor="@Colors.White" /> @data.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado
                                         </RadzenStack>
                                     </RadzenBadge>
                                 }
                                 else if (data.SolIdEstadoSolicitud == 4)
                                 {
-                                    <RadzenBadge BadgeStyle="BadgeStyle.Success" IsPill="false" Shade="Shade.Default" Variant="Variant.Filled">
-                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
-                                            <RadzenIcon Icon="check_box" IconColor="@Colors.White" /> @data.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Success" IsPill="false" Shade="Shade.Light" Variant="Variant.Filled" class="w-100">
+                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                            <RadzenIcon Icon="task_alt" IconColor="@Colors.White" /> @data.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado
                                         </RadzenStack>
                                     </RadzenBadge>
                                 }
                                 else if (data.SolIdEstadoSolicitud == 5)
                                 {
-                                    <RadzenBadge BadgeStyle="BadgeStyle.Warning" IsPill="false" Shade="Shade.Darker" Variant="Variant.Filled" class="text-white">
-                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Warning" IsPill="false" Shade="Shade.Darker" Variant="Variant.Filled" class="text-white w-100">
+                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
                                             <RadzenIcon Icon="star_rate" IconColor="@Colors.White" /> @data.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado
                                         </RadzenStack>
                                     </RadzenBadge>
                                 }
                                 else if (data.SolIdEstadoSolicitud == 6)
                                 {
-                                    <RadzenBadge BadgeStyle="BadgeStyle.Danger" IsPill="false" Shade="Shade.Dark" Variant="Variant.Filled">
-                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
-                                            <RadzenIcon Icon="history" IconColor="@Colors.White" /> @data.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Danger" IsPill="false" Shade="Shade.Dark" Variant="Variant.Filled" class="w-100">
+                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                            <RadzenIcon Icon="highlight_off" IconColor="@Colors.White" /> @data.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado
+                                        </RadzenStack>
+                                    </RadzenBadge>
+                                }
+                                else
+                                {
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Primary" IsPill="false" Shade="Shade.Default" Variant="Variant.Filled" class="w-100">
+                                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.25rem">
+                                            <RadzenIcon Icon="check_box_outline_blank" IconColor="@Colors.White" /> Sin Estado
                                         </RadzenStack>
                                     </RadzenBadge>
                                 }
                             }
+                            <br><small class="text-wrap">@data.SolIdEstadoSolicitudNavigation?.EdosolDescripcion</small>
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Fecha / Hora de Creación" Property="SolFechaHoraCreacion" HeaderTooltip="Fecha y Hora"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" FormatString="{0:dddd, dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss}" Width="350px" />
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Property="SolEncuestaCalidadCalificacion"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Justify" Width="250px">
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" FormatString="{0:dddd, dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt}" Width="240px">
                         <Template Context="data">
-                            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
-                                <span>@data.SolEncuestaCalidadCalificacion</span>
-                                <span>@data.SolEncuestaCalidadComentarios</span>
-                                <span>@data.SolFechaHoraEncuesta</span>
-                            </RadzenStack>
+                            <div class="text-wrap">@data.SolFechaHoraCreacion.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt")</div>
                         </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Property="SolEncuestaCalidadCalificacion"
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="220px">
+                        <Template Context="data">
+                            @{
+                                if(data.SolIdEstadoSolicitud == 5)
+                                {
+                                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="5px" class="">
+                                        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
+                                            @if (data.SolEncuestaCalidadCalificacion == 1)
+                                            {
+                                                // <RadzenIcon Icon="sentiment_very_dissatisfied" IconColor="@Colors.Warning" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-emoji-angry-fill text-warning" viewBox="0 0 16 16">
+                                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M4.053 4.276a.5.5 0 0 1 .67-.223l2 1a.5.5 0 0 1 .166.76c.071.206.111.44.111.687C7 7.328 6.552 8 6 8s-1-.672-1-1.5c0-.408.109-.778.285-1.049l-1.009-.504a.5.5 0 0 1-.223-.67zm.232 8.157a.5.5 0 0 1-.183-.683A4.5 4.5 0 0 1 8 9.5a4.5 4.5 0 0 1 3.898 2.25.5.5 0 1 1-.866.5A3.5 3.5 0 0 0 8 10.5a3.5 3.5 0 0 0-3.032 1.75.5.5 0 0 1-.683.183M10 8c-.552 0-1-.672-1-1.5 0-.247.04-.48.11-.686a.502.502 0 0 1 .166-.761l2-1a.5.5 0 1 1 .448.894l-1.009.504c.176.27.285.64.285 1.049 0 .828-.448 1.5-1 1.5" />
+                                                </svg>
+                                                <small><b>Pésimo</b></small>
+                                            }
+                                            else if (data.SolEncuestaCalidadCalificacion == 2)
+                                            {
+                                                // <RadzenIcon Icon="sentiment_dissatisfied" IconColor="@Colors.Warning" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-emoji-frown-fill text-warning" viewBox="0 0 16 16">
+                                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5m-2.715 5.933a.5.5 0 0 1-.183-.683A4.5 4.5 0 0 1 8 9.5a4.5 4.5 0 0 1 3.898 2.25.5.5 0 0 1-.866.5A3.5 3.5 0 0 0 8 10.5a3.5 3.5 0 0 0-3.032 1.75.5.5 0 0 1-.683.183M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8" />
+                                                </svg>
+                                                <small><b>Malo</b></small>
+                                            }
+                                            else if (data.SolEncuestaCalidadCalificacion == 3)
+                                            {
+                                                // <RadzenIcon Icon="sentiment_satisfied" IconColor="@Colors.Warning" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-emoji-neutral-fill text-warning" viewBox="0 0 16 16">
+                                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5m-3 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8" />
+                                                </svg>
+                                                <small><b>Regular</b></small>
+                                            }
+                                            else if (data.SolEncuestaCalidadCalificacion == 4)
+                                            {
+                                                // <RadzenIcon Icon="sentiment_satisfied_alt" IconColor="@Colors.Warning" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-emoji-smile-fill text-warning" viewBox="0 0 16 16">
+                                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8" />
+                                                </svg>
+                                                <small><b>Bueno</b></small>
+                                            }
+                                            else if (data.SolEncuestaCalidadCalificacion == 5)
+                                            {
+                                                // <RadzenIcon Icon="sentiment_very_satisfied" IconColor="@Colors.Warning" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-emoji-laughing-fill text-warning" viewBox="0 0 16 16">
+                                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5c0 .501-.164.396-.415.235C6.42 6.629 6.218 6.5 6 6.5s-.42.13-.585.235C5.164 6.896 5 7 5 6.5 5 5.672 5.448 5 6 5s1 .672 1 1.5m5.331 3a1 1 0 0 1 0 1A5 5 0 0 1 8 13a5 5 0 0 1-4.33-2.5A1 1 0 0 1 4.535 9h6.93a1 1 0 0 1 .866.5m-1.746-2.765C10.42 6.629 10.218 6.5 10 6.5s-.42.13-.585.235C9.164 6.896 9 7 9 6.5c0-.828.448-1.5 1-1.5s1 .672 1 1.5c0 .501-.164.396-.415.235" />
+                                                </svg>
+                                                <small><b>Excelente</b></small>
+                                            }
+                                        </RadzenStack>
+                                        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.Center" Gap="0px" class="">
+                                            <span class="text-wrap">@data.SolEncuestaCalidadComentarios</span>
+                                            <span class="text-wrap"><small>@data.SolFechaHoraEncuesta?.ToString("dd '/' MMMM '/' yyyy")<br>@data.SolFechaHoraEncuesta?.ToString("HH:mm:ss 'hrs.'")</small></span>
+                                        </RadzenStack>
+                                    </RadzenStack>
+                                }
+                                else
+                                {
+                                    <span class="text-center text-wrap">Sin contestar</span>
+                                }
+                            }
+                        </Template>
+                        <FooterTemplate>
+                            <small>Encuestas contestadas: <b>@oSolicitudesTickets.Data.Where(st => st.SolIdEstadoSolicitud == 5).Count()</b> de <b>@oSolicitudesTickets.Data.Count()</b></small>
+                        </FooterTemplate>
                     </RadzenDataGridColumn>
                 </Columns>
                 <EmptyTemplate>
@@ -204,14 +302,17 @@ else
         {
             int idUsuario = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
 
-            oSolicitudesTickets = await servicioSolicitud.GetDataByIdUsuarioAsync(idUsuario);
+            oSolicitudesTickets = await servicioSolicitud.GetAllDataByIdUsuarioAsync(idUsuario);
             // selectedItems = new List<RequestDTO_Solicitud>() { oSolicitudesTickets.Data.FirstOrDefault() };
-            selectedItems = oSolicitudesTickets.Data.Take(1).ToList();
+            // selectedItems = oSolicitudesTickets.Data.Take(1).ToList();
         }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
+        await JSRuntime.InvokeVoidAsync("blazorInit");
+
         if (firstRender)
         {
         }
@@ -221,6 +322,8 @@ else
     {
         //
     }
+
+    async Task ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "Datos validando", options);
 
     @*///////////////////////////////////////////////  SHOW DIALOG MODAL iFRAME  //////////////////////////////////////////////////////////////////////*@
     private async Task ShowDialogModal_iFrame(string srciFrame, string title)

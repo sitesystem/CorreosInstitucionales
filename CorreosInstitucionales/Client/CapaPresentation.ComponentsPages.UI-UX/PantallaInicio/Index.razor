@@ -1,6 +1,6 @@
 ﻿@page "/Inicio"
 
-@attribute [Authorize(Policy = "[Rol] Ambos")]
+@* @attribute [Authorize(Policy = "[Rol] Ambos")] *@
 
 <PageTitle>SACI | Inicio</PageTitle>
 
@@ -10,7 +10,7 @@
 
 <AuthorizeView Policy="[Rol] Usuario Solicitante">
 	<Authorized>
-        <TimeLine />
+		<TimeLine />
 	</Authorized>
 	<NotAuthorized>
 		@* <p>No Autorizado</p> *@
@@ -22,7 +22,7 @@
 
 <AuthorizeView Policy="[Rol] Administrador">
 	<Authorized>
-        <Dashboard />
+		<Dashboard />
 	</Authorized>
 	<NotAuthorized>
 		@* <p>No Autorizado</p> *@
@@ -34,5 +34,4 @@
 
 @code
 {
-
 }

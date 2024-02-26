@@ -1191,7 +1191,7 @@ else
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Año de Egreso:</RadzenText>
                                         <RadzenText TextStyle="TextStyle.Body1"><b>@(flagEsEgresado ? oUsuario.UsuAñoEgreso : "N/A")</b></RadzenText>
                                     </RadzenStack>
-                                    <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker"
+                                    <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light"
                                                  ShowIcon="true" AllowClose="false" class="mb-0" Visible="@(!string.IsNullOrEmpty(UsuContraseña) || onChangeSelectBarEgresado)">
                                                  <ul>
                                                      @if (!string.IsNullOrEmpty(UsuContraseña))

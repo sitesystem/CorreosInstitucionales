@@ -183,8 +183,8 @@ public class RequestDTO_Usuario
     /// Correo Personal Anterior
     /// </summary>
     [Column("usuCorreoPersonalCuentaAnterior")]
-    [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo inválido. (Formato: xxxxxx@xxx.xx)")]
     [StringLength(100)]
+    //[RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Correo inválido. (Formato: xxxxxx@xxx.xx)")]
     public string? UsuCorreoPersonalCuentaAnterior { get; set; }
 
     /// <summary>
@@ -194,7 +194,7 @@ public class RequestDTO_Usuario
     [StringLength(100)]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO ELECTRÓNICO PERSONAL requerido.")]
     //[RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "CORREO inválido. (Formato: xxxxxx@xxx.xx)")]
-    [RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO inválido. (Formato: xxxxxx@xxx.xx)")]
+    [RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO PERSONAL inválido. (Formato correcto: xxxxxx@xxx.xx)")]
     public string UsuCorreoPersonalCuentaNueva { get; set; } = null!;
 
     /// <summary>
