@@ -1,0 +1,11 @@
+[
+  {
+    "Name": "Nuevo perfil",
+    "Projects": [
+      {
+        "Name": "CorreosInstitucionales\\Server\\CorreosInstitucionales.Server.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

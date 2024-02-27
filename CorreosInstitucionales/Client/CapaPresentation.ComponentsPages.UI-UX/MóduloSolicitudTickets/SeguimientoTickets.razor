@@ -30,8 +30,8 @@
 
 @if (oSolicitudesTickets is not null && oSolicitudesTickets.Data != null)
 {
-    <AuthorizeView>
-        <Authorized>
+    @* <AuthorizeView>
+        <Authorized> *@
             @* <p>Autorizado</p> *@
             <RadzenDataGrid @ref="oSolicitudesTicketsRef" Data="@oSolicitudesTickets.Data" @bind-Value="@selectedItems" TItem="RequestDTO_Solicitud" Density="@Density"
                             AllowFiltering="true" AllowColumnResize="true" AllowColumnReorder="true" AllowAlternatingRows="true" AllowSorting="true"
@@ -271,14 +271,14 @@
                     <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No hay registros encontrados para mostrar.</p>
                 </EmptyTemplate>
             </RadzenDataGrid>
-        </Authorized>
+        @* </Authorized>
         <NotAuthorized>
             <p>No Autorizado</p>
         </NotAuthorized>
         <Authorizing>
             <p>Autorizando..</p>
         </Authorizing>
-    </AuthorizeView>
+    </AuthorizeView> *@
 }
 else
 {

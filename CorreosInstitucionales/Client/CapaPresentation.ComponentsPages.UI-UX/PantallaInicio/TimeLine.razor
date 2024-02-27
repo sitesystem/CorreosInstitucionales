@@ -44,8 +44,8 @@
                 <!-- ... Contenido para pantallas pequeñas móviles -->
                 <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none">
 
-                    <RadzenProgressBarCircular Min="0" Max="100" Unit="%" Value="66" ShowValue="true" ProgressBarStyle="ProgressBarStyle.Info" Mode="ProgressBarMode.Determinate" Size="ProgressBarCircularSize.Large" class="w-100 text-center my-2">
-                        <Template><small><b>66%</b><br />Progreso</small></Template>
+                    <RadzenProgressBarCircular Min="0" Max="100" Value="@valueProgress" Unit="%" ShowValue="true" ProgressBarStyle="@oProgressBarCircularStyle" Mode="ProgressBarMode.Determinate" Size="ProgressBarCircularSize.Large" class="w-100 text-center my-2">
+                        <Template><small><b>@valueProgress%</b><br />Progreso</small></Template>
                     </RadzenProgressBarCircular>
 
                     <RadzenTimeline Orientation="Orientation.Vertical" LinePosition="LinePosition.Start" Reverse="false"
@@ -121,7 +121,7 @@
 
                     <div class="col-md-10 offset-1">
                         @* <RadzenSlider TValue="IEnumerable<int>" Min="0" Max="100" Range="true" Value="@(new int[] { 0, 66 })" Step="1" Disabled="false" Visible="true" class="w-100 my-3" /> *@
-                        <RadzenProgressBar Min="0" Max="100" Unit="%" Value="66" ShowValue="true" ProgressBarStyle="ProgressBarStyle.Primary" Mode="ProgressBarMode.Determinate" Visible="true" class="mt-2" />
+                        <RadzenProgressBar Min="0" Max="100" Unit="%" Value="@valueProgress" ShowValue="true" ProgressBarStyle="@oProgressBarCircularStyle" Mode="ProgressBarMode.Determinate" Visible="true" class="mt-2" />
                     </div>
 
                     <RadzenTimeline Orientation="Orientation.Horizontal" LinePosition="LinePosition.Start" Reverse="false"
@@ -283,6 +283,10 @@ else
     private Response<RequestDTO_Solicitud>? oSolicitudLastTicket = new();
     private bool existenSolicitudes => oSolicitudLastTicket?.Data is not null ? true : false;
 
+    @*////////////////////////////////////////////////  ProgressBar / ProgressCircular  ////////////////////////////////////////////////*@
+    private double valueProgress = 0;
+    private ProgressBarStyle oProgressBarCircularStyle = ProgressBarStyle.Info;
+
     protected override async Task OnInitializedAsync()
     {
         await LoadingPage();
@@ -298,6 +302,14 @@ else
             int id = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
             oUsuario = await servicioUsuario.GetDataByIdAsync(id);
             oSolicitudLastTicket = await servicioSolicitud.GetDataByIdUsuarioLastTicket(id);
+
+            if (oSolicitudLastTicket is not null && oSolicitudLastTicket.Data != null)
+            {
+                if (oSolicitudLastTicket.Data.SolIdEstadoSolicitud == 1)
+                {
+                
+                }
+            }
         }
     }
 }
