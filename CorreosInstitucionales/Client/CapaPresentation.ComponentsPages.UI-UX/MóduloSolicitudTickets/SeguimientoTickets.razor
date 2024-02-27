@@ -1,8 +1,8 @@
-﻿@page "/SeguimientoSolicitudesTickets"
+﻿@page "/HistorialSolicitudesTickets"
 
 @attribute [Authorize(Policy = "[Rol] Usuario Solicitante")]
 
-<PageTitle>SACI | Seguimiento de Solicitudes-Tickets</PageTitle>
+<PageTitle>SACI | Historial de Solicitudes-Tickets</PageTitle>
 
 <style type="text/css">
     .circle-border {
@@ -65,7 +65,7 @@
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Motivo de la Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion"
-                                          Filterable="true" Frozen="true" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="210px">
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="210px">
                         <HeaderTemplate>
                             <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
                                   title="<b>Motivo de la Solicitud-Ticket</b>" data-bs-content="Problema o incidencia requerido por usuario para atención.">
@@ -290,7 +290,7 @@ else
     @*///////////////////////////////////////////////  INICIALIZAR OBJETOS Y OBTENER DATA ASYNC  ///////////////////////////////////////////////*@
     private Response<List<RequestDTO_Solicitud>>? oSolicitudesTickets = new();
     private RadzenDataGrid<RequestDTO_Solicitud>? oSolicitudesTicketsRef = new();
-    IList<RequestDTO_Solicitud> selectedItems;
+    IList<RequestDTO_Solicitud>? selectedItems;
     Density Density = Density.Default;
 
     protected override async Task OnInitializedAsync()

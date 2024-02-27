@@ -11,13 +11,12 @@
                 <div class="row gap-0 mt-1 mb-0">
                     <div class="col-md-1 text-center">
                         <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" class="">#TICKET:</RadzenText>
-                        <RadzenText TextStyle="TextStyle.Body1" Style="border:3px solid rgb(215,215,215); border-radius:25px;" class="text-danger p-1">
+                        <RadzenText TextStyle="TextStyle.DisplayH6" Style="border:3px solid rgb(215,215,215); border-radius:25px;" class="text-danger p-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-tag-fill rz-color-success" viewBox="0 0 16 16">
                                 <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
                             </svg>
                             <b>@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b>
                         </RadzenText>
-                        <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Center" Style="font-variant: small-caps;" class="text-danger" Text="@(oSolicitudLastTicket?.Data?.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado)" />
                     </div>
 
                     <div class="col-md-3 text-center">
@@ -36,13 +35,15 @@
                     </div>
 
                     <div class="col-md-3 text-center">
-                        <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" class="">FECHAR Y HORA DE CREACIÓN:</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" class="">FECHA Y HORA DE CREACIÓN:</RadzenText>
                         <RadzenText TextStyle="TextStyle.Body1" class=""><b>@(oSolicitudLastTicket.Data.SolFechaHoraCreacion.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'"))</b></RadzenText>
                     </div>
                 </div>
 
                 <!-- ... Contenido para pantallas pequeñas móviles -->
                 <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none">
+
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TextAlign="TextAlign.Center" Style="font-variant: small-caps;" class="text-danger" Text="@(oSolicitudLastTicket?.Data?.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado)" />
 
                     <RadzenProgressBarCircular Min="0" Max="100" Value="@valueProgress" Unit="%" ShowValue="true" ProgressBarStyle="@oProgressBarCircularStyle" Mode="ProgressBarMode.Determinate" Size="ProgressBarCircularSize.Large" class="w-100 text-center my-2">
                         <Template><small><b>@valueProgress%</b><br />Progreso</small></Template>
@@ -51,7 +52,7 @@
                     <RadzenTimeline Orientation="Orientation.Vertical" LinePosition="LinePosition.Start" Reverse="false"
                                     style="--rz-timeline-line-width:10px; --rz-timeline-axis-size:80px; max-width:100%; margin:auto;">
                         <Items>
-
+                            @*////////////////////////////////////////////////////////////////  ESTADO ALTA  //////////////////////////////////////////////////////////////////*@
                             <RadzenTimelineItem PointVariant="Variant.Flat" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
                                 <PointContent><RadzenIcon Icon="check" /></PointContent>
                                 <ChildContent>
@@ -68,8 +69,9 @@
                                 </ChildContent>
                             </RadzenTimelineItem>
 
-                            <RadzenTimelineItem PointVariant="Variant.Flat" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
-                                <PointContent><RadzenIcon Icon="check" IconColor="@Colors.White" IconStyle="IconStyle.Danger" /></PointContent>
+                            @*////////////////////////////////////////////////////////////////  ESTADO PENDIENTE  //////////////////////////////////////////////////////////////////*@
+                            <RadzenTimelineItem PointVariant="@oPointVariantPendiente" PointStyle="PointStyle.Info" PointSize="@oPointSizePendiente" PointShadow="5">
+                                <PointContent><RadzenIcon Icon="@iconPointContentPendienteMovil" IconColor="@Colors.White" IconStyle="IconStyle.Danger" /></PointContent>
                                 <ChildContent>
                                     <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
                                         <RadzenBadge BadgeStyle="BadgeStyle.Warning" IsPill="true" Shade="Shade.Default" Variant="Variant.Filled" class="w-100">
@@ -83,8 +85,9 @@
                                 </ChildContent>
                             </RadzenTimelineItem>
 
-                            <RadzenTimelineItem PointVariant="Variant.Filled" PointStyle="PointStyle.Info" PointSize="PointSize.Large" PointShadow="10">
-                                <PointContent><RadzenIcon Icon="arrow_forward" /></PointContent>
+                            @*////////////////////////////////////////////////////////////////  ESTADO EN PROCESO  //////////////////////////////////////////////////////////////////*@
+                            <RadzenTimelineItem PointVariant="@oPointVariantEnProceso" PointStyle="PointStyle.Info" PointSize="@oPointSizeEnProceso" PointShadow="10">
+                                <PointContent><RadzenIcon Icon="@iconPointContentEnProcesoMovil" /></PointContent>
                                 <ChildContent>
                                     <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
                                         <RadzenBadge BadgeStyle="BadgeStyle.Info" IsPill="true" Shade="Shade.Light" Variant="Variant.Filled" class="w-100">
@@ -98,8 +101,9 @@
                                 </ChildContent>
                             </RadzenTimelineItem>
 
-                            <RadzenTimelineItem PointVariant="Variant.Outlined" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
-                                <PointContent><RadzenIcon Icon="hourglass_top" /></PointContent>
+                            @*////////////////////////////////////////////////////////////////  ESTADO ATENDIDO  //////////////////////////////////////////////////////////////////*@
+                            <RadzenTimelineItem PointVariant="@oPointVariantAtendido" PointStyle="PointStyle.Info" PointSize="@oPointSizeAtendido" PointShadow="5">
+                                <PointContent><RadzenIcon Icon="@iconPointContentAtendidoMovil" /></PointContent>
                                 <ChildContent>
                                     <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
                                         <RadzenBadge BadgeStyle="BadgeStyle.Success" IsPill="true" Shade="Shade.Light" Variant="Variant.Filled" class="w-100">
@@ -108,7 +112,7 @@
                                             </RadzenStack>
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 4" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
-                                        <RadzenText Text="Las Credenciales del Correo Institucional se han subido a la Plataforma SACI y enviadas a su Correo Personal." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText Text="Las Credenciales del Correo Institucional generadas con éxito, califica la calidad de atención del servicio." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
                                     </RadzenStack>
                                 </ChildContent>
                             </RadzenTimelineItem>
@@ -120,14 +124,15 @@
                 <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
 
                     <div class="col-md-10 offset-1">
+                        <RadzenText TextStyle="TextStyle.Subtitle1" TextAlign="TextAlign.Center" Style="font-variant: small-caps;" class="text-danger" Text="@(oSolicitudLastTicket?.Data?.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado)" />
                         @* <RadzenSlider TValue="IEnumerable<int>" Min="0" Max="100" Range="true" Value="@(new int[] { 0, 66 })" Step="1" Disabled="false" Visible="true" class="w-100 my-3" /> *@
-                        <RadzenProgressBar Min="0" Max="100" Unit="%" Value="@valueProgress" ShowValue="true" ProgressBarStyle="@oProgressBarCircularStyle" Mode="ProgressBarMode.Determinate" Visible="true" class="mt-2" />
+                        <RadzenProgressBar Min="0" Max="100" Unit="%" @bind-Value="@valueProgress" ShowValue="true" ProgressBarStyle="@oProgressBarCircularStyle" Mode="ProgressBarMode.Determinate" Visible="true" class="mt-2" />
                     </div>
 
                     <RadzenTimeline Orientation="Orientation.Horizontal" LinePosition="LinePosition.Start" Reverse="false"
                                     style="--rz-timeline-line-width:10px; --rz-timeline-axis-size:80px; max-width:100%; margin:auto;">
                         <Items>
-
+                            @*////////////////////////////////////////////////////////////////  ESTADO ALTA  //////////////////////////////////////////////////////////////////*@
                             <RadzenTimelineItem PointVariant="Variant.Flat" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
                                 <PointContent><RadzenIcon Icon="check" /></PointContent>
                                 <ChildContent>
@@ -144,8 +149,9 @@
                                 </ChildContent>
                             </RadzenTimelineItem>
 
-                            <RadzenTimelineItem PointVariant="Variant.Flat" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
-                                <PointContent><RadzenIcon Icon="check" IconColor="@Colors.White" IconStyle="IconStyle.Danger" /></PointContent>
+                            @*////////////////////////////////////////////////////////////////  ESTADO PENDIENTE  //////////////////////////////////////////////////////////////////*@
+                            <RadzenTimelineItem PointVariant="@oPointVariantPendiente" PointStyle="PointStyle.Info" PointSize="@oPointSizePendiente" PointShadow="5">
+                                <PointContent><RadzenIcon Icon="@iconPointContentPendienteMonitor" IconColor="@Colors.White" IconStyle="IconStyle.Danger" /></PointContent>
                                 <ChildContent>
                                     <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
                                         <RadzenBadge BadgeStyle="BadgeStyle.Warning" IsPill="true" Shade="Shade.Default" Variant="Variant.Filled" class="w-100">
@@ -159,8 +165,9 @@
                                 </ChildContent>
                             </RadzenTimelineItem>
 
-                            <RadzenTimelineItem PointVariant="Variant.Filled" PointStyle="PointStyle.Info" PointSize="PointSize.Large" PointShadow="10">
-                                <PointContent><RadzenIcon Icon="arrow_downward" /></PointContent>
+                            @*////////////////////////////////////////////////////////////////  ESTADO EN PROCESO  //////////////////////////////////////////////////////////////////*@
+                            <RadzenTimelineItem PointVariant="@oPointVariantEnProceso" PointStyle="PointStyle.Info" PointSize="@oPointSizeEnProceso" PointShadow="10">
+                                <PointContent><RadzenIcon Icon="@iconPointContentEnProcesoMonitor" /></PointContent>
                                 <ChildContent>
                                     <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
                                         <RadzenBadge BadgeStyle="BadgeStyle.Info" IsPill="true" Shade="Shade.Light" Variant="Variant.Filled" class="w-100">
@@ -174,8 +181,9 @@
                                 </ChildContent>
                             </RadzenTimelineItem>
 
-                            <RadzenTimelineItem PointVariant="Variant.Outlined" PointStyle="PointStyle.Info" PointSize="PointSize.Medium" PointShadow="5">
-                                <PointContent><RadzenIcon Icon="hourglass_top" /></PointContent>
+                            @*////////////////////////////////////////////////////////////////  ESTADO ATENDIDO  //////////////////////////////////////////////////////////////////*@
+                            <RadzenTimelineItem PointVariant="@oPointVariantAtendido" PointStyle="PointStyle.Info" PointSize="@oPointSizeAtendido" PointShadow="5">
+                                <PointContent><RadzenIcon Icon="@iconPointContentAtendidoMonitor" /></PointContent>
                                 <ChildContent>
                                     <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
                                         <RadzenBadge BadgeStyle="BadgeStyle.Success" IsPill="true" Shade="Shade.Light" Variant="Variant.Filled" class="w-100">
@@ -184,7 +192,7 @@
                                             </RadzenStack>
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 4" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
-                                        <RadzenText Text="Las Credenciales del Correo Institucional se han subido a la Plataforma SACI y enviadas a su Correo Personal." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText Text="Las Credenciales del Correo Institucional generadas con éxito, califica la calidad de atención del servicio." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
                                     </RadzenStack>
                                 </ChildContent>
                             </RadzenTimelineItem>
@@ -195,11 +203,12 @@
         </RadzenFieldset>
     </RadzenPanel>
 
-    <RadzenAlert Title="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Default" ShowIcon="true" AllowClose="false" Visible="true" class="my-3">
-        <b>NOTA:</b> Para visualizar tus <strong>Credenciales del Correo Institucional</strong>, favor de responder la siguiente encuesta.
+    <RadzenAlert Title="" AlertStyle="AlertStyle.Secondary" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Dark" ShowIcon="true" AllowClose="false"
+                 Visible="@(existenSolicitudes && oSolicitudLastTicket?.Data?.SolIdEstadoSolicitud == 4)" class="my-3">
+        <b>ATENCIÓN:</b> Para visualizar tus <strong>Credenciales del Correo Institucional</strong>, favor de responder la siguiente encuesta.
     </RadzenAlert>
 
-    <RadzenPanel Visible="true">
+    <RadzenPanel Visible="@(existenSolicitudes && oSolicitudLastTicket?.Data?.SolIdEstadoSolicitud == 4)">
         <RadzenFieldset AllowCollapse="false" ExpandTitle="Encuesta de Satisfacción" CollapseTitle="Encuesta de Satisfacción" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 py-0">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
@@ -208,12 +217,12 @@
             </HeaderTemplate>
             <ChildContent>
                 <div class="row gap-0">
-                    <div class="col-md-6 col-lg-6">
+                    <div class="col-md-6 col-lg-6 align-items-center mb-3">
                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceEvenly" Wrap="FlexWrap.NoWrap" Gap="10px" class="">
                             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0px" class="">
                                 <RadzenText Text="Paso 5" TextAlign="TextAlign.Center" TextStyle="TextStyle.Subtitle1" Visible="true" />
                                 <RadzenText Text="@($@"Califica la calidad del servicio atendido:")" TextAlign="TextAlign.Center" TextStyle="TextStyle.Body1" Visible="true" />
-                                <RadzenRating Value="0" Stars="5" Change="@(args => Console.WriteLine(args))" Placeholder="1-5" Disabled="false" ReadOnly="false" />
+                                <RadzenRating Value="5" Stars="5" Change="@(args => Console.WriteLine(args))" Placeholder="1-5" Disabled="false" ReadOnly="false" />
                             </RadzenStack>
                             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0px" class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-emoji-laughing-fill text-warning" viewBox="0 0 16 16">
@@ -229,7 +238,7 @@
                             <ChildContent>
                                                 @* @bind-Value="@oSolicitudTicket.SolObservacionesSolicitud" @oninput="@(e => oSolicitudTicket.SolObservacionesSolicitud = e.Value.ToString())" *@
                                 <RadzenTextArea Name="@($@"observaciones")" Placeholder="Escribe un comentario, nota o aclaración por el servicio de la Solicitud-Ticket atendida..."
-                                                Cols="30" Rows="1" style="border-bottom: 3px solid red;" MinLength="1" MaxLength="300" class="w-100" aria-label="TextArea" Disabled="false" ReadOnly="false" />
+                                                Cols="30" Rows="2" style="border-bottom: 3px solid red;" MinLength="1" MaxLength="300" class="w-100" aria-label="TextArea" Disabled="false" ReadOnly="false" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                         </RadzenFormField>
@@ -237,7 +246,9 @@
                             @* <b>@(300 - oSolicitudTicket?.SolObservacionesSolicitud?.Length)</b> caracteres restantes de <b>300</b> permitidos. *@
                         </RadzenText>
                         @* <ValidationMessage For="@(() => oSolicitudTicket.SolObservacionesSolicitud)" /> *@
+                    </div>
 
+                    <div class="col-md-12 col-lg-12">
                         <RadzenButton Text="Calificar Encuesta de Calidad"
                                       BusyText="Calificando Encuesta de Calidad..."
                                       ButtonStyle="ButtonStyle.Success"
@@ -261,13 +272,13 @@
             <RadzenText TextStyle="TextStyle.H3" Style="font-variant: small-caps;">Credenciales</RadzenText>
 
             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="0px" class="rz-my-6">
-                <RadzenText TextStyle="TextStyle.Overline" class="rz-my-0">Correo Electrónico Institucional:</RadzenText>
-                <RadzenText TextStyle="TextStyle.Body1" class="rz-my-0"><b>@(oUsuario?.Data?.UsuCorreoInstitucionalCuenta)</b></RadzenText>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-my-0 rz-mb-1">Correo Electrónico Institucional:</RadzenText>
+                <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-my-0"><b>@(oUsuario?.Data?.UsuCorreoInstitucionalCuenta)</b></RadzenText>
             </RadzenStack>
 
             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="0px" class="">
-                <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0">Contraseña:</RadzenText>
-                <RadzenText TextStyle="TextStyle.Body1" class="rz-my-0"><b>@(oUsuario?.Data?.UsuCorreoInstitucionalContraseña)</b></RadzenText>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-mb-1">Contraseña:</RadzenText>
+                <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-my-0"><b>@(oUsuario?.Data?.UsuCorreoInstitucionalContraseña)</b></RadzenText>
             </RadzenStack>
         </RadzenStack>
     </RadzenCard>
@@ -285,7 +296,26 @@ else
 
     @*////////////////////////////////////////////////  ProgressBar / ProgressCircular  ////////////////////////////////////////////////*@
     private double valueProgress = 0;
+    System.Timers.Timer? oTimer;
     private ProgressBarStyle oProgressBarCircularStyle = ProgressBarStyle.Info;
+
+    @*////////////////////////////////////////////////  ESTADO PENDIENTE  ////////////////////////////////////////////////*@
+    private Variant oPointVariantPendiente;
+    private PointSize oPointSizePendiente;
+    private string iconPointContentPendienteMovil = string.Empty;
+    private string iconPointContentPendienteMonitor = string.Empty;
+
+    @*////////////////////////////////////////////////  ESTADO EN PROCESO  ////////////////////////////////////////////////*@
+    private Variant oPointVariantEnProceso;
+    private PointSize oPointSizeEnProceso;
+    private string iconPointContentEnProcesoMovil = string.Empty;
+    private string iconPointContentEnProcesoMonitor = string.Empty;
+
+    @*////////////////////////////////////////////////  ESTADO ATENDIDO  ////////////////////////////////////////////////*@
+    private Variant oPointVariantAtendido;
+    private PointSize oPointSizeAtendido;
+    private string iconPointContentAtendidoMovil = string.Empty;
+    private string iconPointContentAtendidoMonitor = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -305,10 +335,104 @@ else
 
             if (oSolicitudLastTicket is not null && oSolicitudLastTicket.Data != null)
             {
-                if (oSolicitudLastTicket.Data.SolIdEstadoSolicitud == 1)
+                if (oTimer != null && oTimer.Enabled)
+                    return;
+
+                oTimer = new System.Timers.Timer(50);
+
+                if (oSolicitudLastTicket.Data.SolIdEstadoSolicitud == 2)        // ESTADO PENDIENTE
                 {
-                
+                    @*/////////////////////////////  PROGRESSBARCIRCULAR  ////////////////////////////////*@
+                    oTimer.Elapsed += async (sender, e) =>
+                    {
+                        if (valueProgress < 33)
+                            valueProgress += 3;
+                        else
+                        {
+                            valueProgress = 33;
+                            oTimer.Stop();
+                        }
+
+                        await InvokeAsync(() => { StateHasChanged(); });
+                    };
+                    oProgressBarCircularStyle = ProgressBarStyle.Warning;
+
+                    @*/////////////////////////////  PENDIENTE  ////////////////////////////////*@
+                    oPointVariantPendiente = Variant.Filled; oPointSizePendiente = PointSize.Large;
+                    iconPointContentPendienteMovil = "arrow_forward"; iconPointContentPendienteMonitor = "arrow_downward";
+
+                    @*/////////////////////////////  EN PROCESO  ////////////////////////////////*@
+                    oPointVariantEnProceso = Variant.Outlined; oPointSizeEnProceso = PointSize.Medium;
+                    iconPointContentEnProcesoMovil = "hourglass_top"; iconPointContentEnProcesoMonitor = "hourglass_top";
+
+                    @*/////////////////////////////  ATENDIDO  ////////////////////////////////*@
+                    oPointVariantAtendido = Variant.Outlined; oPointSizeAtendido = PointSize.Medium;
+                    iconPointContentAtendidoMovil = "hourglass_top"; iconPointContentAtendidoMonitor = "hourglass_top";
                 }
+                else if (oSolicitudLastTicket.Data.SolIdEstadoSolicitud == 3)   // ESTADO EN PROCESO
+                {
+                    @*/////////////////////////////  PROGRESSBARCIRCULAR  ////////////////////////////////*@
+                    oTimer.Elapsed += async (sender, e) =>
+                    {
+                        if (valueProgress < 66)
+                            valueProgress += 6;
+                        else
+                        {
+                            valueProgress = 66;
+                            oTimer.Stop();
+                        }
+
+                        await InvokeAsync(() => { StateHasChanged(); });
+                    };
+                    oProgressBarCircularStyle = ProgressBarStyle.Info;
+
+                    @*/////////////////////////////  PENDIENTE  ////////////////////////////////*@
+                    oPointVariantPendiente = Variant.Flat; oPointSizePendiente = PointSize.Medium;
+                    iconPointContentPendienteMovil = "check"; iconPointContentPendienteMonitor = "check";
+
+                    @*/////////////////////////////  EN PROCESO  ////////////////////////////////*@
+                    oPointVariantEnProceso = Variant.Filled; oPointSizeEnProceso = PointSize.Large;
+                    iconPointContentEnProcesoMovil = "arrow_forward"; iconPointContentEnProcesoMonitor = "arrow_downward";
+
+                    @*/////////////////////////////  ATENDIDO  ////////////////////////////////*@
+                    oPointVariantAtendido = Variant.Outlined; oPointSizeAtendido = PointSize.Medium;
+                    iconPointContentAtendidoMovil = "hourglass_top"; iconPointContentAtendidoMonitor = "hourglass_top";
+                }
+                else if (oSolicitudLastTicket.Data.SolIdEstadoSolicitud == 4)   // ESTADO ATENDIDO
+                {
+                    @*/////////////////////////////  PROGRESSBARCIRCULAR  ////////////////////////////////*@
+                    oTimer.Elapsed += async (sender, e) =>
+                    {
+                        if (valueProgress < 100)
+                            valueProgress += 10;
+                        else
+                        {
+                            valueProgress = 100;
+                            oTimer.Stop();
+                        }
+
+                        await InvokeAsync(() => { StateHasChanged(); });
+                    };
+                    oProgressBarCircularStyle = ProgressBarStyle.Success;
+
+                    @*/////////////////////////////  PENDIENTE  ////////////////////////////////*@
+                    oPointVariantPendiente = Variant.Flat; oPointSizePendiente = PointSize.Medium;
+                    iconPointContentPendienteMovil = "check"; iconPointContentPendienteMonitor = "check";
+
+                    @*/////////////////////////////  EN PROCESO  ////////////////////////////////*@
+                    oPointVariantEnProceso = Variant.Flat; oPointSizeEnProceso = PointSize.Medium;
+                    iconPointContentEnProcesoMovil = "check"; iconPointContentEnProcesoMonitor = "check";
+
+                    @*/////////////////////////////  ATENDIDO  ////////////////////////////////*@
+                    oPointVariantAtendido = Variant.Filled; oPointSizeAtendido = PointSize.Large;
+                    iconPointContentAtendidoMovil = "arrow_forward"; iconPointContentAtendidoMonitor = "arrow_downward";
+                }
+                else if (oSolicitudLastTicket.Data.SolIdEstadoSolicitud == 5)   // ESTADO ENCUESTA DE CALIDAD CONTESTADA
+                {
+                    
+                }
+
+                oTimer.Start();
             }
         }
     }
