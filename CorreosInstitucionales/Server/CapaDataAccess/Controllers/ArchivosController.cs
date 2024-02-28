@@ -1,9 +1,13 @@
 ﻿using ClosedXML.Excel;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.Utils;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor.Infrastructure;
+using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
+using System.IO.Compression;
+using System.Text;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
@@ -14,35 +18,72 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
 
-        [HttpGet("xlsx/pendientes")]
-        public async Task<IActionResult> GenerarXLSX_Pendientes()
+        private void WriteZip(string filename, List<WebUtils.Link> files, string root_directory = "")
+        {
+            string fname = string.Empty;
+
+            using (FileStream fs = new FileStream(filename, FileMode.CreateNew))
+            {
+                using (ZipArchive za = new ZipArchive(fs, ZipArchiveMode.Create, true))
+                {
+                    foreach (WebUtils.Link file in files)
+                    {
+                        fname = file.Name == "#" ? Path.GetFileName(file.Url) : file.Name;
+
+                        za.CreateEntryFromFile
+                        (
+                            $"{root_directory}{file.Url}",
+                            fname
+                        );
+                    }
+                }
+
+                fs.Position = 0;
+            }
+        }
+
+        private string GenerarNombreAdjunto(MtTbSolicitudesTicket solicitud, string archivo, string tipo = "ARCHIVO")
+        {
+            string ext = Path.GetExtension(archivo);
+            string curp = solicitud.SolIdUsuarioNavigation.UsuCurp;
+            string id = string.Format("{0:00000}", solicitud.IdSolicitudTicket);
+            return $"{curp}_SOL{id}_{tipo}{ext}";
+        }
+
+        [HttpPost("xlsx/pendientes")]
+        public async Task<IActionResult> GenerarPendientes_XLSX(int[] selected)
+        {
+            return await LlenarFormulario(selected, false);
+        }
+
+        [HttpPost("zip/pendientes")]
+        public async Task<IActionResult> GenerarPendientes_ZIP(int[] selected)
+        {
+            return await LlenarFormulario(selected, true);
+        }
+
+        public async Task<IActionResult> LlenarFormulario(int[] selected, bool return_zip)
         {
             Guid id = Guid.NewGuid();
-            Response<string> oResponse = new();
+            string id_fecha = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+
+            Response<List<WebUtils.Link>> oResponse = new() { Data = new() } ;
             List<MtTbSolicitudesTicket> pendientes = new List<MtTbSolicitudesTicket>();
 
             string base_directory = $"../Client/wwwroot";
-            string filename = $"repositorio/pendientes/pendiente_{id}.xlsx";
+            string filename = $"repositorio/pendientes/{id_fecha}_solicitud_alta_desbloqueo_{id}";
             string template_fn = $"assets/sol_alta_desbloqueo.xlsx";
-
+            
             XLWorkbook wb = new XLWorkbook($"{base_directory}/{template_fn}");
             IXLWorksheet ws = wb.Worksheet(1);
 
-            /*
-            ws.Cell(1,1).Value = "ID SOL";
-            ws.Cell(1,2).Value = "NOMBRE";
-            ws.Cell(1,3).Value = "1ER APELLIDO";
-            ws.Cell(1,4).Value = "2DO APELLIDO";
-            ws.Cell(1,5).Value = "BOLETA";
-            ws.Cell(1,6).Value = "TIPO SOLICITUD";
-            ws.Cell(1,7).Value = "CTA NUEVA";
-            ws.Cell(1,8).Value = "CTA ANTERIOR";
-            ws.Cell(1,9).Value = "NO. CEL NUEVO";
-            ws.Cell(1,10).Value = "NO. CEL ANTERIOR";
-            */
+            StringBuilder sb = new StringBuilder();
 
             int i = 5;
             string rol = string.Empty;
+            string repositorio = string.Empty;
+
+            List<WebUtils.Link> files = new();
 
             //FECHA
             ws.Cell("H2").Value = DateTime.Now.ToString("dd/MM/yyyy");
@@ -73,7 +114,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 pendientes = await Task.Run(
                     ()=>_db.MtTbSolicitudesTickets.
-                        Where(st => st.SolIdEstadoSolicitud == 2).
+                        Where(st => selected.Contains(st.IdSolicitudTicket)).
                         Include(st=>st.SolIdUsuarioNavigation).
                         Include(st=>st.SolIdTipoSolicitudNavigation).
                         ToList()
@@ -81,6 +122,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 foreach(MtTbSolicitudesTicket solicitud in pendientes)
                 {
+                    repositorio = $"Repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
+
                     switch (solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
                     {
                         case 1: case 2: id_externo_usuario = solicitud.SolIdUsuarioNavigation.UsuBoletaAlumno; break;
@@ -103,21 +146,87 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     IXLRange row = ws.Range(ws.Cell(i, 1), ws.Cell(i, 9));
 
                     row.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
-                    row.Style.Border.SetOutsideBorderColor(XLColor.Red);
-                    
+                    row.Style.Border.SetOutsideBorderColor(XLColor.Black);
+
+                    row.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
+                    row.Style.Border.SetInsideBorderColor(XLColor.Black);
+
+
+                    if(!string.IsNullOrEmpty(solicitud.SolCapturaCuentaBloqueada))
+                    {
+                        files.Add(
+                            new WebUtils.Link(
+                                    $"{repositorio}{solicitud.SolCapturaCuentaBloqueada}",
+                                    GenerarNombreAdjunto
+                                    (
+                                        solicitud, 
+                                        solicitud.SolCapturaCuentaBloqueada, 
+                                        "CAPTURA_CUENTA_BLOQUEADA"
+                                    )
+                                )
+                            );
+                    }
+
+                    if (!string.IsNullOrEmpty(solicitud.SolCapturaEscaneoAntivirus))
+                    {
+                        files.Add(
+                            new WebUtils.Link(
+                                    $"{repositorio}{solicitud.SolCapturaEscaneoAntivirus}",
+                                    GenerarNombreAdjunto
+                                    (
+                                        solicitud,
+                                        solicitud.SolCapturaEscaneoAntivirus,
+                                        "CAPTURA_ESCANEO_ANTIVIRUS"
+                                    )
+                                )
+                            );
+                    }
+
+                    if (!string.IsNullOrEmpty(solicitud.SolCapturaError))
+                    {
+                        files.Add(
+                            new WebUtils.Link(
+                                    $"{repositorio}{solicitud.SolCapturaError}",
+                                    GenerarNombreAdjunto
+                                    (
+                                        solicitud,
+                                        solicitud.SolCapturaError,
+                                        "CAPTURA_MENSAJE_ERROR"
+                                    )
+                                )
+                            );
+                    }
+
                     i++;
                 }
 
                 ws.Columns(1, 10).AdjustToContents();
 
-                wb.SaveAs($"{base_directory}/{filename}");
+                wb.SaveAs($"{base_directory}/{filename}.xlsx");
 
-                oResponse.Data = filename;
+                files.Add(new WebUtils.Link(filename + ".xlsx"));
+
+                WriteZip($"{base_directory}/{filename}.zip", files, base_directory + "/" );
+                
+                if (return_zip)
+                {
+                    oResponse.Data = new List<WebUtils.Link>() {  new WebUtils.Link(filename + ".zip") };
+                }
+                else
+                {
+                    oResponse.Data = files;
+                }
+                
                 oResponse.Success = 1;
             }
             catch (Exception ex)
             {
+                sb.AppendLine(ex.Message);
+
+                System.IO.File.WriteAllText($"{base_directory}/{filename}.txt", rol.ToString());
+
                 oResponse.Message = ex.Message;
+                oResponse.Data.Add(new WebUtils.Link($"{base_directory}/{filename}.txt"));
 
                 Response.Clear();
                 Response.StatusCode = 500;

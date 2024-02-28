@@ -1,20 +1,29 @@
 ﻿@page "/SolicitudesPendientes"
 @attribute [Authorize(Policy = "[Rol] Administrador")]
+@inject IJSRuntime JsRuntime
 
 <PageTitle>@Title</PageTitle>
-
+<script src="js/descargar.js?v=1.0.0.8"></script>
 
 <div class="p-4 rounded-1 bg-white shadow">
     <h1>@Title</h1>
 
     <div class="row my-4">
         <div class="offset-10 col-2">
-            @if(string.IsNullOrEmpty(link))
+            @if(selectedItems.Count>0)
             {
-                <button class="btn btn-primary form-control" @onclick="Descargar">
-                    Generar Archivo
+                <button class="btn btn-primary form-control mb-3" @onclick="Descargar">
+                    <RadzenIcon Icon="get_app"></RadzenIcon>
+                    Exportar
                 </button>
-            }else{
+                <div>
+                    <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Generar Archivo Zip
+                </div>
+            }
+            
+            @if(!string.IsNullOrEmpty(link))
+            {
+                <br/>
                 <a href="@link">Archivo de Exportación</a>
             }
         </div>
@@ -32,23 +41,17 @@
     }
 
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
-                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true"
+                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    Data="@items" TItem="RequestDTO_Solicitud"
                     Visible=@cargado
-                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems>
+                    SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@selectedItems>
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Tipo" Filterable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
                     @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
-                </Template>
-            </RadzenDataGridColumn>
-
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Filterable="false" TextAlign="TextAlign.Start">
-                <Template Context="item">
-                    @item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
                 </Template>
             </RadzenDataGridColumn>
 
@@ -73,19 +76,75 @@
                 </Template>
             </RadzenDataGridColumn>
 
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Adjuntos" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    <ul>
+                        @if (!string.IsNullOrEmpty(item.SolCapturaCuentaBloqueada))
+                        {
+                            <li>
+                                Captura de pantalla de Cuenta Bloqueada
+                                <a  href="@GenerarURLAdjunto(item, item.SolCapturaCuentaBloqueada)"
+                                   download="@GenerarNombreAdjunto(item, item.SolCapturaCuentaBloqueada, "CAPTURA_CUENTA_BLOQUEADA")">
+                                    Descargar
+                                </a>
+                            </li>
+                        }
+
+                        @if(!string.IsNullOrEmpty(item.SolCapturaError ))
+                        {
+                            <li>
+                                Captura de pantalla de Error
+                                <a href="@GenerarURLAdjunto(item, item.SolCapturaError)"
+                                   download="@GenerarNombreAdjunto(item, item.SolCapturaError, "CAPTURA_ERROR")">
+                                    Descargar
+                                </a>
+                            </li>
+                        }
+
+                        @if (!string.IsNullOrEmpty(item.SolCapturaEscaneoAntivirus))
+                        {
+                            <li>
+                                Captura de pantalla de Escaneo de Antivirus
+                                <a href="@GenerarURLAdjunto(item, item.SolCapturaEscaneoAntivirus)"
+                                   download="@GenerarNombreAdjunto(item, item.SolCapturaEscaneoAntivirus, "CAPTURA_ESCANEO_ANTIVIRUS")">
+                                    Descargar
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                    
+                </Template>
+            </RadzenDataGridColumn>
+
         </Columns>
     </RadzenDataGrid>
 </div>
 
+<pre>@debug</pre>
 
 @code{
     private string Title = "Solicitudes Pendientes";
+
     private bool cargado { get; set; } = false;
     private bool generando = false;
+    private bool exportar_zip = false;
+
     private string link = string.Empty;
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
+
+    private string debug = string.Empty;
+
+    private string GenerarURLAdjunto(RequestDTO_Solicitud solicitud, string archivo)
+    {
+        return $"Repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_{archivo}";
+    }
+
+    private string GenerarNombreAdjunto(RequestDTO_Solicitud solicitud, string archivo, string tipo ="ARCHIVO")
+    {
+        return $"{solicitud.SolIdUsuarioNavigation!.UsuCurp}_{tipo}{Path.GetExtension(archivo)}";
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -116,15 +175,20 @@
     private async void Descargar()
     {
         cargado = false;
-        StateHasChanged();
+        //StateHasChanged();
 
-        Response<string>? oResponse = await servicioArchivos.NewFile("xlsx", "pendientes");
+        List<int> selected_ids = selectedItems.Select(st => st.IdSolicitudTicket).ToList();
+
+        Response<List<WebUtils.Link>>? oResponse = await servicioArchivos.NewFileFromSelection(exportar_zip?"zip":"xlsx", "pendientes", selected_ids);
 
         if(oResponse is not null && oResponse.Data is not null)
         {
-            link = oResponse.Data;
+            foreach(WebUtils.Link url in oResponse.Data)
+            {
+                await JSRuntime.InvokeVoidAsync("Descargar", url);
+            }
         }
-
+        
         cargado = true;
         StateHasChanged();
     }

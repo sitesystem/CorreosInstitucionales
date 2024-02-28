@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,12 @@ namespace CorreosInstitucionales.Shared.Utils
             }
 
             return result;
+        }
+
+        public class Link(string url = "#", string name = "#")
+        {
+            public string Url { get; set; } = url;
+            public string Name { get; set; } = name;
         }
     }
 }
