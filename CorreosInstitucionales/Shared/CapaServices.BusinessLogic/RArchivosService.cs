@@ -1,4 +1,5 @@
 ﻿using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,12 +26,12 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
-        public async Task<Response<List<string>>?> NewFileFromSelection<T>(string extension, string action, List<T> selected)
+        public async Task<Response<List<WebUtils.Link>>?> NewFileFromSelection<T>(string extension, string action, List<T> selected)
         {
             var response = await _httpClient.PostAsJsonAsync($"{url}/{extension}/{action}", selected);
 
             var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Response<List<string>>>(content, options: _options);
+            var result = JsonSerializer.Deserialize<Response<List<WebUtils.Link>>>(content, options: _options);
             return result;
         }
 

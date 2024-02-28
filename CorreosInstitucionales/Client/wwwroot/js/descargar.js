@@ -1,10 +1,16 @@
-﻿function Descargar(url)
+﻿function Descargar(item)
 {
+    console.log(item);
+
     const enlace = document.createElement('a');
 
-    enlace.href = url;
-    enlace.download = "";
+    enlace.href = item.url;
 
+    if (item.name != "#")
+    {
+        enlace.download = item.name;
+    }
+    
     enlace.click();
     enlace.remove();
 }

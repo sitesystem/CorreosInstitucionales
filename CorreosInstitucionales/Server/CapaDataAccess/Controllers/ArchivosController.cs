@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.Utils;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor.Infrastructure;
@@ -17,24 +18,36 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
 
-        private void WriteZip(string filename, List<string> files, string root_directory = "")
+        private void WriteZip(string filename, List<WebUtils.Link> files, string root_directory = "")
         {
+            string fname = string.Empty;
+
             using (FileStream fs = new FileStream(filename, FileMode.CreateNew))
             {
                 using (ZipArchive za = new ZipArchive(fs, ZipArchiveMode.Create, true))
                 {
-                    foreach (string file in files)
+                    foreach (WebUtils.Link file in files)
                     {
+                        fname = file.Name == "#" ? Path.GetFileName(file.Url) : file.Name;
+
                         za.CreateEntryFromFile
                         (
-                            $"{root_directory}{file}",
-                            Path.GetFileName(file)
+                            $"{root_directory}{file.Url}",
+                            fname
                         );
                     }
                 }
 
                 fs.Position = 0;
             }
+        }
+
+        private string GenerarNombreAdjunto(MtTbSolicitudesTicket solicitud, string archivo, string tipo = "ARCHIVO")
+        {
+            string ext = Path.GetExtension(archivo);
+            string curp = solicitud.SolIdUsuarioNavigation.UsuCurp;
+            string id = string.Format("{0:00000}", solicitud.IdSolicitudTicket);
+            return $"{curp}_SOL{id}_{tipo}{ext}";
         }
 
         [HttpPost("xlsx/pendientes")]
@@ -54,7 +67,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             Guid id = Guid.NewGuid();
             string id_fecha = DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
-            Response<List<string>> oResponse = new() { Data = new() } ;
+            Response<List<WebUtils.Link>> oResponse = new() { Data = new() } ;
             List<MtTbSolicitudesTicket> pendientes = new List<MtTbSolicitudesTicket>();
 
             string base_directory = $"../Client/wwwroot";
@@ -70,7 +83,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             string rol = string.Empty;
             string repositorio = string.Empty;
 
-            List<string> files = new();
+            List<WebUtils.Link> files = new();
 
             //FECHA
             ws.Cell("H2").Value = DateTime.Now.ToString("dd/MM/yyyy");
@@ -141,17 +154,47 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                     if(!string.IsNullOrEmpty(solicitud.SolCapturaCuentaBloqueada))
                     {
-                        files.Add($"{repositorio}{solicitud.SolCapturaCuentaBloqueada}");
+                        files.Add(
+                            new WebUtils.Link(
+                                    $"{repositorio}{solicitud.SolCapturaCuentaBloqueada}",
+                                    GenerarNombreAdjunto
+                                    (
+                                        solicitud, 
+                                        solicitud.SolCapturaCuentaBloqueada, 
+                                        "CAPTURA_CUENTA_BLOQUEADA"
+                                    )
+                                )
+                            );
                     }
 
                     if (!string.IsNullOrEmpty(solicitud.SolCapturaEscaneoAntivirus))
                     {
-                        files.Add($"{repositorio}{solicitud.SolCapturaEscaneoAntivirus}");
+                        files.Add(
+                            new WebUtils.Link(
+                                    $"{repositorio}{solicitud.SolCapturaEscaneoAntivirus}",
+                                    GenerarNombreAdjunto
+                                    (
+                                        solicitud,
+                                        solicitud.SolCapturaEscaneoAntivirus,
+                                        "CAPTURA_ESCANEO_ANTIVIRUS"
+                                    )
+                                )
+                            );
                     }
 
                     if (!string.IsNullOrEmpty(solicitud.SolCapturaError))
                     {
-                        files.Add($"{repositorio}{solicitud.SolCapturaError}");
+                        files.Add(
+                            new WebUtils.Link(
+                                    $"{repositorio}{solicitud.SolCapturaError}",
+                                    GenerarNombreAdjunto
+                                    (
+                                        solicitud,
+                                        solicitud.SolCapturaError,
+                                        "CAPTURA_MENSAJE_ERROR"
+                                    )
+                                )
+                            );
                     }
 
                     i++;
@@ -161,13 +204,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 wb.SaveAs($"{base_directory}/{filename}.xlsx");
 
-                files.Add(filename + ".xlsx");
+                files.Add(new WebUtils.Link(filename + ".xlsx"));
 
                 WriteZip($"{base_directory}/{filename}.zip", files, base_directory + "/" );
                 
                 if (return_zip)
                 {
-                    oResponse.Data = new List<string>() { filename + ".zip" };
+                    oResponse.Data = new List<WebUtils.Link>() {  new WebUtils.Link(filename + ".zip") };
                 }
                 else
                 {
@@ -183,7 +226,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 System.IO.File.WriteAllText($"{base_directory}/{filename}.txt", rol.ToString());
 
                 oResponse.Message = ex.Message;
-                oResponse.Data.Add($"{base_directory}/{filename}.txt");
+                oResponse.Data.Add(new WebUtils.Link($"{base_directory}/{filename}.txt"));
 
                 Response.Clear();
                 Response.StatusCode = 500;

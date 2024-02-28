@@ -3,7 +3,7 @@
 @inject IJSRuntime JsRuntime
 
 <PageTitle>@Title</PageTitle>
-<script src="js/descargar.js?v=1.0.0.7"></script>
+<script src="js/descargar.js?v=1.0.0.8"></script>
 
 <div class="p-4 rounded-1 bg-white shadow">
     <h1>@Title</h1>
@@ -179,11 +179,11 @@
 
         List<int> selected_ids = selectedItems.Select(st => st.IdSolicitudTicket).ToList();
 
-        Response<List<string>>? oResponse = await servicioArchivos.NewFileFromSelection(exportar_zip?"zip":"xlsx", "pendientes", selected_ids);
+        Response<List<WebUtils.Link>>? oResponse = await servicioArchivos.NewFileFromSelection(exportar_zip?"zip":"xlsx", "pendientes", selected_ids);
 
         if(oResponse is not null && oResponse.Data is not null)
         {
-            foreach(string url in oResponse.Data)
+            foreach(WebUtils.Link url in oResponse.Data)
             {
                 await JSRuntime.InvokeVoidAsync("Descargar", url);
             }
