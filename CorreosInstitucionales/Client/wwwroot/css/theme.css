@@ -24,6 +24,11 @@
     background-color:#ccc;
 }
 
+tr.rz-data-row.rz-state-highlight a
+{
+    color:white !important;
+}
+
 .loading_img {
     display: inline-block;
     width: 64px;
