@@ -229,7 +229,7 @@
                         </RadzenStack>
                     </div>
 
-                    <div class="col-md-4 col-lg-4">
+                    <div class="col-md-2 col-lg-2">
                         <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0px" class="">
                             @{
                                 switch (valorEncuesta)
@@ -327,7 +327,7 @@ else
 
 @code
 {
-    public int valorEncuesta = 0;
+    public int valorEncuesta = 5;
     private Response<RequestDTO_Usuario>? oUsuario = new();
     private Response<RequestDTO_Solicitud>? oSolicitudLastTicket = new();
     private bool existenSolicitudes => oSolicitudLastTicket?.Data is not null ? true : false;
