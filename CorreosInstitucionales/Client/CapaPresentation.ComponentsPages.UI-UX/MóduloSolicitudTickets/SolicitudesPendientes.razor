@@ -1,6 +1,7 @@
 ﻿@page "/SolicitudesPendientes"
 @attribute [Authorize(Policy = "[Rol] Administrador")]
 @inject IJSRuntime JsRuntime
+@inject Radzen.DialogService dialogService
 
 <PageTitle>@Title</PageTitle>
 <script src="js/descargar.js?v=1.0.0.8"></script>
@@ -87,6 +88,8 @@
                                    download="@GenerarNombreAdjunto(item, item.SolCapturaCuentaBloqueada, "CAPTURA_CUENTA_BLOQUEADA")">
                                     Descargar
                                 </a>
+                                <br />
+                                <button class="btn btn-primary" @onclick="@(async ()=> await VerPDF(GenerarURLAdjunto(item, item.SolCapturaCuentaBloqueada)))">Ver</button>
                             </li>
                         }
 
@@ -98,6 +101,8 @@
                                    download="@GenerarNombreAdjunto(item, item.SolCapturaError, "CAPTURA_ERROR")">
                                     Descargar
                                 </a>
+                                <br />
+                                <button class="btn btn-primary" @onclick="@(async ()=> await VerPDF(GenerarURLAdjunto(item, item.SolCapturaError)))">Ver</button>
                             </li>
                         }
 
@@ -109,6 +114,8 @@
                                    download="@GenerarNombreAdjunto(item, item.SolCapturaEscaneoAntivirus, "CAPTURA_ESCANEO_ANTIVIRUS")">
                                     Descargar
                                 </a>
+                                <br />
+                                <button class="btn btn-primary" @onclick="@(async ()=> await VerPDF(GenerarURLAdjunto(item, item.SolCapturaEscaneoAntivirus)))">Ver</button>
                             </li>
                         }
                     </ul>
@@ -188,8 +195,28 @@
                 await JSRuntime.InvokeVoidAsync("Descargar", url);
             }
         }
-        
+
         cargado = true;
         StateHasChanged();
+    }
+
+    private async Task VerPDF(string archivo) 
+    {
+        await dialogService.OpenAsync<PDFViewer>
+                (
+                    "Ver",
+                    new Dictionary<string, object>()
+                    {
+                        {"file", archivo}
+                    },
+                    new DialogOptions()
+                        {
+                            Width = "calc( 100vw - 8em )",
+                            Height = "calc( 100vh - 8em )",
+                            CssClass = "dialog_simple p-0", 
+                            CloseDialogOnEsc = true, 
+                            CloseDialogOnOverlayClick = true
+                        }
+                );
     }
 }
