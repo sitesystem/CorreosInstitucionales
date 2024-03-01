@@ -464,6 +464,8 @@ else
     public Response<List<RequestViewModel_NoExtension>>? oNoExtensiones = new();
     private string srcCURP = string.Empty;
 
+    [Parameter] public bool existenSolicitudes { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         oLinkCURP = await servicioLink.GetDataByNameAsync("CURP");

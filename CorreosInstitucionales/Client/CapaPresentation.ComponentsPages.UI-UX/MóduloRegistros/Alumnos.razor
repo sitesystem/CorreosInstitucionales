@@ -437,7 +437,7 @@
                 </span>
             </HeaderTemplate>
             <ChildContent>
-                <div class="row">
+                <div class="row" hidden="@existenSolicitudes">
                     <div class="@($@"{( ActionAddEdit == "agregar" ? "col-md-4 col-lg-4 offset-md-4 offset-lg-4" : "col-md-6 col-lg-6" )}")">
                         <RadzenFormField Text="Correo Electrónico Institucional" AllowFloatingLabel="false" AllowClear="true" Variant="Variant.Filled" Style="" class="@($@"{( ActionAddEdit == "agregar" ? "w-100 mt-3" : "rz-shadow-3 w-100 mt-3" )}")" Disabled="false">
                             <Start><RadzenIcon Icon="mail_outline" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
@@ -541,6 +541,8 @@ else
     public Response<List<RequestViewModel_Carrera>>? oCarreras = new();
     private string srcCURP = string.Empty;
     private string srcComprobanteInscripcion = string.Empty;
+
+    [Parameter] public bool existenSolicitudes { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

@@ -330,7 +330,7 @@ else
     public int valorEncuesta = 5;
     private Response<RequestDTO_Usuario>? oUsuario = new();
     private Response<RequestDTO_Solicitud>? oSolicitudLastTicket = new();
-    private bool existenSolicitudes => oSolicitudLastTicket?.Data is not null ? true : false;
+    private bool existenSolicitudes => oSolicitudLastTicket?.Data is not null;
 
     @*////////////////////////////////////////////////  ProgressBar / ProgressCircular  ////////////////////////////////////////////////*@
     private double valueProgress = 0;
