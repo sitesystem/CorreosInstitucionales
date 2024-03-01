@@ -222,17 +222,16 @@
                             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0px" class="">
                                 <RadzenText Text="Paso 5" TextAlign="TextAlign.Center" TextStyle="TextStyle.Subtitle1" Visible="true" />
                                 <RadzenText Text="@($@"Califica la calidad del servicio atendido:")" TextAlign="TextAlign.Center" TextStyle="TextStyle.Body1" Visible="true" />
-                                <RadzenRating Stars="5" @bind-Value="@valorEncuesta" Change="@(args => Console.WriteLine(args))" Placeholder="1-5" Disabled="false" ReadOnly="false" />
+                                <RadzenRating Stars="5" @bind-Value="@oEncuestaCalidad.Calificacion" Change="@(args => Console.WriteLine(args))" Placeholder="1-5" Disabled="false" ReadOnly="false" />
                                 @* <RadzenRating Value="5" Stars="5" @bind-Value="@valorEncuesta" Change="@(args => Console.WriteLine(args))" Placeholder="1-5" Disabled="false" ReadOnly="false" /> *@
                             </RadzenStack>
-                            
                         </RadzenStack>
                     </div>
 
                     <div class="col-md-2 col-lg-2">
                         <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0px" class="">
                             @{
-                                switch (valorEncuesta)
+                                switch (oEncuestaCalidad.Calificacion)
                                 {
                                     case 1:
                                         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-emoji-frown-fill text-danger" viewBox="0 0 16 16">
@@ -274,7 +273,7 @@
                             <Start><RadzenIcon Icon="message" IconColor="@Colors.Base400" /></Start>
                             <ChildContent>
                                                 @* @bind-Value="@oSolicitudTicket.SolObservacionesSolicitud" @oninput="@(e => oSolicitudTicket.SolObservacionesSolicitud = e.Value.ToString())" *@
-                                <RadzenTextArea Name="@($@"observaciones")" Placeholder="Escribe un comentario, nota o aclaración por el servicio de la Solicitud-Ticket atendida..."
+                                <RadzenTextArea Name="@($@"observaciones")" Placeholder="Escribe un comentario, nota o aclaración por el servicio de la Solicitud-Ticket atendida..." @bind-Value="@oEncuestaCalidad.Comentarios"
                                                 Cols="30" Rows="2" style="border-bottom: 3px solid red;" MinLength="1" MaxLength="300" class="w-100" aria-label="TextArea" Disabled="false" ReadOnly="false" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
@@ -327,7 +326,7 @@ else
 
 @code
 {
-    public int valorEncuesta = 5;
+    //public int valorEncuesta = 5;
     private Response<RequestDTO_Usuario>? oUsuario = new();
     private Response<RequestDTO_Solicitud>? oSolicitudLastTicket = new();
     private bool existenSolicitudes => oSolicitudLastTicket?.Data is not null;
@@ -358,6 +357,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         await LoadingPage();
+        oEncuestaCalidad.Calificacion = 5;
     }
 
     private async Task LoadingPage()
@@ -476,7 +476,12 @@ else
     }
 
     @*////////////////////////////////////////////////  ENCUESTA DE CALIDAD  ////////////////////////////////////////////////*@
-    private Response<RequestDTO_EncuestaCalidad>? oEncuestaCalidad = new();
+    private RequestDTO_EncuestaCalidad oEncuestaCalidad = new();
 
+    public async Task EnviarEncuesta()
+    {
+        oEncuestaCalidad.IdSolicitud = oSolicitudLastTicket?.Data?.IdSolicitudTicket;
 
+        var respuesta = await servicioSolicitud.EncuestaCalidadAsync(oEncuestaCalidad);
+    }
 }

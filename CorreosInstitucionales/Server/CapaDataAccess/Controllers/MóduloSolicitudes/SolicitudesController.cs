@@ -361,6 +361,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
                 if (oSolicitud != null)
                 {
+                    oSolicitud.SolIdEstadoSolicitud = 5;
                     oSolicitud.SolEncuestaCalidadCalificacion = model.Calificacion;
                     oSolicitud.SolEncuestaCalidadComentarios = model.Comentarios;
                     oSolicitud.SolFechaHoraEncuesta = DateTime.Now;
