@@ -175,8 +175,11 @@
                             <ChildContent>
                                 @if (IdTipoPersonal == 1 || IdTipoPersonal == 2)
                                 {
-                                    <RadzenMask Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="15"
-                                                Mask="@($@"**********")" CharacterPattern="[A-Z0-9]" Placeholder="@($@"****{oEscuela.Data.EscNoEscuela}****")" Pattern="^\\d{4}60\\d{4}$" />
+                                    @* <RadzenMask Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="15"
+                                                Mask="@($@"**********")" CharacterPattern="[A-Z0-9]" Placeholder="@($@"****{oEscuela.Data.EscNoEscuela}****")" Pattern="" /> *@
+                                    <RadzenTextBox Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
+                                                   Placeholder="@($@"****{oEscuela.Data.EscNoEscuela}****")" aria-label="enter password"
+                                                   @oninput="(e => oUsuario.UsuBoletaAlumno = e.Value.ToString())" @onkeyup="@ValidarBoleta" />
                                 }
                                 else if (IdTipoPersonal == 3)
                                 {
@@ -191,6 +194,8 @@
                         @if (IdTipoPersonal == 1 || IdTipoPersonal == 2)
                         {
                             <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumno)" />
+                            <RadzenAlert Title="Ingresa tu Boleta" Text="@($@"Formato Válido: ****{oEscuela.Data.EscNoEscuela}****")" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker"
+                                         ShowIcon="true" AllowClose="false" class="mb-0" @bind-Visible="flagErrorBoletaAlumno" />
                         }
                         else if (IdTipoPersonal == 3)
                         {
@@ -474,6 +479,26 @@
                         </div>
                     }
                 </div>
+
+                <div class="row" hidden="@(!existenSolicitudes)">
+                    <div class="col-md-12 col-lg-12">
+                        <RadzenAlert Title="" Text="" AlertStyle="AlertStyle.Secondary" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Dark" ShowIcon="true" AllowClose="false"
+                                     Visible="true" class="my-3">
+                            <b>ATENCIÓN:</b> Para visualizar tus <strong>Credenciales del Correo Institucional</strong>, favor de responder la siguiente encuesta.
+                            <RadzenButton Text="Ir a la Encuesta de Calidad"
+                                          BusyText=""
+                                          ButtonStyle="ButtonStyle.Warning"
+                                          ButtonType="ButtonType.Button"
+                                          Variant="Variant.Filled"
+                                          IsBusy="false"
+                                          Icon="arrow_forward"
+                                          class="text-white rz-ripple"
+                                          Shade="Shade.Darker"
+                                          Size="ButtonSize.Small"
+                                          Click="@(() => navigationManager.NavigateTo("/Inicio"))" />
+                        </RadzenAlert>
+                    </div>
+                </div>
             </ChildContent>
             <SummaryTemplate>
                 <ValidationSummary />
@@ -575,7 +600,7 @@ else
             }
             else if (IdTipoPersonal == 3)                       // Número de Boleta del Usuario (Alumno de Maestria)
             {
-                oUsuario.UsuBoletaAlumno = "0000600000";
+                oUsuario.UsuBoletaAlumno = $@"0000{oEscuela?.Data?.EscNoEscuela}0000";
                 oUsuario.UsuBoletaMaestria = "";
             }
             // oUsuario.UsuIdCarrera = 1;                       // FK ID de la Carrera del Alumno
@@ -710,6 +735,11 @@ else
     @*///////////////////////////////////////////////  Año Actual  //////////////////////////////////////////////////////////////////////*@
     public int year = DateTime.Parse(DateTime.Now.ToString()).Year;
 
+    @*///////////////////////////////////////////////  VALIDAR BOLETA DEL ALUMNO  ///////////////////////////////////////////////*@
+    // [RegularExpression("^\\d{4}60\\d{4}$", ErrorMessage = "BOLETA Inválida (Formato: xxxx60xxxx).")]
+    private bool flagErrorBoletaAlumno = false;
+    private async Task ValidarBoleta() => flagErrorBoletaAlumno = !System.Text.RegularExpressions.Regex.IsMatch(oUsuario.UsuBoletaAlumno, @"^\d{4}" + oEscuela.Data.EscNoEscuela + @"\d{4}$");
+
     @*///////////////////////////////////////////////  VALIDAR CAMPOS CONTRASEÑA Y CONFIRMAR CONTRASEÑA  ///////////////////////////////////////////////*@
     // Hacer visible las Contraseñas con el ícono eye
     private bool VisibleContraseña = true;
@@ -724,10 +754,10 @@ else
     private async Task CompararContraseñas()
     {
         if (ActionAddEdit == "agregar")
-            flagErrorPasswords = !string.Equals(oUsuario.UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal) ? true : false;
+            flagErrorPasswords = !string.Equals(oUsuario.UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal);
         else if (ActionAddEdit == "actualizar")
         {
-            flagErrorPasswords = !string.Equals(UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal) ? true : false;
+            flagErrorPasswords = !string.Equals(UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal);
             oUsuario.UsuContraseña = !string.IsNullOrEmpty(UsuContraseña) && !flagErrorPasswords ? CorreosInstitucionales.Shared.CapaTools.Encrypt.GetSHA256(UsuContraseña) : oEditUsuario.UsuContraseña;
         }
     }
@@ -794,7 +824,7 @@ else
 
     @*///////////////////////////////////////////////  REGISTRAR USUARIO  //////////////////////////////////////////////////////////////////////*@
     private bool busyLoading = false;
-    private bool DisablePostButton => ActionAddEdit == "agregar" ? !ValidReCAPTCHA || flagErrorPasswords || !aceptar_aviso_privacidad : !ValidReCAPTCHA || flagErrorPasswords;
+    private bool DisablePostButton => ActionAddEdit == "agregar" ? !ValidReCAPTCHA || flagErrorBoletaAlumno || flagErrorPasswords || !aceptar_aviso_privacidad : !ValidReCAPTCHA || flagErrorBoletaAlumno || flagErrorPasswords;
     private string TextButton = string.Empty;
     private string BusyTextButton = string.Empty;
     private string IconButton = string.Empty;

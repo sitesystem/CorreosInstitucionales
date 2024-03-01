@@ -105,7 +105,7 @@ public class RequestDTO_Usuario
     [StringLength(10, ErrorMessage = "La BOLETA introducida debe ser máximo de 10 dígitos.")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo BOLETA requerido.")]
     [MinLength(10, ErrorMessage = "La BOLETA introducida debe ser mínimo de 10 dígitos.")]
-    [RegularExpression("^\\d{4}60\\d{4}$", ErrorMessage = "BOLETA Inválida (Formato: xxxx60xxxx).")]
+    // [RegularExpression("^\\d{4}60\\d{4}$", ErrorMessage = "BOLETA Inválida (Formato: xxxx60xxxx).")]
     public string? UsuBoletaAlumno { get; set; }
 
     /// <summary>
