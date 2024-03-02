@@ -11,10 +11,11 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
     {
         public int? IdSolicitud { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CALIFICACIÓN requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo CALIFICACIÓN DE LA ENCUESTA requerido.")]
+        [Range(1, 5, ErrorMessage = "Campo CALIFICACIÓN DE LA ENCUESTA requerido.")]
         public int Calificacion { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo OBSERVACIONES/COMENTARIOS requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo OBSERVACIONES / COMENTARIOS requerido.")]
         public string Comentarios { get; set; } = null!;
     }
 }

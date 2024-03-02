@@ -275,7 +275,7 @@
                             </ChildContent>
                             <Helper>
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="alert alert-info my-1 p-2"
-                                            Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de Correo Electrónico Personal, levanta una Solicitud (Ticket)." : "Dominios válidos (gmail, outlook, hotmail, yahoo, msn)." )}")" />
+                                            Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de Correo Electrónico Personal, levanta una Solicitud (Ticket)." : "En caso de no contar con un Correo Personal, le recomendamos crear uno con dominio válido (gmail, outlook, hotmail, yahoo, msn, live, etc.)" )}")" />
                             </Helper>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
