@@ -141,7 +141,7 @@ public class RequestDTO_Usuario
     public int? UsuAñoEgreso { get; set; }
 
     /// <summary>
-    /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP
+    /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP-10
     /// </summary>
     [Column("usuFileNameComprobanteInscripcion")]
     [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del Comprobante de Inscripción adjuntado debe ser máximo de 200 caracteres.")]

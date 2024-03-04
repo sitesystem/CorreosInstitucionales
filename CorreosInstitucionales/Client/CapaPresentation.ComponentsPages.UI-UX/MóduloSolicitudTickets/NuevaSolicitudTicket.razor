@@ -43,15 +43,6 @@
                     <RadzenAlert Title="" AlertStyle="AlertStyle.Secondary" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Default" ShowIcon="true" AllowClose="false" class="rz-mt-0 rz-mb-3" Visible="true">
                         <b>ATENCIÓN.</b> Importante tener en cuenta lo siguiente para levantar tu Solicitud de Ticket:
                         <ul class="my-0">
-                            <li>Actualizar tu Archivo PDF del CURP.</li>
-                            @if (idTipoPersonal == 1 || idTipoPersonal == 2)
-                            {
-                                <li>Actualizar tu Comprobante de Horario (Tira de Materias).</li>
-                            }
-                            else if (idTipoPersonal == 3)
-                            {
-                                <li>Actualizar tu Comprobante de Inscripción (SIP-10).</li>
-                            }
                             <li>Con tu Correo Institucional sólo se te puede apoyar en accesos a aplicaciones que te brinda Microsoft (ejemplo Teams, paquetería de Office), no así en aplicaciones externas.</li>
                         </ul>
                     </RadzenAlert>
@@ -83,21 +74,22 @@
                                         <RadzenFormField Text="Motivo de la Solicitud" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
                                             <ChildContent>
                                                 <RadzenListBox Context="contexto"
-                                                                Name="@($@"tipo_solicitud_list")"
-                                                                @bind-Value="@oSolicitudTicket.SolIdTipoSolicitud"
-                                                                TValue="int"
-                                                                Data="@oTiposSolicitud.Data"
-                                                                ValueProperty="IdTipoSolicitud"
-                                                                TextProperty="TiposolDescripcion"
-                                                                Multiple="false"
-                                                                AllowClear="true"
-                                                                AllowFiltering="true"
-                                                                AllowVirtualization="true"
-                                                                Placeholder="Selecciona una opción"
-                                                                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                                                FilterOperator="StringFilterOperator.Contains"
-                                                                Style="width: 100%; height:300px"
-                                                                InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Selecciona una opción" }})">
+                                                               Name="@($@"tipo_solicitud_list")"
+                                                               @bind-Value="@oSolicitudTicket.SolIdTipoSolicitud"
+                                                               TValue="int"
+                                                               Data="@oTiposSolicitud.Data"
+                                                               ValueProperty="IdTipoSolicitud"
+                                                               TextProperty="TiposolDescripcion"
+                                                               Multiple="false"
+                                                               AllowClear="true"
+                                                               AllowFiltering="true"
+                                                               AllowVirtualization="true"
+                                                               Placeholder="Selecciona una opción"
+                                                               FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                                               FilterOperator="StringFilterOperator.Contains"
+                                                               Style="width: 100%; height:300px"
+                                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Selecciona una opción" }})"
+                                                               Change="@(args => OnChangeListBox(args))">
                                                     <Template>
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill text-success" viewBox="0 0 16 16">
                                                             <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1" />
@@ -125,49 +117,7 @@
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolObservacionesSolicitud)" />
                                     </div>
 
-                                    <!-- ******************************************************************* ARCHIVOS PDF CAPTURAS Y OTROS DATOS ******************************************************************* -->
                                     <div class="col-md-6 col-lg-6 mb-3">
-
-                                        <RadzenFormField Text="Correo Electrónico Personal Actual" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3">
-                                            <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
-                                            <ChildContent>
-                                                <RadzenTextBox Name="currentEmailPersonal" @bind-Value="@oResponseUsuario.Data.UsuCorreoPersonalCuentaNueva" MinLength="0" MaxLength="100" Disabled="true" ReadOnly="true" />
-                                            </ChildContent>
-                                            <Helper></Helper>
-                                        </RadzenFormField>
-
-                                        <RadzenFormField Text="Correo Electrónico Personal Nuevo" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3">
-                                            <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
-                                            <ChildContent>
-                                                <RadzenTextBox Name="newEmailPersonal" @bind-Value="@oSolicitudTicket.SolCorreoPersonalCuentaNueva" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="100"
-                                                               Disabled="false" ReadOnly="false" />
-                                            </ChildContent>
-                                            <Helper>
-                                                <RadzenText Text="Dominios válidos (gmail, outlook, hotmail, yahoo, msn, etc.)." TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" />
-                                            </Helper>
-                                        </RadzenFormField>
-                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCorreoPersonalCuentaNueva)" />
-
-                                        <RadzenFormField Text="@($@"Número de Celular Actual")" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
-                                            <Start><RadzenIcon Icon="phone_iphone" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
-                                            <ChildContent>
-                                                <RadzenMask Name="@($@"currentPhoneNumber")" @bind-Value="@oResponseUsuario.Data.UsuNoCelularNuevo" MinLength="0" MaxLength="20"
-                                                            Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" Disabled="true" ReadOnly="true" />
-                                            </ChildContent>
-                                            <Helper></Helper>
-                                        </RadzenFormField>
-                                            
-                                        <RadzenFormField Text="@($@"Número de Celular Nuevo")" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
-                                            <Start><RadzenIcon Icon="phone_iphone" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
-                                            <ChildContent>
-                                                <RadzenMask Name="@($@"newPhoneNumber")" @bind-Value="@oSolicitudTicket.SolNoCelularNuevo" MinLength="0" MaxLength="20" style="border-bottom: 3px solid red;"
-                                                            Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" Disabled="false" ReadOnly="false" />
-                                            </ChildContent>
-                                            <Helper>
-                                                <RadzenText Text="Sólo No. de Celular con 10 dígitos." TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" />
-                                            </Helper>
-                                        </RadzenFormField>
-                                        <ValidationMessage For="@(() => oSolicitudTicket.SolNoCelularNuevo)" />
 
                                         <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.Div" TextAlign="TextAlign.JustifyAll" class="mt-3 mb-0">
                                             <a href="@oLinkReducirTamañoArchivo?.Data?.LinkEnlace" target="_blank" class="icon-link icon-link-hover alert alert-info w-100">
@@ -179,7 +129,105 @@
                                             </a>
                                         </RadzenText>
 
-                                        <RadzenFormField Text="Archivo de la Captura del Escaneo de Antivirus" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-0">
+                                        <!-- ******************************************************************* ARCHIVOS PDF CURP / COMPROBANTE DE ESTUDIO ******************************************************************* -->
+                                        <RadzenFormField Text="Archivo PDF del CURP Actualizado" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-0">
+                                            <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent> @* image/*, .pdf, .doc, .docx *@
+                                                <RadzenUpload @ref="oUploadFile_SolFileNameCurp" Url="" Accept=".pdf"
+                                                              Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                                              Change=@(args => OnChangeFiles(args, CURP))
+                                                              Error=@(args => OnErrorFiles(args, "FileInput"))
+                                                              InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                                              Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                                              Complete="@(args => OnCompleteFiles(args))" />
+                                            </ChildContent>
+                                            <Helper></Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileNameCurp)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCurp)" />
+
+                                        @if (idTipoPersonal == 1 || idTipoPersonal == 2 || idTipoPersonal == 3)
+                                        {
+                                            <RadzenFormField Text="@($@"{(idTipoPersonal == 1 || idTipoPersonal == 2 ? "Archivo PDF del Comprobante de Horario (Tira de Materias) Actualizado" : "Archivo PDF del SIP-10 Actualizado")}")"
+                                                             AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
+                                                <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                                <ChildContent>
+                                                    @* image/*, .pdf, .doc, .docx *@
+                                                    <RadzenUpload @ref="oUploadFile_SolFileNameComprobanteInscripcion" Url="" Accept=".pdf"
+                                                                  Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                                                  Change=@(args => OnChangeFiles(args, ComprobanteInscripcion))
+                                                                  Error=@(args => OnErrorFiles(args, "FileInput"))
+                                                                  InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                                                  Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                                                  Complete="@(args => OnCompleteFiles(args))" />
+                                                </ChildContent>
+                                                <Helper></Helper>
+                                            </RadzenFormField>
+                                            <ValidationMessage For="@(() => oSolicitudTicket.SolFileNameComprobanteInscripcion)" />
+                                            <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeComprobanteInscripcion)" />
+                                        }
+
+                                        <!-- ******************************************************************* DATOS DE CAMBIO DE NO. CELULAR O CORREO PERSONAL ******************************************************************* -->
+                                        <RadzenFormField Text="@($@"Número de Celular Actual")" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleNoCelularNuevo">
+                                            <Start><RadzenIcon Icon="phone_iphone" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                <RadzenMask Name="@($@"currentPhoneNumber")" @bind-Value="@oResponseUsuario.Data.UsuNoCelularNuevo" MinLength="0" MaxLength="20"
+                                                            Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" Disabled="true" ReadOnly="true" />
+                                            </ChildContent>
+                                            <Helper></Helper>
+                                        </RadzenFormField>
+
+                                        <RadzenFormField Text="@($@"Número de Celular Nuevo")" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleNoCelularNuevo">
+                                            <Start><RadzenIcon Icon="phone_iphone" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                <RadzenMask Name="@($@"newPhoneNumber")" @bind-Value="@oSolicitudTicket.SolNoCelularNuevo" MinLength="0" MaxLength="20" style="border-bottom: 3px solid red;"
+                                                            Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" Disabled="false" ReadOnly="false" />
+                                            </ChildContent>
+                                            <Helper>
+                                                <RadzenText Text="Sólo No. de Celular con 10 dígitos." TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" />
+                                            </Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolNoCelularNuevo)" hidden="@(!isVisibleNoCelularNuevo)" />
+
+                                        <RadzenFormField Text="Correo Electrónico Personal Actual" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCuentaCorreoPersonalNuevo">
+                                            <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                <RadzenTextBox Name="currentEmailPersonal" @bind-Value="@oResponseUsuario.Data.UsuCorreoPersonalCuentaNueva" MinLength="0" MaxLength="100" Disabled="true" ReadOnly="true" />
+                                            </ChildContent>
+                                            <Helper></Helper>
+                                        </RadzenFormField>
+
+                                        <RadzenFormField Text="Correo Electrónico Personal Nuevo" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCuentaCorreoPersonalNuevo">
+                                            <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                <RadzenTextBox Name="newEmailPersonal" @bind-Value="@oSolicitudTicket.SolCorreoPersonalCuentaNueva" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="100"
+                                                               Disabled="false" ReadOnly="false" />
+                                            </ChildContent>
+                                            <Helper>
+                                                <RadzenText Text="Dominios válidos (gmail, outlook, hotmail, yahoo, msn, live, etc.)" TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" />
+                                            </Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCorreoPersonalCuentaNueva)" hidden="@(!isVisibleCuentaCorreoPersonalNuevo)" />
+
+                                        <!-- ******************************************************************* ARCHIVOS PDF CAPTURAS ******************************************************************* -->
+                                        <RadzenFormField Text="Archivo de la Captura de la Cuenta Bloqueada" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCapturaCuentaBloqueada">
+                                            <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                @* image/*, .pdf, .doc, .docx *@
+                                                <RadzenUpload @ref="oUploadFile_SolCapturaCuentaBloqueada" Url="" Accept=".pdf"
+                                                              Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                                              Change=@(args => OnChangeFiles(args, CapturaCuentaBloqueada))
+                                                              Error=@(args => OnErrorFiles(args, "FileInput"))
+                                                              InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                                              Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                                              Complete="@(args => OnCompleteFiles(args))" />
+                                            </ChildContent>
+                                            <Helper></Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaCuentaBloqueada)" hidden="@(!isVisibleCapturaCuentaBloqueada)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada)" hidden="@(!isVisibleCapturaCuentaBloqueada)" />
+
+                                        <RadzenFormField Text="Archivo de la Captura del Escaneo de Antivirus" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCapturaEscaneoAntivirus">
                                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
                                                 <RadzenUpload @ref="oUploadFile_SolCapturaEscaneoAntivirus" Url="" Accept=".pdf"
@@ -192,26 +240,10 @@
                                             </ChildContent>
                                             <Helper></Helper>
                                         </RadzenFormField>
-                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaEscaneoAntivirus)" />
-                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaEscaneoAntivirus)" hidden="@(!isVisibleCapturaEscaneoAntivirus)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus)" hidden="@(!isVisibleCapturaEscaneoAntivirus)" />
 
-                                        <RadzenFormField Text="Archivo de la Captura de la Cuenta Bloqueada" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
-                                            <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
-                                            <ChildContent> @* image/*, .pdf, .doc, .docx *@
-                                                <RadzenUpload @ref="oUploadFile_SolCapturaCuentaBloqueada" Url="" Accept=".pdf"
-                                                              Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
-                                                              Change=@(args => OnChangeFiles(args, CapturaCuentaBloqueada))
-                                                              Error=@(args => OnErrorFiles(args, "FileInput"))
-                                                              InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
-                                                              Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
-                                                              Complete="@(args => OnCompleteFiles(args))" />
-                                            </ChildContent>
-                                            <Helper></Helper>
-                                        </RadzenFormField>
-                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaCuentaBloqueada)" />
-                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada)" />
-
-                                        <RadzenFormField Text="Archivo de la Captura del Error" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
+                                        <RadzenFormField Text="Archivo de la Captura del Error" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCapturaError">
                                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
                                                 <RadzenUpload @ref="oUploadFile_SolCapturaError" Url="" Accept=".pdf"
@@ -224,8 +256,8 @@
                                             </ChildContent>
                                             <Helper></Helper>
                                         </RadzenFormField>
-                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaError)" />
-                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaError)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaError)" hidden="@(!isVisibleCapturaError)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaError)" hidden="@(!isVisibleCapturaError)" />
                                     </div>
                                 </div>
                             </ChildContent>
@@ -234,7 +266,7 @@
                         <!-- ******************************************************************* ReCAPTCHA Y BOTÓN ENVIAR ******************************************************************* -->
                         <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" class="rz-mt-4">
                             <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-                            <ValidationSummary class="rz-my-0" />
+                            @* <ValidationSummary class="rz-my-0" /> *@
                             <RadzenButton Text="Enviar Solicitud-Ticket"
                                           BusyText="Enviando Solicitud-Ticket..."
                                           ButtonStyle="ButtonStyle.Success"
@@ -298,19 +330,37 @@ else
             @* DATOS DE LA SOLICITUD-TICKET *@
             oSolicitudTicket.SolIdTipoSolicitud = 0;
             oSolicitudTicket.SolIdUsuario = oResponseUsuario.Data.IdUsuario;
+            @* DATOS DE ARCHIVOS PDF USUARIO *@
+            oSolicitudTicket.SolFileNameCurp = "";
+            oSolicitudTicket.SolFileSizeCurp = 0L;
+            if (idTipoPersonal == 1 || idTipoPersonal == 2 || idTipoPersonal == 3)
+            {
+                oSolicitudTicket.SolFileNameComprobanteInscripcion = "";
+                oSolicitudTicket.SolFileSizeComprobanteInscripcion = 0L;
+            }
+            else
+            {
+                oSolicitudTicket.SolFileNameComprobanteInscripcion = "-";
+                oSolicitudTicket.SolFileSizeComprobanteInscripcion = 1L;
+            }
+            @* DATOS DE CAMBIO DE NO. DE CELULAR O CORREO PERSONAL *@
+            oSolicitudTicket.SolNoCelularNuevo = "00 00 00 00 00";
+            oSolicitudTicket.SolCorreoPersonalCuentaNueva = "ejemplo@test.com";
+            @* DATOS DE ARCHIVOS PDF CAPTURAS *@
             oSolicitudTicket.SolCapturaEscaneoAntivirus = "";
             oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 0L;
             oSolicitudTicket.SolCapturaCuentaBloqueada = "";
             oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada = 0L;
             oSolicitudTicket.SolCapturaError = "";
             oSolicitudTicket.SolFileSizeCapturaError = 0L;
+            @* OTROS DATOS *@
             oSolicitudTicket.SolObservacionesSolicitud = "";
             oSolicitudTicket.SolIdEstadoSolicitud = 2;
             oSolicitudTicket.SolValidacionDatos = false;
             @* DATOS ENCUESTA DE CALIDAD DE LA SOLICITUD-TICKET *@
             oSolicitudTicket.SolEncuestaCalidadCalificacion = null;
             oSolicitudTicket.SolEncuestaCalidadComentarios = "";
-            oSolicitudTicket.SolFechaHoraEncuesta = DateTime.Now;
+            oSolicitudTicket.SolFechaHoraEncuesta = null;
             @* DATOS FECHA Y HORA DE LA SOLICITUD-TICKET *@
             oSolicitudTicket.SolFechaHoraCreacion = DateTime.Now;
         }
@@ -333,20 +383,192 @@ else
         // await JSRuntime.InvokeVoidAsync("eval", $@"document.getElementById('tipo_solicitud_list').select()");
     }
 
+    @*///////////////////////////////////////////////  LISTA MOTIVOS / INCIDENCIAS DE SOLICITUD DE TICKET  ///////////////////////////////////////////////*@
+    private bool isVisibleNoCelularNuevo = false;
+    private bool isVisibleCuentaCorreoPersonalNuevo = false;
+    private bool isVisibleCapturaCuentaBloqueada = false;
+    private bool isVisibleCapturaEscaneoAntivirus = false;
+    private bool isVisibleCapturaError = false;
+
+    private async Task OnChangeListBox(object args)
+    {
+        Console.WriteLine($@"Motivo o Tipo de Solicitud: {oSolicitudTicket.SolIdTipoSolicitud}");
+
+        @* DATOS DE ARCHIVOS PDF USUARIO *@
+        oSolicitudTicket.SolFileNameCurp = "";
+        oSolicitudTicket.SolFileSizeCurp = 0L;
+        if (idTipoPersonal == 1 || idTipoPersonal == 2 || idTipoPersonal == 3)
+        {
+            oSolicitudTicket.SolFileNameComprobanteInscripcion = "";
+            oSolicitudTicket.SolFileSizeComprobanteInscripcion = 0L;
+        }
+        else
+        {
+            oSolicitudTicket.SolFileNameComprobanteInscripcion = "-";
+            oSolicitudTicket.SolFileSizeComprobanteInscripcion = 1L;
+        }
+        @* DATOS DE CAMBIO DE NO. DE CELULAR O CORREO PERSONAL *@
+        oSolicitudTicket.SolNoCelularNuevo = "00 00 00 00 00";
+        oSolicitudTicket.SolCorreoPersonalCuentaNueva = "a@test.com";
+        
+        await oUploadFile_SolFileNameCurp.ClearFiles();
+        await oUploadFile_SolFileNameComprobanteInscripcion.ClearFiles();
+        await oUploadFile_SolCapturaEscaneoAntivirus.ClearFiles();
+        await oUploadFile_SolCapturaCuentaBloqueada.ClearFiles();
+        await oUploadFile_SolCapturaError.ClearFiles();
+
+        oFileInfoSolCurp = null;
+        oFileInfoSolComprobanteInscripcion = null;
+        oFileInfoSolCapturaEscaneoAntivirus = null;
+        oFileInfoSolCapturaCuentaBloqueada = null;
+        oFileInfoSolCapturaError = null;
+
+        if (oSolicitudTicket.SolIdTipoSolicitud == 1)                   // 1. Bloqueo de Cuenta
+        {
+            @* DATOS DE ARCHIVOS PDF CAPTURAS *@
+            oSolicitudTicket.SolCapturaEscaneoAntivirus = "";
+            oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 0L;
+            oSolicitudTicket.SolCapturaCuentaBloqueada = "";
+            oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada = 0L;
+            oSolicitudTicket.SolCapturaError = "-";
+            oSolicitudTicket.SolFileSizeCapturaError = 1L;
+
+            isVisibleNoCelularNuevo = false;
+            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleCapturaCuentaBloqueada = true;
+            isVisibleCapturaEscaneoAntivirus = true;
+            isVisibleCapturaError = false;
+        }
+        else if (oSolicitudTicket.SolIdTipoSolicitud == 2)              // 2. Cambio de Correo Electrónico Personal
+        {
+            oSolicitudTicket.SolCorreoPersonalCuentaNueva = "";
+            @* DATOS DE ARCHIVOS PDF CAPTURAS *@
+            oSolicitudTicket.SolCapturaEscaneoAntivirus = "-";
+            oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 1L;
+            oSolicitudTicket.SolCapturaCuentaBloqueada = "-";
+            oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada = 1L;
+            oSolicitudTicket.SolCapturaError = "-";
+            oSolicitudTicket.SolFileSizeCapturaError = 1L;
+
+            isVisibleNoCelularNuevo = false;
+            isVisibleCuentaCorreoPersonalNuevo = true;
+            isVisibleCapturaCuentaBloqueada = false;
+            isVisibleCapturaEscaneoAntivirus = false;
+            isVisibleCapturaError = false;
+        }
+        else if (oSolicitudTicket.SolIdTipoSolicitud == 3)              // 3. Cambio de Número de Celular
+        {
+            oSolicitudTicket.SolNoCelularNuevo = "";
+            @* DATOS DE ARCHIVOS PDF CAPTURAS *@
+            oSolicitudTicket.SolCapturaEscaneoAntivirus = "-";
+            oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 1L;
+            oSolicitudTicket.SolCapturaCuentaBloqueada = "-";
+            oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada = 1L;
+            oSolicitudTicket.SolCapturaError = "-";
+            oSolicitudTicket.SolFileSizeCapturaError = 1L;
+
+            isVisibleNoCelularNuevo = true;
+            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleCapturaCuentaBloqueada = false;
+            isVisibleCapturaEscaneoAntivirus = false;
+            isVisibleCapturaError = false;
+        }
+        else if (oSolicitudTicket.SolIdTipoSolicitud == 4)              // 4. Correo Electrónico de Egresado
+        {
+            @* DATOS DE ARCHIVOS PDF CAPTURAS *@
+            oSolicitudTicket.SolCapturaEscaneoAntivirus = "-";
+            oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 1L;
+            oSolicitudTicket.SolCapturaCuentaBloqueada = "-";
+            oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada = 1L;
+            oSolicitudTicket.SolCapturaError = "-";
+            oSolicitudTicket.SolFileSizeCapturaError = 1L;
+
+            isVisibleNoCelularNuevo = false;
+            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleCapturaCuentaBloqueada = false;
+            isVisibleCapturaEscaneoAntivirus = false;
+            isVisibleCapturaError = false;
+        }
+        else if (oSolicitudTicket.SolIdTipoSolicitud == 5)              // 5. Creación o Activación de Correo Institucional
+        {
+            @* DATOS DE ARCHIVOS PDF CAPTURAS *@
+            oSolicitudTicket.SolCapturaEscaneoAntivirus = "-";
+            oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 1L;
+            oSolicitudTicket.SolCapturaCuentaBloqueada = "-";
+            oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada = 1L;
+            oSolicitudTicket.SolCapturaError = "-";
+            oSolicitudTicket.SolFileSizeCapturaError = 1L;
+
+            isVisibleNoCelularNuevo = false;
+            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleCapturaCuentaBloqueada = false;
+            isVisibleCapturaEscaneoAntivirus = false;
+            isVisibleCapturaError = false;
+        }
+        else if (oSolicitudTicket.SolIdTipoSolicitud == 6)              // 6. Recuperación de Contraseña
+        {
+            @* DATOS DE ARCHIVOS PDF CAPTURAS *@
+            oSolicitudTicket.SolCapturaEscaneoAntivirus = "-";
+            oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 1L;
+            oSolicitudTicket.SolCapturaCuentaBloqueada = "-";
+            oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada = 1L;
+            oSolicitudTicket.SolCapturaError = "-";
+            oSolicitudTicket.SolFileSizeCapturaError = 1L;
+
+            isVisibleNoCelularNuevo = false;
+            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleCapturaCuentaBloqueada = false;
+            isVisibleCapturaEscaneoAntivirus = false;
+            isVisibleCapturaError = false;
+        }
+        else if (oSolicitudTicket.SolIdTipoSolicitud == 7)              // 7. Otro motivo de Solicitud (por error)
+        {
+            @* DATOS DE ARCHIVOS PDF CAPTURAS *@
+            oSolicitudTicket.SolCapturaEscaneoAntivirus = "-";
+            oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 1L;
+            oSolicitudTicket.SolCapturaCuentaBloqueada = "-";
+            oSolicitudTicket.SolFileSizeCapturaCuentaBloqueada = 1L;
+            oSolicitudTicket.SolCapturaError = "";
+            oSolicitudTicket.SolFileSizeCapturaError = 0L;
+
+            isVisibleNoCelularNuevo = false;
+            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleCapturaCuentaBloqueada = false;
+            isVisibleCapturaEscaneoAntivirus = false;
+            isVisibleCapturaError = true;
+        }
+    }
+
     @*///////////////////////////////////////////////  VALIDAR CAMPOS DEL FORMULARIO ARCHIVOS PARA SUBIR  ///////////////////////////////////////////////*@
     // Subida de archivo
+    private RadzenUpload oUploadFile_SolFileNameCurp = new();
+    private RadzenUpload oUploadFile_SolFileNameComprobanteInscripcion = new();
     private RadzenUpload oUploadFile_SolCapturaEscaneoAntivirus = new();
     private RadzenUpload oUploadFile_SolCapturaCuentaBloqueada = new();
     private RadzenUpload oUploadFile_SolCapturaError = new();
+    private IEnumerable<FileInfo>? oFileInfoSolCurp { get; set; }
+    private IEnumerable<FileInfo>? oFileInfoSolComprobanteInscripcion { get; set; }
     private IEnumerable<FileInfo>? oFileInfoSolCapturaEscaneoAntivirus { get; set; }
     private IEnumerable<FileInfo>? oFileInfoSolCapturaCuentaBloqueada { get; set; }
     private IEnumerable<FileInfo>? oFileInfoSolCapturaError { get; set; }
 
-    async Task OnChangeFiles(UploadChangeEventArgs args, string name)
+    private async Task OnChangeFiles(UploadChangeEventArgs args, string name)
     {
         foreach (var file in args.Files)
         {
-            if (name == CapturaEscaneoAntivirus)
+            if (name == CURP)
+            {
+                oSolicitudTicket.SolFileNameCurp = $"{CURP}_{oGuid}{Path.GetExtension(file.Name).ToLower()}";
+                oSolicitudTicket.SolFileSizeCurp = file.Size; // bytes
+                oFileInfoSolCurp = args.Files;
+            }
+            else if (name == ComprobanteInscripcion)
+            {
+                oSolicitudTicket.SolFileNameComprobanteInscripcion = $"{ComprobanteInscripcion}_{oGuid}{Path.GetExtension(file.Name).ToLower()}";
+                oSolicitudTicket.SolFileSizeComprobanteInscripcion = file.Size; // bytes
+                oFileInfoSolComprobanteInscripcion = args.Files;
+            }
+            else if (name == CapturaEscaneoAntivirus)
             {
                 oSolicitudTicket.SolCapturaEscaneoAntivirus = $"{CapturaEscaneoAntivirus}_{oGuid}{Path.GetExtension(file.Name).ToLower()}";
                 oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = file.Size; // bytes
@@ -396,7 +618,10 @@ else
     private bool busyLoading = false;
     private bool DisablePostButton => !ValidReCAPTCHA;
     private Response<RequestViewModel_TipoSolicitud>? oTipoSolicitud = new();
-    private string folder = "Solicitudes-Tickets";
+    private string folderUsuarios = "Usuarios";
+    private string folderSolicitudes = "Solicitudes-Tickets";
+    private string CURP = "CURP";
+    private string ComprobanteInscripcion = "Comprobante-Inscripcion";
     private string CapturaEscaneoAntivirus = "CapturaEscaneoAntivirus";
     private string CapturaCuentaBloqueada = "CapturaCuentaBloqueada";
     private string CapturaError = "CapturaError";
@@ -411,8 +636,6 @@ else
             oTipoSolicitud = await servicioTipoSolicitud.GetDataByIdAsync(oSolicitudTicket.SolIdTipoSolicitud);
 
             var verification = await servicioSolicitud.GetDataByIdUsuarioStatusAsync(oResponseUsuario.Data.IdUsuario);
-
-            Console.WriteLine(oResponseUsuario.Data.IdUsuario);
 
             if (ValidReCAPTCHA && verification?.Success == 1)
             {
@@ -517,24 +740,38 @@ else
                         </body>";
 
                     @*//  UPLOAD FILES  //*@
+                    if (oFileInfoSolCurp is not null)
+                    {
+                        oSolicitudTicket.SolFileNameCurp = $"{CURP}{Path.GetExtension(oSolicitudTicket.SolFileNameCurp).ToLower()}";
+                        oUploadFile_SolFileNameCurp.Url = $@"api/RepositoryFiles/UploadSingleFile/{folderUsuarios}/{oResponseUsuario.Data.IdUsuario}/{oSolicitudTicket.SolFileNameCurp}/{oGuid}";
+                        await oUploadFile_SolFileNameCurp.Upload();
+                    }
+                    
+                    if (oFileInfoSolComprobanteInscripcion is not null)
+                    {
+                        oSolicitudTicket.SolFileNameComprobanteInscripcion = $"{ComprobanteInscripcion}{Path.GetExtension(oSolicitudTicket.SolFileNameComprobanteInscripcion).ToLower()}";
+                        oUploadFile_SolFileNameComprobanteInscripcion.Url = $@"api/RepositoryFiles/UploadSingleFile/{folderUsuarios}/{oResponseUsuario.Data.IdUsuario}/{oSolicitudTicket.SolFileNameComprobanteInscripcion}/{oGuid}";
+                        await oUploadFile_SolFileNameComprobanteInscripcion.Upload();
+                    }
+
                     if (oFileInfoSolCapturaEscaneoAntivirus is not null)
                     {
                         oSolicitudTicket.SolCapturaEscaneoAntivirus = $"{CapturaEscaneoAntivirus}{Path.GetExtension(oSolicitudTicket.SolCapturaEscaneoAntivirus).ToLower()}";
-                        oUploadFile_SolCapturaEscaneoAntivirus.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oSolicitudTicket.SolCapturaEscaneoAntivirus}/{oGuid}";
+                        oUploadFile_SolCapturaEscaneoAntivirus.Url = $@"api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaEscaneoAntivirus}/{oGuid}";
                         await oUploadFile_SolCapturaEscaneoAntivirus.Upload();
                     }
 
                     if (oFileInfoSolCapturaCuentaBloqueada is not null)
                     {
                         oSolicitudTicket.SolCapturaCuentaBloqueada = $"{CapturaCuentaBloqueada}{Path.GetExtension(oSolicitudTicket.SolCapturaCuentaBloqueada).ToLower()}";
-                        oUploadFile_SolCapturaCuentaBloqueada.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oSolicitudTicket.SolCapturaCuentaBloqueada}/{oGuid}";
+                        oUploadFile_SolCapturaCuentaBloqueada.Url = $@"api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaCuentaBloqueada}/{oGuid}";
                         await oUploadFile_SolCapturaCuentaBloqueada.Upload();
                     }
 
-                    if (oFileInfoSolCapturaCuentaBloqueada is not null)
+                    if (oFileInfoSolCapturaError is not null)
                     {
                         oSolicitudTicket.SolCapturaError = $"{CapturaError}{Path.GetExtension(oSolicitudTicket.SolCapturaError).ToLower()}";
-                        oUploadFile_SolCapturaError.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oSolicitudTicket.SolCapturaError}/{oGuid}";
+                        oUploadFile_SolCapturaError.Url = $@"api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaError}/{oGuid}";
                         await oUploadFile_SolCapturaError.Upload();
                     }
 

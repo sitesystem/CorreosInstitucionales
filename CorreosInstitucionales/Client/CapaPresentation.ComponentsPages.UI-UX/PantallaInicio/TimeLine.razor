@@ -126,7 +126,7 @@
                     <div class="col-md-10 offset-1">
                         <RadzenText TextStyle="TextStyle.Subtitle1" TextAlign="TextAlign.Center" Style="font-variant: small-caps;" class="text-danger" Text="@(oSolicitudLastTicket?.Data?.SolIdEstadoSolicitudNavigation?.EdosolNombreEstado)" />
                         @* <RadzenSlider TValue="IEnumerable<int>" Min="0" Max="100" Range="true" Value="@(new int[] { 0, 66 })" Step="1" Disabled="false" Visible="true" class="w-100 my-3" /> *@
-                        <RadzenProgressBar Min="0" Max="100" Unit="%" @bind-Value="@valueProgress" ShowValue="true" ProgressBarStyle="@oProgressBarCircularStyle" Mode="ProgressBarMode.Determinate" Visible="true" class="mt-2" />
+                        <RadzenProgressBar Min="0" Max="100" Unit="% de Progreso" @bind-Value="@valueProgress" ShowValue="true" ProgressBarStyle="@oProgressBarCircularStyle" Mode="ProgressBarMode.Determinate" Visible="true" class="mt-2" />
                     </div>
 
                     <RadzenTimeline Orientation="Orientation.Horizontal" LinePosition="LinePosition.Start" Reverse="false"
@@ -275,7 +275,7 @@
                                 </RadzenStack>
                             </div>
 
-                            <div class="col-md-6 col-lg-6">
+                            <div class="col-md-6 col-lg-6 mb-3">
                                 <RadzenFormField Text="Observaciones" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100">
                                     <Start><RadzenIcon Icon="message" IconColor="@Colors.Base400" /></Start>
                                     <ChildContent>
@@ -531,6 +531,68 @@ else
                             // DetailContent = ns => @<RadzenButton Text="Clear" Click="@(args => ns.Messages.Clear())" />
                         });
 
+                    @*//  DIALOG MESSAGE REGISTRO EXITOSO  //*@
+                    DialogModalService.Open($@"<span style='font-variant: small-caps; font-size:18px;'>Mensaje<span>", ds =>
+                        @<div>
+                            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="5px" Class="">
+                                <span class="circle-border">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16" style="color: green; font-weight: bold;">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+                                    </svg>
+                                </span>
+                                <RadzenText TextStyle="TextStyle.Body1" class="text-success"><b>¡Encuesta de Calidad contestada exitosamente!</b></RadzenText>
+                            </RadzenStack>
+                            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="">
+                                <RadzenStack Gap="0px">
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">#TICKET:</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oSolicitudLastTicket?.Data?.IdSolicitudTicket</b></RadzenText>
+                                </RadzenStack>
+                                <RadzenStack Gap="0px">
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Motivo / Incidencia de la Solicitud:</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oSolicitudLastTicket?.Data?.SolIdTipoSolicitudNavigation?.TiposolDescripcion</b></RadzenText>
+                                </RadzenStack>
+                                <RadzenStack Gap="0px">
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Calificación:</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oEncuestaCalidad.Calificacion</b></RadzenText>
+                                </RadzenStack>
+                                <RadzenStack Gap="0px">
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Observaciones / Comentarios:</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oEncuestaCalidad.Comentarios</b></RadzenText>
+                                </RadzenStack>
+                                <RadzenStack Gap="0px">
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Fecha / Hora:</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1"><b>@DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'")</b></RadzenText>
+                                </RadzenStack>
+                                <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light"
+                                             ShowIcon="true" AllowClose="false" class="mb-0" Visible="true">
+                                    Sus <b>Credenciales del Correo Electrónico Institucional</b> se generaron exitosamente,<br />
+                                    podrá visualizarlas en la plataforma SACI así como se les enviará por correo.
+                                </RadzenAlert>
+                                <RadzenButton Text="Cerrar"
+                                              BusyText=""
+                                              ButtonStyle="ButtonStyle.Warning"
+                                              ButtonType="ButtonType.Button"
+                                              IsBusy="false"
+                                              Icon="cancel"
+                                              class="rz-color-white rz-ripple rz-my-0 w-100"
+                                              Shade="Shade.Darker"
+                                              Click="@(() => ds.Close(false))" />
+                            </RadzenStack>
+                        </div>,
+                        new DialogOptions()
+                        {
+                            CloseDialogOnOverlayClick = false,
+                            CloseDialogOnEsc = false,
+                            Width = "Auto",
+                            Height = "Auto",
+                            Resizable = true,
+                            ShowTitle = true,
+                            ShowClose = true,
+                            Draggable = true,
+                            CssClass = "custom-dialog-class",
+                            WrapperCssClass = "custom-dialog-wrapper-class"
+                        });
+
                     @*//  ENVÍO DE CORREO ELECTRÓNICO PARA AVISO DE CREDENCIALES GENERADAS  //*@
                     await servicioSendEmail.SendEmailAsync(
                         new RequestDTO_SendEmail()
@@ -586,68 +648,6 @@ else
 		                            </div>
 	                            </footer>
                             </body>"
-                        });
-
-                    @*//  DIALOG MESSAGE REGISTRO EXITOSO  //*@
-                    await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>Mensaje<span>", ds =>
-                        @<div>
-                            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="5px" Class="">
-                                <span class="circle-border">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16" style="color: green; font-weight: bold;">
-                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
-                                    </svg>
-                                </span>
-                                <RadzenText TextStyle="TextStyle.Body1" class="text-success"><b>¡Encuesta de Calidad contestada exitosamente!</b></RadzenText>
-                            </RadzenStack>
-                            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="">
-                                <RadzenStack Gap="0px">
-                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">#TICKET:</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oSolicitudLastTicket?.Data?.IdSolicitudTicket</b></RadzenText>
-                                </RadzenStack>
-                                <RadzenStack Gap="0px">
-                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Motivo / Incidencia de la Solicitud:</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oSolicitudLastTicket?.Data?.SolIdTipoSolicitudNavigation?.TiposolDescripcion</b></RadzenText>
-                                </RadzenStack>
-                                <RadzenStack Gap="0px">
-                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Calificación:</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oEncuestaCalidad.Calificacion</b></RadzenText>
-                                </RadzenStack>
-                                <RadzenStack Gap="0px">
-                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Observaciones / Comentarios:</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oEncuestaCalidad.Comentarios</b></RadzenText>
-                                </RadzenStack>
-                                <RadzenStack Gap="0px">
-                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Fecha / Hora:</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'")</b></RadzenText>
-                                </RadzenStack>
-                                <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light"
-                                             ShowIcon="true" AllowClose="false" class="mb-0" Visible="true">
-                                             Sus <b>Credenciales del Correo Electrónico Institucional</b> se generaron exitosamente,<br />
-                                             podrá visualizarlas en la plataforma SACI así como se les enviará por correo.
-                                </RadzenAlert>
-                                <RadzenButton Text="Cerrar"
-                                              BusyText=""
-                                              ButtonStyle="ButtonStyle.Warning"
-                                              ButtonType="ButtonType.Button"
-                                              IsBusy="false"
-                                              Icon="cancel"
-                                              class="rz-color-white rz-ripple rz-my-0 w-100"
-                                              Shade="Shade.Darker"
-                                              Click="@(() => ds.Close(false))" />
-                            </RadzenStack>
-                        </div>,
-                        new DialogOptions()
-                        {
-                            CloseDialogOnOverlayClick = false,
-                            CloseDialogOnEsc = false,
-                            Width = "Auto",
-                            Height = "Auto",
-                            Resizable = true,
-                            ShowTitle = true,
-                            ShowClose = true,
-                            Draggable = true,
-                            CssClass = "custom-dialog-class",
-                            WrapperCssClass = "custom-dialog-wrapper-class"
                         });
 
                     await LoadingPage();

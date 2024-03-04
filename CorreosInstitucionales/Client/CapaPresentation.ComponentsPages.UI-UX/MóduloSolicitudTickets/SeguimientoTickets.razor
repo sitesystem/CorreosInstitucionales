@@ -65,7 +65,7 @@
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Motivo de la Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="210px">
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="205px">
                         <HeaderTemplate>
                             <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
                                   title="<b>Motivo de la Solicitud-Ticket</b>" data-bs-content="Problema o incidencia requerido por usuario para atención.">
@@ -77,7 +77,7 @@
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Observaciones" Property="SolObservacionesSolicitud"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="170px">
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="160px">
                         <HeaderTemplate>
                             <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
                                   title="<b>Observaciones</b>" data-bs-content="Mención de observaciones, comentarios, notas, aclaraciones adicionales por parte del usuario.">
@@ -89,19 +89,9 @@
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Archivos PDF" Property=""
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="210px">
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="205px">
                         <Template Context="data">
                             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
-                                <RadzenButton Text="Captura Escaneo Antivirus"
-                                              Size="ButtonSize.ExtraSmall"
-                                              ButtonStyle="ButtonStyle.Secondary"
-                                              ButtonType="ButtonType.Button"
-                                              Variant="Variant.Flat"
-                                              Icon="visibility"
-                                              class="rz-ripple rz-my-0 w-100"
-                                              Click="@(() => ShowDialogModal_iFrame($@"/Repositorio/Solicitudes-Tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaEscaneoAntivirus}", "Archivo PDF de la Captura de Escaneo Antivirus"))"
-                                              Shade="Shade.Light"
-                                              Visible="true" />
                                 <RadzenButton Text="Captura Cuenta Bloqueada"
                                               Size="ButtonSize.ExtraSmall"
                                               ButtonStyle="ButtonStyle.Secondary"
@@ -111,7 +101,17 @@
                                               class="rz-ripple rz-my-0 w-100"
                                               Click="@(() => ShowDialogModal_iFrame($@"/Repositorio/Solicitudes-Tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaCuentaBloqueada}", "Archivo PDF de la Captura de Cuenta Bloqueada"))"
                                               Shade="Shade.Light"
-                                              Visible="true" />
+                                              Visible="@(data.SolCapturaCuentaBloqueada != "-")" />
+                                <RadzenButton Text="Captura Escaneo Antivirus"
+                                              Size="ButtonSize.ExtraSmall"
+                                              ButtonStyle="ButtonStyle.Secondary"
+                                              ButtonType="ButtonType.Button"
+                                              Variant="Variant.Flat"
+                                              Icon="visibility"
+                                              class="rz-ripple rz-my-0 w-100"
+                                              Click="@(() => ShowDialogModal_iFrame($@"/Repositorio/Solicitudes-Tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaEscaneoAntivirus}", "Archivo PDF de la Captura de Escaneo Antivirus"))"
+                                              Shade="Shade.Light"
+                                              Visible="@(data.SolCapturaEscaneoAntivirus != "-")" />
                                 <RadzenButton Text="Captura Error"
                                               Size="ButtonSize.ExtraSmall"
                                               ButtonStyle="ButtonStyle.Secondary"
@@ -121,12 +121,12 @@
                                               class="rz-ripple rz-my-0 w-100"
                                               Click="@(() => ShowDialogModal_iFrame($@"/Repositorio/Solicitudes-Tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaError}", "Archivo PDF de la Captura de Error"))"
                                               Shade="Shade.Darker"
-                                              Visible="true" />
+                                              Visible="@(data.SolCapturaError != "-")" />
                             </RadzenStack>
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Validación de Datos" Property="SolValidacionDatos"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="120px">
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="115px">
                         <HeaderTemplate>
                             <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
                                   title="<b>Validación de Datos</b>" data-bs-content="Se revisan y validan sus datos para darle seguimiento al proceso de atención.">
@@ -140,7 +140,7 @@
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Property="SolIdEstadoSolicitudNavigation.EdosolNombreEstado"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="250px">
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="270px">
                         <Template Context="data">
                             @{
                                 if(data.SolIdEstadoSolicitud == 2)
@@ -196,7 +196,7 @@
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Fecha / Hora de Creación" Property="SolFechaHoraCreacion" HeaderTooltip="Fecha y Hora"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" FormatString="{0:dddd, dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt}" Width="240px">
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" FormatString="{0:dddd, dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt}" Width="230px">
                         <Template Context="data">
                             <div class="text-wrap">@data.SolFechaHoraCreacion.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt")</div>
                         </Template>

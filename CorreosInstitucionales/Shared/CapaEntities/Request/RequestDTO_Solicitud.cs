@@ -10,6 +10,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
     public class RequestDTO_Solicitud
     {
+        /*******************************  DATOS ID LA SOLICITUD  *******************************/
         /// <summary>
         /// PK ID Único de la Solicitud
         /// </summary>
@@ -36,11 +37,36 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         [Column("solIdUsuario")]
         public int SolIdUsuario { get; set; }
 
-        [StringLength(100)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO PERSONAL NUEVO requerido.")]
-        [RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO PERSONAL inválido. (Formato: xxxxxx@xxx.xx)")]
-        public string? SolCorreoPersonalCuentaNueva { get; set; }
+        /*******************************  DATOS DE ARCHIVOS PDF DEL USUARIO  *******************************/
+        /// <summary>
+        /// Nombre del Archivo PDF del CURP del Usuario
+        /// </summary>
+        [Column("solFileNameCURP")]
+        [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del CURP adjuntado debe ser máximo de 200 caracteres.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del CURP requerido.")]
+        public string? SolFileNameCurp { get; set; }
 
+        /// <summary>
+        /// Tamaño del Archivo PDF del CURP del Usuario
+        /// </summary>
+        [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF del CURP adjuntado debe ser máximo de 2 MB.")]
+        public long? SolFileSizeCurp { get; set; }
+
+        /// <summary>
+        /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP-10
+        /// </summary>
+        [Column("solFileNameComprobanteInscripcion")]
+        [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/HORARIO adjuntado debe ser máximo de 200 caracteres.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del Comprobante de Inscripción requerido.")]
+        public string? SolFileNameComprobanteInscripcion { get; set; }
+
+        /// <summary>
+        /// Tamaño del Archivo PDF del Comprobante de Inscripción del Usuario
+        /// </summary>
+        [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/HORARIO adjuntado debe ser máximo de 2 MB.")]
+        public long? SolFileSizeComprobanteInscripcion { get; set; }
+
+        /*******************************  DATOS DE CAMBIO DE NO. CELULAR O CORREO PERSONAL  *******************************/
         /// <summary>
         /// Número Celular Anterior del Usuario
         /// </summary>
@@ -49,6 +75,12 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR NUEVO requerido.")]
         public string? SolNoCelularNuevo { get; set; }
 
+        [StringLength(100)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO PERSONAL NUEVO requerido.")]
+        [RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO PERSONAL inválido. (Formato: xxxxxx@xxx.xx)")]
+        public string? SolCorreoPersonalCuentaNueva { get; set; }
+
+        /*******************************  DATOS DE ARCHIVOS PDF CAPTURAS  *******************************/
         /// <summary>
         /// Nombre del Archivo PDF de la Captura del Escaneo del Antivirus
         /// </summary>
@@ -91,6 +123,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF CAPTURA ERROR adjuntado debe ser máximo de 2 MB.")]
         public long? SolFileSizeCapturaError { get; set; }
 
+        /*******************************  OTROS DATOS  *******************************/
         /// <summary>
         /// Observación y/o comentario del problema de la Solicitud-Ticket.
         /// </summary>
@@ -111,6 +144,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         [Column("solValidacionDatos")]
         public bool SolValidacionDatos { get; set; }
 
+        /*******************************  ENCUESTA DE CALIDAD  *******************************/
         /// <summary>
         /// Calificación de la Encuesta de Calidad con emojis caritas o estrellas.
         /// </summary>
