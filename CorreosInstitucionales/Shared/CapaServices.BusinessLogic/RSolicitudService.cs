@@ -31,9 +31,9 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
-        public async Task<Response<List<RequestDTO_Solicitud>>?> GetAllDataByProgressAsync(int progress)
+        public async Task<Response<List<RequestDTO_Solicitud>>?> GetAllDataByProgressAsync(int[] progress)
         {
-            var response = await _httpClient.GetAsync($"{url}/filterByProgress/{progress}");
+            var response = await _httpClient.PostAsJsonAsync($"{url}/filterByProgress", progress, _options);
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<Response<List<RequestDTO_Solicitud>>>(content, options: _options);
             return result;

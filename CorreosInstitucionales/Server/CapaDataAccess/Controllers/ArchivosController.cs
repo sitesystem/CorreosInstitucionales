@@ -18,9 +18,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
 
-        private void WriteZip(string filename, List<WebUtils.Link> files, string root_directory = "")
+        private string? WriteZip(string filename, List<WebUtils.Link> files, string root_directory = "")
         {
-            string fname = string.Empty;
+            string z_name = string.Empty;
+            string z_filename = string.Empty;
+            string? log = null;
+
+            StringBuilder sb = new();
+            bool guardar_log = false;
 
             using (FileStream fs = new FileStream(filename, FileMode.CreateNew))
             {
@@ -28,18 +33,40 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 {
                     foreach (WebUtils.Link file in files)
                     {
-                        fname = file.Name == "#" ? Path.GetFileName(file.Url) : file.Name;
+                        z_filename = $"{root_directory}{file.Url}";
 
-                        za.CreateEntryFromFile
-                        (
-                            $"{root_directory}{file.Url}",
-                            fname
-                        );
+                        if (!System.IO.File.Exists(z_filename))
+                        {
+                            sb.AppendLine($"NO EXISTE EL ARCHIVO {z_filename}");
+                            guardar_log = true;
+                            continue;
+                        }
+
+                        z_name = file.Name == "#" ? Path.GetFileName(file.Url) : file.Name;
+
+                        za.CreateEntryFromFile(z_filename,z_name);
+                    }
+
+                    if(guardar_log)
+                    {
+                        log = sb.ToString();
+
+                        ZipArchiveEntry logfile = za.CreateEntry("log.txt");
+                        using (Stream stream = logfile.Open())
+                        {
+                            using(StreamWriter sw = new StreamWriter(stream, Encoding.UTF8))
+                            {
+                                sw.Write(log);
+                                sw.Flush();
+                            }
+                        }
                     }
                 }
 
                 fs.Position = 0;
             }
+
+            return log;
         }
 
         private string GenerarNombreAdjunto(MtTbSolicitudesTicket solicitud, string archivo, string tipo = "ARCHIVO")
@@ -77,7 +104,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             XLWorkbook wb = new XLWorkbook($"{base_directory}/{template_fn}");
             IXLWorksheet ws = wb.Worksheet(1);
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder errors = new StringBuilder();
+            bool save_log = false;
 
             int i = 5;
             string rol = string.Empty;
@@ -109,7 +137,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             };
 
             string? id_externo_usuario = string.Empty;
-
+            
             try
             {
                 pendientes = await Task.Run(
@@ -206,7 +234,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 files.Add(new WebUtils.Link(filename + ".xlsx"));
 
-                WriteZip($"{base_directory}/{filename}.zip", files, base_directory + "/" );
+                string? zip_errors = WriteZip($"{base_directory}/{filename}.zip", files, base_directory + "/" );
+
+                if(zip_errors is not null)
+                {
+                    errors.AppendLine(zip_errors);
+                    save_log = true;
+                }
                 
                 if (return_zip)
                 {
@@ -221,15 +255,19 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }
             catch (Exception ex)
             {
-                sb.AppendLine(ex.Message);
+                errors.AppendLine(ex.Message);
+                save_log = true;
 
-                System.IO.File.WriteAllText($"{base_directory}/{filename}.txt", rol.ToString());
-
-                oResponse.Message = ex.Message;
-                oResponse.Data.Add(new WebUtils.Link($"{base_directory}/{filename}.txt"));
-
-                Response.Clear();
+                //Response.Clear();
                 Response.StatusCode = 500;
+            }
+
+            if(save_log)
+            {
+                System.IO.File.WriteAllText($"{base_directory}/{filename}.txt", errors.ToString());
+
+                oResponse.Message = errors.ToString();
+                oResponse.Data.Add(new WebUtils.Link($"{base_directory}/{filename}.txt"));
             }
 
             return Ok(oResponse);

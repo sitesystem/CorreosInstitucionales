@@ -30,7 +30,9 @@
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
         <RadzenPanelMenuItem Text="Solicitudes de (Tickets)" Icon="bookmarks" IconColor="@Colors.PrimaryLight" Style="font-size:16px;" Expanded="true" class="nav-menu-hover">
             @*************************** Solicitudes (Ticket's) Pendientes ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" IconColor="@Colors.Warning" Path="SolicitudesPendientes" class="nav-menu-hover" />
+            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" IconColor="@Colors.PrimaryLight" Path="SolicitudesPendientes" class="nav-menu-hover" />
+            @*************************** Solicitudes (Ticket's) en Proceso ***************************@
+            <RadzenPanelMenuItem Text="Solicitudes en Proceso" Icon="hourglass_empty" IconColor="@Colors.Warning" Path="SolicitudesProceso" class="nav-menu-hover" />
             @*************************** Solicitudes (Ticket's) Atendidas ***************************@
             <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" IconColor="@Colors.SuccessLight" Path="SolicitudesAtendidas" class="nav-menu-hover" />
         </RadzenPanelMenuItem>
@@ -60,6 +62,14 @@
             <RadzenPanelMenuItem Text="Solicitudes" Icon="supervisor_account" Path="catalogo/solicitudes" class="rz-border-base-800" />
 
         </RadzenPanelMenuItem>
+
+        @*************************** DEBUG ***************************@
+        <RadzenPanelMenuItem Text="DEBUG" Icon="extension" IconColor="@Colors.Success" Style="font-size:16px;">
+            <RadzenPanelMenuItem Text="Objecto a UI" Icon="label_outline" Path="debug/catalogos" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Correos" Icon="markunread_mailbox" Path="debug/correos" class="rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Settings" Icon="settings" Path="debug/settings" class="rz-border-base-800" />
+        </RadzenPanelMenuItem>
+
         @*************************** tbUsuarios ***************************@
         <RadzenPanelMenuItem Text="Lista de Usuarios" Icon="people_alt" IconColor="@Colors.SecondaryLight" Style="font-size:16px;" Path="catalogo/usuarios" />
         @*************************** Perfil ***************************@
@@ -83,6 +93,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        
         var authState = await servicioAuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 

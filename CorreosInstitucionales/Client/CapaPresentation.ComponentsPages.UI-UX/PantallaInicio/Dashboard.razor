@@ -146,6 +146,7 @@
     </RadzenFieldset>
 </RadzenCard>
 
+<pre>@debug</pre>
 
 @code
 {
@@ -166,6 +167,7 @@
     List<IntDataItem> volumen_atendidos = new();
     List<IntDataItem> volumen_cancelados = new();
 
+    private string debug = string.Empty;
 
     public async Task CargarEstadisticas()
     {
@@ -173,21 +175,43 @@
 
         if (response is not null && response.Data is not null)
         {
-            estado_solicitudes = response.Data;
+            if(response.Success == 1)
+            {
+                estado_solicitudes = response.Data;
+            }
+            else
+            {
+                debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {response.Message}";
+            }
+            
         }
 
         response = await estadisticas.GetStatByName("diarias", inicio, fin);
 
         if (response is not null && response.Data is not null)
         {
-            solicitudes_diarias = response.Data;
+            if (response.Success == 1)
+            {
+                solicitudes_diarias = response.Data;
+            }
+            else
+            {
+                debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {response.Message}";
+            }
         }
 
         response = await estadisticas.GetStatByName("calidad", inicio, fin);
 
         if (response is not null && response.Data is not null)
         {
-            encuesta_calidad = response.Data;
+            if (response.Success == 1)
+            {
+                encuesta_calidad = response.Data;
+            }
+            else
+            {
+                debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {response.Message}";
+            }
         }
 
         Response<Dictionary<string, List<IntDataItem>>>? volumen_req = await estadisticas.GetDictionaryStatsByName("volumen", inicio, fin);
