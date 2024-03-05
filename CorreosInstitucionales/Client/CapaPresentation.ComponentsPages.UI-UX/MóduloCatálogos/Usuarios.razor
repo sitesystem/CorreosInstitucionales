@@ -120,6 +120,11 @@
         if (firstRender)
         {
             items = await WebUtils.ListByStatusAsync(servicioUsuario, false);
+            cat_UsuIdAreaDepto = await WebUtils.ListByStatusAsync(servicioAreaDepto);
+            cat_UsuIdCarrera = await WebUtils.ListByStatusAsync(servicioCarrera);
+            cat_UsuIdRol = await WebUtils.ListByStatusAsync(servicioRol);
+            cat_UsuIdTipoPersonal = await WebUtils.ListByStatusAsync(servicioTipoPersonal);
+
             cargado = true;
             StateHasChanged();
         }
@@ -141,9 +146,13 @@
                 (
                     "Actualizar Datos",
                     new Dictionary<string, object>()
-                                        {
-                        {"registro", registro}
-                                        },
+                    {
+                        {"registro", registro},
+                        {"cat_UsuIdAreaDepto",cat_UsuIdAreaDepto},
+                        {"cat_UsuIdCarrera",cat_UsuIdCarrera},
+                        {"cat_UsuIdRol",cat_UsuIdRol},
+                        {"cat_UsuIdTipoPersonal",cat_UsuIdTipoPersonal}
+                    },
                     new DialogOptions()
                         {
                             ShowClose = false,
