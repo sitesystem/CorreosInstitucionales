@@ -164,6 +164,10 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         [Column("solFechaHoraEncuesta", TypeName = "datetime")]
         public DateTime? SolFechaHoraEncuesta { get; set; }
 
+        [Column("solRespuestaDCyC")]
+        [StringLength(300)]
+        public string? SolRespuestaDcyC { get; set; }
+
         /// <summary>
         /// Fecha Hora de la creación de la Solicitud-Ticket.
         /// </summary>

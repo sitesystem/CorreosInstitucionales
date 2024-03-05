@@ -122,6 +122,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     // DATOS LABORALES
                     UsuNumeroEmpleado = model.UsuNumeroEmpleado,
                     UsuIdAreaDepto = model.UsuIdAreaDepto,
+                    UsuNoExtensionAnterior = model.UsuNoExtensionAnterior,
                     UsuNoExtension = model.UsuNoExtension,
                     // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                     UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior,
@@ -189,6 +190,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     // DATOS LABORALES
                     oUsuario.UsuNumeroEmpleado = model.UsuNumeroEmpleado;
                     oUsuario.UsuIdAreaDepto = model.UsuIdAreaDepto;
+                    oUsuario.UsuNoExtensionAnterior = model.UsuNoExtensionAnterior;
                     oUsuario.UsuNoExtension = model.UsuNoExtension;
                     // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                     oUsuario.UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior;

@@ -276,6 +276,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     SolEncuestaCalidadCalificacion = model.SolEncuestaCalidadCalificacion,
                     SolEncuestaCalidadComentarios = model.SolEncuestaCalidadComentarios,
                     SolFechaHoraEncuesta = model.SolFechaHoraEncuesta,
+                    SolRespuestaDcyC = model.SolRespuestaDcyC,
                     SolFechaHoraCreacion = DateTime.Now,
                     SolIdTipoSolicitudNavigation = null,
                     SolIdUsuarioNavigation = null,
@@ -321,6 +322,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     oSolicitud.SolEncuestaCalidadCalificacion = model.SolEncuestaCalidadCalificacion;
                     oSolicitud.SolEncuestaCalidadComentarios = model.SolEncuestaCalidadComentarios;
                     oSolicitud.SolFechaHoraEncuesta = model.SolFechaHoraEncuesta;
+                    oSolicitud.SolRespuestaDcyC = model.SolRespuestaDcyC;
                     // oSolicitud.SolFechaHoraCreacion = model.SolFechaHoraCreacion;
                     oSolicitud.SolIdEstadoSolicitudNavigation = null;
                     oSolicitud.SolIdTipoSolicitudNavigation = null;
