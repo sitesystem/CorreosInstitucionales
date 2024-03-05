@@ -1,0 +1,58 @@
+﻿@page "/debug/correos"
+@inject IServiceProvider serviceProvider
+
+<button @onclick="EnviarCorreo" class="btn btn-primary">Enviar correo de prueba</button>
+
+<h1>DEBUG</h1>
+<pre>@debug</pre>
+
+@code 
+{
+    string debug = "";
+
+    private async Task EnviarCorreo()
+    {
+        ILoggerFactory loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+        HtmlRenderer htmlRenderer = new HtmlRenderer(serviceProvider, loggerFactory);
+
+        string body = await htmlRenderer.Dispatcher.InvokeAsync
+        (
+            async ()=>
+            {
+
+                var parameters = ParameterView.FromDictionary
+                (
+                    new Dictionary<string, object?>
+                    {
+                        { "nombre", "NOMBRE DE PRUEBA"},
+                        { "correo", "gabriel@localhost"}
+                    }
+                );
+
+                var output = await htmlRenderer.RenderComponentAsync<CorreoPrueba>(parameters);
+
+                return output.ToHtmlString();
+            }
+        );
+
+        HttpResponseMessage response = await servicioSendEmail.SendEmailAsync
+        (
+            new RequestDTO_SendEmail()
+                {
+                    EmailTo = "agmartinezc@ipn.mx",
+                    Subject = "Correo de prueba",
+                    Body = body
+                }
+        );
+
+        if(response.IsSuccessStatusCode)
+        {
+            debug += Environment.NewLine + "CORREO ENVIADO";
+        }
+        else
+        {
+            string content = await response.Content.ReadAsStringAsync();
+            debug += Environment.NewLine + $"ERROR ENVIANDO CORREO: {content}";
+        }
+    }
+}
