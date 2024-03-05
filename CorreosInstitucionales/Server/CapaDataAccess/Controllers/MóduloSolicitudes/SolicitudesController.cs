@@ -188,7 +188,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             {
                 int solicitudNoAtendida = await _db.MtTbSolicitudesTickets
                                                    .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioStatus) &&
-                                                          !st.SolIdEstadoSolicitud.Equals(5) && !st.SolIdEstadoSolicitud.Equals(6))
+                                                                !st.SolIdEstadoSolicitud.Equals(5) && !st.SolIdEstadoSolicitud.Equals(6))
                                                    .CountAsync();
                 if (solicitudNoAtendida > 0)
                     oResponse.Message = "NO PUEDE SOLICITAR, PENDIENTE DE CONTESTAR ENCUESTA DE CALIDAD";
@@ -217,7 +217,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             {
                 var item = await _db.MtTbSolicitudesTickets
                                     .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioLastTicket) &&
-                                           st.SolIdEstadoSolicitud != 5 && st.SolIdEstadoSolicitud != 6)
+                                                 st.SolIdEstadoSolicitud != 5 && st.SolIdEstadoSolicitud != 6)
                                     .Include(ts => ts.SolIdTipoSolicitudNavigation)
                                     .Include(u => u.SolIdUsuarioNavigation)
                                     .Include(e => e.SolIdEstadoSolicitudNavigation)
@@ -243,6 +243,24 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
             try
             {
+                MpTbUsuario? oUsuario = await _db.MpTbUsuarios.FindAsync(model.SolIdUsuario);
+
+                if (oUsuario != null)
+                {
+                    oUsuario.UsuFileNameCurp = model.SolFileNameCurp;
+
+                    if (model?.SolIdUsuarioNavigation?.UsuIdTipoPersonal == 1 || model?.SolIdUsuarioNavigation?.UsuIdTipoPersonal == 2 || model?.SolIdUsuarioNavigation?.UsuIdTipoPersonal == 3)
+                        oUsuario.UsuFileNameComprobanteInscripcion = model.SolFileNameComprobanteInscripcion;
+
+                    if (model.SolIdTipoSolicitud == 2)
+                        oUsuario.UsuCorreoPersonalCuentaAnterior = model.SolCorreoPersonalCuentaNueva;
+                    else if (model.SolIdTipoSolicitud == 3)
+                        oUsuario.UsuNoCelularAnterior = model.SolNoCelularNuevo;
+
+                    _db.Entry(oUsuario).State = EntityState.Modified;
+                    await _db.SaveChangesAsync();
+                }
+
                 MtTbSolicitudesTicket oSolicitud = new()
                 {
                     IdSolicitudTicket = model.IdSolicitudTicket,
@@ -361,6 +379,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
                 if (oSolicitud != null)
                 {
+                    oSolicitud.SolIdEstadoSolicitud = 5;
                     oSolicitud.SolEncuestaCalidadCalificacion = model.Calificacion;
                     oSolicitud.SolEncuestaCalidadComentarios = model.Comentarios;
                     oSolicitud.SolFechaHoraEncuesta = DateTime.Now;

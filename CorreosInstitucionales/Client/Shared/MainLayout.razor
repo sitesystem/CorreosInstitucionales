@@ -9,9 +9,17 @@
 
 <AuthorizeView>
     <Authorized>
+
+        @{
+            string? rol = context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "1" ? "Administrador" : "Usuario";
+            string? tipoPersonal = oResponseTipoPersonal?.Data?.TipoperNombre ?? null;
+            string? name = context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value;
+            string? email = context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
+        }
+
         <RadzenLayout>
             <RadzenHeader class="rz-background-color-info-light rz-border-radius-0 rz-py-0 rz-my-0" Style="border-bottom:0;">
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="0px">
                     
                     <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" class="rz-m-0" />
 
@@ -26,12 +34,7 @@
                             </RadzenStack>
                         </RadzenStack>
                     </RadzenCard>
-                    @{
-                        string? rol = context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "1" ? "Administrador" : "Usuario";
-                        string? tipoPersonal = oResponseTipoPersonal?.Data?.TipoperNombre ?? null;
-                        string? name = context.User.Claims.FirstOrDefault(c => c.Type == "Name")?.Value;
-                        string? email = context.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-                    }
+                    
                     <RadzenCard Variant="Variant.Filled" Class="rz-p-3 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block rz-border-radius-0">
                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" class="">
                             <RadzenImage Path="./logo_ipn.png" Style="height: 30px;" />
@@ -42,11 +45,33 @@
                         </RadzenStack>
                     </RadzenCard>
 
-                    <RadzenCard Variant="Variant.Filled" Class="rz-p-0 d-block d-sm-block rz-border-radius-0">
+                    <RadzenCard Variant="Variant.Filled" Class="rz-p-0 d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block rz-border-radius-0">
                         <RadzenProfileMenu Class="">
                             <Template>
                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" class="">
                                     <RadzenGravatar Email="@email" />
+                                    <RadzenStack Gap="0px">
+                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">@name</RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@email</b></RadzenText>
+                                    </RadzenStack>
+                                </RadzenStack>
+                            </Template>
+                            <ChildContent>
+                                <RadzenButton Variant="Variant.Text" Click="@(() => navigationManager.NavigateTo("/PerfilUsuario"))" Text="Perfil" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="account_circle" class="d-block text-start" style="width: 100%" />
+                                <RadzenButton Variant="Variant.Text" Click="@LogOut" Text="Cerrar Sesión" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="logout" class="d-block text-start" style="width: 100%" />
+                            </ChildContent>
+                        </RadzenProfileMenu>
+                    </RadzenCard>
+
+                    <RadzenCard Variant="Variant.Filled" class="rz-p-0 d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-border-radius-0">
+                        <RadzenProfileMenu class="">
+                            <Template>
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
+                                    <RadzenGravatar Email="@email" />
+                                    <RadzenStack Gap="0px">
+                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">@rol:</RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@tipoPersonal</b></RadzenText>
+                                    </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">@name</RadzenText>
                                         <RadzenText TextStyle="TextStyle.Body1"><b>@email</b></RadzenText>
@@ -64,7 +89,18 @@
 
             <!-- ... Contenido para pantallas pequeñas móviles -->
             <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-background-color-base-900">
-                <RadzenSidebar @bind-Expanded="@sidebarExpanded" Responsive="false" Style="width:max-content; font-family:var(--rz-text-font-family);" class="rz-background-color-base-900 rz-border-base-900">
+                <RadzenSidebar @bind-Expanded="@sidebarExpanded" Responsive="false" Style="width:max-content; position:absolute; z-index:3; font-family:var(--rz-text-font-family);" class="rz-background-color-base-900 rz-border-base-900">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="0px" class="rz-p-0">
+                        <RadzenCard Variant="Variant.Filled" @onclick="@(() => navigationManager.NavigateTo("/Inicio"))" Style="cursor:pointer;" class="rz-py-2 rz-border-radius-0">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="10px" class="">
+                                <RadzenImage Path="./logo_saci.png" Style="height:30px;" AlternateText="logo saci" />
+                                <RadzenStack Gap="0px">
+                                    <RadzenText TextStyle="TextStyle.Body1"><b>SACI</b></RadzenText>
+                                </RadzenStack>
+                            </RadzenStack>
+                        </RadzenCard>
+                        <RadzenSidebarToggle Click="@(() => sidebarExpanded = false)" class="rz-m-0 rz-background-color-info-light rz-border-color-info-lighter" />
+                    </RadzenStack>
                     <RadzenPanelMenu Multiple="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" ShowArrow="true">
                         <NavMenu isExpanded="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" />
                     </RadzenPanelMenu>
@@ -89,11 +125,64 @@
                 </RadzenColumn>
             </RadzenBody>
 
+            <!-- ... Contenido para pantallas pequeñas móviles -->
+            <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none">
+                @if (sidebarExpanded)
+                {
+                    <div @onclick="@(() => sidebarExpanded = false)" class="rz-dialog-mask" style="position: absolute; z-index: 2"></div>
+                }
+            </div>
+
             <RadzenFooter class="rz-background-color-base-900 rz-border-base-900">
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceAround" Wrap="FlexWrap.Wrap" Gap="10px" Class="">
-                    <RadzenText Text="UPIICSA (UDI - Desarrollo de Sistemas de Información)" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: white;" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-                    <RadzenText Text="Ⓒ 2023 SACI (Sistema de Atención para Correos Institucionales) vα 1.0" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: white;" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-                </RadzenStack>
+                <!-- ... Contenido para pantallas pequeñas móviles -->
+                <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none text-center">
+                    @* <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.NoWrap" Gap="5px" class="">
+                        <RadzenImage Path="./logo_upiicsa.png" Style="height:20px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />
+                        <RadzenText Text="UPIICSA (UDI - Desarrollo de SI) | Ⓒ 2024 SACI vα 1.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: white;" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                    </RadzenStack>
+                    <RadzenText Text="Ⓒ 2024 SACI (Sistema de Atención para Correos Institucionales) vα 1.0" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: white;" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" /> *@
+                    <hr />
+                    <!-- Pie de Página (Footer Fixed-Bottom) -->
+                    <nav class="navbar bg-body-tertiary bg-dark fixed-bottom" data-bs-theme="dark">
+                        <div class="container">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0px" class="">
+                                <a class="navbar-brand" style="text-decoration:none; font-size:calc(8px + 0.390625vw); color:white;">
+                                    <RadzenImage Path="./logo_upiicsa.png" Style="height:20px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />&nbsp;
+                                    UPIICSA (UDI - Desarrollo de Sistemas de Información)&nbsp;
+                                    <RadzenImage Path="./logo_udi.png" Style="height:20px;" AlternateText="logo udi" class="img-fluid rz-my-0" />
+                                </a>
+                                <a class="navbar-brand" style="text-decoration:none; font-size:calc(8px + 0.390625vw); color:white;">
+                                    &copy; 2024 SACI vα 1.0 &ensp;| &nbsp;
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pc-display" viewBox="0 0 16 16">
+                                        <path d="M8 1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm1 13.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0M9.5 1a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM9 3.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1h-5a.5.5 0 0 0-.5.5M1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v2h-.5a.5.5 0 0 0 0 1H7v-4H1.5a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7V2z" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-laptop" viewBox="0 0 16 16">
+                                        <path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tablet" viewBox="0 0 16 16">
+                                        <path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                                        <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-phone" viewBox="0 0 16 16">
+                                        <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                                        <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                                    </svg>
+                                </a>
+                            </RadzenStack>
+                        </div>
+                    </nav>
+                </div>
+
+                <!-- ... Contenido para pantallas grandes ... -->
+                <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceAround" Wrap="FlexWrap.Wrap" Gap="10px" class="">
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" class="">
+                            <RadzenImage Path="./logo_upiicsa.png" Style="height:20px;" AlternateText="logo upiicsa" class="img-fluid rz-my-0" />
+                            <RadzenText Text="UPIICSA (UDI - Desarrollo de Sistemas de Información)" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: white;" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                        </RadzenStack>
+                        <RadzenText Text="Ⓒ 2024 SACI (Sistema de Atención para Correos Institucionales) vα 1.0" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: white;" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                    </RadzenStack>
+                </div>
             </RadzenFooter>
         </RadzenLayout>
     </Authorized>
