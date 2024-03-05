@@ -11,7 +11,7 @@
 
     <div class="row my-4">
         <div class="offset-10 col-2">
-            @if(selectedItems.Count>0)
+            @if(puede_exportar)
             {
                 <button class="btn btn-primary form-control mb-3" @onclick="Descargar">
                     <RadzenIcon Icon="get_app"></RadzenIcon>
@@ -80,7 +80,17 @@
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Adjuntos" Filterable="false" TextAlign="TextAlign.Start">
                 <Template Context="item">
                     <ul>
-                        @if (!string.IsNullOrEmpty(item.SolCapturaCuentaBloqueada))
+                        <li>
+                            CURP
+                            <a  href="@GenerarURLAdjunto(item, item.SolFileNameCurp!)"
+                            download="@GenerarNombreAdjunto(item, item.SolFileNameCurp!, "CURP")">
+                                Descargar
+                            </a>
+                            <br />
+                            <button class="btn btn-primary" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
+                        </li>
+
+                        @if (item.SolCapturaCuentaBloqueada is not null && item.SolCapturaCuentaBloqueada != "-")
                         {
                             <li>
                                 Captura de pantalla de Cuenta Bloqueada
@@ -93,7 +103,7 @@
                             </li>
                         }
 
-                        @if(!string.IsNullOrEmpty(item.SolCapturaError ))
+                        @if (item.SolCapturaError is not null && item.SolCapturaError != "-")
                         {
                             <li>
                                 Captura de pantalla de Error
@@ -106,7 +116,7 @@
                             </li>
                         }
 
-                        @if (!string.IsNullOrEmpty(item.SolCapturaEscaneoAntivirus))
+                        @if (item.SolCapturaEscaneoAntivirus is not null && item.SolCapturaEscaneoAntivirus != "-")
                         {
                             <li>
                                 Captura de pantalla de Escaneo de Antivirus
@@ -121,8 +131,17 @@
                     </ul>
                     
                 </Template>
-            </RadzenDataGridColumn>
+            </RadzenDataGridColumn><!--ARCHIVOS-->
 
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Verificado" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    <RadzenStack Class="rz-p-sm-12">
+                        <RadzenSwitch @bind-Value=@item.SolValidacionDatos Change="StateHasChanged" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})" />
+                    </RadzenStack>
+
+                </Template>
+            </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
 </div>
@@ -140,6 +159,15 @@
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
+    private readonly int[] estados = { 1, 2 };
+
+    private bool puede_exportar
+    {
+        get
+        {
+            return items.Any(i => i.SolValidacionDatos);
+        }
+    }
 
     private string debug = string.Empty;
 
@@ -166,11 +194,18 @@
 
     private async Task CargarLista(int? selecccionar_id = null)
     {
-        Response<List<RequestDTO_Solicitud>>? request = await servicioSolicitud.GetAllDataByProgressAsync(1);
+        Response<List<RequestDTO_Solicitud>>? request = await servicioSolicitud.GetAllDataByProgressAsync(estados);
 
         if(request is not null && request.Data is not null)
         {
-            items = request.Data;
+            if (request.Success==1)
+            {
+                items = request.Data;
+            }
+            else
+            {
+                debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {request.Message}";
+            }
         }
 
         if (selecccionar_id is not null)
@@ -184,27 +219,37 @@
         cargado = false;
         //StateHasChanged();
 
-        List<int> selected_ids = selectedItems.Select(st => st.IdSolicitudTicket).ToList();
+        List<int> selected_ids = items.Where(i=>i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToList();
 
         Response<List<WebUtils.Link>>? oResponse = await servicioArchivos.NewFileFromSelection(exportar_zip?"zip":"xlsx", "pendientes", selected_ids);
 
         if(oResponse is not null && oResponse.Data is not null)
         {
-            foreach(WebUtils.Link url in oResponse.Data)
+            if(oResponse.Success == 1)
             {
-                await JSRuntime.InvokeVoidAsync("Descargar", url);
+                foreach (WebUtils.Link url in oResponse.Data)
+                {
+                    await JSRuntime.InvokeVoidAsync("Descargar", url);
+                }
             }
+            else
+            {
+                debug += Environment.NewLine + oResponse.Message;
+            }
+
+
+
         }
 
         cargado = true;
         StateHasChanged();
     }
 
-    private async Task VerPDF(string archivo) 
+    private async Task VerPDF(string archivo, string titulo = "Ver") 
     {
         await dialogService.OpenAsync<PDFViewer>
                 (
-                    "Ver",
+                    titulo,
                     new Dictionary<string, object>()
                     {
                         {"file", archivo}
@@ -218,5 +263,14 @@
                             CloseDialogOnOverlayClick = true
                         }
                 );
+    }
+
+    private async Task VerCURP(RequestDTO_Solicitud item)
+    {
+        string nombre = $@"{item.SolIdUsuarioNavigation!.UsuNombre}
+        {item.SolIdUsuarioNavigation!.UsuPrimerApellido}
+        {item.SolIdUsuarioNavigation!.UsuSegundoApellido} - {item.SolIdUsuarioNavigation!.UsuCurp}";
+
+        await VerPDF(GenerarURLAdjunto(item, item.SolFileNameCurp!), nombre);
     }
 }

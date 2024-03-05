@@ -1,10 +1,10 @@
-﻿@page "/SolicitudesAtendidas"
+﻿@page "/SolicitudesProceso"
 @attribute [Authorize(Policy = "[Rol] Administrador")]
 <PageTitle>@Title</PageTitle>
 
 
-<div class="p-4 rounded-1 bg-white shadow">
-    <h1>@Title</h1>
+    <div class="p-4 rounded-1 bg-white shadow">
+        <h1>@Title</h1>
 
     @if (!cargado || generando)
     {
@@ -76,7 +76,7 @@
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
-    private readonly int[] estados = { 4, 5 };
+    private readonly int[] estados = { 3 };
 
     private string debug = string.Empty;
 
