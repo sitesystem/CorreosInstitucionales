@@ -87,7 +87,7 @@
                                                                Placeholder="Selecciona una opción"
                                                                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                                                FilterOperator="StringFilterOperator.Contains"
-                                                               Style="width: 100%; height:300px"
+                                                               Style="width: 100%; height:370px"
                                                                InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Selecciona una opción" }})"
                                                                Change="@(args => OnChangeListBox(args))">
                                                     <Template>
@@ -107,7 +107,7 @@
                                             <ChildContent>
                                                 <RadzenTextArea Name="@($@"observaciones")" Placeholder="Escribe un motivo, comentario, nota o aclaración adicional para la Solicitud-Ticket..."
                                                                 @bind-Value="@oSolicitudTicket.SolObservacionesSolicitud" @oninput="@(e => oSolicitudTicket.SolObservacionesSolicitud = e.Value.ToString())"
-                                                                Cols="30" Rows="2" style="border-bottom: 3px solid red;" MinLength="1" MaxLength="300" class="w-100" aria-label="TextArea" Disabled="false" ReadOnly="false" />
+                                                                Cols="30" Rows="3" style="border-bottom: 3px solid red;" MinLength="1" MaxLength="300" class="w-100" aria-label="TextArea" Disabled="false" ReadOnly="false" />
                                             </ChildContent>
                                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                                         </RadzenFormField>

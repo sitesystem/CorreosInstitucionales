@@ -63,7 +63,9 @@
                                             </RadzenStack>
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 1" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
-                                        <RadzenText Text="Se ha levantado y aperturado una Solicitud de Ticket." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
+                                            <div>Se ha levantado y aperturado una Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket).</b></div>
+                                        </RadzenText>
                                         <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Justify" class="rz-m-0"><b>@(oSolicitudLastTicket?.Data?.SolFechaHoraCreacion.ToString("dd/MM/yyyy 'a las' HH:mm:ss 'hrs.'"))</b></RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
@@ -80,7 +82,9 @@
                                             </RadzenStack>
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 2" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
-                                        <RadzenText Text="Solicitud-Ticket colocada en la Bandeja de Espera para su pronta atención." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
+                                            <div>Solicitud-Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> colocada en la Bandeja de Espera para la revisión y validación de tus datos.</div>
+                                        </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
                             </RadzenTimelineItem>
@@ -96,7 +100,9 @@
                                             </RadzenStack>
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 3" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
-                                        <RadzenText Text="Revisando y validando tus datos. La Solicitud de Ticket se envía a Área Central para la Generación o Recuperación de las Credenciales del Correo Institucional." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
+                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Área Central para la Generación o Recuperación de las Credenciales del Correo Institucional.</div>
+                                        </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
                             </RadzenTimelineItem>
@@ -112,7 +118,9 @@
                                             </RadzenStack>
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 4" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
-                                        <RadzenText Text="Las Credenciales del Correo Institucional generadas con éxito, califica la calidad de atención del servicio." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
+                                            <div><strong>Credenciales del Correo Institucional</strong> generadas con éxito, para visualizarlas por favor responde la <b>encuesta de calidad</b> y califica la atención del servicio.</div>
+                                        </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
                             </RadzenTimelineItem>
@@ -143,7 +151,9 @@
                                             </RadzenStack>
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 1" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
-                                        <RadzenText Text="Se ha levantado y aperturado una Solicitud de Ticket." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
+                                            <div>Se ha levantado y aperturado una Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket).</b></div>
+                                        </RadzenText>
                                         <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Justify" class="rz-m-0"><b>@(oSolicitudLastTicket?.Data?.SolFechaHoraCreacion.ToString("dd/MM/yyyy '-' HH:mm:ss 'hrs.'"))</b></RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
@@ -160,7 +170,9 @@
                                             </RadzenStack>
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 2" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
-                                        <RadzenText Text="Solicitud-Ticket colocada en la Bandeja de Espera para su pronta atención." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
+                                            <div>Solicitud-Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> colocada en la Bandeja de Espera para la revisión y validación de tus datos.</div>
+                                        </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
                             </RadzenTimelineItem>
@@ -176,7 +188,9 @@
                                             </RadzenStack>
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 3" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
-                                        <RadzenText Text="Revisando y validando tus datos. La Solicitud de Ticket se envía a Área Central para la Generación o Recuperación de las Credenciales del Correo Institucional." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
+                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Área Central para la Generación o Recuperación de las Credenciales del Correo Institucional.</div>
+                                        </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
                             </RadzenTimelineItem>
@@ -192,7 +206,9 @@
                                             </RadzenStack>
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 4" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
-                                        <RadzenText Text="Las Credenciales del Correo Institucional generadas con éxito, califica la calidad de atención del servicio." TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0" />
+                                        <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
+                                            <div><strong>Credenciales del Correo Institucional</strong> generadas con éxito, para visualizarlas por favor responde la <b>encuesta de calidad</b> y califica la atención del servicio.</div>
+                                        </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
                             </RadzenTimelineItem>
