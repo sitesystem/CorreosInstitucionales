@@ -181,6 +181,32 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             return Ok(oResponse);
         }
 
+        [HttpGet("filterByIdUsuarioLastTicketRespuesta/{filterByIdUsuarioLastTicketRespuesta}")]
+        public async Task<IActionResult> GetDataByIdUsuarioLastTicketRespuesta(int filterByIdUsuarioLastTicketRespuesta)
+        {
+            Response<MtTbSolicitudesTicket> oResponse = new();
+
+            try
+            {
+                var item = await _db.MtTbSolicitudesTickets
+                                    .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioLastTicketRespuesta) && st.SolIdEstadoSolicitud == 5)
+                                    .Include(ts => ts.SolIdTipoSolicitudNavigation)
+                                    .Include(u => u.SolIdUsuarioNavigation)
+                                    .Include(e => e.SolIdEstadoSolicitudNavigation)
+                                    .OrderByDescending(st => st.IdSolicitudTicket)
+                                    .FirstOrDefaultAsync();
+
+                oResponse.Success = 1;
+                oResponse.Data = item;
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddData(RequestDTO_Solicitud model)
         {
