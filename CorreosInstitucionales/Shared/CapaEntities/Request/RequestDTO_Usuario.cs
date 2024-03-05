@@ -170,6 +170,10 @@ public class RequestDTO_Usuario
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo ÁREA / DEPARTAMENTO requerido.")]
     public int? UsuIdAreaDepto { get; set; }
 
+    [Column("usuNoExtensionAnterior")]
+    [StringLength(10)]
+    public string? UsuNoExtensionAnterior { get; set; }
+
     /// <summary>
     /// Número de Extensión del Área / Departamento
     /// </summary>

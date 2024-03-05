@@ -47,6 +47,14 @@ public partial class McCatEscuela
     [Unicode(false)]
     public string? EscNombreCorto { get; set; }
 
+    [Column("escFileNameAvisoPrivacidad")]
+    [StringLength(300)]
+    [Unicode(false)]
+    public string? EscFileNameAvisoPrivacidad { get; set; }
+
+    [Column("escFechaFundacion", TypeName = "datetime")]
+    public DateTime? EscFechaFundacion { get; set; }
+
     /// <summary>
     /// Estado (1 = Activo, 0 = Inactivo)
     /// </summary>

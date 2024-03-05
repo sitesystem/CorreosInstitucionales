@@ -142,6 +142,11 @@ public partial class MpTbUsuario
     [Column("usuIdAreaDepto")]
     public int? UsuIdAreaDepto { get; set; }
 
+    [Column("usuNoExtensionAnterior")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? UsuNoExtensionAnterior { get; set; }
+
     /// <summary>
     /// Número de Extensión del Área / Departamento
     /// </summary>

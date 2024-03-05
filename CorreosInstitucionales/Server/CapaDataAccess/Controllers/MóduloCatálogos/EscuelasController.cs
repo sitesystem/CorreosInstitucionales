@@ -68,10 +68,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                 McCatEscuela oEscuela = new()
                 {
                     IdEscuela = model.IdEscuela,
+                    EscLogo = model.EscLogo,
                     EscNoEscuela = model.EscNoEscuela,
                     EscNombreLargo = model.EscNombreLargo,
                     EscNombreCorto = model.EscNombreCorto,
-                    EscLogo = model.EscLogo,
+                    EscFileNameAvisoPrivacidad = model.EscFileNameAvisoPrivacidad,
+                    EscFechaFundacion = model.EscFechaFundacion,
                     EscStatus = true
                 };
 
@@ -103,6 +105,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                     oEscuela.EscNoEscuela = model.EscNoEscuela;
                     oEscuela.EscNombreLargo = model.EscNombreLargo;
                     oEscuela.EscNombreCorto = model.EscNombreCorto;
+                    oEscuela.EscFileNameAvisoPrivacidad = model.EscFileNameAvisoPrivacidad;
+                    oEscuela.EscFechaFundacion = model.EscFechaFundacion;
                     oEscuela.EscStatus = model.EscStatus;
 
                     _db.Entry(oEscuela).State = EntityState.Modified;
