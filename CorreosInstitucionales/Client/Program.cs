@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Radzen;
 using System.Globalization;
@@ -62,5 +63,7 @@ builder.Services.AddRadzenComponents();
 // builder.Services.AddScoped<DialogService>();
 // builder.Services.AddScoped<NotificationService>();
 // builder.Services.AddScoped<TooltipService>();
+
+builder.Services.AddLogging();
 
 await builder.Build().RunAsync();
