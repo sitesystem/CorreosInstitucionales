@@ -1,6 +1,6 @@
 ﻿@inject Radzen.DialogService dialogService
 
-<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+<EditForm Model=@registro OnSubmit="OnSubmit">
     <DataAnnotationsValidator/>
 
     @if(!registro_nuevo)
@@ -63,12 +63,12 @@
                 {
                     <span class="fw-bold">Captura de Cuenta Bloqueada</span>
                     
-                    <InputText @bind-Value="@registro.SolCapturaCuentaBloqueada" class="  form-control" />
+                    <InputText @bind-Value="@registro.SolCapturaCuentaBloqueada" class="form-control" />
                     <ValidationMessage For="()=>registro.SolCapturaCuentaBloqueada"></ValidationMessage>
                 }
                 else
                 {
-                    <span class="fw-bold">Captura Error</span>
+                    <span class="fw-bold">Captura</span>
                     <InputText @bind-Value="@registro.SolCapturaError" class="  form-control" />
                     <ValidationMessage For="()=>registro.SolCapturaError"></ValidationMessage>
                 }
@@ -123,6 +123,8 @@
         </div>
     }
 
+    <ValidationSummary/>
+
     <div class="container-fluid mt-3 py-3 bg-silver">
         <div class="row">
             <div class="offset-8 col-2">
@@ -150,4 +152,9 @@
 
     private void OnValidForm() => dialogService.Close(registro);
     private void OnCloseForm() => dialogService.Close(null);
+
+    private void OnSubmit()
+    {
+        dialogService.Close(registro);
+    }
 }

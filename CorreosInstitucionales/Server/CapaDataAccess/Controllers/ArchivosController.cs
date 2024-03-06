@@ -14,6 +14,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using Microsoft.AspNetCore.Components.Web;
 
 using CorreosInstitucionales.Server.Correos;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
@@ -58,11 +59,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             ILoggerFactory loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
             HtmlRenderer htmlRenderer = new HtmlRenderer(_serviceProvider, loggerFactory);
 
-            RequestDTO_SendEmail correo;
+            RequestDTO_SendEmail correo = new RequestDTO_SendEmail()
+            {
+                Subject = "Su solcicitud ha sido canalizada hacia la mesa de control",
+                EmailTo = "agmartinezc@ipn.mx",
+                Body = "NO DEFINIDO"
+            };
 
             foreach (MtTbSolicitudesTicket solicitud in lista)
             {
-                string body = await htmlRenderer.Dispatcher.InvokeAsync
+                correo.Body = await htmlRenderer.Dispatcher.InvokeAsync
                 (
                     async () =>
                     {
@@ -81,13 +87,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         return output.ToHtmlString();
                     }
                 );
-
-                correo = new RequestDTO_SendEmail()
-                {
-                    Subject = "Su solcicitud ha sido calanizada hacia la mesa de control",
-                    EmailTo = "agmartinezc@ipn.mx",
-                    Body = body
-                };
 
                 await _servicioCorreo.SendEmail(correo);
             }
