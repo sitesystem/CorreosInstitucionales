@@ -101,7 +101,7 @@
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 3" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
                                         <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
-                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Área Central para la Generación o Recuperación de las Credenciales del Correo Institucional.</div>
+                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Mesa de Control para la Generación o Recuperación de las Credenciales del Correo Institucional.</div>
                                         </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
@@ -189,7 +189,7 @@
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 3" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
                                         <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
-                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Área Central para la Generación o Recuperación de las Credenciales del Correo Institucional.</div>
+                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Mesa de Control para la Generación o Recuperación de las Credenciales del Correo Institucional.</div>
                                         </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
@@ -221,7 +221,7 @@
 
     <RadzenAlert Title="" AlertStyle="AlertStyle.Secondary" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Dark" ShowIcon="true" AllowClose="false"
                  Visible="@(existenSolicitudes && oSolicitudLastTicket?.Data?.SolIdEstadoSolicitud == 4)" class="my-3">
-        <b>ATENCIÓN:</b> Para visualizar tus <strong>Credenciales del Correo Institucional</strong>, favor de responder la siguiente encuesta.
+                 <b>ATENCIÓN:</b> Para visualizar tus <strong>Credenciales del Correo Institucional</strong>, favor de responder la siguiente encuesta.
     </RadzenAlert>
 
     <RadzenPanel Visible="@(existenSolicitudes && oSolicitudLastTicket?.Data?.SolIdEstadoSolicitud == 4)">
@@ -345,6 +345,15 @@
             </RadzenStack>
         </RadzenStack>
     </RadzenCard>
+
+    @if (oSolicitudLastTicketRespuesta != null && oSolicitudLastTicketRespuesta.Data is not null && !string.IsNullOrEmpty(oSolicitudLastTicketRespuesta.Data.SolRespuestaDcyC))
+    {
+        <div class="col-md-4 offset-md-4 mt-3">
+            <RadzenAlert Title="Respuesta de Mesa de Control" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Medium" Shade="Shade.Default" ShowIcon="true" AllowClose="false" class="" Visible="true">
+                <b>Acción:</b> @(oSolicitudLastTicketRespuesta?.Data?.SolRespuestaDcyC)
+            </RadzenAlert>
+        </div>
+    }
 }
 else
 {
@@ -356,6 +365,7 @@ else
     //public int valorEncuesta = 5;
     private Response<RequestDTO_Usuario>? oUsuario = new();
     private Response<RequestDTO_Solicitud>? oSolicitudLastTicket = new();
+    private Response<RequestDTO_Solicitud>? oSolicitudLastTicketRespuesta = new();
     private bool existenSolicitudes => oSolicitudLastTicket?.Data is not null;
     public int idUsuario { get; set; }
 
@@ -399,6 +409,7 @@ else
             idUsuario = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
             oUsuario = await servicioUsuario.GetDataByIdAsync(idUsuario);
             oSolicitudLastTicket = await servicioSolicitud.GetDataByIdUsuarioLastTicket(idUsuario);
+            oSolicitudLastTicketRespuesta = await servicioSolicitud.GetDataByIdUsuarioLastTicketRespuesta(idUsuario);
 
             if (oSolicitudLastTicket is not null && oSolicitudLastTicket.Data != null)
             {
