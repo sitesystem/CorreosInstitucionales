@@ -1,10 +1,23 @@
 ﻿@page "/SolicitudesProceso"
+@using System.Net.Http.Headers
 @attribute [Authorize(Policy = "[Rol] Administrador")]
+
 <PageTitle>@Title</PageTitle>
 
 
     <div class="p-4 rounded-1 bg-white shadow">
-        <h1>@Title</h1>
+    <h1>@Title</h1>
+
+    <div class="row my-4">
+        <div class="offset-10 col-2">
+            <InputFile OnChange="fuImportacion_OnChange"></InputFile>
+
+            <button class="btn btn-primary form-control mb-3" @onclick="Importar">
+                <RadzenIcon Icon="get_app"></RadzenIcon>
+                Importar
+            </button>
+        </div>
+    </div>
 
     @if (!cargado || generando)
     {
@@ -70,13 +83,15 @@
 
 @code
 {
-    private string Title = "Solicitudes Pendientes";
+    private string Title = "Solicitudes en Proceso";
     private bool cargado { get; set; } = false;
     private bool generando = false;
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
-    private readonly int[] estados = { 3 };
+    private readonly int[] estados = { TipoEstadoSolicitud.EN_PROCESO };
+
+    private IBrowserFile? fuImportar = null;
 
     private string debug = string.Empty;
 
@@ -112,5 +127,53 @@
             selectedItems = items.Where(i => (i.IdSolicitudTicket == selecccionar_id)).ToList();
         }
     }
+
+    private void fuImportacion_OnChange(InputFileChangeEventArgs e)
+    {
+        fuImportar = e.File;
+    }
+
+    private async Task Importar()
+    {
+        if (fuImportar is null)
+        {
+            return;
+        }
+
+        cargado = false;
+        StateHasChanged();
+
+        List<int> selected_ids = items.Where(i => i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToList();
+
+        using (MultipartFormDataContent content = new MultipartFormDataContent())
+        {
+            using (StreamContent fileContent = new StreamContent(fuImportar.OpenReadStream()))
+            {
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(fuImportar.ContentType);
+
+                content.Add(fileContent, name: "\"file\"", fuImportar.Name);
+
+                Response<string>? oResponse = await servicioArchivos.PostFile("xlsx", "procesados", content);
+
+                if (oResponse is not null && oResponse.Data is not null)
+                {
+                    if (oResponse.Success == 1)
+                    {
+                        debug += Environment.NewLine + oResponse.Message;
+                    }
+                    else
+                    {
+                        debug += Environment.NewLine + "[ERROR]" + oResponse.Message;
+                    }
+                }
+            }
+        }
+        
+        
+
+        cargado = true;
+        StateHasChanged();
+    }
+
 
 }
