@@ -147,8 +147,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         private WebUtils.Link GenerarLink(MtTbSolicitudesTicket solicitud, int tipo_documento, string directorio)
         {
             string archivo = string.Empty;
-            string tipo = string.Empty;
-            
+            string tipo = TipoDocumento.Nombre[tipo_documento] ?? "ARCHIVO";
+
             string curp = solicitud.SolIdUsuarioNavigation.UsuCurp;
             string id = string.Format("{0:00000}", solicitud.IdSolicitudTicket);
 
@@ -156,23 +156,18 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 case TipoDocumento.CURP:
                     archivo = solicitud.SolIdUsuarioNavigation.UsuFileNameCurp!;
-                    tipo = "CURP";
                     break;
                 case TipoDocumento.COM_INSCRIPCION:
                     archivo = solicitud.SolIdUsuarioNavigation.UsuFileNameComprobanteInscripcion!;
-                    tipo = "COMPROBANTE_INSCRIPCION";
                     break;
                 case TipoDocumento.CAP_ANTIVIRUS:
                     archivo = solicitud.SolCapturaEscaneoAntivirus!;
-                    tipo = "CAPTURA_ANTIVIRUS";
                     break;
                 case TipoDocumento.CAP_BLOQUEO:
                     archivo = solicitud.SolCapturaCuentaBloqueada!;
-                    tipo = "CAPTURA_BLOQUEO";
                     break;
                 case TipoDocumento.CAP_ERROR:
                     archivo = solicitud.SolCapturaError!;
-                    tipo = "CAPTURA_ERROR";
                     break;
             }
 
@@ -304,9 +299,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             if (guardar_registro)
             {
-                await System.IO.File.WriteAllTextAsync($"{filename}.txt", sb.ToString());
-                oResponse.Data += Environment.NewLine + sb.ToString();
-                oResponse.Success = 0;
+                await System.IO.File.WriteAllTextAsync($"{filename}.log", sb.ToString());
+                oResponse.Message += Environment.NewLine + sb.ToString();
             }
 
             return Ok(oResponse);

@@ -8,25 +8,32 @@
     <div class="p-4 rounded-1 bg-white shadow">
     <h1>@Title</h1>
 
-    <div class="row my-4">
-        <div class="offset-10 col-2">
-            <InputFile OnChange="fuImportacion_OnChange"></InputFile>
-
-            <button class="btn btn-primary form-control mb-3" @onclick="Importar">
-                <RadzenIcon Icon="get_app"></RadzenIcon>
-                Importar
-            </button>
-        </div>
-    </div>
-
-    @if (!cargado || generando)
+    @if (trabajando)
     {
         <div class="row my-4">
             <div class="col text-center">
                 <img src="logo_saci.png" class="loading_img" />
                 <br />
-                Trabajando...
+                <strong>Trabajando...</strong>
             </div>
+        </div>
+    }
+    else
+    {
+        <div class="row my-4">
+            <div class="offset-10 col-2">
+                @if (items.Count > 0)
+                {
+                    <InputFile OnChange="fuImportacion_OnChange" class="form-control mb-3"></InputFile>
+                }
+                @if (fuImportar is not null)
+                {
+                    <button class="btn btn-primary form-control mb-3" @onclick="Importar">
+                        <RadzenIcon Icon="get_app"></RadzenIcon>
+                        Importar
+                    </button>
+                }
+            </div>       
         </div>
     }
 
@@ -34,7 +41,7 @@
                     FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
-                    Visible=@cargado
+                    Visible=@(!trabajando)
                     SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems>
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
@@ -45,33 +52,11 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Filterable="false" TextAlign="TextAlign.Start">
-                <Template Context="item">
-                    @item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
-                </Template>
-            </RadzenDataGridColumn>
-
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
                 <Template Context="item">
                     @item.SolIdUsuarioNavigation!.UsuPrimerApellido
                     @item.SolIdUsuarioNavigation!.UsuSegundoApellido
                     @item.SolIdUsuarioNavigation!.UsuNombre
-                </Template>
-            </RadzenDataGridColumn>
-
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Filterable="false" TextAlign="TextAlign.Center">
-                <Template Context="item">
-                    @if (item.SolEncuestaCalidadCalificacion is null)
-                    {
-                        <text>(Pendiente de Contestar)</text>
-                    }
-                    else
-                    {
-                        <img class="d-inline mb-2" src="img/calidad/@(item.SolEncuestaCalidadCalificacion).png" />
-                        <br>
-                        @item.SolEncuestaCalidadComentarios
-                    }
-
                 </Template>
             </RadzenDataGridColumn>
 
@@ -84,8 +69,7 @@
 @code
 {
     private string Title = "Solicitudes en Proceso";
-    private bool cargado { get; set; } = false;
-    private bool generando = false;
+    private bool trabajando { get; set; } = true;
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
@@ -101,7 +85,7 @@
         {
             await CargarLista();
 
-            cargado = true;
+            trabajando = false;
             StateHasChanged();
         }
     }
@@ -140,7 +124,7 @@
             return;
         }
 
-        cargado = false;
+        trabajando = true;
         StateHasChanged();
 
         List<int> selected_ids = items.Where(i => i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToList();
@@ -157,21 +141,13 @@
 
                 if (oResponse is not null && oResponse.Data is not null)
                 {
-                    if (oResponse.Success == 1)
-                    {
-                        debug += Environment.NewLine + oResponse.Message;
-                    }
-                    else
-                    {
-                        debug += Environment.NewLine + "[ERROR]" + oResponse.Message;
-                    }
+                    debug += Environment.NewLine + "[SERVIDOR] " + oResponse.Message;
                 }
             }
         }
-        
-        
 
-        cargado = true;
+        fuImportar = null;
+        trabajando = false;
         StateHasChanged();
     }
 
