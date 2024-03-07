@@ -1,19 +1,39 @@
 ﻿@page "/SolicitudesProceso"
+@using System.Net.Http.Headers
 @attribute [Authorize(Policy = "[Rol] Administrador")]
+
 <PageTitle>@Title</PageTitle>
 
 
     <div class="p-4 rounded-1 bg-white shadow">
-        <h1>@Title</h1>
+    <h1>@Title</h1>
 
-    @if (!cargado || generando)
+    @if (trabajando)
     {
         <div class="row my-4">
             <div class="col text-center">
                 <img src="logo_saci.png" class="loading_img" />
                 <br />
-                Trabajando...
+                <strong>Trabajando...</strong>
             </div>
+        </div>
+    }
+    else
+    {
+        <div class="row my-4">
+            <div class="offset-10 col-2">
+                @if (items.Count > 0)
+                {
+                    <InputFile OnChange="fuImportacion_OnChange" class="form-control mb-3"></InputFile>
+                }
+                @if (fuImportar is not null)
+                {
+                    <button class="btn btn-primary form-control mb-3" @onclick="Importar">
+                        <RadzenIcon Icon="get_app"></RadzenIcon>
+                        Importar
+                    </button>
+                }
+            </div>       
         </div>
     }
 
@@ -21,7 +41,7 @@
                     FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
-                    Visible=@cargado
+                    Visible=@(!trabajando)
                     SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems>
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
@@ -29,12 +49,6 @@
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Tipo" Filterable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
                     @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
-                </Template>
-            </RadzenDataGridColumn>
-
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Filterable="false" TextAlign="TextAlign.Start">
-                <Template Context="item">
-                    @item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
                 </Template>
             </RadzenDataGridColumn>
 
@@ -46,22 +60,6 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Filterable="false" TextAlign="TextAlign.Center">
-                <Template Context="item">
-                    @if (item.SolEncuestaCalidadCalificacion is null)
-                    {
-                        <text>(Pendiente de Contestar)</text>
-                    }
-                    else
-                    {
-                        <img class="d-inline mb-2" src="img/calidad/@(item.SolEncuestaCalidadCalificacion).png" />
-                        <br>
-                        @item.SolEncuestaCalidadComentarios
-                    }
-
-                </Template>
-            </RadzenDataGridColumn>
-
         </Columns>
     </RadzenDataGrid>
 </div>
@@ -70,13 +68,14 @@
 
 @code
 {
-    private string Title = "Solicitudes Pendientes";
-    private bool cargado { get; set; } = false;
-    private bool generando = false;
+    private string Title = "Solicitudes en Proceso";
+    private bool trabajando { get; set; } = true;
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
-    private readonly int[] estados = { 3 };
+    private readonly int[] estados = { TipoEstadoSolicitud.EN_PROCESO };
+
+    private IBrowserFile? fuImportar = null;
 
     private string debug = string.Empty;
 
@@ -86,7 +85,7 @@
         {
             await CargarLista();
 
-            cargado = true;
+            trabajando = false;
             StateHasChanged();
         }
     }
@@ -112,5 +111,45 @@
             selectedItems = items.Where(i => (i.IdSolicitudTicket == selecccionar_id)).ToList();
         }
     }
+
+    private void fuImportacion_OnChange(InputFileChangeEventArgs e)
+    {
+        fuImportar = e.File;
+    }
+
+    private async Task Importar()
+    {
+        if (fuImportar is null)
+        {
+            return;
+        }
+
+        trabajando = true;
+        StateHasChanged();
+
+        List<int> selected_ids = items.Where(i => i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToList();
+
+        using (MultipartFormDataContent content = new MultipartFormDataContent())
+        {
+            using (StreamContent fileContent = new StreamContent(fuImportar.OpenReadStream()))
+            {
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(fuImportar.ContentType);
+
+                content.Add(fileContent, name: "\"file\"", fuImportar.Name);
+
+                Response<string>? oResponse = await servicioArchivos.PostFile("xlsx", "procesados", content);
+
+                if (oResponse is not null && oResponse.Data is not null)
+                {
+                    debug += Environment.NewLine + "[SERVIDOR] " + oResponse.Message;
+                }
+            }
+        }
+
+        fuImportar = null;
+        trabajando = false;
+        StateHasChanged();
+    }
+
 
 }

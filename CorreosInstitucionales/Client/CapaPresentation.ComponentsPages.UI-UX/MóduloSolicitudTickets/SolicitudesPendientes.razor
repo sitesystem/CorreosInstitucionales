@@ -81,60 +81,78 @@
                 <Template Context="item">
                     <ul>
                         <li>
-                            CURP
-                            <a  href="@GenerarURLAdjunto(item, item.SolFileNameCurp!)"
-                            download="@GenerarNombreAdjunto(item, item.SolFileNameCurp!, "CURP")">
+                            <strong>CURP</strong>
+                            <a href="@GenerarURLArchivoUsuario(item, TipoDocumento.CURP)"
+                               download="@GenerarNombreArchivo(item, TipoDocumento.CURP)">
                                 Descargar
                             </a>
                             <br />
-                            <button class="btn btn-primary" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
+                            <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
                         </li>
 
-                        @if (item.SolCapturaCuentaBloqueada is not null && item.SolCapturaCuentaBloqueada != "-")
+                        @if(item.SolIdUsuarioNavigation!.UsuFileNameComprobanteInscripcion != "-")
                         {
                             <li>
-                                Captura de pantalla de Cuenta Bloqueada
-                                <a  href="@GenerarURLAdjunto(item, item.SolCapturaCuentaBloqueada)"
-                                   download="@GenerarNombreAdjunto(item, item.SolCapturaCuentaBloqueada, "CAPTURA_CUENTA_BLOQUEADA")">
+                                <strong>Comprobante de Inscripción</strong>
+                                <a href="@GenerarURLArchivoUsuario(item, TipoDocumento.COM_INSCRIPCION)"
+                                   download="@GenerarNombreArchivo(item, TipoDocumento.COM_INSCRIPCION)">
                                     Descargar
                                 </a>
                                 <br />
-                                <button class="btn btn-primary" @onclick="@(async ()=> await VerPDF(GenerarURLAdjunto(item, item.SolCapturaCuentaBloqueada)))">Ver</button>
+                                <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
                             </li>
                         }
 
-                        @if (item.SolCapturaError is not null && item.SolCapturaError != "-")
+                        @if ((item.SolCapturaCuentaBloqueada??"-") != "-")
                         {
                             <li>
-                                Captura de pantalla de Error
-                                <a href="@GenerarURLAdjunto(item, item.SolCapturaError)"
-                                   download="@GenerarNombreAdjunto(item, item.SolCapturaError, "CAPTURA_ERROR")">
+                                <strong>Comprobante de Inscripción</strong>
+                                <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_BLOQUEO)"
+                                   download="@GenerarNombreArchivo(item, TipoDocumento.CAP_BLOQUEO)">
                                     Descargar
                                 </a>
                                 <br />
-                                <button class="btn btn-primary" @onclick="@(async ()=> await VerPDF(GenerarURLAdjunto(item, item.SolCapturaError)))">Ver</button>
+                                <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
                             </li>
                         }
 
-                        @if (item.SolCapturaEscaneoAntivirus is not null && item.SolCapturaEscaneoAntivirus != "-")
+                        @if ((item.SolCapturaEscaneoAntivirus ?? "-") != "-")
                         {
                             <li>
-                                Captura de pantalla de Escaneo de Antivirus
-                                <a href="@GenerarURLAdjunto(item, item.SolCapturaEscaneoAntivirus)"
-                                   download="@GenerarNombreAdjunto(item, item.SolCapturaEscaneoAntivirus, "CAPTURA_ESCANEO_ANTIVIRUS")">
+                                <strong>Comprobante de Inscripción</strong>
+                                <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ANTIVIRUS)"
+                                   download="@GenerarNombreArchivo(item, TipoDocumento.CAP_ANTIVIRUS)">
                                     Descargar
                                 </a>
                                 <br />
-                                <button class="btn btn-primary" @onclick="@(async ()=> await VerPDF(GenerarURLAdjunto(item, item.SolCapturaEscaneoAntivirus)))">Ver</button>
+                                <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
                             </li>
                         }
+
+                        @if ((item.SolCapturaError ?? "-") != "-")
+                        {
+                            <li>
+                                <strong>Comprobante de Inscripción</strong>
+                                <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ERROR)"
+                                   download="@GenerarNombreArchivo(item, TipoDocumento.CAP_ERROR)">
+                                    Descargar
+                                </a>
+                                <br />
+                                <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
+                            </li>
+                        }
+
+
+
+
+                        
                     </ul>
                     
                 </Template>
             </RadzenDataGridColumn><!--ARCHIVOS-->
 
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Verificado" Filterable="false" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Verificado" Filterable="false" TextAlign="TextAlign.Center">
                 <Template Context="item">
                     <RadzenStack Class="rz-p-sm-12">
                         <RadzenSwitch @bind-Value=@item.SolValidacionDatos Change="StateHasChanged" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})" />
@@ -159,7 +177,7 @@
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
-    private readonly int[] estados = { 1, 2 };
+    private readonly int[] estados = { TipoEstadoSolicitud.ALTA, TipoEstadoSolicitud.PENDIENTE };
 
     private bool puede_exportar
     {
@@ -171,14 +189,54 @@
 
     private string debug = string.Empty;
 
-    private string GenerarURLAdjunto(RequestDTO_Solicitud solicitud, string archivo)
+    private string ArchivoSolicitud(RequestDTO_Solicitud solicitud, int tipo_documento)
     {
+        string archivo = "ARCHIVO_404";
+
+        switch(tipo_documento)
+        {
+            case TipoDocumento.CURP: 
+                archivo = solicitud.SolIdUsuarioNavigation!.UsuFileNameCurp!; 
+                break;
+
+            case TipoDocumento.COM_INSCRIPCION: 
+                archivo = solicitud.SolIdUsuarioNavigation!.UsuFileNameComprobanteInscripcion!;
+                break;
+
+            case TipoDocumento.CAP_BLOQUEO:
+                archivo = solicitud.SolCapturaCuentaBloqueada!;
+                break;
+
+            case TipoDocumento.CAP_ANTIVIRUS:
+                archivo = solicitud.SolCapturaEscaneoAntivirus!;
+                break;
+
+            case TipoDocumento.CAP_ERROR:
+                archivo = solicitud.SolCapturaError!;
+                break;
+        }
+
+        return archivo;
+    }
+
+    private string GenerarURLArchivoUsuario(RequestDTO_Solicitud solicitud, int tipo_documento)
+    {
+        string archivo = ArchivoSolicitud(solicitud, tipo_documento);
+        return $"Repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_{archivo}";
+    }
+
+    private string GenerarURLArchivoRepositorio(RequestDTO_Solicitud solicitud, int tipo_documento)
+    {
+        string archivo = ArchivoSolicitud(solicitud, tipo_documento);
         return $"Repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_{archivo}";
     }
 
-    private string GenerarNombreAdjunto(RequestDTO_Solicitud solicitud, string archivo, string tipo ="ARCHIVO")
+    private string GenerarNombreArchivo(RequestDTO_Solicitud solicitud, int tipo_documento)
     {
-        return $"{solicitud.SolIdUsuarioNavigation!.UsuCurp}_{tipo}{Path.GetExtension(archivo)}";
+        string archivo = ArchivoSolicitud(solicitud, tipo_documento);
+        string ext = Path.GetExtension(archivo);
+        string nombre = TipoDocumento.Nombre[tipo_documento] ?? "ARCHIVO_404";
+        return $"SOL{solicitud.IdSolicitudTicket}_{solicitud.SolIdUsuarioNavigation!.UsuCurp}_{nombre}{ext}";
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -260,7 +318,9 @@
                             Height = "calc( 100vh - 8em )",
                             CssClass = "dialog_simple p-0", 
                             CloseDialogOnEsc = true, 
-                            CloseDialogOnOverlayClick = true
+                            CloseDialogOnOverlayClick = true,
+                            Resizable = true,
+                            Draggable = true
                         }
                 );
     }
@@ -271,6 +331,6 @@
         {item.SolIdUsuarioNavigation!.UsuPrimerApellido}
         {item.SolIdUsuarioNavigation!.UsuSegundoApellido} - {item.SolIdUsuarioNavigation!.UsuCurp}";
 
-        await VerPDF(GenerarURLAdjunto(item, item.SolFileNameCurp!), nombre);
+        await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CURP), nombre);
     }
 }

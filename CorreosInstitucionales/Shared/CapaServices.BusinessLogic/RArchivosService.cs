@@ -16,7 +16,15 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
         const string url = "/api/archivos";
 
-        
+        public async Task<Response<string>?> PostFile(string extension, string action, MultipartFormDataContent formData)
+        {
+            var response = await _httpClient.PostAsync($"{url}/{extension}/{action}", formData);
+
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<Response<string>>(content, options: _options);
+            return result;
+        }
+
         public async Task<Response<string>?> NewFile(string extension, string action)
         {
             var response = await _httpClient.GetAsync($"{url}/{extension}/{action}");

@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Components.Web;
 
 using CorreosInstitucionales.Server.Correos;
 using DocumentFormat.OpenXml.Wordprocessing;
+using CorreosInstitucionales.Shared.CapaEntities.Common;
+using System.Linq.Dynamic.Core;
+using Microsoft.AspNetCore.Components.Web.HtmlRendering;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
@@ -54,6 +57,55 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return response;
         }
 
+        private async Task EnvioMasivoRespuesta(List<MtTbSolicitudesTicket> lista)
+        {
+            ILoggerFactory loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
+            HtmlRenderer htmlRenderer = new HtmlRenderer(_serviceProvider, loggerFactory);
+
+            RequestDTO_SendEmail correo = new RequestDTO_SendEmail()
+            {
+                Subject = "Su solcicitud ha sido atendida por la mesa de control",
+                EmailTo = "agmartinezc@ipn.mx",
+                Body = "NO DEFINIDO"
+            };
+
+            foreach (MtTbSolicitudesTicket solicitud in lista)
+            {
+                correo.Body = await htmlRenderer.Dispatcher.InvokeAsync
+                (
+                    async () =>
+                    {
+
+                        var parameters = Microsoft.AspNetCore.Components.ParameterView.FromDictionary
+                        (
+                            new Dictionary<string, object?>
+                            {
+                                { "solicitud", solicitud}
+                            }
+                        );
+
+                        HtmlRootComponent output;
+                        
+                        switch(solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
+                        {
+                            case TipoPersonal.ALUMNO:
+                            case TipoPersonal.EGRESADO:
+                            case TipoPersonal.MAESTRIA:
+                                output = await htmlRenderer.RenderComponentAsync<AtendidoAlumnoYEgresado>(parameters);
+                                break;
+                            default:
+                                output = await htmlRenderer.RenderComponentAsync<AtendidoPersonal>(parameters);
+                                break;
+                        }
+
+                        return output.ToHtmlString();
+                    }
+                );
+
+                await _servicioCorreo.SendEmail(correo);
+            }//FOREACH solicitud
+        }
+
         private async Task EnvioMasivo(List<MtTbSolicitudesTicket> lista)
         {
             ILoggerFactory loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
@@ -89,14 +141,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 );
 
                 await _servicioCorreo.SendEmail(correo);
-            }
-        }
+            }//FOREACH solicitud
+        }// ENVIO  MASIVO (EN PROCESO)
 
         private WebUtils.Link GenerarLink(MtTbSolicitudesTicket solicitud, int tipo_documento, string directorio)
         {
             string archivo = string.Empty;
-            string tipo = string.Empty;
-            
+            string tipo = TipoDocumento.Nombre[tipo_documento] ?? "ARCHIVO";
+
             string curp = solicitud.SolIdUsuarioNavigation.UsuCurp;
             string id = string.Format("{0:00000}", solicitud.IdSolicitudTicket);
 
@@ -104,23 +156,18 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 case TipoDocumento.CURP:
                     archivo = solicitud.SolIdUsuarioNavigation.UsuFileNameCurp!;
-                    tipo = "CURP";
                     break;
                 case TipoDocumento.COM_INSCRIPCION:
                     archivo = solicitud.SolIdUsuarioNavigation.UsuFileNameComprobanteInscripcion!;
-                    tipo = "COMPROBANTE_INSCRIPCION";
                     break;
                 case TipoDocumento.CAP_ANTIVIRUS:
                     archivo = solicitud.SolCapturaEscaneoAntivirus!;
-                    tipo = "CAPTURA_ANTIVIRUS";
                     break;
                 case TipoDocumento.CAP_BLOQUEO:
                     archivo = solicitud.SolCapturaCuentaBloqueada!;
-                    tipo = "CAPTURA_BLOQUEO";
                     break;
                 case TipoDocumento.CAP_ERROR:
                     archivo = solicitud.SolCapturaError!;
-                    tipo = "CAPTURA_ERROR";
                     break;
             }
 
@@ -139,6 +186,124 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         public async Task<IActionResult> GenerarPendientes_ZIP(int[] selected)
         {
             return await LlenarFormulario(selected, true);
+        }
+
+        [HttpPost("xlsx/procesados")]
+        public async Task<IActionResult> ImportarProcesados_XLSX(IFormFile file)
+        {
+            Response<string> oResponse = new();
+
+            Guid id = Guid.NewGuid();
+            string id_fecha = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            
+            string filename = $"../Client/wwwroot/repositorio/procesados/{id_fecha}_solicitud_alta_desbloqueo_{id}";
+            
+            StringBuilder sb = new StringBuilder();
+            bool guardar_registro = false;
+
+            //15,5
+            Dictionary<string,RegistroImportacion> registros = new ();
+            RegistroImportacion registro_actual;
+
+            List<string> lista_curps = new();
+
+            string CURP = string.Empty;
+            
+            try
+            {
+                using (var stream = file.OpenReadStream())
+                {
+                    XLWorkbook wb = new XLWorkbook(stream);
+                    IXLWorksheet ws = wb.Worksheet(1);
+
+                    int n = ws.LastRowUsed().RowNumber();
+
+                    if (n >= 5)
+                    {
+                        for(int row = 5; row<n; row++)
+                        {
+                            CURP = ws.Cell(row, 5).Value.ToString().Trim();
+                            
+                            lista_curps.Add(CURP);
+
+                            registro_actual = new RegistroImportacion()
+                            {
+                                CURP = CURP,
+                                ID = ws.Cell(row, 6).Value.ToString(),
+                                NoExtension = ws.Cell(row, 7).Value.ToString(),
+                                CorreoPersonal = ws.Cell(row, 8).Value.ToString(),
+                                CorreoInstitucional = ws.Cell(row, 9).Value.ToString(),
+                                Clave = ws.Cell(row, 10).Value.ToString(),
+                                Accion = ws.Cell(row, 11).Value.ToString()
+                            };
+
+                            registros.Add(CURP, registro_actual);
+
+                            sb.AppendLine(registro_actual.ToString());
+                        }
+                    }//LEER XLSX
+
+                    List<MtTbSolicitudesTicket> solicitudes = await _db.MtTbSolicitudesTickets
+                        .Where
+                        (
+                            st =>
+                                st.SolIdEstadoSolicitud == TipoEstadoSolicitud.EN_PROCESO &&
+                                lista_curps.Contains(st.SolIdUsuarioNavigation.UsuCurp)
+                        )
+                        .Include(st => st.SolIdUsuarioNavigation)
+                        .ToListAsync();
+
+                    if(registros.Count != solicitudes.Count)
+                    {
+                        sb.AppendLine($"EL NÚMERO DE REGISTROS DEL ARCHIVO XLSX ({registros.Count}) NO COINCIDE CON EL NÚMERO DE SOLICITUDES ({solicitudes.Count}).");
+                        guardar_registro = true;
+                    }
+
+                    //TODO: Cambio de asignaciones deacuerdo al tipo de solicitud
+                    foreach(MtTbSolicitudesTicket solicitud in solicitudes)
+                    {
+                        registro_actual = registros[solicitud.SolIdUsuarioNavigation.UsuCurp];
+
+                        solicitud.SolIdEstadoSolicitud = TipoEstadoSolicitud.ATENDIDA;
+                        
+                        if(solicitud.SolIdTipoSolicitud == TipoSolicitud.OTRO)
+                        {
+                            solicitud.SolIdUsuarioNavigation.UsuNoExtensionAnterior = solicitud.SolIdUsuarioNavigation.UsuNoExtension;
+                            solicitud.SolIdUsuarioNavigation.UsuNoExtension = registro_actual.NoExtension;
+                        }
+                        
+                        if(solicitud.SolIdTipoSolicitud ==  TipoSolicitud.CAMBIO_CORREO_PERSONAL)
+                        {
+                            solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+                            solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva = registro_actual.CorreoPersonal;
+                        }
+                        
+                        solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
+                        solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
+
+                        solicitud.SolRespuestaDcyC = registro_actual.Accion;
+                    }
+
+                    await _db.SaveChangesAsync();
+
+                    await EnvioMasivoRespuesta(solicitudes);
+                }
+
+                oResponse.Data = "OK";
+                oResponse.Success = 1;
+            }
+            catch(Exception ex)
+            {
+                oResponse.Data = ex.Message + Environment.NewLine + ex.StackTrace;
+            }
+
+            if (guardar_registro)
+            {
+                await System.IO.File.WriteAllTextAsync($"{filename}.log", sb.ToString());
+                oResponse.Message += Environment.NewLine + sb.ToString();
+            }
+
+            return Ok(oResponse);
         }
 
         public async Task<IActionResult> LlenarFormulario(int[] selected, bool return_zip)
@@ -181,15 +346,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             try
             {
-                pendientes = await Task.Run(
-                    ()=>_db.MtTbSolicitudesTickets.
-                        Where(st => selected.Contains(st.IdSolicitudTicket)).
-                        Include(st=>st.SolIdUsuarioNavigation).
-                        Include(st=>st.SolIdTipoSolicitudNavigation).
-                        ToList()
-                );
+                pendientes = await _db.MtTbSolicitudesTickets
+                        .Where(st => selected.Contains(st.IdSolicitudTicket))
+                        .Include(st => st.SolIdUsuarioNavigation)
+                        .Include(st => st.SolIdTipoSolicitudNavigation)
+                        .ToListAsync();
 
-                foreach(MtTbSolicitudesTicket solicitud in pendientes)
+                foreach (MtTbSolicitudesTicket solicitud in pendientes)
                 {
                     ruta_repositorio = $"Repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
                     ruta_usuario = $"Repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";

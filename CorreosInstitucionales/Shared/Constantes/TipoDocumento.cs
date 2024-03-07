@@ -13,5 +13,14 @@ namespace CorreosInstitucionales.Shared.Constantes
         public const int CAP_ANTIVIRUS      = 2;
         public const int CAP_BLOQUEO        = 3;
         public const int CAP_ERROR          = 4;
+
+        public static readonly Dictionary<int, string> Nombre = new()
+        {
+            {CURP,"CURP" },
+            {COM_INSCRIPCION,"COMPROBANTE_INSCRIPCION" },
+            {CAP_ANTIVIRUS,"CAPTURA_ANTIVIRUS" },
+            {CAP_BLOQUEO,"CAPTURA_BLOQUEO" },
+            {CAP_ERROR,"CAPTURA_ERROR" },
+        };
     }
 }
