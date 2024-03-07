@@ -218,9 +218,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                     int n = ws.LastRowUsed().RowNumber();
 
-                    if (n >= 5)
+                    if (n > 4)
                     {
-                        for(int row = 5; row<n; row++)
+                        for(int row = 5; row<=n; row++)
                         {
                             CURP = ws.Cell(row, 5).Value.ToString().Trim();
                             
@@ -242,6 +242,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             sb.AppendLine(registro_actual.ToString());
                         }
                     }//LEER XLSX
+                    else
+                    {
+                        sb.AppendLine("EL ARCHIVO NO CUENTA CON REGISTROS.");
+                        guardar_registro = true;
+                    }
 
                     List<MtTbSolicitudesTicket> solicitudes = await _db.MtTbSolicitudesTickets
                         .Where
@@ -265,22 +270,38 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         registro_actual = registros[solicitud.SolIdUsuarioNavigation.UsuCurp];
 
                         solicitud.SolIdEstadoSolicitud = TipoEstadoSolicitud.ATENDIDA;
-                        
-                        if(solicitud.SolIdTipoSolicitud == TipoSolicitud.OTRO)
-                        {
-                            solicitud.SolIdUsuarioNavigation.UsuNoExtensionAnterior = solicitud.SolIdUsuarioNavigation.UsuNoExtension;
-                            solicitud.SolIdUsuarioNavigation.UsuNoExtension = registro_actual.NoExtension;
-                        }
-                        
-                        if(solicitud.SolIdTipoSolicitud ==  TipoSolicitud.CAMBIO_CORREO_PERSONAL)
-                        {
-                            solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
-                            solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva = registro_actual.CorreoPersonal;
-                        }
-                        
-                        solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
-                        solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
 
+                        switch(solicitud.SolIdTipoSolicitud)
+                        {
+                            case TipoSolicitud.CAMBIO_CORREO_PERSONAL:
+                                solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+                                solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva = registro_actual.CorreoPersonal;
+                                break;
+
+                            case TipoSolicitud.CAMBIO_CELULAR:
+                                solicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
+                                solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo = registro_actual.Celular;
+                                break;
+
+                            case TipoSolicitud.CORREO_EGRESADO://CAMBIO DE DOMINIO alumno.ipn.mx a egresado.ipn.mx
+                            case TipoSolicitud.CREACION_ACTIVACION_CORREO_INST:
+                                solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
+                                solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
+                                break;
+
+                            case TipoSolicitud.RECUPERACION_CONTRA:
+                                solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
+                                break;
+
+                            case TipoSolicitud.OTRO:
+                                solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
+                                solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
+
+                                solicitud.SolIdUsuarioNavigation.UsuNoExtensionAnterior = solicitud.SolIdUsuarioNavigation.UsuNoExtension;
+                                solicitud.SolIdUsuarioNavigation.UsuNoExtension = registro_actual.NoExtension;
+                                break;
+                        }
+                        
                         solicitud.SolRespuestaDcyC = registro_actual.Accion;
                     }
 

@@ -142,6 +142,11 @@
                 if (oResponse is not null && oResponse.Data is not null)
                 {
                     debug += Environment.NewLine + "[SERVIDOR] " + oResponse.Message;
+
+                    if(oResponse.Success == 1)
+                    {
+                        await CargarLista();
+                    }
                 }
             }
         }

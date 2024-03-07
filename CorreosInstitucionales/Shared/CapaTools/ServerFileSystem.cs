@@ -10,10 +10,10 @@ namespace CorreosInstitucionales.Shared.Utils
         {
             string z_name = string.Empty;
             string z_filename = string.Empty;
+
             string? log = null;
 
-            StringBuilder sb = new();
-            bool guardar_log = false;
+            List<string> messages = [$"PATH: {Path.GetFullPath(".")}"];
 
             using (FileStream fs = new FileStream(filename, FileMode.CreateNew))
             {
@@ -25,8 +25,7 @@ namespace CorreosInstitucionales.Shared.Utils
 
                         if (!File.Exists(z_filename))
                         {
-                            sb.AppendLine($"NO EXISTE EL ARCHIVO {z_filename}");
-                            guardar_log = true;
+                            messages.Add($"NO EXISTE EL ARCHIVO {z_filename}");
                             continue;
                         }
 
@@ -35,11 +34,11 @@ namespace CorreosInstitucionales.Shared.Utils
                         za.CreateEntryFromFile(z_filename, z_name);
                     }
 
-                    if (guardar_log)
+                    if (messages.Count > 0)
                     {
-                        log = sb.ToString();
+                        log = string.Join(Environment.NewLine, messages);
 
-                        ZipArchiveEntry logfile = za.CreateEntry("log.txt");
+                        ZipArchiveEntry logfile = za.CreateEntry("mensajes.log");
                         using (Stream stream = logfile.Open())
                         {
                             using (StreamWriter sw = new StreamWriter(stream, Encoding.UTF8))

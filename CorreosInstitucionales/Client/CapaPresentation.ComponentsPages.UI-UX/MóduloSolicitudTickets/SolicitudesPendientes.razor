@@ -99,7 +99,10 @@
                                     Descargar
                                 </a>
                                 <br />
-                                <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
+                                <button class="btn btn-primary form-control" 
+                                    @onclick="@(async () => await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.COM_INSCRIPCION), "COMPROBANTE DE INSCRIPCIÓN"))">
+                                    Ver
+                                </button>
                             </li>
                         }
 
@@ -112,7 +115,10 @@
                                     Descargar
                                 </a>
                                 <br />
-                                <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
+                                <button class="btn btn-primary form-control"
+                                        @onclick="@(async () => await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CAP_BLOQUEO), "CAPTURA DE PANTALLA DE BLOQUEO"))">
+                                    Ver
+                                </button>
                             </li>
                         }
 
@@ -125,7 +131,10 @@
                                     Descargar
                                 </a>
                                 <br />
-                                <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
+                                <button class="btn btn-primary form-control"
+                                        @onclick="@(async () => await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CAP_ANTIVIRUS), "CAPTURA DE PANTALLA DE ESCANEO DE ANTIVIRUS"))">
+                                    Ver
+                                </button>
                             </li>
                         }
 
@@ -138,14 +147,12 @@
                                     Descargar
                                 </a>
                                 <br />
-                                <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerCURP(item))">Ver</button>
+                                <button class="btn btn-primary form-control"
+                                        @onclick="@(async () => await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CAP_ERROR), "CAPTURA DE PANTALLA DE ERROR"))">
+                                    Ver
+                                </button>
                             </li>
                         }
-
-
-
-
-                        
                     </ul>
                     
                 </Template>
@@ -285,6 +292,8 @@
         {
             if(oResponse.Success == 1)
             {
+                await CargarLista();
+
                 foreach (WebUtils.Link url in oResponse.Data)
                 {
                     await JSRuntime.InvokeVoidAsync("Descargar", url);
@@ -294,9 +303,6 @@
             {
                 debug += Environment.NewLine + oResponse.Message;
             }
-
-
-
         }
 
         cargado = true;
@@ -330,6 +336,15 @@
         string nombre = $@"{item.SolIdUsuarioNavigation!.UsuNombre}
         {item.SolIdUsuarioNavigation!.UsuPrimerApellido}
         {item.SolIdUsuarioNavigation!.UsuSegundoApellido} - {item.SolIdUsuarioNavigation!.UsuCurp}";
+
+        await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CURP), nombre);
+    }
+
+    private async Task VerComprobanteInscripcion(RequestDTO_Solicitud item)
+    {
+        string nombre = $@"{item.SolIdUsuarioNavigation!.UsuNombre}
+        {item.SolIdUsuarioNavigation!.UsuPrimerApellido}
+        {item.SolIdUsuarioNavigation!.UsuSegundoApellido}";
 
         await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CURP), nombre);
     }

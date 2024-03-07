@@ -10,7 +10,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Common
     {
         public string CURP { get; set; } = string.Empty;
         public string ID { get; set; } = string.Empty ;
-        public string NoExtension {  get; set; } = string.Empty ; 
+        public string NoExtension {  get; set; } = string.Empty ;
+        public string Celular { get; set; } = string.Empty;
         public string CorreoPersonal {  get; set; } = string.Empty ;
         public string CorreoInstitucional { get; set; } = string.Empty;
         public string Clave {  get; set; } = string.Empty ;
@@ -18,7 +19,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Common
 
         public override string ToString()
         {
-            return $"{CURP}|{ID}|{NoExtension}|{CorreoPersonal}|{CorreoInstitucional}|{Clave}|{Accion}";
+            return $"{CURP}|{ID}|{NoExtension}|{Celular}|{CorreoPersonal}|{CorreoInstitucional}|{Clave}|{Accion}";
         }
     }
 }
