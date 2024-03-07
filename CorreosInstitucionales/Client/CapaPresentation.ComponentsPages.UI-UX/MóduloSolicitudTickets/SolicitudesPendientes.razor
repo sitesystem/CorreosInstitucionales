@@ -159,7 +159,7 @@
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
-    private readonly int[] estados = { 1, 2 };
+    private readonly int[] estados = { TipoEstadoSolicitud.ALTA, TipoEstadoSolicitud.PENDIENTE };
 
     private bool puede_exportar
     {
