@@ -490,10 +490,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             if (save_log)
             {
-                System.IO.File.WriteAllText($"{base_directory}/{filename}.txt", errors.ToString());
+                System.IO.File.WriteAllText($"{base_directory}/{filename}.log", errors.ToString());
 
                 oResponse.Message = errors.ToString();
-                oResponse.Data.Add(new WebUtils.Link($"{base_directory}/{filename}.txt"));
+                oResponse.Data.Add(new WebUtils.Link($"{base_directory}/{filename}.log"));
             }
 
             return Ok(oResponse);
