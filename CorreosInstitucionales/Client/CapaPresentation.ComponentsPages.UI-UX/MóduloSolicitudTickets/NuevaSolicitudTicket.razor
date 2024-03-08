@@ -243,7 +243,7 @@
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaEscaneoAntivirus)" hidden="@(!isVisibleCapturaEscaneoAntivirus)" />
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus)" hidden="@(!isVisibleCapturaEscaneoAntivirus)" />
 
-                                        <RadzenFormField Text="Archivo de la Captura del Error" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCapturaError">
+                                        <RadzenFormField Text="Archivo de la Captura Otro Motivo" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCapturaError">
                                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
                                                 <RadzenUpload @ref="oUploadFile_SolCapturaError" Url="" Accept=".pdf"
@@ -417,12 +417,6 @@ else
         await oUploadFile_SolCapturaEscaneoAntivirus.ClearFiles();
         await oUploadFile_SolCapturaCuentaBloqueada.ClearFiles();
         await oUploadFile_SolCapturaError.ClearFiles();
-
-        oUploadFile_SolFileNameCurp.Dispose();
-        oUploadFile_SolFileNameComprobanteInscripcion.Dispose();
-        oUploadFile_SolCapturaEscaneoAntivirus.Dispose();
-        oUploadFile_SolCapturaCuentaBloqueada.Dispose();
-        oUploadFile_SolCapturaError.Dispose();
 
         oFileInfoSolCurp = null;
         oFileInfoSolComprobanteInscripcion = null;

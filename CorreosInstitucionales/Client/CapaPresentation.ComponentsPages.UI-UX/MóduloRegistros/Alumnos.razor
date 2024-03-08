@@ -147,7 +147,7 @@
                                             <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
                                         </svg>
                                     </a>
-                                    <iframe src="@srcCURP" frameborder="1" scrolling="yes" class="w-100" style="height:500px;" hidden="true" />
+                                    <iframe src="@srcCURP" frameborder="1" scrolling="yes" class="w-100" style="height:100px;" />
                                 </RadzenText>
                             </Helper>
                         </RadzenFormField>
@@ -293,6 +293,7 @@
                                                 <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
                                             </svg>
                                         </a>
+                                        <iframe src="@srcComprobanteInscripcion" frameborder="1" scrolling="yes" class="w-100" style="height:100px;" />
                                     }
                                 </RadzenText>
                             </Helper>
@@ -824,16 +825,7 @@ else
         }
     }
 
-    async Task OnCompleteFiles(UploadCompleteEventArgs args)
-    {
-        Console.WriteLine($"Server response: {args.RawResponse}");
-
-        oFileInfoCURP = null;
-        oFileInfoComprobanteInscripcion = null;
-        StateHasChanged();
-        await oUploadFile_CURP.ClearFiles();
-        await oUploadFile_ComprobanteInscripción.ClearFiles();
-    }
+    async Task OnCompleteFiles(UploadCompleteEventArgs args) => Console.WriteLine($"Server response: {args.RawResponse}");
 
     @*///////////////////////////////////////////////  VALIDAR ReCAPTCHA  ////////////////////////////////////////////////////////////////////////*@
     private ReCAPTCHA oReCAPTCHAComponent;
@@ -911,10 +903,10 @@ else
                                                     <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
 				                                    Se le informa que su {agregar_actualizar} fué exitoso en la Plataforma <b>SACI (Sistema de Ayuda para Correos Institucionales)</b>
 				                                    de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
-                                                    {entrega_credenciales_acceso}<br>
+                                                {entrega_credenciales_acceso}<br>
 				                                </p>
 			                                </article>
-			                                {credenciales_acceso}
+                               {credenciales_acceso}
 			                                <div align='center'>
 				                                <article style='background-color: rgb(255, 255, 255); width:700px; border-radius:10px; padding:5px; '>
 					                                <p class='text-start' style='font-size:calc(12px + 0.290625vw); color:black;'>
@@ -958,19 +950,19 @@ else
 								                                <tr>
 									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Boleta</td>
 									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>
-                                                                        {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumno : oUsuario.UsuBoletaMaestria)}
+                                                                    {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumno : oUsuario.UsuBoletaMaestria)}
                                                                     </td>
 								                                </tr>
 								                                <tr style='background-color: #dddddd;'>
 									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Carrera</td>
 									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>
-                                                                        {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oCarrera?.Data?.CarrNombre : "")}
+                                                                    {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oCarrera?.Data?.CarrNombre : "")}
                                                                     </td>
 								                                </tr>
 								                                <tr>
 									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Semestre</td>
 									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>
-                                                                        {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuSemestre : "")}
+                                                                    {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuSemestre : "")}
                                                                     </td>
 								                                </tr>
 								                                <tr style='background-color: #dddddd;'>
@@ -1006,6 +998,9 @@ else
 
                 if (ValidReCAPTCHA && verification?.Success == 1)
                 {
+                    Console.WriteLine($"CURP: {oUsuario.UsuFileNameCurp}");
+                    Console.WriteLine($"CH: {oUsuario.UsuFileNameComprobanteInscripcion}");
+                    
                     var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
                     oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
 
@@ -1169,25 +1164,19 @@ else
                     {
                         @*//  UPLOAD FILES  //*@
                         idResponse = oUsuario.IdUsuario;
+                        
+                        oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
+                        oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
+                        await oUploadFile_CURP.Upload();
 
-                        if (oFileInfoCURP is not null && oUploadFile_CURP != null)
-                        {
-                            oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
-                            oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
-                            await oUploadFile_CURP.Upload();
-                        }
-
-                        if (oFileInfoComprobanteInscripcion is not null && oUploadFile_ComprobanteInscripción != null)
-                        {
-                            oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
-                            oUploadFile_ComprobanteInscripción.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
-                            await oUploadFile_ComprobanteInscripción.Upload();
-                        }
+                        oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
+                        oUploadFile_ComprobanteInscripción.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
+                        await oUploadFile_ComprobanteInscripción.Upload();
 
                         var responseUsuario = await servicioUsuario.GetDataByIdAsync(oUsuario.IdUsuario);
                         oUsuario = responseUsuario.Data;
-                        srcCURP = oUsuario.UsuFileNameCurp != "CURP.pdf" ? $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}" : $@"/Repositorio/CURP.pdf";
-                        srcComprobanteInscripcion = oUsuario.UsuFileNameComprobanteInscripcion != "Comprobante-Inscripción.pdf" ? $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteInscripcion}" : $@"/Repositorio/Comprobante-Inscripción.pdf";
+                        srcCURP = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}";
+                        srcComprobanteInscripcion = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteInscripcion}";
 
                         @*//  NOTIFICATION TOAST REGISTRO EXITOSO  //*@
                         NotificationService.Notify(
@@ -1376,6 +1365,8 @@ else
         finally
         {
             busyLoading = false;
+            if (ActionAddEdit == "actualizar" && oFileInfoCURP is not null || oFileInfoComprobanteInscripcion is not null)
+                navigationManager.Refresh(true);
         }
     }
 

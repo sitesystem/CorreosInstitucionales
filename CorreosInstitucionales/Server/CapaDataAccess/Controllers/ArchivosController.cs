@@ -62,7 +62,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             ILoggerFactory loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
             HtmlRenderer htmlRenderer = new HtmlRenderer(_serviceProvider, loggerFactory);
 
-            RequestDTO_SendEmail correo = new RequestDTO_SendEmail()
+            RequestDTO_SendEmail correo = new()
             {
                 Subject = "Su solcicitud ha sido atendida por la mesa de control",
                 EmailTo = "agmartinezc@ipn.mx",
@@ -75,7 +75,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 (
                     async () =>
                     {
-
                         var parameters = Microsoft.AspNetCore.Components.ParameterView.FromDictionary
                         (
                             new Dictionary<string, object?>
@@ -111,7 +110,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             ILoggerFactory loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
             HtmlRenderer htmlRenderer = new HtmlRenderer(_serviceProvider, loggerFactory);
 
-            RequestDTO_SendEmail correo = new RequestDTO_SendEmail()
+            RequestDTO_SendEmail correo = new()
             {
                 Subject = "Su solcicitud ha sido canalizada hacia la mesa de control",
                 EmailTo = "agmartinezc@ipn.mx",
@@ -124,7 +123,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 (
                     async () =>
                     {
-
                         var parameters = Microsoft.AspNetCore.Components.ParameterView.FromDictionary
                         (
                             new Dictionary<string, object?>
@@ -195,9 +193,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             Guid id = Guid.NewGuid();
             string id_fecha = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            
-            string filename = $"../Client/wwwroot/repositorio/procesados/{id_fecha}_solicitud_alta_desbloqueo_{id}";
-            
+
+            string filename = $"../Client/wwwroot/repositorio/procesados/{id_fecha}_solicitud_alta_desbloqueo_{id}"; // Development Root
+            //string filename = $"wwwroot/repositorio/procesados/{id_fecha}_solicitud_alta_desbloqueo_{id}"; // Deployment Root
+
             StringBuilder sb = new StringBuilder();
             bool guardar_registro = false;
 
@@ -335,14 +334,15 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             Response<List<WebUtils.Link>> oResponse = new() { Data = new() } ;
             List<MtTbSolicitudesTicket> pendientes = new List<MtTbSolicitudesTicket>();
 
-            string base_directory = $"../Client/wwwroot";
+            string base_directory = $"../Client/wwwroot"; // Development Root
+            //string base_directory = $"wwwroot"; // Deployment Root
             string filename = $"repositorio/pendientes/{id_fecha}_solicitud_alta_desbloqueo_{id}";
             string template_fn = $"assets/sol_alta_desbloqueo.xlsx";
             
             XLWorkbook wb = new XLWorkbook($"{base_directory}/{template_fn}");
             IXLWorksheet ws = wb.Worksheet(1);
 
-            StringBuilder errors = new StringBuilder();
+            StringBuilder errors = new();
             bool save_log = false;
 
             int i = 5;
