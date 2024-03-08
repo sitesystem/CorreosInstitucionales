@@ -45,8 +45,7 @@
                     FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Solicitud"
-                    Visible=@cargado
-                    SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@selectedItems>
+                    Visible=@cargado>
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
@@ -183,7 +182,7 @@
     private string link = string.Empty;
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
-    private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
+    
     private readonly int[] estados = { TipoEstadoSolicitud.ALTA, TipoEstadoSolicitud.PENDIENTE };
 
     private bool puede_exportar
@@ -271,11 +270,6 @@
             {
                 debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {request.Message}";
             }
-        }
-
-        if (selecccionar_id is not null)
-        {
-            selectedItems = items.Where(i => (i.IdSolicitudTicket == selecccionar_id)).ToList();
         }
     }
 
