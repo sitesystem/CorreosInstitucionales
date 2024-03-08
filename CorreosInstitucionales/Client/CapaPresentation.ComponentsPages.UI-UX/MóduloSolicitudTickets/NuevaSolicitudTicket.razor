@@ -357,6 +357,7 @@ else
             oSolicitudTicket.SolObservacionesSolicitud = "";
             oSolicitudTicket.SolIdEstadoSolicitud = 2;
             oSolicitudTicket.SolValidacionDatos = false;
+            oSolicitudTicket.SolRespuestaDcyC = "";
             @* DATOS ENCUESTA DE CALIDAD DE LA SOLICITUD-TICKET *@
             oSolicitudTicket.SolEncuestaCalidadCalificacion = null;
             oSolicitudTicket.SolEncuestaCalidadComentarios = "";
@@ -416,6 +417,12 @@ else
         await oUploadFile_SolCapturaEscaneoAntivirus.ClearFiles();
         await oUploadFile_SolCapturaCuentaBloqueada.ClearFiles();
         await oUploadFile_SolCapturaError.ClearFiles();
+
+        oUploadFile_SolFileNameCurp.Dispose();
+        oUploadFile_SolFileNameComprobanteInscripcion.Dispose();
+        oUploadFile_SolCapturaEscaneoAntivirus.Dispose();
+        oUploadFile_SolCapturaCuentaBloqueada.Dispose();
+        oUploadFile_SolCapturaError.Dispose();
 
         oFileInfoSolCurp = null;
         oFileInfoSolComprobanteInscripcion = null;

@@ -153,6 +153,7 @@
                                             <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
                                         </svg>
                                     </a>
+                                    <iframe src="@srcCURP" frameborder="1" scrolling="yes" class="w-100" style="height:500px;" hidden="true" />
                                 </RadzenText>
                             </Helper>
                         </RadzenFormField>
@@ -520,6 +521,7 @@ else
             @* DATOS LABORALES *@
             oUsuario.UsuNumeroEmpleado = "";                    // Número del Empleado del Usuario (Administrador o Docente)
             // oUsuario.UsuIdAreaDepto = 1;                     // FK ID del Área/Departamento del Usuario Empleado
+            oUsuario.UsuNoExtensionAnterior = "0";              // Número de Extensión Anterior del Empleado
             oUsuario.UsuNoExtension = "";                       // Número de Extensión del Empleado
             @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
             oUsuario.UsuCorreoPersonalCuentaAnterior = null;    // Correo Personal de la Cuenta Anterior
@@ -569,6 +571,7 @@ else
             @* DATOS LABORALES *@
             oUsuario.UsuNumeroEmpleado = oEditUsuario.UsuNumeroEmpleado;        // Número del Empleado del Usuario (Administrador o Docente)
             oUsuario.UsuIdAreaDepto = oEditUsuario.UsuIdAreaDepto;              // FK ID del Área/Departamento del Usuario Empleado
+            oUsuario.UsuNoExtensionAnterior = oEditUsuario.UsuNoExtensionAnterior; // Número de Extensión del Empleado
             oUsuario.UsuNoExtension = oEditUsuario.UsuNoExtension;              // Número de Extensión del Empleado
             @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
             oUsuario.UsuCorreoPersonalCuentaAnterior = oEditUsuario.UsuCorreoPersonalCuentaAnterior;        // Correo Personal de la Cuenta Anterior
@@ -1120,7 +1123,8 @@ else
                                          Visible="true" Class="rz-border-radius-1">
                                          El <strong>Correo Electrónico Personal y/o CURP</strong> ya están registrados por lo que <b>NO</b> puede volverse a registrar con estos datos.
                             </RadzenAlert>
-                        </RadzenStack>,
+                        </RadzenStack>
+    ,
                         new DialogOptions()
                         {
                             CloseDialogOnOverlayClick = true,
@@ -1145,6 +1149,8 @@ else
         {
             busyLoading = false;
             oFileInfoCURP = null;
+            StateHasChanged();
+            await oUploadFile_CURP.ClearFiles();
         }
     }
 

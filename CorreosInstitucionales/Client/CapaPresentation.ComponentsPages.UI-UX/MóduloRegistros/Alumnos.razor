@@ -147,7 +147,7 @@
                                             <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
                                         </svg>
                                     </a>
-                                    <a href="@($"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}")">RUTA</a>
+                                    <iframe src="@srcCURP" frameborder="1" scrolling="yes" class="w-100" style="height:500px;" hidden="true" />
                                 </RadzenText>
                             </Helper>
                         </RadzenFormField>
@@ -293,7 +293,6 @@
                                                 <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
                                             </svg>
                                         </a>
-                                        <a href="@($"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteInscripcion}")">RUTA</a>
                                     }
                                 </RadzenText>
                             </Helper>
@@ -624,6 +623,7 @@ else
             @* DATOS LABORALES *@
             oUsuario.UsuNumeroEmpleado = "0";                   // Número del Empleado del Usuario (Administrador o Docente)
             oUsuario.UsuIdAreaDepto = 1;                        // FK ID del Área/Departamento del Usuario Empleado
+            oUsuario.UsuNoExtensionAnterior = "0";              // Número de Extensión Anterior del Empleado
             oUsuario.UsuNoExtension = "0";                      // Número de Extensión del Empleado
             @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
             oUsuario.UsuCorreoPersonalCuentaAnterior = null;    // Correo Personal de la Cuenta Anterior
@@ -674,6 +674,7 @@ else
             @* DATOS LABORALES *@
             oUsuario.UsuNumeroEmpleado = oEditUsuario.UsuNumeroEmpleado;        // Número del Empleado del Usuario (Administrador o Docente)
             oUsuario.UsuIdAreaDepto = oEditUsuario.UsuIdAreaDepto;              // FK ID del Área/Departamento del Usuario Empleado
+            oUsuario.UsuNoExtensionAnterior = oEditUsuario.UsuNoExtensionAnterior; // Número de Extensión Anterior del Empleado
             oUsuario.UsuNoExtension = oEditUsuario.UsuNoExtension;              // Número de Extensión del Empleado
             @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
             oUsuario.UsuCorreoPersonalCuentaAnterior = oEditUsuario.UsuCorreoPersonalCuentaAnterior;        // Correo Personal de la Cuenta Anterior
@@ -823,7 +824,16 @@ else
         }
     }
 
-    async Task OnCompleteFiles(UploadCompleteEventArgs args) => Console.WriteLine($"Server response: {args.RawResponse}");
+    async Task OnCompleteFiles(UploadCompleteEventArgs args)
+    {
+        Console.WriteLine($"Server response: {args.RawResponse}");
+
+        oFileInfoCURP = null;
+        oFileInfoComprobanteInscripcion = null;
+        StateHasChanged();
+        await oUploadFile_CURP.ClearFiles();
+        await oUploadFile_ComprobanteInscripción.ClearFiles();
+    }
 
     @*///////////////////////////////////////////////  VALIDAR ReCAPTCHA  ////////////////////////////////////////////////////////////////////////*@
     private ReCAPTCHA oReCAPTCHAComponent;
@@ -1160,14 +1170,14 @@ else
                         @*//  UPLOAD FILES  //*@
                         idResponse = oUsuario.IdUsuario;
 
-                        if (oFileInfoCURP is not null)
+                        if (oFileInfoCURP is not null && oUploadFile_CURP != null)
                         {
                             oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
                             oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
                             await oUploadFile_CURP.Upload();
                         }
 
-                        if (oFileInfoComprobanteInscripcion is not null)
+                        if (oFileInfoComprobanteInscripcion is not null && oUploadFile_ComprobanteInscripción != null)
                         {
                             oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
                             oUploadFile_ComprobanteInscripción.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
@@ -1341,7 +1351,8 @@ else
                                          Visible="true" Class="rz-border-radius-1">
                                          El <strong>Correo Electrónico Personal y/o CURP</strong> ya están registrados por lo que <b>NO</b> puede volverse a registrar con estos datos.
                             </RadzenAlert>
-                        </RadzenStack>,
+                        </RadzenStack>
+    ,
                         new DialogOptions()
                         {
                             CloseDialogOnOverlayClick = true,
@@ -1365,8 +1376,6 @@ else
         finally
         {
             busyLoading = false;
-            oFileInfoCURP = null;
-            oFileInfoComprobanteInscripcion = null;
         }
     }
 

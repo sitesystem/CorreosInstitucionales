@@ -26,8 +26,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.RepositorioFi
                 if (file.Length > 0 && file != null)
                 {
                     // var carpeta = Path.Combine(_hostEnvironment.ContentRootPath, $@"CapaDataAccess\Repositorio\{id}_{guid}");
-                    //folder = Path.Combine(Path.Combine(_webHostEnvironment.ContentRootPath, ".."), $@"Client\wwwroot\Repositorio\{folder}\{id}"); // Developer Root
-                    folder = Path.Combine(_webHostEnvironment.ContentRootPath, $@"wwwroot\Repositorio\{folder}\{id}"); // Deployed Root
+                    folder = Path.Combine(Path.Combine(_webHostEnvironment.ContentRootPath, ".."), $@"Client\wwwroot\Repositorio\{folder}\{id}"); // Developer Root
+                    //folder = Path.Combine(_webHostEnvironment.ContentRootPath, $@"wwwroot\Repositorio\{folder}\{id}"); // Deployed Root
                     // var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     if (!Directory.Exists(folder))
                         Directory.CreateDirectory(folder);
