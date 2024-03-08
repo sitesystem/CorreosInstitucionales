@@ -1,23 +1,16 @@
 ﻿using ClosedXML.Excel;
+using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
+using CorreosInstitucionales.Server.Correos;
+using CorreosInstitucionales.Shared.CapaEntities.Common;
+using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.Utils;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Razor.Infrastructure;
-using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
-
-using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
-using CorreosInstitucionales.Shared.CapaEntities.Request;
-using Microsoft.AspNetCore.Components.Web;
-
-using CorreosInstitucionales.Server.Correos;
-using DocumentFormat.OpenXml.Wordprocessing;
-using CorreosInstitucionales.Shared.CapaEntities.Common;
 using System.Linq.Dynamic.Core;
-using Microsoft.AspNetCore.Components.Web.HtmlRendering;
+using System.Text;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
@@ -34,6 +27,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
         private readonly ISendEmailService _servicioCorreo = servicioEmail;
         private readonly IServiceProvider _serviceProvider = serviceProvider;
+
+        protected string? EnlaceRoto(string? archivo, string ruta)
+        {
+            return
+            (
+                archivo is not null &&
+                archivo != "-" &&
+                !System.IO.File.Exists(ruta+archivo)
+            )? ruta+archivo : null;
+        }
 
         protected async Task<string?> EstablecerEstado(int[] lista_solicitudes, int estado)
         {
@@ -59,9 +62,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
         private async Task EnvioMasivoRespuesta(List<MtTbSolicitudesTicket> lista)
         {
-            ILoggerFactory loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
-            HtmlRenderer htmlRenderer = new HtmlRenderer(_serviceProvider, loggerFactory);
-
+            ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
+            
             RequestDTO_SendEmail correo = new()
             {
                 Subject = "Su solcicitud ha sido atendida por la mesa de control",
@@ -69,37 +71,26 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 Body = "NO DEFINIDO"
             };
 
+            Dictionary<string, object?> variables_correo = new Dictionary<string, object?>
+            {
+                { "solicitud", null}
+            };
+
             foreach (MtTbSolicitudesTicket solicitud in lista)
             {
-                correo.Body = await htmlRenderer.Dispatcher.InvokeAsync
-                (
-                    async () =>
-                    {
-                        var parameters = Microsoft.AspNetCore.Components.ParameterView.FromDictionary
-                        (
-                            new Dictionary<string, object?>
-                            {
-                                { "solicitud", solicitud}
-                            }
-                        );
+                variables_correo["solicitud"] = solicitud;
 
-                        HtmlRootComponent output;
-                        
-                        switch(solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
-                        {
-                            case TipoPersonal.ALUMNO:
-                            case TipoPersonal.EGRESADO:
-                            case TipoPersonal.MAESTRIA:
-                                output = await htmlRenderer.RenderComponentAsync<AtendidoAlumnoYEgresado>(parameters);
-                                break;
-                            default:
-                                output = await htmlRenderer.RenderComponentAsync<AtendidoPersonal>(parameters);
-                                break;
-                        }
-
-                        return output.ToHtmlString();
-                    }
-                );
+                switch (solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
+                {
+                    case TipoPersonal.ALUMNO:
+                    case TipoPersonal.EGRESADO:
+                    case TipoPersonal.MAESTRIA:
+                        correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_correo);
+                        break;
+                    default:
+                        correo.Body = await renderer.GetHTML<AtendidoPersonal>(variables_correo);
+                        break;
+                }
 
                 await _servicioCorreo.SendEmail(correo);
             }//FOREACH solicitud
@@ -107,8 +98,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
         private async Task EnvioMasivo(List<MtTbSolicitudesTicket> lista)
         {
-            ILoggerFactory loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
-            HtmlRenderer htmlRenderer = new HtmlRenderer(_serviceProvider, loggerFactory);
+            ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
 
             RequestDTO_SendEmail correo = new()
             {
@@ -117,26 +107,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 Body = "NO DEFINIDO"
             };
 
+            Dictionary<string, object?> variables_correo = new Dictionary<string, object?>
+            {
+                { "solicitud", null}
+            };
+
             foreach (MtTbSolicitudesTicket solicitud in lista)
             {
-                correo.Body = await htmlRenderer.Dispatcher.InvokeAsync
-                (
-                    async () =>
-                    {
-                        var parameters = Microsoft.AspNetCore.Components.ParameterView.FromDictionary
-                        (
-                            new Dictionary<string, object?>
-                            {
-                                { "nombre", solicitud.SolIdUsuarioNavigation.UsuNombre},
-                                { "solicitud", solicitud.IdSolicitudTicket}
-                            }
-                        );
+                variables_correo["solicitud"] = solicitud;
 
-                        var output = await htmlRenderer.RenderComponentAsync<EnProceso>(parameters);
-
-                        return output.ToHtmlString();
-                    }
-                );
+                correo.Body = await renderer.GetHTML<EnProceso>(variables_correo);
 
                 await _servicioCorreo.SendEmail(correo);
             }//FOREACH solicitud
@@ -514,6 +494,62 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 oResponse.Message = errors.ToString();
                 oResponse.Data.Add(new WebUtils.Link($"{base_directory}/{filename}.txt"));
+            }
+
+            return Ok(oResponse);
+        }//LLENAR FORMULARIO
+
+        [HttpGet("*/arreglar_rotos")]
+        public async Task<IActionResult> ListarEnlacesRotos()
+        {
+            string root = Path.GetFullPath("../client/wwwroot/");
+            Response<List<string>> oResponse = new() { Data = [root] };
+            List<MtTbSolicitudesTicket> solicitudes;
+            
+            string? enlace;
+            string origen = $"{root}/assets/cheems.pdf";
+
+            string ruta_repositorio;
+            string ruta_usuario;
+
+            try
+            {
+                solicitudes = await _db.MtTbSolicitudesTickets
+                    .Include(st => st.SolIdUsuarioNavigation)
+                    .ToListAsync();
+
+                foreach (MtTbSolicitudesTicket solicitud in solicitudes)
+                {
+                    ruta_repositorio = $"Repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
+                    ruta_usuario = $"Repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
+
+                    enlace = EnlaceRoto(solicitud.SolIdUsuarioNavigation.UsuFileNameCurp, ruta_usuario);
+
+                    if (enlace is not null)
+                    {
+                        oResponse.Data.Add(enlace);
+                        //System.IO.File.Copy(origen, )
+                    }
+
+                    enlace = EnlaceRoto(solicitud.SolIdUsuarioNavigation.UsuFileNameComprobanteInscripcion, ruta_usuario);
+                    if (enlace is not null) oResponse.Data.Add(enlace);
+
+                    enlace = EnlaceRoto(solicitud.SolCapturaCuentaBloqueada, ruta_repositorio);
+                    if (enlace is not null) oResponse.Data.Add(enlace);
+
+                    enlace = EnlaceRoto(solicitud.SolCapturaEscaneoAntivirus, ruta_repositorio);
+                    if (enlace is not null) oResponse.Data.Add(enlace);
+
+                    enlace = EnlaceRoto(solicitud.SolCapturaError, ruta_repositorio);
+                    if (enlace is not null) oResponse.Data.Add(enlace);
+
+
+                }
+
+                oResponse.Success = 1;
+            }catch(Exception ex)
+            {
+                oResponse.Message = ex.Message;
             }
 
             return Ok(oResponse);
