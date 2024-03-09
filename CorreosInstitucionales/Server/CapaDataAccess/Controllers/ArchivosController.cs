@@ -30,12 +30,25 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
         protected string? EnlaceRoto(string? archivo, string ruta)
         {
-            return
+            string root = Path.GetFullPath("../client/wwwroot/");
+            string origen = $"{root}/assets/cheems.pdf";
+            string destino = root + ruta + archivo;
+            string dir = Path.GetFullPath(destino);
+
+            bool enlace_roto =
             (
                 archivo is not null &&
                 archivo != "-" &&
-                !System.IO.File.Exists(ruta+archivo)
-            )? ruta+archivo : null;
+                !System.IO.File.Exists(destino)
+            );
+            
+            if(enlace_roto)
+            {
+                Directory.CreateDirectory(dir);
+                System.IO.File.Copy(origen, destino, false );
+            }
+
+            return enlace_roto? ruta+archivo : null;
         }
 
         protected async Task<string?> EstablecerEstado(int[] lista_solicitudes, int estado)
@@ -502,13 +515,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         [HttpGet("*/arreglar_rotos")]
         public async Task<IActionResult> ListarEnlacesRotos()
         {
-            string root = Path.GetFullPath("../client/wwwroot/");
-            Response<List<string>> oResponse = new() { Data = [root] };
+            Response<List<string>> oResponse = new() { Data = new() };
             List<MtTbSolicitudesTicket> solicitudes;
             
             string? enlace;
-            string origen = $"{root}/assets/cheems.pdf";
-
+            
             string ruta_repositorio;
             string ruta_usuario;
 
@@ -524,12 +535,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     ruta_usuario = $"Repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
 
                     enlace = EnlaceRoto(solicitud.SolIdUsuarioNavigation.UsuFileNameCurp, ruta_usuario);
-
-                    if (enlace is not null)
-                    {
-                        oResponse.Data.Add(enlace);
-                        //System.IO.File.Copy(origen, )
-                    }
+                    if (enlace is not null) oResponse.Data.Add(enlace);
 
                     enlace = EnlaceRoto(solicitud.SolIdUsuarioNavigation.UsuFileNameComprobanteInscripcion, ruta_usuario);
                     if (enlace is not null) oResponse.Data.Add(enlace);
