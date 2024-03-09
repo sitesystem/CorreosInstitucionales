@@ -139,18 +139,18 @@ else
     app.UseHsts();
 }
 
-// Middlewares para gestionar la Authentication y la Authorization
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.UseCors(cors);
 
 app.UseHttpsRedirection();
 
-app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
+app.UseBlazorFrameworkFiles();
 
 app.UseRouting();
+
+// Middlewares para gestionar la Authentication y la Authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();

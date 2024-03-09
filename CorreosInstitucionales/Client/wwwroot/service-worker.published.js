@@ -40,11 +40,20 @@ async function onActivate(event) {
 async function onFetch(event) {
     let cachedResponse = null;
     if (event.request.method === 'GET') {
-        // For all navigation requests, try to serve index.html from cache,
-        // unless that request is for an offline resource.
+        // For all navigation requests, try to serve index.html from cache, unless that request is for an offline resource.
         // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
-        const shouldServeIndexHtml = event.request.mode === 'navigate'
-            && !manifestUrlList.some(url => url === event.request.url);
+        // asset.url is relative while event.request.url is absolute
+
+        // const shouldServeIndexHtml = event.request.mode === 'navigate' && !manifestUrlList.some(url => url === event.request.url);
+        
+        const shouldServeIndexHtml = event.request.mode === 'navigate' && new URL(event.request.url).pathname === '/';
+
+        //const shouldServeIndexHtml = event.request.mode === 'navigate'
+        //    && !self.assetsManifest.assets.some(asset => (self.origin + "/" + asset.url) === event.request.url);
+
+        //const shouldServeIndexHtml = event.request.mode === 'navigate'
+        //    && !event.request.url.includes('/connect/')
+        //    && !event.request.url.includes('/Identity/');
 
         const request = shouldServeIndexHtml ? 'index.html' : event.request;
         const cache = await caches.open(cacheName);
