@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloCatálogos;
-using System.Linq.Dynamic.Core;
-using System.Net.NetworkInformation;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
 {
@@ -189,7 +187,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             try
             {
                 var item = await _db.MtTbSolicitudesTickets
-                                    .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioLastTicketRespuesta) && st.SolIdEstadoSolicitud == 5)
+                                    .Where(st => st.SolIdUsuario.Equals(filterByIdUsuarioLastTicketRespuesta))
                                     .Include(ts => ts.SolIdTipoSolicitudNavigation)
                                     .Include(u => u.SolIdUsuarioNavigation)
                                     .Include(e => e.SolIdEstadoSolicitudNavigation)
@@ -220,9 +218,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 if (oUsuario != null)
                 {
                     oUsuario.UsuFileNameCurp = model.SolFileNameCurp;
-
-                    if (model?.SolIdUsuarioNavigation?.UsuIdTipoPersonal == 1 || model?.SolIdUsuarioNavigation?.UsuIdTipoPersonal == 2 || model?.SolIdUsuarioNavigation?.UsuIdTipoPersonal == 3)
-                        oUsuario.UsuFileNameComprobanteInscripcion = model.SolFileNameComprobanteInscripcion;
+                    oUsuario.UsuFileNameComprobanteInscripcion = model.SolFileNameComprobanteInscripcion;
 
                     if (model.SolIdTipoSolicitud == 2)
                         oUsuario.UsuCorreoPersonalCuentaAnterior = model.SolCorreoPersonalCuentaNueva;

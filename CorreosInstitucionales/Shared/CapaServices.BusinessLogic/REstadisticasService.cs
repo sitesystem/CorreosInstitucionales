@@ -1,11 +1,12 @@
-﻿using CorreosInstitucionales.Shared.CapaEntities.Request;
-using CorreosInstitucionales.Shared.CapaEntities.Response;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+
+using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 {
@@ -14,8 +15,6 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
         const string url = "/api/estadisticas";
-
-
 
         public async Task<Response<List<IntDataItem>>?> GetStatByName(string name, DateTime inicio, DateTime fin)
         {
@@ -31,7 +30,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
         public async Task<Response<Dictionary<string,List<IntDataItem>>>?> GetDictionaryStatsByName(string name, DateTime inicio, DateTime fin)
         {
             var response = await _httpClient.GetAsync(
-                $"{url}/{name}/{inicio.Year}_{inicio.Month}_{inicio.Day}-{fin.Year}_{fin.Month}_{fin.Day}"
+                    $"{url}/{name}/{inicio.Year}_{inicio.Month}_{inicio.Day}-{fin.Year}_{fin.Month}_{fin.Day}"
                 );
 
             var content = await response.Content.ReadAsStringAsync();

@@ -1,4 +1,4 @@
-﻿namespace CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
+﻿namespace CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Login
 {
     public interface ILoginServices
     {

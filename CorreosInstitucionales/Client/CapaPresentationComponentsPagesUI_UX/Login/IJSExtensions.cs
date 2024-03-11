@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
 
-namespace CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
+namespace CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Login
 {
     public class IJSExtensions(IJSRuntime js)
     {

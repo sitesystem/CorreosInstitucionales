@@ -224,7 +224,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadis
                 2 progreso      3
                 3 terminado     4,5
                 4 cancelado     6
-             */
+            */
             Response<List<IntDataItem>> oResponse = new();
 
             try
@@ -295,6 +295,5 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadis
 
             return Ok(oResponse);
         }//PROGRESO
-
     }
 }

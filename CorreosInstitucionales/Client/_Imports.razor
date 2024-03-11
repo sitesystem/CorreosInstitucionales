@@ -9,6 +9,7 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Globalization
 @using System.Net.Http
+@using System.Net.Http.Headers
 @using System.Net.Http.Json
 @using System.Security.Claims;
 @using System.Text.Json
@@ -17,9 +18,12 @@
 @using Radzen.Blazor
 
 @using CorreosInstitucionales.Client
-@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX
-@using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
-@using CorreosInstitucionales.Client.CapaPresentation_ComponentsPages_UI_UX.MóduloRegistros
+@using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Debug
+@using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Login
+@using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos
+@using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloRegistros
+@using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloSolicitudTickets
+@using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.PantallaInicio
 @using CorreosInstitucionales.Client.Shared
 @using CorreosInstitucionales.Client.Shared.Components
 @using CorreosInstitucionales.Client.Shared.Components.Modals
@@ -29,8 +33,9 @@
 @using CorreosInstitucionales.Shared.CapaEntities.Response
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
-@using CorreosInstitucionales.Shared.Utils;
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp
 @using CorreosInstitucionales.Shared.Constantes;
+@using CorreosInstitucionales.Shared.Utils;
 
 @* Inyectar Interfaz de los Servicios *@
 @inject AuthenticationStateProvider servicioAuthenticationStateProvider
@@ -48,6 +53,7 @@
 @* Capa Tools Helper *@
 @inject IJSRuntime JSRuntime
 @inject ISendEmailService servicioSendEmail
+@inject ISendWhatsAppService servicioSendWhatsApp
 
 @* Módulo de Archivos *@
 @inject RArchivosService servicioArchivos

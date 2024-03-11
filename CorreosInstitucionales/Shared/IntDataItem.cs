@@ -28,6 +28,5 @@ namespace CorreosInstitucionales.Shared
         {
             return $"{Text} = {Value}";
         }
-
     }
 }

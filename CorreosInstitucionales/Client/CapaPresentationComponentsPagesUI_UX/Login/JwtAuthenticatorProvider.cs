@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login
+namespace CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Login
 {
     public class JwtAuthenticatorProvider(IJSRuntime jsRuntime, HttpClient httpClient) : AuthenticationStateProvider, ILoginServices
     {

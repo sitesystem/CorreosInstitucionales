@@ -7,3 +7,4 @@
 /CorreosInstitucionales/Shared/obj/
 /CorreosInstitucionales/Client/wwwroot/Repositorio/pendientes/
 /CorreosInstitucionales/Client/wwwroot/Repositorio/procesados/*.log
+/api_whatsapp/node_modules

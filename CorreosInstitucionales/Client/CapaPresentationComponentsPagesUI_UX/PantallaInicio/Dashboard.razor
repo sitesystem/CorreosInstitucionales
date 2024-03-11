@@ -150,10 +150,9 @@
 
 @code
 {
-    //Gráfica de area
+    // Gráfica de area
     bool showDataLabels = true;
     bool cargado = false;
-
 
     DateTime inicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
     DateTime fin    = DateTime.Now;
@@ -183,7 +182,6 @@
             {
                 debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {response.Message}";
             }
-            
         }
 
         response = await estadisticas.GetStatByName("diarias", inicio, fin);

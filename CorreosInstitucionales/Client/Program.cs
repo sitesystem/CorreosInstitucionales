@@ -7,9 +7,10 @@ using Radzen;
 using System.Globalization;
 
 using CorreosInstitucionales.Client;
-using CorreosInstitucionales.Client.CapaPresentation.ComponentsPages.UI_UX.Login;
+using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Login;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Client.Shared.Components.Utils;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -32,8 +33,9 @@ builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider =>
 // Inyección de Dependencias - Módulo de Archivos
 builder.Services.AddScoped<RArchivosService>();
 
-// Inyección de Dependencias - Módulo de Send Email
+// Inyección de Dependencias - Módulo de Send Email & WhatsApp
 builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
+builder.Services.AddScoped<ISendWhatsAppService, RSendWhatsAppService>();
 
 // Inyección de Dependencias - Módulo de Registro del Usuario
 builder.Services.AddScoped<RUsuarioService>();
