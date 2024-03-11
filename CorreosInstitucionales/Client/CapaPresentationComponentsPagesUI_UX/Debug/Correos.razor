@@ -1,17 +1,88 @@
 ﻿@page "/debug/correos"
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp
+
 @inject IServiceProvider serviceProvider
+@inject ISendWhatsAppService servicioWA
 
-<button @onclick="EnviarCorreo" class="btn btn-primary">Enviar correo de prueba</button>
+<PageTitle>@Title</PageTitle>
 
-<h1>DEBUG</h1>
-<pre>@debug</pre>
+<div class="p-4 rounded-1 bg-white shadow">
+    <h1>@Title</h1>
+    <div class="row">
+        <div class="col-6">
+            <strong>Correo</strong>
+            <InputText class="form-control" required @bind-Value=correo />
+        </div>
+
+        <div class="col-6">
+            <strong>Número telefónico</strong>
+            <InputText class="form-control" required @bind-Value=numero />
+        </div>
+
+        <div class="col-12">
+            <strong>Mensaje</strong>
+            <InputTextArea class="form-control" required @bind-Value=mensaje />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="row">
+            <pre class="col p-3">@debug</pre>
+        </div>
+    </div>
+
+    <div class="row my-2">
+        <div clas="col-2">
+            <button @onclick="EnviarCorreo" class="btn btn-primary form-control">Enviar Mensaje</button>
+        </div>
+        
+    </div>
+
+    
+</div>
+
+
+
+
 
 @code 
 {
+    readonly string Title = "Correos (y mensajes)";
     string debug = "";
+
+    string correo = string.Empty;
+    string mensaje = string.Empty;
+    string numero = string.Empty;
+
+    public RequestDTO_Usuario usuario = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var authState = await servicioAuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            int idUsuario = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
+
+            Response<RequestDTO_Usuario>? response = await servicioUsuario.GetDataByIdAsync(idUsuario);
+
+            if(response is not null && response.Data is not null && response.Success == 1)
+            {
+                usuario = response.Data;
+                correo = usuario.UsuCorreoPersonalCuentaNueva;
+                numero = usuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
+                mensaje = $"MENSAJE DE PRUEBA PARA {usuario.UsuNombre}";
+            }
+
+            StateHasChanged();
+        }
+    }
 
     private async Task EnviarCorreo()
     {
+        HttpResponseMessage response;
+        
         ILoggerFactory loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         HtmlRenderer htmlRenderer = new HtmlRenderer(serviceProvider, loggerFactory);
 
@@ -24,8 +95,7 @@
                 (
                     new Dictionary<string, object?>
                     {
-                        { "nombre", "NOMBRE DE PRUEBA"},
-                        { "correo", "gabriel@localhost"}
+                        { "mensaje", mensaje}
                     }
                 );
 
@@ -35,11 +105,12 @@
             }
         );
 
-        HttpResponseMessage response = await servicioSendEmail.SendEmailAsync
+        
+        response = await servicioSendEmail.SendEmailAsync
         (
             new RequestDTO_SendEmail()
                 {
-                    EmailTo = "agmartinezc@ipn.mx",
+                    EmailTo = correo,
                     Subject = "Correo de prueba",
                     Body = body
                 }
@@ -54,5 +125,23 @@
             string content = await response.Content.ReadAsStringAsync();
             debug += Environment.NewLine + $"ERROR ENVIANDO CORREO: {content}";
         }
+        
+        RequestDTO_SendWhatsApp MensajeWA = new()
+        {
+            Message = mensaje,
+            Number = numero
+        };
+
+        response = await servicioWA.SendWhatsAppAsync(MensajeWA);
+        if (response.IsSuccessStatusCode)
+        {
+            debug += Environment.NewLine + "MENSAJE ENVIADO POR WA CORECTAMENTE.";
+        }
+        else
+        {
+            string content = await response.Content.ReadAsStringAsync();
+            debug += Environment.NewLine + $"ERROR ENVIANDO MENSAJE WA: {content}";
+        }
+
     }
 }
