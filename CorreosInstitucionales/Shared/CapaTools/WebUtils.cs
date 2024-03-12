@@ -11,24 +11,6 @@ namespace CorreosInstitucionales.Shared.Utils
 {
     public static class WebUtils
     {
-        static public HttpClient Client;
-        static HttpClientHandler _client_handler;
-
-        static WebUtils()
-        {
-            _client_handler = new HttpClientHandler()
-            {
-                ClientCertificateOptions = ClientCertificateOption.Manual,
-                ServerCertificateCustomValidationCallback =
-                    (httpRequestMessage, cert, cetChain, policyErrors) =>
-                    {
-                        return true;
-                    }
-            };
-
-            Client = new HttpClient(_client_handler);
-        }
-
         public static async Task<List<T>> ListByStatusAsync<T>(IGenericService<T> service, bool filterByStatus = true)
         {
             List<T> result = new();

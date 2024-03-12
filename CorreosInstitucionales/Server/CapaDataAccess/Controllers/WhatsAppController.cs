@@ -12,9 +12,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class WhatsAppController : Controller
+    public class WhatsAppController : ExternalAPIController
     {
-        private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
         const string url = "https://www.developers.upiicsa.ipn.mx:8081/api/SendWhatsApp";
 
         [HttpPost("send")]
@@ -22,13 +21,15 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         {
             Response<string> oResponse = new();
 
-            HttpResponseMessage response = await WebUtils.Client.PostAsJsonAsync(url, message, options: _options);
+            HttpResponseMessage response = await Client.PostAsJsonAsync(url, message, options: _options);
 
             if(response.IsSuccessStatusCode)
             {
                 oResponse.Success = 1;
-                oResponse.Data = await response.Content.ReadAsStringAsync();
+                
             }
+
+            oResponse.Data = await response.Content.ReadAsStringAsync();
 
             return Ok(oResponse);
         }
