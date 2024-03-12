@@ -28,6 +28,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         private readonly ISendEmailService _servicioCorreo = servicioEmail;
         private readonly IServiceProvider _serviceProvider = serviceProvider;
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         protected string? EnlaceRoto(string? archivo, string ruta)
         {
             string root = Path.GetFullPath("../client/wwwroot/");
@@ -51,6 +52,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return enlace_roto? ruta+archivo : null;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         protected async Task<string?> EstablecerEstado(int[] lista_solicitudes, int estado)
         {
             string? response = null;
@@ -73,6 +75,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return response;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         private async Task EnvioMasivoRespuesta(List<MtTbSolicitudesTicket> lista)
         {
             ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
@@ -109,6 +112,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }//FOREACH solicitud
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         private async Task EnvioMasivo(List<MtTbSolicitudesTicket> lista)
         {
             ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
@@ -135,6 +139,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }//FOREACH solicitud
         }// ENVIO  MASIVO (EN PROCESO)
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         private WebUtils.Link GenerarLink(MtTbSolicitudesTicket solicitud, int tipo_documento, string directorio)
         {
             string archivo = string.Empty;
@@ -319,6 +324,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return Ok(oResponse);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> LlenarFormulario(int[] selected, bool return_zip)
         {
             Guid id = Guid.NewGuid();
