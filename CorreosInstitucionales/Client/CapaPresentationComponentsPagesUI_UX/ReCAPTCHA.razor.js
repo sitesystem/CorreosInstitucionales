@@ -1,4 +1,4 @@
-export const reCAPTCHA =
+﻿export const reCAPTCHA =
 {
     scriptLoaded : null
 };
