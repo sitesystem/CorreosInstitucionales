@@ -540,16 +540,6 @@
         </RadzenStack>
     </EditForm>
 
-    <RadzenButton Text="Enviar WhatsApp"
-                  ButtonStyle="ButtonStyle.Success"
-                  ButtonType="ButtonType.Button"
-                  class="w-100 rz-ripple"
-                  Shade="Shade.Default"
-                  Disabled="false"
-                  Size="ButtonSize.Large"
-                  Variant="Variant.Filled"
-                  Click="@SendWhatsApp" />
-
     <ButtonScrollToTop />
 }
 else
@@ -866,6 +856,7 @@ else
         try
         {
             busyLoading = true;
+            string fecha_actual = DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");
             oTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(oUsuario.UsuIdTipoPersonal);
             oCarrera = await servicioCarrera.GetDataByIdAsync(oUsuario.UsuIdCarrera);
             string isEgresado = flagEsEgresado ? "SI" : "NO";
@@ -1002,30 +993,27 @@ else
 	                                </footer>
                                 </body>";
 
-            oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo;
+            oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
             oSendWhatsApp.Message = $@"*Sistema de Ayuda para Correos Institucionales\n
-                                        POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n
-                                        _Credenciales de Acceso_\n
-                                        Usuario: {oUsuario.UsuCorreoPersonalCuentaNueva}\n
-                                        Contraseña: {password}\n\n
-                                        `*Rol:* Usuario`\n
-                                        `*Tipo de Personal:* {oTipoPersonal.Data.TipoperNombre}`\n
-                                        `*Nombre:* {oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}`\n
-                                        `*CURP:* {oUsuario.UsuCurp}`\n
-                                        `*No. de Celular:* {oUsuario.UsuNoCelularNuevo}`\n
-                                        `*Boleta:* {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumno : oUsuario.UsuBoletaMaestria)}`\n
-                                        `*Carrera:* {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oCarrera?.Data?.CarrNombre : "")}`\n
-                                        `*Semestre:* {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuSemestre : "")}`\n
-                                        `*Egresado:* {isEgresado}`\n
-                                        `*Año de egreso:* {añoEgreso}`\n
-                                        `*Fecha / Hora de Alta:* {DateTime.Now.ToString()}`\n\n
-                                        Que tenga un excelente día.\n
-                                        *>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
-
-            // {
-            //     "number": "5535784540",
-            //     "message": "*Negrita* _Cursiva_ ```Monospace``` \n 1. Opción Uno 2. Opción Dos > Cita `Texto alineado`"
-            // }
+                                    POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n
+                                    Se le informa que su registro fué exitoso en la Plataforma *SACI (Sistema de Ayuda para Correos Institucionales)*
+				                    de la Unidad Académica *{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})*.\n
+									Por este medio se le hace entrega de sus _Credenciales de Acceso_:\n\n
+                                    Usuario: {oUsuario.UsuCorreoPersonalCuentaNueva}\n
+                                    Contraseña: {password}\n\n
+                                    `*Rol:* Usuario`\n
+                                    `*Tipo de Personal:* {oTipoPersonal.Data.TipoperNombre}`\n
+                                    `*Nombre:* {oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}`\n
+                                    `*CURP:* {oUsuario.UsuCurp}`\n
+                                    `*No. de Celular:* {oUsuario.UsuNoCelularNuevo}`\n
+                                    `*Boleta:* {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumno : oUsuario.UsuBoletaMaestria)}`\n
+                                    `*Carrera:* {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oCarrera?.Data?.CarrNombre : "")}`\n
+                                    `*Semestre:* {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuSemestre : "")}`\n
+                                    `*Egresado:* {isEgresado}`\n
+                                    `*Año de egreso:* {añoEgreso}`\n
+                                    `*Fecha / Hora de Alta:* {fecha_actual}`\n\n
+                                    Que tenga un excelente día.\n
+                                    *>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
 
             if (ActionAddEdit == "agregar")
             {
@@ -1352,6 +1340,17 @@ else
                                     Body = msgEmail
                                 });
 
+                            @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@
+                            oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
+                            oSendWhatsApp.Message = $@"*SACI (Sistema de Ayuda para Correos Institucionales)\nPOR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n
+									                Por este medio se le hace entrega de sus _Credenciales de Acceso_ a la Plataforma SACI:\n\n
+                                                    Usuario: {oUsuario.UsuCorreoPersonalCuentaNueva}\n
+                                                    Contraseña: {password}\n\n
+                                                    Que tenga un excelente día.\n
+                                                    *>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
+
+                            await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
+
                             await loginService.Logout();
                             navigationManager.NavigateTo("/");
                         }
@@ -1448,48 +1447,5 @@ else
                 CssClass = "custom-dialog-class",
                 WrapperCssClass = "custom-dialog-wrapper-class"
             });
-    }
-
-    private string? responseBody;
-
-    private async Task SendWhatsApp()
-    {
-        oSendWhatsApp.Number = "5523235261";
-        oSendWhatsApp.Message = "Chito";
-
-        // var requestMessage = new HttpRequestMessage()
-        // {
-        //     Method = new HttpMethod("POST"),
-        //     RequestUri = new Uri("https:www.developers.upiicsa.ipn.mx:8081/api/SendWhatsApp"),
-        //     Content = JsonContent.Create(oSendWhatsApp)
-        // };
-
-        // requestMessage.Content.Headers.TryAddWithoutValidation(
-        //         "x-custom-header", "value");
-
-        // var response = await httpClient.SendAsync(requestMessage);
-        // var responseStatusCode = response.StatusCode;
-
-        // responseBody = await response.Content.ReadAsStringAsync();
-
-        // var tokenResult = await TokenProvider.RequestAccessToken();
-
-        // if (tokenResult.TryGetToken(out var token))
-        // {
-        //     requestMessage.Headers.Authorization =
-        //         new AuthenticationHeaderValue("Bearer", token.Value);
-
-        //     requestMessage.Content.Headers.TryAddWithoutValidation(
-        //         "x-custom-header", "value");
-
-        //     var response = await httpClient.SendAsync(requestMessage);
-        //     var responseStatusCode = response.StatusCode;
-
-        //     responseBody = await response.Content.ReadAsStringAsync();
-        // }
-
-        // await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
-
-        // await JSRuntime.InvokeVoidAsync("sendWhatsApp");
     }
 }

@@ -682,11 +682,14 @@ else
     private Response<RequestViewModel_TipoPersonal> oTipoPersonal = new();
     private Response<RequestViewModel_AreaDepto> oAreaDepto = new();
 
+    private RequestDTO_SendWhatsApp oSendWhatsApp = new();
+
     public async Task OnValidHandled_Registrar()
     {
         try
         {
             busyLoading = true;
+            string fecha_actual = DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");
             oTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(oUsuario.UsuIdTipoPersonal);
             oAreaDepto = await servicioAreaDepto.GetDataByIdAsync(oUsuario.UsuIdAreaDepto);
             string password = ActionAddEdit == "agregar" ? oUsuario.UsuContraseña : UsuContraseña;
@@ -805,6 +808,26 @@ else
 		                                </div>
 	                                </footer>
                                 </body>";
+            
+            oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
+            oSendWhatsApp.Message = $@"*Sistema de Ayuda para Correos Institucionales\n
+                                        POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n
+                                        Se le informa que su registro fué exitoso en la Plataforma *SACI (Sistema de Ayuda para Correos Institucionales)*
+				                        de la Unidad Académica *{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})*.\n
+										Por este medio se le hace entrega de sus _Credenciales de Acceso_:\n\n
+                                        Usuario: {oUsuario.UsuCorreoPersonalCuentaNueva}\n
+                                        Contraseña: {password}\n\n
+                                        `*Rol:* Usuario`\n
+                                        `*Tipo de Personal:* {oTipoPersonal.Data.TipoperNombre}`\n
+                                        `*Nombre:* {oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}`\n
+                                        `*CURP:* {oUsuario.UsuCurp}`\n
+                                        `*No. de Celular:* {oUsuario.UsuNoCelularNuevo}`\n
+                                        `*No. Empleado/Contrato:* {oUsuario.UsuNumeroEmpleado}`\n
+                                        `*Área/Depto:* {oAreaDepto.Data.AreNombreAreaDepto}`\n
+                                        `*No. Extensión:* {oUsuario.UsuNoExtension}`\n
+                                        `*Fecha / Hora de Alta:* {fecha_actual}`\n\n
+                                        Que tenga un excelente día.\n
+                                        *>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
 
             if (ActionAddEdit == "agregar")
             {
