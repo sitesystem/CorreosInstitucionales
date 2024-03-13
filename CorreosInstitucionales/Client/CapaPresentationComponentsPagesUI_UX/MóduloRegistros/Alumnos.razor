@@ -870,6 +870,7 @@ else
             oCarrera = await servicioCarrera.GetDataByIdAsync(oUsuario.UsuIdCarrera);
             string isEgresado = flagEsEgresado ? "SI" : "NO";
             string añoEgreso = flagEsEgresado ? oUsuario.UsuAñoEgreso.ToString() : "N/A";
+            string fecha_hora_alta = ActionAddEdit == "agregar" ? DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'") : oUsuario.UsuFechaHoraAlta?.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");
             string password = ActionAddEdit == "agregar" ? oUsuario.UsuContraseña : UsuContraseña;
             string agregar_actualizar = ActionAddEdit == "agregar" ? "registro" : "actualización de datos";
             string entrega_credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) ? "<br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b>" : "";
@@ -985,7 +986,7 @@ else
 								                                </tr>
                                                                 <tr style='background-color: #dddddd;'>
 									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Fecha / Hora de Alta</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{DateTime.Now.ToString()}</td>
+									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{fecha_hora_alta}</td>
 								                                </tr>
 							                                </tbody>
 						                                </table>
