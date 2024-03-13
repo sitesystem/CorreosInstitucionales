@@ -261,7 +261,7 @@
                     }
 
                     <div class="@($@"{((IdTipoPersonal == 2 || TipoPersonal == "egresado") || (IdTipoPersonal == 1 && ActionAddEdit == "actualizar") ? "col-md-4 col-lg-4" : "col-md-4 col-lg-4 mb-3")}")">
-                        <RadzenFormField Text="@($@"{( (IdTipoPersonal == 1 || IdTipoPersonal == 2) ? "Archivo PDF del Comprobante de Inscripción" : "Archivo PDF del SIP-10" )}")" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="@($@"{( (IdTipoPersonal == 1 || IdTipoPersonal == 2) ? "Archivo PDF del Comprobante de Horario (Tira de Materias) del Último Semestre Cursado" : "Archivo PDF del SIP-10" )}")" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
                                 <RadzenUpload @ref="oUploadFile_ComprobanteInscripción" Url="" Accept=".pdf"
@@ -274,7 +274,7 @@
                             </ChildContent>
                             <End>
                                 <RadzenButton Icon="visibility"
-                                              Click="@(() => ShowDialogModal_iFrame(srcComprobanteInscripcion, $@"{( (IdTipoPersonal == 1 || IdTipoPersonal == 2) ? "Archivo PDF del Comprobante de Inscripción" : "Archivo PDF del SIP-10" )}"))"
+                                              Click="@(() => ShowDialogModal_iFrame(srcComprobanteInscripcion, $@"{( (IdTipoPersonal == 1 || IdTipoPersonal == 2) ? "Archivo PDF del Comprobante de Horario (Tira de Materias) del Último Semestre Cursado" : "Archivo PDF del SIP-10" )}"))"
                                               Variant="Variant.Text"
                                               Size="ButtonSize.Small"
                                               ButtonStyle="ButtonStyle.Secondary"
@@ -319,7 +319,7 @@
                             </RadzenFormField>
                         </div>
 
-                        <div class="col-md-4 col-lg-4 mb-3">
+                        <div class="col-md-4 col-lg-4">
                             <RadzenFormField Text="Año de Egreso" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Disabled="false" Visible="@flagEsEgresado">
                                 <Start><RadzenIcon Icon="dialpad" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                 <ChildContent>
@@ -332,6 +332,15 @@
                             <ValidationMessage For="@(() => oUsuario.UsuAñoEgreso)" />
                         </div>
                     }
+
+                    <div class="col-md-12">
+                        <RadzenAlert Title="ATENCIÓN Egresado:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light" ShowIcon="true" AllowClose="false"
+                                     Visible="@(flagEsEgresado)" class="mt-3">
+                            ✅ Para tener tu Correo de Egresado, levanta una nueva solicitud.<br />
+                            ✅ Dejarás de contar con tu Correo de Alumno.<br />
+                            ✅ Con tu Correo de Egresado no podrás tener acceso a las aplicaciones de Office 365 de manera gratuita.<br />
+                        </RadzenAlert>
+                    </div>
                 </div>
             </ChildContent>
             <SummaryTemplate>
@@ -438,10 +447,10 @@
         </RadzenFieldset>
         
         <!-- ******************************************************************* CARD DATOS CORREO INSTITUCIONAL ******************************************************************* -->
-        <RadzenFieldset AllowCollapse="false" ExpandTitle="Cuenta del Correo Electrónico Institucional" CollapseTitle="Cuenta del Correo Electrónico Institucional" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 my-3">
+        <RadzenFieldset AllowCollapse="false" ExpandTitle="Credenciales del Correo E. Institucional" CollapseTitle="Credenciales del Correo E. Institucional" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 my-3">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
-                    <RadzenIcon Icon="email" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Cuenta del Correo Electrónico Institucional</b>
+                    <RadzenIcon Icon="email" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Credenciales del Correo E. Institucional</b>
                 </span>
             </HeaderTemplate>
             <ChildContent>
@@ -485,7 +494,7 @@
 
                 <div class="row" hidden="@(!existenSolicitudes)">
                     <div class="col-md-12 col-lg-12">
-                        <RadzenAlert Title="" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light" ShowIcon="true" AllowClose="false"
+                        <RadzenAlert Title="" Text="" AlertStyle="AlertStyle.Secondary" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Default" ShowIcon="true" AllowClose="false"
                                      Visible="true" class="my-3">
                             <b>ATENCIÓN:</b> Para visualizar tus <strong>Credenciales del Correo Institucional</strong>, favor de esperar a que se genere y después responder la encuesta de calidad.
                             <RadzenButton Text="Ir al Seguimiento de la Solicitud"
@@ -1028,6 +1037,9 @@ else
                     {
                         idResponse = int.Parse(oRespuesta.Message);
 
+                        @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@
+                        await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
+
                         @*//  ENVÍO DE CORREO ELECTRÓNICO PARA AVISO DE REGISTRO EXITOSO  //*@
                         await servicioSendEmail.SendEmailAsync(
                             new RequestDTO_SendEmail()
@@ -1036,9 +1048,6 @@ else
                                 Subject = "REGISTRO EN PLATAFORMA SACI",
                                 Body = msgEmail
                             });
-
-                        @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@
-                        await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
                     
                         @*//  UPLOAD FILES  //*@
                         oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";

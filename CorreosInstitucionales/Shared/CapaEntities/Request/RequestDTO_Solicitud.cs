@@ -56,14 +56,14 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP-10
         /// </summary>
         [Column("solFileNameComprobanteInscripcion")]
-        [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/HORARIO adjuntado debe ser máximo de 200 caracteres.")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del Comprobante de Inscripción requerido.")]
+        [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO (TIRA DE MATERIAS) adjuntado debe ser máximo de 200 caracteres.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO (TIRA DE MATERIAS) requerido.")]
         public string? SolFileNameComprobanteInscripcion { get; set; }
 
         /// <summary>
         /// Tamaño del Archivo PDF del Comprobante de Inscripción del Usuario
         /// </summary>
-        [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/HORARIO adjuntado debe ser máximo de 2 MB.")]
+        [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO adjuntado debe ser máximo de 2 MB.")]
         public long? SolFileSizeComprobanteInscripcion { get; set; }
 
         /*******************************  DATOS DE CAMBIO DE NO. CELULAR O CORREO PERSONAL  *******************************/
@@ -114,13 +114,13 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         /// </summary>
         [Column("solCapturaError")]
         [StringLength(150)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF CAPTURA ERROR requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF CAPTURA OTRO MOTIVO, INCIDENCIA O PROBLEMA requerido.")]
         public string? SolCapturaError { get; set; }
 
         /// <summary>
         /// Tamaño del Archivo PDF del CURP del Usuario
         /// </summary>
-        [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF CAPTURA ERROR adjuntado debe ser máximo de 2 MB.")]
+        [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF CAPTURA OTRO MOTIVO, INCIDENCIA O PROBLEMA adjuntado debe ser máximo de 2 MB.")]
         public long? SolFileSizeCapturaError { get; set; }
 
         /*******************************  OTROS DATOS  *******************************/
@@ -129,7 +129,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         /// </summary>
         [Column("solObservacionesSolicitud")]
         [StringLength(300)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo OBSERVACIONES requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo OBSERVACIONES / COMENTARIOS / NOTAS / DETALLE DEL MOTIVO requerido.")]
         public string? SolObservacionesSolicitud { get; set; }
 
         /// <summary>
