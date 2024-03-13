@@ -71,7 +71,7 @@
 
                                     <!-- ******************************************************************* LISTA MOTIVOS / INCIDENCIAS SOLICITUD-TICKET ******************************************************************* -->
                                     <div class="col-md-6 col-lg-6">
-                                        <RadzenFormField Text="Motivo de la Solicitud" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
+                                        <RadzenFormField Text="Problema, Incidencia o Motivo de la Solicitud" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
                                             <ChildContent>
                                                 <RadzenListBox Context="contexto"
                                                                Name="@($@"tipo_solicitud_list")"
@@ -265,7 +265,7 @@
 
                         <!-- ******************************************************************* ReCAPTCHA Y BOTÓN ENVIAR ******************************************************************* -->
                         <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" class="rz-mt-4">
-                            <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6LeMdxkpAAAAABQkCp77LSx1K8tDRlmSAYXIU6AL" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                            <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6Ld5KwcTAAAAAIQePJpN1xS27jttxdwMo9CimLd5" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                             @* <ValidationSummary class="rz-my-0" /> *@
                             <RadzenButton Text="Enviar Solicitud-Ticket"
                                           BusyText="Enviando Solicitud-Ticket..."
