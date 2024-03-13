@@ -1,0 +1,36 @@
+﻿@page "/debug/archivos"
+
+<PageTitle>@Title</PageTitle>
+<h3>@Title</h3>
+
+<button type="button" class="btn btn-primary" @onclick="Arreglar_Click">Arreglar Enlaces Rotos</button>
+<pre>@debug</pre>
+
+@code{
+    readonly string Title = "Archivos";
+    string debug = string.Empty;
+
+    public async Task Arreglar_Click()
+    {
+        Response<List<string>>? rotos = await servicioArchivos.ArreglarEnlacesRotos();
+        if (rotos is null)
+        {
+            debug += Environment.NewLine + "ERROR ARREGLANDO ENLACES.";
+        }
+        else
+        {
+            if(rotos.Data is null)
+            {
+                debug += Environment.NewLine + rotos.Message;
+            }
+            else
+            {
+                foreach (string enlace in rotos.Data)
+                {
+                    debug += Environment.NewLine + enlace;
+                }
+            }
+        }
+
+    }
+}

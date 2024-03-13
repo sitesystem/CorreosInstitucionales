@@ -4,8 +4,25 @@ using System.Text;
 
 namespace CorreosInstitucionales.Shared.Utils
 {
-    public static class ServerFileSystem
+    public static class ServerFS
     {
+        public const string Root = "wwwroot";
+
+        public static string GetBaseDir(bool fullpath)
+        {
+            return fullpath ? Path.GetFullPath(Root) : string.Empty;
+        }
+
+        public static string ArchivoUsuario(int id_usuario, string archivo, bool ruta_absoluta = false)
+        {
+            return $"Repositorio/Usuarios/{id_usuario}/{id_usuario}_{archivo}";
+        }
+
+        public static string ArchivoRepositorio(int id_solicitud, string archivo, bool ruta_absoluta = false)
+        {
+            return $"Repositorio/Solicitudes-Tickets/{id_solicitud}/{id_solicitud}_{archivo}";
+        }
+
         public static string? WriteZip(string filename, List<WebUtils.Link> files, string root_directory = "")
         {
             string z_name = string.Empty;
