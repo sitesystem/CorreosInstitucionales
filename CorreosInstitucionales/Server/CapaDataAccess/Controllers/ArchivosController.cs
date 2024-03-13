@@ -31,21 +31,18 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         protected string? EnlaceRoto(string? archivo, string ruta)
         {
-            string root = Path.GetFullPath("../client/wwwroot/");
-            string origen = $"{root}/assets/cheems.pdf";
-            string destino = root + ruta + archivo;
-            string dir = Path.GetFullPath(destino);
+            if (archivo is null || archivo == "-") return null;
 
-            bool enlace_roto =
-            (
-                archivo is not null &&
-                archivo != "-" &&
-                !System.IO.File.Exists(destino)
-            );
-            
-            if(enlace_roto)
+            string basedir = ServerFS.GetBaseDir(true);
+
+            string origen = $"{basedir}/assets/cheems.pdf";
+            string destino = Path.GetFullPath($"{ServerFS.Root}/{ruta}{archivo}");
+            string? dir = Path.GetDirectoryName(destino);
+            bool enlace_roto = !System.IO.File.Exists(destino);
+
+            if (enlace_roto)
             {
-                Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(dir!);
                 System.IO.File.Copy(origen, destino, false );
             }
 
@@ -456,7 +453,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 files.Add(new WebUtils.Link(filename + ".xlsx"));
 
-                error = ServerFileSystem.WriteZip($"{base_directory}/{filename}.zip", files, base_directory + "/" );
+                error = ServerFS.WriteZip($"{base_directory}/{filename}.zip", files, base_directory + "/" );
 
                 if(error is not null)
                 {
