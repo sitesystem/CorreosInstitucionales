@@ -9,15 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\assets\**" />
     <Compile Remove="wwwroot\Repositorio\**" />
+    <Content Remove="wwwroot\assets\**" />
     <Content Remove="wwwroot\Repositorio\**" />
+    <EmbeddedResource Remove="wwwroot\assets\**" />
     <EmbeddedResource Remove="wwwroot\Repositorio\**" />
+    <None Remove="wwwroot\assets\**" />
     <None Remove="wwwroot\Repositorio\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="wwwroot\assets\activacion.xlsx" />
-    <Content Remove="wwwroot\assets\sol_cambio_celular.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,10 +36,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shared\CorreosInstitucionales.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\assets\sol_cambio_celular.xlsx" />
   </ItemGroup>
 
   <ItemGroup>

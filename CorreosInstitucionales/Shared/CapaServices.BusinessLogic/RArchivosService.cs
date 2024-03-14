@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 {
@@ -42,6 +44,15 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             var result = JsonSerializer.Deserialize<Response<List<WebUtils.Link>>>(content, options: _options);
             return result;
         }
+
+        public async Task<Response<List<string>>?> ArreglarEnlacesRotos()
+        {
+            var response = await _httpClient.GetAsync($"{url}/*/arreglar_rotos");
+            var content = await response.Content.ReadAsStringAsync();
+
+            return JsonSerializer.Deserialize<Response<List<string>>>(content, options: _options);
+        }
+
 
     }
 }
