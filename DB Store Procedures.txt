@@ -1,4 +1,6 @@
 Microsoft SQL Server
 - Vaciar una Tabla
 -> USE db_CorreosInst_UPIICSA;
--> DELETE FROM MCE_tbUsuarios DBCC CHECKIDENT ('MCE_tbUsuarios', RESEED, 0);
+-> DELETE FROM MCE_tbUsuarios DBCC CHECKIDENT ('db_CorreosInstitucionales_UPIICSA.dbo.MP_tbUsuarios', RESEED, 0);
+-> DELETE FROM MT_tbSolicitudesTickets
+-> DBCC CHECKIDENT ('db_CorreosInstitucionales_UPIICSA.dbo.MT_tbSolicitudesTickets', RESEED, 0)
