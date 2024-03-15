@@ -78,6 +78,7 @@
     {
         string razor = string.Empty;
         string cs_code = string.Empty;
+        string cs_new_req = string.Empty;
 
         UIControl control;
 
@@ -99,7 +100,12 @@
             control.Build();
 
             razor += Environment.NewLine + control.Razor;
-            
+
+            if(control.IsRequired)
+            {
+                cs_new_req += $"{control.Name} = default," + Environment.NewLine;
+            }
+
             if(control.HasForeignKey)
             {
                 cs_param_editor += $"[Parameter] public List<{control.ClassName}> cat_{control.Name} {{ get; set; }}  = new List<{control.ClassName}>();{Environment.NewLine}\t";
@@ -171,7 +177,7 @@
     }}
 }}
 ";
-        razor_code = razor + Environment.NewLine + cs_code;
+        razor_code = razor + Environment.NewLine + cs_code +Environment.NewLine + cs_new_req;
         return razor_code;
     }
 

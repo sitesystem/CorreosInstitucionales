@@ -5,6 +5,8 @@ using System.Linq.Dynamic.Core;
 
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.Constantes;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
 {
@@ -363,6 +365,79 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             catch (Exception ex)
             {
                 oRespuesta.Message = ex.Message;
+            }
+
+            return Ok(oRespuesta);
+        }//ENCUESTA DE CALIDAD
+
+        [HttpGet("generar_random")]
+        public async Task<IActionResult> GenerarSolicitudes()
+        {
+            Response<object> oRespuesta = new();
+            MtTbSolicitudesTicket oSolicitud;
+
+            int[] terminados = 
+            [
+                TipoEstadoSolicitud.ATENDIDA, 
+                TipoEstadoSolicitud.ENCUESTA_CALIDAD, 
+                TipoEstadoSolicitud.CANCELADA
+            ];
+
+            try
+            {
+                List<int> tipo_solicitudes = await _db.McCatTiposSolicituds
+                    .Select(ts => ts.IdTipoSolicitud)
+                    .ToListAsync();
+
+                //USUARIOS QUE YA TIENEN UNA SOLICITUD PENDIENTE
+                List<int> usuarios = await _db.MtTbSolicitudesTickets
+                    .Where(st => !terminados.Contains(st.SolIdEstadoSolicitud))
+                    .Select(st => st.SolIdUsuario)
+                    .Distinct()
+                    .ToListAsync();
+
+                List<MpTbUsuario> pendientes = await _db.MpTbUsuarios
+                    .Where(u => !usuarios.Contains(u.IdUsuario))
+                    .ToListAsync();
+
+                int tipo_solicitud;
+                Random rnd = new Random();
+                string uid = string.Empty;
+
+                foreach (MpTbUsuario pendiente in pendientes)
+                {
+                    uid = Guid.NewGuid().ToString();
+                    tipo_solicitud = rnd.Next(1, 7);
+
+                    oSolicitud = new()
+                    {
+                        SolToken = uid,
+                        SolIdTipoSolicitud = tipo_solicitud,
+                        SolIdUsuario = pendiente.IdUsuario,
+
+                        SolObservacionesSolicitud = null,
+                        SolIdEstadoSolicitud = TipoEstadoSolicitud.PENDIENTE,
+                        SolValidacionDatos = false,
+                        SolEncuestaCalidadCalificacion = null,
+                        SolEncuestaCalidadComentarios = null,
+                        SolFechaHoraEncuesta = null,
+                        SolRespuestaDcyC = null,
+                        SolFechaHoraCreacion = DateTime.Now
+                    };
+
+                    oSolicitud.SolCapturaEscaneoAntivirus = TipoSolicitud.Documentos[tipo_solicitud].Contains(TipoDocumento.CAP_ANTIVIRUS) ? $"CAPTURA_ANTIVIRUS_{uid}.pdf" : "-";
+                    oSolicitud.SolCapturaCuentaBloqueada = TipoSolicitud.Documentos[tipo_solicitud].Contains(TipoDocumento.CAP_BLOQUEO) ? $"CAPTURA_BLOQUEO_{uid}.pdf" : "-";
+                    oSolicitud.SolCapturaError = TipoSolicitud.Documentos[tipo_solicitud].Contains(TipoDocumento.CAP_ERROR) ? $"CAPTURA_ERROR_{uid}.pdf" : "-";
+
+                    await _db.MtTbSolicitudesTickets.AddAsync(oSolicitud);
+                }
+
+                await _db.SaveChangesAsync();
+                oRespuesta.Success = 1;
+
+            }catch(Exception ex)
+            {
+                oRespuesta.Message = ex.Message + Environment.NewLine + ex.StackTrace;
             }
 
             return Ok(oRespuesta);

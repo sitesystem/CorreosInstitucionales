@@ -15,5 +15,16 @@ namespace CorreosInstitucionales.Shared.Constantes
         public const int CREACION_ACTIVACION_CORREO_INST    = 5;
         public const int RECUPERACION_CONTRA                = 6;
         public const int OTRO = 7;
+
+        public static readonly Dictionary<int, int[]> Documentos = new()
+        {
+            {DESBLOQUEO_CUENTA,               [TipoDocumento.CAP_BLOQUEO, TipoDocumento.CAP_ANTIVIRUS] },
+            {CAMBIO_CORREO_PERSONAL,          [] },
+            {CAMBIO_CELULAR,                  [] },
+            {CORREO_EGRESADO,                 [] },
+            {CREACION_ACTIVACION_CORREO_INST, [] },
+            {RECUPERACION_CONTRA,             [] },
+            {OTRO,                            [TipoDocumento.CAP_ERROR] },
+        };
     }
 }
