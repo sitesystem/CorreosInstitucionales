@@ -1,4 +1,6 @@
 ﻿@page "/catalogo/usuarios"
+@using CorreosInstitucionales.Shared
+@using CorreosInstitucionales.Shared.CapaTools
 
 @attribute [Authorize(Policy = "[Rol] Ambos")]
 
@@ -140,7 +142,7 @@
         }
     }
 
-    private async Task<RequestDTO_Usuario?> MostrarFormulario(RequestDTO_Usuario registro)
+    private async Task<FileAttachmentObject<RequestDTO_Usuario>?> MostrarFormulario(RequestDTO_Usuario registro)
     {
         return await DialogService.OpenAsync<UsuarioEditor>
                 (
@@ -173,18 +175,25 @@
 
     private async Task Agregar()
     {
-        RequestDTO_Usuario registro = new();
+        RequestDTO_Usuario registro = TemplateEntity.CreateUsuario();
 
-        RequestDTO_Usuario? result = await MostrarFormulario(registro);
+        FileAttachmentObject<RequestDTO_Usuario>? result = await MostrarFormulario(registro);
 
         if (result is not null)
         {
             MensajeCarga();
 
-            HttpResponseMessage response = await servicioUsuario.AddDataAsync(registro);
+            result.Value.UsuCurp = result.Value.UsuCurp.ToUpper();
+            result.Value.UsuNombre = result.Value.UsuNombre.ToUpper();
+            result.Value.UsuPrimerApellido = result.Value.UsuPrimerApellido.ToUpper();
+            result.Value.UsuSegundoApellido = result.Value.UsuSegundoApellido ?? "".ToUpper();
+            result.Value.UsuCorreoPersonalCuentaNueva = result.Value.UsuCorreoPersonalCuentaNueva.ToLower();
+            result.Value.UsuContraseña = Encrypt.GetSHA256(result.Value.UsuContraseña);
+
+            HttpResponseMessage response = await servicioUsuario.AddDataAsync(result.Value);
             if (response.IsSuccessStatusCode)
             {
-                await CargarLista(result.IdUsuario);
+                await CargarLista(result.Value.IdUsuario);
             }
 
             DialogService.Close();
@@ -198,14 +207,14 @@
 
         if (registro is not null)
         {
-            RequestDTO_Usuario? result = await MostrarFormulario(registro);
+            FileAttachmentObject<RequestDTO_Usuario>? result = await MostrarFormulario(registro);
 
             if (result is not null)
             {
-                HttpResponseMessage response = await servicioUsuario.EditDataAsync(registro);
+                HttpResponseMessage response = await servicioUsuario.EditDataAsync(result.Value);
                 if (response.IsSuccessStatusCode)
                 {
-                    await CargarLista(item.IdUsuario);
+                    await CargarLista(result.Value.IdUsuario);
                 }
             }
         }

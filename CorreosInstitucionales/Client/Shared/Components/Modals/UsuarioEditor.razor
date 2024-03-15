@@ -1,4 +1,6 @@
-﻿@inject Radzen.DialogService dialogService
+﻿@using CorreosInstitucionales.Shared;
+
+@inject Radzen.DialogService dialogService
 
 <EditForm Model=@registro OnValidSubmit="@OnValidForm">
     <div class="alert alert-info">
@@ -46,26 +48,30 @@
         <div class="row">
             <div class="col-4 mb-2">
                 <span class="fw-bold">Nombre (s)<strong class="red" title="requerido">*</strong></span>
-                <InputText @bind-Value="@registro.UsuNombre" class="required form-control" />
+                <InputText @bind-Value="@registro.UsuNombre" class="required form-control text-uppercase" />
                 <ValidationMessage For="()=>registro.UsuNombre"></ValidationMessage>
             </div>
 
             <div class="col-4 mb-2">
-                <span class="fw-bold">Primer Apellido<strong class="red" title="requerido">*</strong></span>
+                <span class="fw-bold">Primer Apellido<strong class="red text-uppercase" title="requerido">*</strong></span>
                 <InputText @bind-Value="@registro.UsuPrimerApellido" class="required form-control" />
                 <ValidationMessage For="()=>registro.UsuPrimerApellido"></ValidationMessage>
             </div>
 
             <div class="col-4 mb-2">
                 <span class="fw-bold">Segundo Apellido</span>
-                <InputText @bind-Value="@registro.UsuSegundoApellido" class=" form-control" />
+                <InputText @bind-Value="@registro.UsuSegundoApellido" class="form-control text-uppercase" />
                 <ValidationMessage For="()=>registro.UsuSegundoApellido"></ValidationMessage>
             </div>
 
             <div class="col-6">
                 <span class="fw-bold">CURP<strong class="red" title="requerido">*</strong></span>
-                <InputText @bind-Value="@registro.UsuCurp" class="required form-control" />
+                <InputText @bind-Value="@registro.UsuCurp" class="required form-control text-uppercase" />
                 <ValidationMessage For="()=>registro.UsuCurp"></ValidationMessage>
+            </div>
+
+            <div class="col-6">
+                <InputFile OnChange="fuCURP_OnChange" class="form-control mb-3"></InputFile>
             </div>
         </div>
     </section>
@@ -81,13 +87,13 @@
             </div>
             <div class="col-6">
                 <span class="fw-bold">Correo (Personal)<strong class="red" title="requerido">*</strong></span>
-                <InputText @bind-Value="@registro.UsuCorreoPersonalCuentaNueva" class="required form-control" />
+                <InputText @bind-Value="@registro.UsuCorreoPersonalCuentaNueva" class="required form-control text-lowercase" />
                 <ValidationMessage For="()=>registro.UsuCorreoPersonalCuentaNueva"></ValidationMessage>
             </div>
 
             <div class="col-6">
-                <span class="fw-bold">UsuContraseña<strong class="red" title="requerido">*</strong></span>
-                <InputText @bind-Value="@registro.UsuContraseña" class="required form-control" />
+                <span class="fw-bold">Contraseña<strong class="red" title="requerido">*</strong></span>
+                <InputText type="password" @bind-Value="@registro.UsuContraseña" class="required form-control" />
                 <ValidationMessage For="()=>registro.UsuContraseña"></ValidationMessage>
             </div>
         </div>
@@ -132,6 +138,13 @@
                     <ValidationMessage For="()=>registro.UsuBoletaMaestria"></ValidationMessage>
                 </div>
             }
+
+            @if(es_alumno || es_alumno_maestria)
+                {
+                    <div class="col-6">
+                        <InputFile OnChange="fuComprobanteInscripcion_OnChange" class="form-control mb-3"></InputFile>
+                    </div>
+                }
 
             @if (es_egresado)
             {
@@ -216,15 +229,29 @@
     [Parameter] public List<RequestViewModel_Rol> cat_UsuIdRol { get; set; } = new List<RequestViewModel_Rol>();
     [Parameter] public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; set; } = new List<RequestViewModel_TipoPersonal>();
 
-    int[] ids_tipo_personal_alumnos = new int[] { 1, 2 };
-    int[] ids_tipo_peronal_personal = new int[] { 5, 6 };
+    int[] tipo_personal_alumnos = new int[] { TipoPersonal.ALUMNO, TipoPersonal.EGRESADO };
+    int[] tipo_peronal_personal = new int[] { TipoPersonal.DOCENTE, TipoPersonal.HONORARIOS };
 
-    private bool es_alumno { get { return ids_tipo_personal_alumnos.Contains(registro.UsuIdTipoPersonal); } }
+    private Dictionary<int,IBrowserFile?> archivos = new();
+
+    private bool es_alumno { get { return tipo_personal_alumnos.Contains(registro.UsuIdTipoPersonal); } }
 
     private bool es_egresado { get {  return registro.UsuIdTipoPersonal == 2 || es_alumno_maestria; } }
     private bool es_alumno_maestria { get { return registro.UsuIdTipoPersonal == 3; }}
-    private bool es_empleado { get { return ids_tipo_peronal_personal.Contains(registro.UsuIdTipoPersonal); }}
-    
-    private void OnValidForm() => dialogService.Close(registro);
+    private bool es_empleado { get { return tipo_peronal_personal.Contains(registro.UsuIdTipoPersonal); }}
+
+    private void fuCURP_OnChange(InputFileChangeEventArgs e)
+    {
+        archivos[TipoDocumento.CURP] = e.File;
+        registro.UsuFileNameCurp = "-";
+    }
+
+    private void fuComprobanteInscripcion_OnChange(InputFileChangeEventArgs e)
+    {
+        archivos[TipoDocumento.COM_INSCRIPCION] = e.File;
+        registro.UsuFileNameComprobanteInscripcion = "-";
+    }
+
+    private void OnValidForm() => dialogService.Close(new FileAttachmentObject<RequestDTO_Usuario>(registro, archivos));
     private void OnCloseForm() => dialogService.Close(null);
 }
