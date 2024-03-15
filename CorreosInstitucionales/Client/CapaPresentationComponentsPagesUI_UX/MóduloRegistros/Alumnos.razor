@@ -1004,26 +1004,33 @@ else
                                 </body>";
 
             oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
-            oSendWhatsApp.Message = $@"*Sistema de Ayuda para Correos Institucionales\n
-                                    POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n
-                                    Se le informa que su registro fué exitoso en la Plataforma *SACI (Sistema de Ayuda para Correos Institucionales)*
-				                    de la Unidad Académica *{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})*.\n
-									Por este medio se le hace entrega de sus _Credenciales de Acceso_:\n\n
-                                    Usuario: {oUsuario.UsuCorreoPersonalCuentaNueva}\n
-                                    Contraseña: {password}\n\n
-                                    - `*Rol:* Usuario`\n
-                                    - `*Tipo de Personal:* {oTipoPersonal.Data.TipoperNombre}`\n
-                                    - `*Nombre:* {oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}`\n
-                                    - `*CURP:* {oUsuario.UsuCurp}`\n
-                                    - `*No. de Celular:* {oUsuario.UsuNoCelularNuevo}`\n
-                                    - `*Boleta:* {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumno : oUsuario.UsuBoletaMaestria)}`\n
-                                    - `*Carrera:* {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oCarrera?.Data?.CarrNombre : "")}`\n
-                                    - `*Semestre:* {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuSemestre : "")}`\n
-                                    - `*Egresado:* {isEgresado}`\n
-                                    - `*Año de egreso:* {añoEgreso}`\n
-                                    - `*Fecha / Hora de Alta:* {fecha_actual}`\n\n
-                                    Que tenga un excelente día.\n
-                                    *>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
+            oSendWhatsApp.Message = 
+$@" Sistema de Ayuda para Correos Institucionales
+    *POR FAVOR NO RESPONDER A ESTE MENSAJE*
+
+Se le informa que su registro fué exitoso en la Plataforma 
+*SACI (Sistema de Ayuda para Correos Institucionales)* de la 
+Unidad Académica *{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})*.
+
+Por este medio se le hace entrega de sus _Credenciales de Acceso_:
+        
+        Usuario: {oUsuario.UsuCorreoPersonalCuentaNueva}
+        Contraseña: {password}
+
+    `Rol: Usuario`
+    `Tipo de Personal: {oTipoPersonal.Data.TipoperNombre}`
+    `Nombre: {oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}`
+    `CURP: {oUsuario.UsuCurp}`
+    `No. de Celular: {oUsuario.UsuNoCelularNuevo}`
+    `Boleta: {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumno : oUsuario.UsuBoletaMaestria)}`
+    `Carrera: {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oCarrera?.Data?.CarrNombre : "")}`
+    `Semestre: {(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuSemestre : "")}`
+    `Egresado: {isEgresado}`
+    `Año de egreso: {añoEgreso}`
+    `Fecha / Hora de Alta:` 
+        `{fecha_actual}`
+Que tenga un excelente día.
+*NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
 
             if (ActionAddEdit == "agregar")
             {
@@ -1352,12 +1359,17 @@ else
 
                             @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@
                             oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
-                            oSendWhatsApp.Message = $@"*SACI (Sistema de Ayuda para Correos Institucionales)\nPOR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n
-									                Por este medio se le hace entrega de sus _Credenciales de Acceso_ a la Plataforma SACI:\n\n
-                                                    Usuario: {oUsuario.UsuCorreoPersonalCuentaNueva}\n
-                                                    Contraseña: {password}\n\n
-                                                    Que tenga un excelente día.\n
-                                                    *>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
+                            oSendWhatsApp.Message = 
+$@" SACI (Sistema de Ayuda para Correos Institucionales)
+    *POR FAVOR NO RESPONDER A ESTE MENSAJE*
+
+Se le hace entrega de sus _Credenciales de Acceso_ a la Plataforma SACI:
+
+        Usuario: {oUsuario.UsuCorreoPersonalCuentaNueva}
+        Contraseña: {password}
+
+Que tenga un excelente día.
+*NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
 
                             await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
 
