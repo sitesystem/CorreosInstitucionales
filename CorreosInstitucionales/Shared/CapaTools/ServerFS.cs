@@ -23,22 +23,31 @@ namespace CorreosInstitucionales.Shared.Utils
             return $"Repositorio/Solicitudes-Tickets/{id_solicitud}/{id_solicitud}_{archivo}";
         }
 
-        public static string? WriteZip(string filename, List<WebUtils.Link> files, string root_directory = "")
+        public static bool SubirArchivo()
+        {
+            bool result = false;
+
+
+            return result;
+        }
+
+        public static string? WriteZip(string filename, List<WebUtils.Link> files)
         {
             string z_name = string.Empty;
             string z_filename = string.Empty;
+            string basedir = GetBaseDir(true);
 
             string? log = null;
 
             List<string> messages = [$"PATH: {Path.GetFullPath(".")}"];
 
-            using (FileStream fs = new FileStream(filename, FileMode.CreateNew))
+            using (FileStream fs = new FileStream($"{basedir}/{filename}", FileMode.CreateNew))
             {
                 using (ZipArchive za = new ZipArchive(fs, ZipArchiveMode.Create, true))
                 {
                     foreach (WebUtils.Link file in files)
                     {
-                        z_filename = $"{root_directory}{file.Url}";
+                        z_filename = $"{basedir}/{file.Url}";
 
                         if (!File.Exists(z_filename))
                         {

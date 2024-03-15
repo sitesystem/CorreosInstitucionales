@@ -170,13 +170,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPost("xlsx/pendientes")]
-        public async Task<IActionResult> GenerarPendientes_XLSX(int[] selected)
+        public async Task<IActionResult> ExportarPendientes_XLSX(int[] selected)
         {
             return await LlenarFormulario(selected, false);
         }
 
         [HttpPost("zip/pendientes")]
-        public async Task<IActionResult> GenerarPendientes_ZIP(int[] selected)
+        public async Task<IActionResult> ExportarPendientes_ZIP(int[] selected)
         {
             return await LlenarFormulario(selected, true);
         }
@@ -189,13 +189,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             Guid id = Guid.NewGuid();
             string id_fecha = DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
-            string filename = $"../Client/wwwroot/repositorio/procesados/{id_fecha}_solicitud_alta_desbloqueo_{id}"; // Development Root
-            //string filename = $"wwwroot/repositorio/procesados/{id_fecha}_solicitud_alta_desbloqueo_{id}"; // Deployment Root
-
+            string basedir = ServerFS.GetBaseDir(true);
+            string filename = $"{basedir}/repositorio/procesados/{id_fecha}_solicitud_alta_desbloqueo_{id}";
+            
             StringBuilder sb = new StringBuilder();
             bool guardar_registro = false;
 
-            //15,5
             Dictionary<string,RegistroImportacion> registros = new ();
             RegistroImportacion registro_actual;
 
@@ -330,12 +329,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             Response<List<WebUtils.Link>> oResponse = new() { Data = new() } ;
             List<MtTbSolicitudesTicket> pendientes = new List<MtTbSolicitudesTicket>();
 
-            string base_directory = $"../Client/wwwroot"; // Development Root
-            //string base_directory = $"wwwroot"; // Deployment Root
+            string base_directory = ServerFS.GetBaseDir(true);
             string filename = $"repositorio/pendientes/{id_fecha}_solicitud_alta_desbloqueo_{id}";
-            string template_fn = $"assets/sol_alta_desbloqueo.xlsx";
+            string template_fn = $"{base_directory}/assets/sol_alta_desbloqueo.xlsx";
             
-            XLWorkbook wb = new XLWorkbook($"{base_directory}/{template_fn}");
+            XLWorkbook wb = new XLWorkbook(template_fn);
             IXLWorksheet ws = wb.Worksheet(1);
 
             StringBuilder errors = new();
@@ -453,7 +451,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 files.Add(new WebUtils.Link(filename + ".xlsx"));
 
-                error = ServerFS.WriteZip($"{base_directory}/{filename}.zip", files, base_directory + "/" );
+                error = ServerFS.WriteZip($"{filename}.zip", files);
 
                 if(error is not null)
                 {
