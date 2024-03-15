@@ -115,7 +115,7 @@
                                 </a>
                                 <br />
                                 <button class="btn btn-primary form-control"
-                                        @onclick="@(async () => await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CAP_BLOQUEO), "CAPTURA DE PANTALLA DE BLOQUEO"))">
+                                        @onclick="@(async () => await VerPDF(GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_BLOQUEO), "CAPTURA DE PANTALLA DE BLOQUEO"))">
                                     Ver
                                 </button>
                             </li>
@@ -131,7 +131,7 @@
                                 </a>
                                 <br />
                                 <button class="btn btn-primary form-control"
-                                        @onclick="@(async () => await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CAP_ANTIVIRUS), "CAPTURA DE PANTALLA DE ESCANEO DE ANTIVIRUS"))">
+                                        @onclick="@(async () => await VerPDF(GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ANTIVIRUS), "CAPTURA DE PANTALLA DE ESCANEO DE ANTIVIRUS"))">
                                     Ver
                                 </button>
                             </li>
@@ -147,7 +147,7 @@
                                 </a>
                                 <br />
                                 <button class="btn btn-primary form-control"
-                                        @onclick="@(async () => await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CAP_ERROR), "CAPTURA DE PANTALLA DE ERROR"))">
+                                        @onclick="@(async () => await VerPDF(GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ERROR), "CAPTURA DE PANTALLA DE ERROR"))">
                                     Ver
                                 </button>
                             </li>
