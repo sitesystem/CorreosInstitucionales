@@ -195,7 +195,7 @@
 
     private string debug = string.Empty;
 
-    private string ArchivoSolicitud(RequestDTO_Solicitud solicitud, int tipo_documento)
+    private string ArchivoSolicitud(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
     {
         string archivo = "ARCHIVO_404";
 
@@ -225,23 +225,23 @@
         return archivo;
     }
 
-    private string GenerarURLArchivoUsuario(RequestDTO_Solicitud solicitud, int tipo_documento)
+    private string GenerarURLArchivoUsuario(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
     {
         string archivo = ArchivoSolicitud(solicitud, tipo_documento);
         return ServerFS.ArchivoUsuario(solicitud.SolIdUsuario, archivo);
     }
 
-    private string GenerarURLArchivoRepositorio(RequestDTO_Solicitud solicitud, int tipo_documento)
+    private string GenerarURLArchivoRepositorio(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
     {
         string archivo = ArchivoSolicitud(solicitud, tipo_documento);
         return ServerFS.ArchivoRepositorio(solicitud.IdSolicitudTicket,archivo);
     }
 
-    private string GenerarNombreArchivo(RequestDTO_Solicitud solicitud, int tipo_documento)
+    private string GenerarNombreArchivo(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
     {
         string archivo = ArchivoSolicitud(solicitud, tipo_documento);
         string ext = Path.GetExtension(archivo);
-        string nombre = TipoDocumento.Nombre[tipo_documento] ?? "ARCHIVO_404";
+        string nombre = tipo_documento.GetNombre();
         return $"SOL{solicitud.IdSolicitudTicket}_{solicitud.SolIdUsuarioNavigation!.UsuCurp}_{nombre}{ext}";
     }
 

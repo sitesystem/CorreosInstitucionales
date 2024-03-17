@@ -232,7 +232,7 @@
     int[] tipo_personal_alumnos = new int[] { TipoPersonal.ALUMNO, TipoPersonal.EGRESADO };
     int[] tipo_peronal_personal = new int[] { TipoPersonal.DOCENTE, TipoPersonal.HONORARIOS };
 
-    private Dictionary<int,IBrowserFile?> archivos = new();
+    private Dictionary<TipoDocumento,IBrowserFile?> archivos = new();
 
     private bool es_alumno { get { return tipo_personal_alumnos.Contains(registro.UsuIdTipoPersonal); } }
 
@@ -252,6 +252,6 @@
         registro.UsuFileNameComprobanteInscripcion = "-";
     }
 
-    private void OnValidForm() => dialogService.Close(new FileAttachmentObject<RequestDTO_Usuario>(registro, archivos));
+    private void OnValidForm() => dialogService.Close(new DocumentoAdjunto<RequestDTO_Usuario>(registro, archivos));
     private void OnCloseForm() => dialogService.Close(null);
 }

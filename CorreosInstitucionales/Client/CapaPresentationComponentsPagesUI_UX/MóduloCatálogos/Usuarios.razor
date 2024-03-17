@@ -142,7 +142,7 @@
         }
     }
 
-    private async Task<FileAttachmentObject<RequestDTO_Usuario>?> MostrarFormulario(RequestDTO_Usuario registro)
+    private async Task<DocumentoAdjunto<RequestDTO_Usuario>?> MostrarFormulario(RequestDTO_Usuario registro)
     {
         return await DialogService.OpenAsync<UsuarioEditor>
                 (
@@ -177,7 +177,7 @@
     {
         RequestDTO_Usuario registro = TemplateEntity.CreateUsuario();
 
-        FileAttachmentObject<RequestDTO_Usuario>? result = await MostrarFormulario(registro);
+        DocumentoAdjunto<RequestDTO_Usuario>? result = await MostrarFormulario(registro);
 
         if (result is not null)
         {
@@ -207,7 +207,7 @@
 
         if (registro is not null)
         {
-            FileAttachmentObject<RequestDTO_Usuario>? result = await MostrarFormulario(registro);
+            DocumentoAdjunto<RequestDTO_Usuario>? result = await MostrarFormulario(registro);
 
             if (result is not null)
             {

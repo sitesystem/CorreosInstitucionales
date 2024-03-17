@@ -137,10 +137,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }// ENVIO  MASIVO (EN PROCESO)
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private WebUtils.Link GenerarLink(MtTbSolicitudesTicket solicitud, int tipo_documento, string directorio)
+        private WebUtils.Link GenerarLink(MtTbSolicitudesTicket solicitud, TipoDocumento tipo_documento, string directorio)
         {
             string archivo = string.Empty;
-            string tipo = TipoDocumento.Nombre[tipo_documento] ?? "ARCHIVO";
+            string tipo = tipo_documento.GetNombre();
 
             string curp = solicitud.SolIdUsuarioNavigation.UsuCurp;
             string id = string.Format("{0:00000}", solicitud.IdSolicitudTicket);
@@ -192,16 +192,18 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             string basedir = ServerFS.GetBaseDir(true);
             string filename = $"{basedir}/repositorio/procesados/{id_fecha}_solicitud_alta_desbloqueo_{id}";
             
-            StringBuilder sb = new StringBuilder();
-            bool guardar_registro = false;
-
+            List<string> logs = new();
+            
             Dictionary<string,RegistroImportacion> registros = new ();
             RegistroImportacion registro_actual;
 
             List<string> lista_curps = new();
 
             string CURP = string.Empty;
-            
+
+            TipoDatoActualizar[] datos_a_actualizar = [];
+            bool actualizar_todo = false;
+
             try
             {
                 using (var stream = file.OpenReadStream())
@@ -232,13 +234,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                             registros.Add(CURP, registro_actual);
 
-                            sb.AppendLine(registro_actual.ToString());
+                            logs.Add(registro_actual.ToString());
                         }
                     }//LEER XLSX
                     else
                     {
-                        sb.AppendLine("EL ARCHIVO NO CUENTA CON REGISTROS.");
-                        guardar_registro = true;
+                        logs.Add("EL ARCHIVO NO CUENTA CON REGISTROS.");
                     }
 
                     List<MtTbSolicitudesTicket> solicitudes = await _db.MtTbSolicitudesTickets
@@ -251,50 +252,52 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         .Include(st => st.SolIdUsuarioNavigation)
                         .ToListAsync();
 
-                    if(registros.Count != solicitudes.Count)
-                    {
-                        sb.AppendLine($"EL NÚMERO DE REGISTROS DEL ARCHIVO XLSX ({registros.Count}) NO COINCIDE CON EL NÚMERO DE SOLICITUDES ({solicitudes.Count}).");
-                        guardar_registro = true;
-                    }
+                    logs.Add($"SE ACTUALIZ{(registros.Count > 1 ? "ARÁN" : "Á")} {registros.Count} SOLICITUD{(registros.Count>1?"ES":string.Empty)} DE {solicitudes.Count} PENDIENTE{(solicitudes.Count>1?"S":string.Empty)}...");                    
 
                     //TODO: Cambio de asignaciones deacuerdo al tipo de solicitud
-                    foreach(MtTbSolicitudesTicket solicitud in solicitudes)
+                    foreach (MtTbSolicitudesTicket solicitud in solicitudes)
                     {
-                        registro_actual = registros[solicitud.SolIdUsuarioNavigation.UsuCurp];
+                        datos_a_actualizar = ((TipoSolicitud)solicitud.SolIdTipoSolicitud).GetDatosActualizar();
 
                         solicitud.SolIdEstadoSolicitud = TipoEstadoSolicitud.ATENDIDA;
 
-                        switch(solicitud.SolIdTipoSolicitud)
+                        if (datos_a_actualizar.Contains(TipoDatoActualizar.NINGUNO))
                         {
-                            case TipoSolicitud.CAMBIO_CORREO_PERSONAL:
-                                solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
-                                solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva = registro_actual.CorreoPersonal;
-                                break;
-
-                            case TipoSolicitud.CAMBIO_CELULAR:
-                                solicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
-                                solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo = registro_actual.Celular;
-                                break;
-
-                            case TipoSolicitud.CORREO_EGRESADO://CAMBIO DE DOMINIO alumno.ipn.mx a egresado.ipn.mx
-                            case TipoSolicitud.CREACION_ACTIVACION_CORREO_INST:
-                                solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
-                                solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
-                                break;
-
-                            case TipoSolicitud.RECUPERACION_CONTRA:
-                                solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
-                                break;
-
-                            case TipoSolicitud.OTRO:
-                                solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
-                                solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
-
-                                solicitud.SolIdUsuarioNavigation.UsuNoExtensionAnterior = solicitud.SolIdUsuarioNavigation.UsuNoExtension;
-                                solicitud.SolIdUsuarioNavigation.UsuNoExtension = registro_actual.NoExtension;
-                                break;
+                            continue;
                         }
-                        
+
+                        registro_actual = registros[solicitud.SolIdUsuarioNavigation.UsuCurp];
+
+                        actualizar_todo = datos_a_actualizar.Contains(TipoDatoActualizar.TODO);
+
+                        if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoActualizar.CORREO_PERSONAL))
+                        {
+                            solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+                            solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva = registro_actual.CorreoPersonal;
+                        }
+
+                        if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoActualizar.CORREO_INSTITUCIONAL))
+                        {
+                            solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
+                        }
+
+                        if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoActualizar.CONTRA))
+                        {
+                            solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
+                        }
+
+                        if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoActualizar.CELULAR))
+                        {
+                            solicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
+                            solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo = registro_actual.Celular;
+                        }
+
+                        if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoActualizar.EXTENSION))
+                        {
+                            solicitud.SolIdUsuarioNavigation.UsuNoExtensionAnterior = solicitud.SolIdUsuarioNavigation.UsuNoExtension;
+                            solicitud.SolIdUsuarioNavigation.UsuNoExtension = registro_actual.NoExtension;
+                        }
+                                                
                         solicitud.SolRespuestaDcyC = registro_actual.Accion;
                     }
 
@@ -303,7 +306,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     await EnvioMasivoRespuesta(solicitudes);
                 }
 
-                oResponse.Data = "OK";
                 oResponse.Success = 1;
             }
             catch(Exception ex)
@@ -311,11 +313,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 oResponse.Data = ex.Message + Environment.NewLine + ex.StackTrace;
             }
 
-            if (guardar_registro)
-            {
-                await System.IO.File.WriteAllTextAsync($"{filename}.log", sb.ToString());
-                oResponse.Message += Environment.NewLine + sb.ToString();
-            }
+            string log_content = string.Join(Environment.NewLine, logs);
+
+            await System.IO.File.WriteAllTextAsync($"{filename}.log", log_content);
+
+            oResponse.Data = log_content;
 
             return Ok(oResponse);
         }
@@ -389,7 +391,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             break;
                     }
 
-                    switch(solicitud.SolIdTipoSolicitud)
+                    switch((TipoSolicitud)solicitud.SolIdTipoSolicitud)
                     {
                         case TipoSolicitud.DESBLOQUEO_CUENTA:
                             adjuntar_cap_bloqueo = true;

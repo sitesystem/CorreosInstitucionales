@@ -375,6 +375,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
         {
             Response<object> oRespuesta = new();
             MtTbSolicitudesTicket oSolicitud;
+            TipoDocumento[] documentos = [];
 
             int[] terminados = 
             [
@@ -425,9 +426,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                         SolFechaHoraCreacion = DateTime.Now
                     };
 
-                    oSolicitud.SolCapturaEscaneoAntivirus = TipoSolicitud.Documentos[tipo_solicitud].Contains(TipoDocumento.CAP_ANTIVIRUS) ? $"CAPTURA_ANTIVIRUS_{uid}.pdf" : "-";
-                    oSolicitud.SolCapturaCuentaBloqueada = TipoSolicitud.Documentos[tipo_solicitud].Contains(TipoDocumento.CAP_BLOQUEO) ? $"CAPTURA_BLOQUEO_{uid}.pdf" : "-";
-                    oSolicitud.SolCapturaError = TipoSolicitud.Documentos[tipo_solicitud].Contains(TipoDocumento.CAP_ERROR) ? $"CAPTURA_ERROR_{uid}.pdf" : "-";
+                    documentos = ((TipoSolicitud)tipo_solicitud).GetDocumentos();
+
+                    oSolicitud.SolCapturaEscaneoAntivirus = documentos.Contains(TipoDocumento.CAP_ANTIVIRUS) ? $"CAPTURA_ANTIVIRUS_{uid}.pdf" : "-";
+                    oSolicitud.SolCapturaCuentaBloqueada = documentos.Contains(TipoDocumento.CAP_BLOQUEO) ? $"CAPTURA_BLOQUEO_{uid}.pdf" : "-";
+                    oSolicitud.SolCapturaError = documentos.Contains(TipoDocumento.CAP_ERROR) ? $"CAPTURA_ERROR_{uid}.pdf" : "-";
 
                     await _db.MtTbSolicitudesTickets.AddAsync(oSolicitud);
                 }

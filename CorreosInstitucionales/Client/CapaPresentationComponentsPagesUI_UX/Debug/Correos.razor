@@ -7,19 +7,24 @@
 <div class="p-4 rounded-1 bg-white shadow">
     <h1>@Title</h1>
     <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-md-6 mb-3">
             <strong>Correo</strong>
-            <InputText class="form-control" required @bind-Value=correo />
-        </div>
-
-        <div class="col-6">
-            <strong>Número de Celular</strong>
-            <InputText class="form-control" required @bind-Value=numero />
-        </div>
-
-        <div class="col-12">
+            <InputText class="form-control mb-3" required @bind-Value=correo />
+            
             <strong>Mensaje</strong>
-            <InputTextArea class="form-control" required @bind-Value=mensaje />
+            <InputTextArea class="form-control mb-3" required @bind-Value=mensaje_correo />
+
+            <button @onclick="EnviarCorreo" class="btn btn-primary form-control">Enviar Correo</button>
+        </div>
+
+        <div class="col-12 col-md-6 mb-3">
+            <strong>Número de Celular</strong>
+            <InputText class="form-control mb-3" required @bind-Value=numero />
+
+            <strong>Mensaje</strong>
+            <InputTextArea class="form-control mb-3" required @bind-Value=mensaje_wa />
+
+            <button @onclick="EnviarMensajeWA" class="btn btn-primary form-control">Enviar WA</button>
         </div>
     </div>
 
@@ -31,19 +36,21 @@
 
     <div class="row my-2">
         <div clas="col-2">
-            <button @onclick="EnviarCorreo" class="btn btn-primary form-control">Enviar Mensaje</button>
+            
         </div>
     </div>
 </div>
 
 @code 
 {
-    readonly string Title = "Correos (y mensajes)";
+    readonly string Title = "Enviar Mensaje";
     string debug = "";
 
     string correo = string.Empty;
-    string mensaje = string.Empty;
+    string mensaje_correo = string.Empty;
+
     string numero = string.Empty;
+    string mensaje_wa = string.Empty;
 
     public RequestDTO_Usuario usuario = new();
 
@@ -63,7 +70,8 @@
                 usuario = response.Data;
                 correo = usuario.UsuCorreoPersonalCuentaNueva;
                 numero = usuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
-                mensaje = $"MENSAJE DE PRUEBA PARA {usuario.UsuNombre}";
+                mensaje_correo = $"MENSAJE DE PRUEBA PARA {usuario.UsuNombre}";
+                mensaje_wa = $"MENSAJE DE PRUEBA PARA *{usuario.UsuNombre}*";
             }
 
             StateHasChanged();
@@ -73,7 +81,7 @@
     private async Task EnviarCorreo()
     {
         HttpResponseMessage response;
-        
+
         ILoggerFactory loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         HtmlRenderer htmlRenderer = new HtmlRenderer(serviceProvider, loggerFactory);
 
@@ -86,7 +94,7 @@
                 (
                     new Dictionary<string, object?>
                     {
-                        { "mensaje", mensaje}
+                        { "mensaje", mensaje_correo}
                     }
                 );
 
@@ -95,6 +103,9 @@
                 return output.ToHtmlString();
             }
         );
+
+        debug += Environment.NewLine + "Enviando mensaje";
+        StateHasChanged();
 
         response = await servicioSendEmail.SendEmailAsync
         (
@@ -115,12 +126,20 @@
             string content = await response.Content.ReadAsStringAsync();
             debug += Environment.NewLine + $"ERROR ENVIANDO CORREO: {content}";
         }
-        
+    }//ENVIAR CORREO
+
+    private async Task EnviarMensajeWA()
+    {
+        HttpResponseMessage response;
+
         RequestDTO_SendWhatsApp MensajeWA = new()
         {
-            Message = mensaje,
-            Number = numero
+            Message = mensaje_wa,
+            Number = numero.Replace(" ", string.Empty)
         };
+
+        debug += Environment.NewLine + "Enviando mensaje";
+        StateHasChanged();
 
         response = await servicioSendWhatsApp.SendWhatsAppAsync(MensajeWA);
         if (response.IsSuccessStatusCode)

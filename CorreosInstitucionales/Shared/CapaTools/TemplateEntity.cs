@@ -39,7 +39,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
                 SolCapturaCuentaBloqueada = "-",
                 SolCapturaError = "-",
                 SolObservacionesSolicitud = "-",
-                SolIdEstadoSolicitud = TipoEstadoSolicitud.ALTA
+                SolIdEstadoSolicitud = TipoEstadoSolicitud.PENDIENTE
             };
         }
 

@@ -137,9 +137,12 @@
 
                 Response<string>? oResponse = await servicioArchivos.PostFile("xlsx", "procesados", content);
 
-                if (oResponse is not null && oResponse.Data is not null)
+                if (oResponse is not null)
                 {
-                    debug += Environment.NewLine + "[SERVIDOR] " + oResponse.Message;
+                    debug += Environment.NewLine + 
+                    "[SERVIDOR] " + oResponse.Message + Environment.NewLine + 
+                    Environment.NewLine + 
+                    oResponse.Data;
 
                     if(oResponse.Success == 1)
                     {

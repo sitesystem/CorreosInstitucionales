@@ -6,21 +6,29 @@ using System.Threading.Tasks;
 
 namespace CorreosInstitucionales.Shared.Constantes
 {
-    public static class TipoDocumento
+    public enum TipoDocumento
     {
-        public const int CURP               = 0;
-        public const int COM_INSCRIPCION    = 1;
-        public const int CAP_ANTIVIRUS      = 2;
-        public const int CAP_BLOQUEO        = 3;
-        public const int CAP_ERROR          = 4;
+        CURP            = 0,
+        COM_INSCRIPCION = 1,
+        CAP_ANTIVIRUS   = 2,
+        CAP_BLOQUEO     = 3,
+        CAP_ERROR       = 4,
+    }
 
-        public static readonly Dictionary<int, string> Nombre = new()
+    public static class TipoDocumentoMethods
+    {
+        public static string GetNombre(this TipoDocumento documento)
         {
-            {CURP,"CURP" },
-            {COM_INSCRIPCION,"COMPROBANTE_INSCRIPCION" },
-            {CAP_ANTIVIRUS,"CAPTURA_ANTIVIRUS" },
-            {CAP_BLOQUEO,"CAPTURA_BLOQUEO" },
-            {CAP_ERROR,"CAPTURA_ERROR" },
-        };
+            switch(documento)
+            {
+                case TipoDocumento.CURP:            return "CURP";
+                case TipoDocumento.COM_INSCRIPCION: return "COMPROBANTE_INSCRIPCION";
+                case TipoDocumento.CAP_ANTIVIRUS:   return "CAPTURA_ANTIVIRUS";
+                case TipoDocumento.CAP_BLOQUEO:     return "CAPTURA_BLOQUEO";
+                case TipoDocumento.CAP_ERROR:       return "CAPTURA_ERROR";
+            }
+
+            return "ARCHIVO";
+        }
     }
 }
