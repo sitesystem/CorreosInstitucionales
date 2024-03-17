@@ -5,6 +5,8 @@
 /CorreosInstitucionales/Server/obj/
 /CorreosInstitucionales/Shared/bin/
 /CorreosInstitucionales/Shared/obj/
-/CorreosInstitucionales/Client/wwwroot/Repositorio/pendientes/
-/CorreosInstitucionales/Client/wwwroot/Repositorio/procesados/*.log
+/CorreosInstitucionales/Server/wwwroot/Repositorio/pendientes/
+/CorreosInstitucionales/Server/wwwroot/Repositorio/procesados/*.log
+/CorreosInstitucionales/Server/wwwroot/Repositorio/Solicitudes-Tickets/*/*.pdf
+/CorreosInstitucionales/Server/wwwroot/Repositorio/Usuarios/*/*.pdf
 /api_whatsapp/node_modules
