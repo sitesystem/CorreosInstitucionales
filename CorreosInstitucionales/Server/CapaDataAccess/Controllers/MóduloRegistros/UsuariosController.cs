@@ -5,6 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaTools;
+using CorreosInstitucionales.Shared.Constantes;
+using CorreosInstitucionales.Shared;
+using CorreosInstitucionales.Shared.Utils;
+using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos;
+using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloRegistros;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegistros
 {
@@ -311,6 +316,134 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             }
 
             return Ok(oRespuesta);
-        }
+        }//editByIdStatus
+
+        [HttpPut("generar_random/{cantidad}")]
+        public async Task<IActionResult> GenerarUsuarios(int cantidad = 10)
+        {
+            Response<string> oResponse = new() { Data = string.Empty };
+
+            Random rnd = new Random();
+            string id;
+            MpTbUsuario tmp;
+
+            string basedir = ServerFS.GetBaseDir(true);
+
+            RandomItemPicker<string> nombres_h = new RandomItemPicker<string>($"{basedir}/assets/nombres_h.txt");
+            RandomItemPicker<string> nombres_m = new RandomItemPicker<string>($"{basedir}/assets/nombres_m.txt");
+            RandomItemPicker<string> apellidos = new RandomItemPicker<string>($"{basedir}/assets/apellidos.txt");
+
+            RandomItemPicker<TipoPersonal> rol = new RandomItemPicker<TipoPersonal>
+            (
+                new RandomItem<TipoPersonal>[]
+                {
+                    new RandomItem<TipoPersonal>(50,    TipoPersonal.ALUMNO),
+                    new RandomItem<TipoPersonal>(10,    TipoPersonal.EGRESADO),
+                    new RandomItem<TipoPersonal>(10,    TipoPersonal.MAESTRIA),
+                    new RandomItem<TipoPersonal>(10,    TipoPersonal.DOCENTE),
+                    new RandomItem<TipoPersonal>(10,    TipoPersonal.HONORARIOS),
+                    new RandomItem<TipoPersonal>(5,     TipoPersonal.ADMINISTRATIVO),
+                    new RandomItem<TipoPersonal>(5,     TipoPersonal.PLATAFORMA_SACI),
+                }
+            );
+
+            bool es_hombre = rnd.NextDouble() >= 0.5f;//50%
+            bool tiene_varios_nombres = rnd.NextDouble() >= 0.5f;//50%
+            bool tiene_dos_apellidos = rnd.NextDouble() <= 0.85;//85% SI, 20% NO
+
+            TipoPersonal tipo_personal = TipoPersonal.NINGUNO;
+
+            bool es_alumno = false;
+
+            DateOnly fecha_nacimiento;
+            int anio_nacimiento = 1990;
+            int anios_estudio = 0;
+            int edad = 0;
+
+            try
+            {
+                for (int i = 0; i < cantidad; i++)
+                {
+                    id = Guid.NewGuid().ToString();
+                    tipo_personal = rol.GetRandomItem();
+
+                    es_alumno = false;
+
+                    edad = 21;// rnd.Next(25, 80);
+                    anios_estudio = rnd.Next(0, 5);
+
+                    tmp = new MpTbUsuario()
+                    {
+                        UsuFechaHoraAlta = DateTime.Now,
+                        UsuIdRol = (int)tipo_personal,
+                        UsuFileNameCurp = $"CURP_{id}.pdf",
+                        UsuFileNameComprobanteInscripcion = "-",
+                        UsuNoExtension = "0",
+                        UsuStatus = true
+                    };
+
+                    tmp.UsuNombre = es_hombre ? nombres_h.GetRandomItem() : nombres_m.GetRandomItem();
+
+                    if (tiene_varios_nombres)
+                    {
+                        tmp.UsuNombre += " " + (es_hombre ? nombres_h.GetRandomItem() : nombres_m.GetRandomItem());
+                    }
+
+                    tmp.UsuPrimerApellido = apellidos.GetRandomItem();
+
+                    if (tiene_dos_apellidos)
+                    {
+                        tmp.UsuSegundoApellido = apellidos.GetRandomItem();
+                    }
+
+                    switch(tipo_personal)
+                    {
+                        case TipoPersonal.ALUMNO:
+                            es_alumno = true;
+                            
+                            edad = rnd.Next(18, 25);
+                            break;
+
+                        case TipoPersonal.EGRESADO:
+                            es_alumno = true;
+                            edad = rnd.Next(21, 35);
+                            anios_estudio = rnd.Next(4, 6);
+                            break;
+
+                        case TipoPersonal.MAESTRIA:
+                            es_alumno = true;
+                            edad = rnd.Next(30, 50);
+                            anios_estudio = rnd.Next(4, 15);
+                            break;
+                    }
+
+                    anio_nacimiento = DateTime.Now.Year - edad - anios_estudio;
+
+                    fecha_nacimiento = new DateOnly(anio_nacimiento, rnd.Next(1, 12), 1);
+
+
+
+                    if(es_alumno)
+                    {
+                        tmp.UsuFileNameComprobanteInscripcion = $"COMPROBANTE_INSCRIPCION_{id}.pdf";
+                    }
+
+
+
+                    await _db.MpTbUsuarios.AddAsync(tmp);
+                    await _db.SaveChangesAsync();
+
+                }//FOR
+
+                oResponse.Success = 1;
+            }
+            catch ( Exception ex )
+            {
+                oResponse.Message = ex.Message;
+                oResponse.Data = ex.StackTrace;
+            }
+            
+            return Ok(oResponse);
+        }//GenerarUsuarios
     }
 }
