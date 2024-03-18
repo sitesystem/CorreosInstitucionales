@@ -238,7 +238,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                 if (oUsuario != null)
                 {
-                    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+                    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&";
                     string tmpPassword = new(Enumerable.Repeat(chars, 10).Select(s => s[new Random().Next(s.Length)]).ToArray());
 
                     oUsuario.UsuContraseña = Encrypt.GetSHA256(tmpPassword);
@@ -248,7 +248,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     await _db.SaveChangesAsync();
 
                     oRespuesta.Success = 1;
-                    oRespuesta.Message = $"<b>{tmpPassword}</b>";
+                    oRespuesta.Message = $"{tmpPassword}";
                     oRespuesta.Data = oUsuario;
                 }
                 else

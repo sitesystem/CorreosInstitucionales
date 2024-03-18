@@ -3,16 +3,6 @@
 @attribute [AllowAnonymous]
 
 <style type="text/css">
-    .circle-border {
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        color: green;
-        width: 60px;
-        height: 60px;
-        border: 5px solid rgb(215,215,215);
-        border-radius: 50%;
-    }
 </style>
 
 @if (oAreasDeptos is not null && oAreasDeptos.Data != null)
@@ -355,10 +345,10 @@
         </RadzenFieldset>
 
         <!-- ******************************************************************* CARD DATOS CORREO INSTITUCIONAL ******************************************************************* -->
-        <RadzenFieldset AllowCollapse="false" ExpandTitle="Cuenta del Correo Electrónico Institucional" CollapseTitle="Cuenta del Correo Electrónico Institucional" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 my-3">
+        <RadzenFieldset AllowCollapse="false" ExpandTitle="Credenciales del Correo E. Institucional" CollapseTitle="Credenciales del Correo E. Institucional" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 my-3">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
-                    <RadzenIcon Icon="email" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Cuenta del Correo Electrónico Institucional</b>
+                    <RadzenIcon Icon="email" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Credenciales del Correo E. Institucional</b>
                 </span>
             </HeaderTemplate>
             <ChildContent>
@@ -432,7 +422,7 @@
             {
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="0px" Class="" Style="font-family:var(--rz-text-font-family);">
                     <RadzenCheckBox Name="@($@"aviso_privacidad_{TipoPersonal}")" TValue="bool" @bind-Value="@aceptar_aviso_privacidad" TriState="false" Change="@(args => aceptar_aviso_privacidad = args)" Disabled="false" ReadOnly="false" />
-                    <RadzenLabel Text="He leído y Acepto los términos del" Component="@($@"aviso_privacidad_{TipoPersonal}")" Style="margin-left: 8px; vertical-align: middle;" />&ensp;
+                    <RadzenLabel Text="He leído y Acepto los términos y condiciones del" Component="@($@"aviso_privacidad_{TipoPersonal}")" Style="margin-left: 8px; vertical-align: middle;" />&ensp;
                     <a style="cursor:pointer;" @onclick="@(() => ShowDialogModal_iFrame("./documentos/saci_aviso_privacidad.pdf", "Aviso de Privacidad para la Protección de Datos Personales"))" class="icon-link icon-link-hover">
                         <b>Aviso</b> de <strong>Privacidad</strong>
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
@@ -692,114 +682,123 @@ else
             string fecha_actual = DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");
             oTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(oUsuario.UsuIdTipoPersonal);
             oAreaDepto = await servicioAreaDepto.GetDataByIdAsync(oUsuario.UsuIdAreaDepto);
+            string fecha_hora_alta = ActionAddEdit == "agregar" ? DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'") : oUsuario.UsuFechaHoraAlta?.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");
             string password = ActionAddEdit == "agregar" ? oUsuario.UsuContraseña : UsuContraseña;
             string número = (IdTipoPersonal == 4 || IdTipoPersonal == 5 ? "Número de Empleado" : "Número de Contrato");
             string agregar_actualizar = ActionAddEdit == "agregar" ? "registro" : "actualización de datos";
+            string entrega_credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) ? "<br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>" : "";
+            string credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
+                                        $@"
+                                        <div align='center'>
+                                            <article class='container-fluid' style='background-color: rgb(244,244,244); width:700px; border-radius:10px; padding:5px; text-align:justify;'>
+				                            <div align='center'>
+						                        <table style='padding:5px; border: 1px solid black; border-collapse:collapse;' >
+							                        <thead>
+								                        <tr style='background-color: #dddddd;'>
+									                        <th scope='col' colspan='2' style='border: 1px solid black;'>Credenciales de Acceso</th>
+								                        </tr>
+							                        </thead>
+							                        <tbody>
+								                        <tr style='background-color: #ffffff;'>
+									                        <td width='250px' style='border: 1px solid black;'><b>✉️ Usuario:</b></td>
+									                        <td width='250px' style='border: 1px solid black;'><b>{oUsuario.UsuCorreoPersonalCuentaNueva}</b></td>
+								                        </tr>
+								                        <tr style='background-color: #dddddd;'>
+									                        <td width='250px' style='border: 1px solid black;'><b>🔑 Contraseña:</b></td>
+									                        <td width='250px' style='border: 1px solid black;'><b>{password}</b></td>
+								                        </tr>
+							                        </tbody>
+						                        </table>
+				                            </div>
+			                                </article>
+                                        </div>" : "";
 
             string msgEmail = $@"
                                 <body>
 	                                <header>
 		                                <div align='center'>
-			                                <p style='font-weight:bold; text-align:center; font-size:calc(16px + 0.390625vw); color:black;' > Sistema de Ayuda para Correos Institucionales</p>
+			                                <p style='font-weight:bold; text-align:center; color:black;'>SACI (Sistema de Atención para Correos Institucionales)</p>
 		                                </div>
 	                                </header>
 	                                <main class='container-fluid'>
 		                                <section>
 			                                <article style='background-color: rgb(255, 255, 255); border-radius:10px; padding:5px;'>
-				                                <p style='font-size:calc(12px + 0.290625vw); text-align:justify; color:black;'><b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>	Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
-				                                    Se le informa que su {agregar_actualizar} fué exitoso en la Plataforma <b>SACI (Sistema de Ayuda para Correos Institucionales)</b>
+				                                <p style='text-align:justify; color:black;'>
+                                                    ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
+                                                    Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
+				                                    Se le informa que su {agregar_actualizar} fué exitoso en la Plataforma <b>SACI (Sistema de Atención para Correos Institucionales)</b>
 				                                    de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
-                                                    <br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>
+                                                    {entrega_credenciales_acceso}
 				                                </p>
 			                                </article>
-                            
-                                            <div align='center'>
-                                                <article class='container-fluid' style='background-color: rgb(244,244,244); width:700px; border-radius:10px; padding:5px; text-align:justify;'>
-				                                <div align='center'>
-						                                <table style='padding:5px; border: 1px solid black; border-collapse:collapse;' >
-							                                <thead>
-								                                <tr style='background-color: #dddddd;'>
-									                                <th scope='col' colspan='2' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Credenciales de Acceso</th>
-								                                </tr>
-							                                </thead>
-							                                <tbody>
-								                                <tr style='background-color: #ffffff;'>
-									                                <td width='250px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Usuario:</td>
-									                                <td width='250px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'><b>{oUsuario.UsuCorreoPersonalCuentaNueva}</b></td>
-								                                </tr>
-								                                <tr style='background-color: #dddddd;'>
-									                                <td width='250px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Contraseña:</td>
-									                                <td width='250px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'><b>{password}</b></td>
-								                                </tr>
-
-							                                </tbody>
-						                                </table>
-				                                </div>
-			                                    </article>
-                                            </div>
-
+                                            {credenciales_acceso}
 			                                <div align='center'>
 				                                <article style='background-color: rgb(255, 255, 255); width:700px; border-radius:10px; padding:5px; '>
-					                                <p class='text-start' style='font-size:calc(12px + 0.290625vw); color:black;'>
+					                                <p style='color:black;'>
 						                                Sus datos son los siguientes:<br>
 
 						                                <table style='text-align:justify;'>
 							                                <thead>
 								                                <tr>
-									                                <th scope='col' colspan='2' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Datos personales</th>
+									                                <th scope='col' colspan='2' style='border: 1px solid black;'>Datos del Registro</th>
 								                                </tr>
 							                                </thead>
 							                                <tbody>
 								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Rol</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Usuario</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ Rol</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>Usuario</td>
 								                                </tr>
 								                                <tr>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Tipo de personal</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{oTipoPersonal.Data.TipoperNombre}</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ Tipo de Personal</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>{oTipoPersonal.Data.TipoperNombre}</td>
 								                                </tr>
 								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Nombre</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{oUsuario.UsuNombre}</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ Nombre</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNombre}</td>
 								                                </tr>
 								                                <tr>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Primer Apellido</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{oUsuario.UsuPrimerApellido}</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ Primer Apellido</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuPrimerApellido}</td>
 								                                </tr>
 								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Segundo Apellido</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{oUsuario.UsuSegundoApellido}</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ Segundo Apellido</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuSegundoApellido}</td>
 								                                </tr>
 								                                <tr>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>CURP</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{oUsuario.UsuCurp}</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ CURP</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuCurp}</td>
 								                                </tr>
 								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Número de Celular</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{oUsuario.UsuNoCelularNuevo}</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ No. de Celular</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNoCelularNuevo}</td>
 								                                </tr>
 								                                <tr>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{número}</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{oUsuario.UsuNumeroEmpleado}</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ {número}</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNumeroEmpleado}</td>
 								                                </tr>
 								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Área / Departamento</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{oAreaDepto.Data.AreNombreAreaDepto}</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ Área / Departamento</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>{oAreaDepto.Data.AreNombreAreaDepto}</td>
 								                                </tr>
 								                                <tr>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Número de Extensión</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{oUsuario.UsuNoExtension}</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ No. de Extensión</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNoExtension}</td>
 								                                </tr>
 								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Fecha / Hora de Alta</td>
-									                                <td width='300px' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>{DateTime.Now.ToString()}</td>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ Fecha / Hora de Alta</td>
+									                                <td width='300px' style='border: 1px solid black;'>{fecha_hora_alta}</td>
 								                                </tr>
 							                                </tbody>
 						                                </table>
 					                                </p>
 				                                </article>
 			                                </div>
-			                                <footer><p class='text-start' style='font-size:calc(12px + 0.290625vw); color:black;'>Que tenga un excelente día.<br>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.</p></footer>
+			                                <footer>
+                                                <p style='color:black;'>
+                                                    Que tenga un excelente día.<br>
+                                                    NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
+                                                </p>
+                                            </footer>
 		                                </section>
 	                                </main>
 	                                <footer>
@@ -810,24 +809,24 @@ else
                                 </body>";
             
             oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
-            oSendWhatsApp.Message = $@"*Sistema de Ayuda para Correos Institucionales\n
-                                        POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n
-                                        Se le informa que su registro fué exitoso en la Plataforma *SACI (Sistema de Ayuda para Correos Institucionales)*
-				                        de la Unidad Académica *{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})*.\n
-										Por este medio se le hace entrega de sus _Credenciales de Acceso_:\n\n
-                                        Usuario: {oUsuario.UsuCorreoPersonalCuentaNueva}\n
-                                        Contraseña: {password}\n\n
-                                        `*Rol:* Usuario`\n
-                                        `*Tipo de Personal:* {oTipoPersonal.Data.TipoperNombre}`\n
-                                        `*Nombre:* {oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}`\n
-                                        `*CURP:* {oUsuario.UsuCurp}`\n
-                                        `*No. de Celular:* {oUsuario.UsuNoCelularNuevo}`\n
-                                        `*No. Empleado/Contrato:* {oUsuario.UsuNumeroEmpleado}`\n
-                                        `*Área/Depto:* {oAreaDepto.Data.AreNombreAreaDepto}`\n
-                                        `*No. Extensión:* {oUsuario.UsuNoExtension}`\n
-                                        `*Fecha / Hora de Alta:* {fecha_actual}`\n\n
-                                        Que tenga un excelente día.\n
-                                        *>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
+            oSendWhatsApp.Message = "*SACI (Sistema de Atención para Correos Institucionales)*\n" +
+                                    "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
+                                    "Se le informa que su " + agregar_actualizar + " fué exitoso en la Plataforma " +
+                                    "*SACI* de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
+                                    "Por este medio se le hace entrega de sus _Credenciales de Acceso_:\n" +
+                                    "   ✉ *Usuario:       " + oUsuario.UsuCorreoPersonalCuentaNueva + "*\n" +
+                                    "   🔑 *Contraseña: " + password + "*\n\n" +
+                                    "✅ Rol: *Usuario*\n" +
+                                    "✅ Tipo de Personal: *" + oTipoPersonal.Data.TipoperNombre + "*\n" +
+                                    "✅ Nombre: *" + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "*\n" +
+                                    "✅ CURP: *" + oUsuario.UsuCurp + "*\n" +
+                                    "✅ No. de Celular: *" + oUsuario.UsuNoCelularNuevo + "*\n" +
+                                    "✅ No. de Empleado/Contrato: *" + oUsuario.UsuNumeroEmpleado + "*\n" +
+                                    "✅ Área/Depto: *" + oAreaDepto.Data.AreNombreAreaDepto + "*\n" +
+                                    "✅ No. de Extensión: *" + oUsuario.UsuNoExtension + "*\n" +
+                                    "✅ Fecha / Hora de Alta: *" + fecha_hora_alta + "*\n\n" +
+                                    "Que tenga un excelente día.\n" +
+                                    "> *NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
 
             if (ActionAddEdit == "agregar")
             {
@@ -840,21 +839,24 @@ else
 
                     if (oRespuesta.Success == 1)
                     {
+                        idResponse = int.Parse(oRespuesta.Message);
+                        
+                        @*//  UPLOAD FILES  //*@
+                        oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
+                        oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
+                        await oUploadFile_CURP.Upload();
+
+                        @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@
+                        await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
+
                         @*//  ENVÍO DE CORREO ELECTRÓNICO PARA AVISO DE REGISTRO EXITOSO  //*@
-                        await servicioSendEmail.SendEmailAsync(
+                        servicioSendEmail.SendEmailAsync(
                             new RequestDTO_SendEmail()
                             {
                                 EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
                                 Subject = "REGISTRO EN PLATAFORMA SACI",
                                 Body = msgEmail
                             });
-
-                        @*//  UPLOAD FILES  //*@
-                        idResponse = int.Parse(oRespuesta.Message);
-
-                        oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
-                        oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
-                        await oUploadFile_CURP.Upload();
 
                         @*//  NOTIFICATION TOAST REGISTRO EXITOSO  //*@
                         NotificationService.Notify(
@@ -863,7 +865,7 @@ else
                                 Severity = NotificationSeverity.Success,
                                 Duration = 3000,
                                 Summary = "¡Registro Exitoso!",
-                                Detail = "Se guardaron sus datos y se enviará un correo."
+                                    Detail = "Se guardaron sus datos y se notificará por las vías de comunicación."
                                 // SummaryContent = ns => @<RadzenText TextStyle="TextStyle.H6">Custom summary: <br /> @DateTime.Now</RadzenText>,
                                 // DetailContent = ns => @<RadzenButton Text="Clear" Click="@(args => ns.Messages.Clear())" />
                             });
@@ -940,9 +942,10 @@ else
                         await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
                             {
                                 EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                                Subject = "ERROR DE REGISTRO EN SACI",
+                                Subject = "SACI | ERROR DE REGISTRO",
                                 Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                    "Registro NO exitoso en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b> Por favor no responder a este correo, acuda a la unidad de informática de tu escuela<br><br>"
+                                       "Registro NO exitoso en el <b>Sistema de Atención para Correos Institucionales (SACI)</b><br>" +
+                                       "Por favor no responder a este correo, acuda a la unidad de informática de tu escuela<br>"
                             });
                     }
                 }
@@ -984,18 +987,15 @@ else
                         @*//  UPLOAD FILES  //*@
                         idResponse = oUsuario.IdUsuario;
 
-                        if (oFileInfoCURP is not null)
-                        {
-                            oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
-                            oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
-                            await oUploadFile_CURP.Upload();
-                        }
+                        oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
+                        oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
+                        await oUploadFile_CURP.Upload();
 
                         var responseUsuario = await servicioUsuario.GetDataByIdAsync(oUsuario.IdUsuario);
                         oUsuario = responseUsuario.Data;
-                        srcCURP = oUsuario.UsuFileNameCurp != "CURP.pdf" ? $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}" : $@"/Repositorio/CURP.pdf";
+                        srcCURP = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}";
 
-                        @*//  NOTIFICATION TOAST REGISTRO EXITOSO  //*@
+                        @*//  NOTIFICATION TOAST ACTUALIZACIÓN DE DATOS EXITOSO  //*@
                         NotificationService.Notify(
                             new NotificationMessage
                             {
@@ -1085,7 +1085,31 @@ else
 
                         if (!string.IsNullOrEmpty(UsuContraseña))
                         {
-                            DialogModalService.Open($@"<span style='font-variant: small-caps; font-size:18px;'>Cerrando Sesión...<span>", ds =>
+                            @*//  ENVÍO DE WHATSAPP PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
+                            await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
+
+                            @*//  ENVÍO DE EMAIL PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
+                            servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
+                                {
+                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                                    Subject = "Actualización de datos en la plataforma SACI",
+                                    Body = msgEmail
+                                });
+
+                            @*//  NOTIFICATION TOAST ACTUALIZACIÓN EXITOSA  //*@
+                            NotificationService.Notify(
+                                new NotificationMessage
+                                    {
+                                        Severity = NotificationSeverity.Success,
+                                        Duration = 3000,
+                                        Summary = "¡Actualización Correcta!",
+                                        Detail = "Se guardaron los cambios y se cerrará sesión."
+                                        // SummaryContent = ns => @<RadzenText TextStyle="TextStyle.H6">Custom summary: <br /> @DateTime.Now</RadzenText>,
+                                        // DetailContent = ns => @<RadzenButton Text="Clear" Click="@(args => ns.Messages.Clear())" />
+                                    });
+
+                            @*//  DIALOG MODAL MESSAGE ACTUALIZACIÓN EXITOSA  //*@
+                            await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>Cerrando Sesión...<span>", ds =>
                                 @<div>
                                     <LoadingComponent />
                                 </div>,
@@ -1103,25 +1127,6 @@ else
                                     WrapperCssClass = "custom-dialog-wrapper-class"
                                 });
 
-                            @*//  NOTIFICATION TOAST REGISTRO EXITOSO  //*@
-                            NotificationService.Notify(
-                                new NotificationMessage
-                                {
-                                    Severity = NotificationSeverity.Success,
-                                    Duration = 3000,
-                                    Summary = "¡Actualización Correcta!",
-                                    Detail = "Se guardaron los cambios y se cerrará sesión."
-                                    // SummaryContent = ns => @<RadzenText TextStyle="TextStyle.H6">Custom summary: <br /> @DateTime.Now</RadzenText>,
-                                    // DetailContent = ns => @<RadzenButton Text="Clear" Click="@(args => ns.Messages.Clear())" />
-                                });
-
-                            await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
-                                {
-                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                                    Subject = "Actualización de datos en la plataforma SACI",
-                                    Body = msgEmail
-                                });
-
                             await loginService.Logout();
                             navigationManager.NavigateTo("/");
                         }
@@ -1131,9 +1136,9 @@ else
                         await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
                             {
                                 EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                                Subject = "ERROR DE ACTUALIZACIÓN DE DATOS EN SACI",
+                                Subject = "SACI | ERROR EN ACTUALIZACIÓN DE DATOS",
                                 Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                "Actualización de datos NO exitosa en el <b>Sistema para Atención de Correos Institucionales IPN (SACI)</b><br>"
+                                       "Actualización de datos NO exitosa en el <b>Sistema de Atención de Correos Institucionales IPN (SACI)</b><br>"
                             });
                     }
                 }
@@ -1145,8 +1150,7 @@ else
                                          Visible="true" Class="rz-border-radius-1">
                                          El <strong>Correo Electrónico Personal y/o CURP</strong> ya están registrados por lo que <b>NO</b> puede volverse a registrar con estos datos.
                             </RadzenAlert>
-                        </RadzenStack>
-    ,
+                        </RadzenStack>,
                         new DialogOptions()
                         {
                             CloseDialogOnOverlayClick = true,
@@ -1179,11 +1183,11 @@ else
     private async Task ShowDialogModal_iFrame(string srciFrame, string title)
     {
         await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>{title}<span>", ds =>
-            @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="5px" Class="w-100">
+            @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="5px" class="w-100">
                 <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-m-0 rz-p-0 w-100">
                     <iframe src="@srciFrame" frameborder="1" scrolling="yes" class="w-100" style="height:500px;" />
                 </RadzenCard>
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="w-100">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" class="w-100">
                     <RadzenButton Text="Cerrar"
                                   BusyText=""
                                   ButtonStyle="ButtonStyle.Warning"
