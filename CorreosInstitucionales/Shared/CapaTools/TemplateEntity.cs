@@ -3,6 +3,7 @@ using CorreosInstitucionales.Shared.Constantes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,7 +40,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
                 SolCapturaCuentaBloqueada = "-",
                 SolCapturaError = "-",
                 SolObservacionesSolicitud = "-",
-                SolIdEstadoSolicitud = TipoEstadoSolicitud.PENDIENTE
+                SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.PENDIENTE
             };
         }
 
