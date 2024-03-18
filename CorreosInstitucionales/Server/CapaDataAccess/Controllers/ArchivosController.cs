@@ -93,7 +93,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 variables_correo["solicitud"] = solicitud;
 
-                switch (solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
+                switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
                 {
                     case TipoPersonal.ALUMNO:
                     case TipoPersonal.EGRESADO:
@@ -246,7 +246,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         .Where
                         (
                             st =>
-                                st.SolIdEstadoSolicitud == TipoEstadoSolicitud.EN_PROCESO &&
+                                st.SolIdEstadoSolicitud == (int)TipoEstadoSolicitud.EN_PROCESO &&
                                 lista_curps.Contains(st.SolIdUsuarioNavigation.UsuCurp)
                         )
                         .Include(st => st.SolIdUsuarioNavigation)
@@ -259,7 +259,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     {
                         datos_a_actualizar = ((TipoSolicitud)solicitud.SolIdTipoSolicitud).GetDatosActualizar();
 
-                        solicitud.SolIdEstadoSolicitud = TipoEstadoSolicitud.ATENDIDA;
+                        solicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.ATENDIDA;
 
                         if (datos_a_actualizar.Contains(TipoDatoActualizar.NINGUNO))
                         {
@@ -374,7 +374,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     ruta_repositorio = $"Repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
                     ruta_usuario = $"Repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
 
-                    switch (solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
+                    switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
                     {
                         case TipoPersonal.ALUMNO: 
                         case TipoPersonal.EGRESADO: 
@@ -409,7 +409,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     ws.Cell(i, 8).Value = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
                     ws.Cell(i, 9).Value = solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta;
 
-                    ws.Cell(i, 4).Value = TipoPersonal.Nombre[solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal];
+                    ws.Cell(i, 4).Value = ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal).GetNombre();
                     ws.Cell(i, 6).Value = id_externo_usuario;
 
                     ws.Cell(i, 7).Value = extension;
@@ -485,7 +485,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 try
                 {
-                    error = await EstablecerEstado(selected, TipoEstadoSolicitud.EN_PROCESO);
+                    error = await EstablecerEstado(selected, (int)TipoEstadoSolicitud.EN_PROCESO);
                     
                     if (error is null)
                     {

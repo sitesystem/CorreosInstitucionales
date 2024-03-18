@@ -379,9 +379,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
             int[] terminados = 
             [
-                TipoEstadoSolicitud.ATENDIDA, 
-                TipoEstadoSolicitud.ENCUESTA_CALIDAD, 
-                TipoEstadoSolicitud.CANCELADA
+                (int)TipoEstadoSolicitud.ATENDIDA,
+                (int)TipoEstadoSolicitud.ENCUESTA_CALIDAD,
+                (int)TipoEstadoSolicitud.CANCELADA
             ];
 
             try
@@ -404,6 +404,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 int tipo_solicitud;
                 Random rnd = new Random();
                 string uid = string.Empty;
+                int estado_pendiente = (int)TipoEstadoSolicitud.PENDIENTE;
+
 
                 foreach (MpTbUsuario pendiente in pendientes)
                 {
@@ -417,7 +419,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                         SolIdUsuario = pendiente.IdUsuario,
 
                         SolObservacionesSolicitud = null,
-                        SolIdEstadoSolicitud = TipoEstadoSolicitud.PENDIENTE,
+                        SolIdEstadoSolicitud = estado_pendiente,
                         SolValidacionDatos = false,
                         SolEncuestaCalidadCalificacion = null,
                         SolEncuestaCalidadComentarios = null,

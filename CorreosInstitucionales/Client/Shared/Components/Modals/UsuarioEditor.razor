@@ -229,8 +229,8 @@
     [Parameter] public List<RequestViewModel_Rol> cat_UsuIdRol { get; set; } = new List<RequestViewModel_Rol>();
     [Parameter] public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; set; } = new List<RequestViewModel_TipoPersonal>();
 
-    int[] tipo_personal_alumnos = new int[] { TipoPersonal.ALUMNO, TipoPersonal.EGRESADO };
-    int[] tipo_peronal_personal = new int[] { TipoPersonal.DOCENTE, TipoPersonal.HONORARIOS };
+    int[] tipo_personal_alumnos = new int[] { (int)TipoPersonal.ALUMNO, (int)TipoPersonal.EGRESADO };
+    int[] tipo_peronal_personal = new int[] { (int)TipoPersonal.DOCENTE, (int)TipoPersonal.HONORARIOS };
 
     private Dictionary<TipoDocumento,IBrowserFile?> archivos = new();
 
