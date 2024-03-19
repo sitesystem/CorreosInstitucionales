@@ -166,6 +166,19 @@
 
                 </Template>
             </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Context="item"
+                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false">
+                <Template Context="item">
+                    <RadzenButton title="Cancelar"
+                                  Icon="delete"
+                                  ButtonStyle="ButtonStyle.Danger"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Click="@(async ()=> await Cancelar(item))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+                </Template>
+            </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
 </div>
@@ -182,7 +195,7 @@
     private string link = string.Empty;
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
-    
+
     private readonly int[] estados = { (int)TipoEstadoSolicitud.ALTA, (int)TipoEstadoSolicitud.PENDIENTE };
 
     private bool puede_exportar
@@ -328,8 +341,8 @@
     private async Task VerCURP(RequestDTO_Solicitud item)
     {
         string nombre = $@"{item.SolIdUsuarioNavigation!.UsuNombre}
-        {item.SolIdUsuarioNavigation!.UsuPrimerApellido}
-        {item.SolIdUsuarioNavigation!.UsuSegundoApellido} - {item.SolIdUsuarioNavigation!.UsuCurp}";
+    {item.SolIdUsuarioNavigation!.UsuPrimerApellido}
+    {item.SolIdUsuarioNavigation!.UsuSegundoApellido} - {item.SolIdUsuarioNavigation!.UsuCurp}";
 
         await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CURP), nombre);
     }
@@ -337,9 +350,41 @@
     private async Task VerComprobanteInscripcion(RequestDTO_Solicitud item)
     {
         string nombre = $@"{item.SolIdUsuarioNavigation!.UsuNombre}
-        {item.SolIdUsuarioNavigation!.UsuPrimerApellido}
-        {item.SolIdUsuarioNavigation!.UsuSegundoApellido}";
+    {item.SolIdUsuarioNavigation!.UsuPrimerApellido}
+    {item.SolIdUsuarioNavigation!.UsuSegundoApellido}";
 
         await VerPDF(GenerarURLArchivoUsuario(item, TipoDocumento.CURP), nombre);
+    }
+
+    private async Task Cancelar(RequestDTO_Solicitud item)
+    {
+        string? mensaje = await dialogService.OpenAsync<MensajeRespuesta>
+        (
+            $"Cancelar solicitud {item.IdSolicitudTicket} de {item.SolIdUsuarioNavigation!.UsuNombre} {item.SolIdUsuarioNavigation!.UsuPrimerApellido} {item.SolIdUsuarioNavigation!.UsuSegundoApellido}",
+            null,
+            new DialogOptions()
+            {
+                ShowClose = false,
+                Width = "75%",
+                CssClass = "dialog_simple"
+            }
+        );
+
+        if(!string.IsNullOrEmpty(mensaje))
+        {
+            item.SolRespuestaDcyC = mensaje;
+            HttpResponseMessage response = await servicioSolicitud.Cancelar(new KeyValuePair<int, string>(item.IdSolicitudTicket, mensaje));
+
+            if(response.IsSuccessStatusCode)
+            {
+                debug += Environment.NewLine + $"SOLICITUD {item.IdSolicitudTicket} CANCELADA.";
+            }
+            else
+            {
+                debug += Environment.NewLine + "ERROR CANCELANDO SOLICITUD {item.IdSolicitudTicket}";
+            }
+        }
+
+
     }
 }

@@ -1,0 +1,25 @@
+﻿@inject Radzen.DialogService dialogService
+
+<div class="p-3">
+    <div class="row">
+        <div class="col">
+            <strong>Motivo de cancelación:</strong>
+            <InputTextArea class="form-control" style="height:200px" @bind-Value=mensaje />
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="offset-3 col-3">
+        <button type="button" class="btn btn-secondary form-control" @onclick=@(()=>dialogService.Close(null))>Cancelar</button>
+    </div>
+
+    <div class="col-3">
+        <button type="button" class="btn btn-primary form-control" @onclick=@(()=>dialogService.Close(mensaje))>Aceptar</button>
+    </div>
+</div>
+
+@code
+{
+    string mensaje = string.Empty;
+}

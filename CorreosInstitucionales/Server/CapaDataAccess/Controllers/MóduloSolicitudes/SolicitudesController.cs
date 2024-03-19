@@ -446,6 +446,36 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             }
 
             return Ok(oRespuesta);
+        }// GENERAR SOLICITUDES
+
+
+        [HttpPatch("cancelar")]
+        public async Task<IActionResult> CancelarSolicitud(KeyValuePair<int, string> datos)
+        {
+            Response<object> oRespuesta = new();
+
+            try
+            {
+                MtTbSolicitudesTicket? oSolicitud = await _db.MtTbSolicitudesTickets.FindAsync(datos.Key);
+                //db.Remove(oPersona);
+
+                if (oSolicitud != null)
+                {
+                    oSolicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.CANCELADA;
+                    oSolicitud.SolRespuestaDcyC = datos.Value;
+
+                    _db.Entry(oSolicitud).State = EntityState.Modified;
+                    await _db.SaveChangesAsync();
+                }
+
+                oRespuesta.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                oRespuesta.Message = ex.Message;
+            }
+
+            return Ok(oRespuesta);
         }
     }
 }
