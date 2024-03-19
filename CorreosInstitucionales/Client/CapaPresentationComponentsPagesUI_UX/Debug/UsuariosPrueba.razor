@@ -1,0 +1,48 @@
+﻿@page "/debug/usuarios"
+
+<PageTitle>@Title</PageTitle>
+
+<div class="bg-white shadow p-3">
+    <h3>@Title</h3>
+
+    <div class="row my-3">
+        <div class="col-2">
+            <InputNumber class="form-control text-center" @bind-Value=usuarios_a_generar />
+        </div>
+
+        <div class="col-2">
+            <button type="button" class="btn btn-primary form-control" @onclick="GenerarUsuarios_Click">Generar Usuarios</button>
+        </div>
+    </div>
+
+    <pre>@debug</pre>
+</div>
+
+
+
+@code {
+    readonly string Title = "Usuarios";
+    string debug = string.Empty;
+    int usuarios_a_generar = 1;
+
+    public void Log(string? message)
+    {
+        debug += Environment.NewLine + message;
+    }
+
+    public async Task GenerarUsuarios_Click()
+    {
+        Response<string>? response = await servicioUsuario.GenerarRandom(usuarios_a_generar);
+        if (response is null)
+        {
+            Log("ERROR EN LA CONSULTA.");
+        }
+        else
+        {
+            Log(response.Success == 1 ? "[OK]" : "[ERROR]");
+            Log(response.Message);
+            Log(response.Data);
+        }
+
+    }
+}

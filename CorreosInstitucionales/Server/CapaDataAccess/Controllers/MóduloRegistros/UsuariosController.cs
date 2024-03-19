@@ -370,8 +370,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             int anio_nacimiento = 1990;
             int anios_estudio = 0;
             int anios_egreso = 0;
-            int edad = 0;
-
+            
             try
             {
                 for (int i = 0; i < cantidad; i++)
@@ -381,11 +380,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                     es_alumno = false;
 
-                    edad = 21;// rnd.Next(25, 80);
                     anios_estudio = rnd.Next(0, 5);
 
                     tmp = new MpTbUsuario()
                     {
+                        UsuSegundoApellido = null,
                         UsuFechaHoraAlta = DateTime.Now,
                         UsuIdRol = 1,
                         UsuIdTipoPersonal= (int)tipo_personal,
@@ -448,7 +447,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     
                     fecha_nacimiento = new DateOnly(anio_nacimiento, rnd.Next(1, 12), 1);
 
-                    tmp.UsuCurp = CURP.Generar(tmp.UsuNombre, tmp.UsuPrimerApellido, tmp.UsuPrimerApellido, fecha_nacimiento, es_hombre?'H':'M', estados.GetRandomItem());
+                    tmp.UsuCurp = CURP.Generar(tmp.UsuNombre, tmp.UsuPrimerApellido, tmp.UsuSegundoApellido, fecha_nacimiento, es_hombre?'H':'M', estados.GetRandomItem());
 
                     tmp.UsuFileNameCurp = $"CURP_{id}.pdf";
 

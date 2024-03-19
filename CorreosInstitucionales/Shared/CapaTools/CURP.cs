@@ -41,7 +41,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
             return (char)(48 + sum);
         }//CRC
 
-        public static string Generar(string nombre, string apellido1, string apellido2, DateOnly fecha_nac, char sexo = 'H', string estado = "DF")
+        public static string Generar(string nombre, string apellido1, string? apellido2, DateOnly fecha_nac, char sexo = 'H', string estado = "DF")
         {
             string result = string.Empty;
 
@@ -63,7 +63,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
             char[] c_nombre = nombre_n.Cast<char>().ToArray();
 
             char[] c_apellido1 = letras_remover.Replace(apellido1.ToUpper(), "X").Cast<char>().ToArray();
-            char[] c_apellido2 = letras_remover.Replace(apellido2.ToUpper(), "X").Cast<char>().ToArray();
+            char[] c_apellido2 = letras_remover.Replace((apellido2??"X").ToUpper(), "X").Cast<char>().ToArray();
 
             Console.WriteLine($"{string.Join("", c_nombre)} {string.Join("", c_apellido1)} {string.Join("", c_apellido2)}");
 
