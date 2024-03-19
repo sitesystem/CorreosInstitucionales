@@ -21,6 +21,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         {
             Response<string> oResponse = new();
 
+            if(message.Number == "5500000000")
+            {
+                oResponse.Success = 1;
+                oResponse.Data = "EL MENSAJE NO SE ENVIÓ DADO QUE ES UN NÚMERO DE PRUEBA.";
+                return Ok(oResponse);
+            }
+
             HttpResponseMessage response = await Client.PostAsJsonAsync(url, message, options: _options);
 
             if(response.IsSuccessStatusCode)

@@ -11,6 +11,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail
 
         public async Task SendEmail(RequestDTO_SendEmail modelEmailTo)
         {
+			if(modelEmailTo.EmailTo.ToLower().EndsWith("@localhost"))
+			{
+				return;
+			}
+
 			try
 			{
 				string host = _config.GetSection("Email:Host").Value ?? string.Empty;
