@@ -318,7 +318,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             return Ok(oRespuesta);
         }//editByIdStatus
 
-        [HttpPut("generar_random/{cantidad}")]
+        [HttpGet("generar_random/{cantidad}")]
         public async Task<IActionResult> GenerarUsuarios(int cantidad = 10)
         {
             Response<string> oResponse = new() { Data = string.Empty };
@@ -347,6 +347,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 }
             );
 
+            RandomItemPicker<string> estados = new RandomItemPicker<string>
+            (
+                [
+                    "AS", "BC", "BS", "CC", "CL", "CM", "CS", "CH",
+                    "DG", "GT", "GR", "HG", "JC", "MC", "MN", "MS",
+                    "NT", "NL", "OC", "PL", "QT", "QR", "SP", "SL",
+                    "SR", "TC", "TS", "TL", "VZ", "YN", "ZS", "DF",
+                    "NE"
+                ]
+            );
+
             bool es_hombre = rnd.NextDouble() >= 0.5f;//50%
             bool tiene_varios_nombres = rnd.NextDouble() >= 0.5f;//50%
             bool tiene_dos_apellidos = rnd.NextDouble() <= 0.85;//85% SI, 20% NO
@@ -358,6 +369,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             DateOnly fecha_nacimiento;
             int anio_nacimiento = 1990;
             int anios_estudio = 0;
+            int anios_egreso = 0;
             int edad = 0;
 
             try
@@ -375,10 +387,15 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     tmp = new MpTbUsuario()
                     {
                         UsuFechaHoraAlta = DateTime.Now,
-                        UsuIdRol = (int)tipo_personal,
+                        UsuIdRol = 1,
+                        UsuIdTipoPersonal= (int)tipo_personal,
                         UsuFileNameCurp = $"CURP_{id}.pdf",
                         UsuFileNameComprobanteInscripcion = "-",
                         UsuNoExtension = "0",
+                        UsuBoletaMaestria = "B000000",
+                        UsuNumeroEmpleado = "0",
+                        UsuIdAreaDepto = 1,
+                        UsuIdCarrera = 8,
                         UsuStatus = true
                     };
 
@@ -395,40 +412,55 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     {
                         tmp.UsuSegundoApellido = apellidos.GetRandomItem();
                     }
-
-                    switch(tipo_personal)
+                                        
+                    switch (tipo_personal)
                     {
                         case TipoPersonal.ALUMNO:
                             es_alumno = true;
-                            
-                            edad = rnd.Next(18, 25);
+                            anios_estudio = rnd.Next(0, 5);
+                            anios_egreso = 0;
+
+                            tmp.UsuSemestre = Math.Clamp(anios_estudio * 2, 1, 8).ToString();
                             break;
 
                         case TipoPersonal.EGRESADO:
                             es_alumno = true;
-                            edad = rnd.Next(21, 35);
                             anios_estudio = rnd.Next(4, 6);
+                            anios_egreso = rnd.Next(0, 20);
+
+                            tmp.UsuSemestre = "8";
+                            tmp.UsuAñoEgreso = DateTime.Now.Year - (anios_egreso + anios_estudio);
                             break;
 
                         case TipoPersonal.MAESTRIA:
                             es_alumno = true;
-                            edad = rnd.Next(30, 50);
-                            anios_estudio = rnd.Next(4, 15);
+                            anios_estudio = rnd.Next(4, 6);
+                            anios_egreso = rnd.Next(0, 20);
+
+                            tmp.UsuAñoEgreso = DateTime.Now.Year - (anios_egreso + anios_estudio);
                             break;
                     }
 
-                    anio_nacimiento = DateTime.Now.Year - edad - anios_estudio;
+                    anio_nacimiento = DateTime.Now.Year - (18 + anios_egreso + anios_estudio);
 
+                    tmp.UsuBoletaAlumno = $"{DateTime.Now.Year - anios_estudio - anios_egreso}600{tmp.UsuNombre[0] % 10}{tmp.UsuPrimerApellido[0] % 10}{(tmp.UsuSegundoApellido ?? "X")[0] % 10}";
+
+                    
                     fecha_nacimiento = new DateOnly(anio_nacimiento, rnd.Next(1, 12), 1);
 
+                    tmp.UsuCurp = CURP.Generar(tmp.UsuNombre, tmp.UsuPrimerApellido, tmp.UsuPrimerApellido, fecha_nacimiento, es_hombre?'H':'M', estados.GetRandomItem());
 
+                    tmp.UsuFileNameCurp = $"CURP_{id}.pdf";
 
-                    if(es_alumno)
+                    if (es_alumno)
                     {
+                        tmp.UsuIdCarrera = rnd.Next(1, 7);
                         tmp.UsuFileNameComprobanteInscripcion = $"COMPROBANTE_INSCRIPCION_{id}.pdf";
                     }
 
-
+                    tmp.UsuContraseña = Encrypt.GetSHA256(tmp.UsuCurp);
+                    tmp.UsuCorreoPersonalCuentaNueva = "noreply@localhost";
+                    tmp.UsuNoCelularNuevo = "55 00 00 00 00";
 
                     await _db.MpTbUsuarios.AddAsync(tmp);
                     await _db.SaveChangesAsync();
@@ -441,6 +473,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             {
                 oResponse.Message = ex.Message;
                 oResponse.Data = ex.StackTrace;
+
+                if(ex.InnerException is not null)
+                {
+                    oResponse.Message += Environment.NewLine + ex.InnerException.Message;
+                }
             }
             
             return Ok(oResponse);
