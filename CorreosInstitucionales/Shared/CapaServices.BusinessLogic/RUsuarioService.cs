@@ -92,5 +92,13 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 
             return response;
         }
+
+        public async Task<Response<string>?> GenerarRandom(int cantidad)
+        {
+            var response = await _httpClient.GetAsync($"{url}/generar_random/{cantidad}");
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<Response<string>>(content, options: _options);
+            return result;
+        }
     }
 }
