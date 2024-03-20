@@ -434,8 +434,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 if(cambio_celular)
                 {
-                    ws.Cell(i, 10).Value = usuario.UsuNoCelularAnterior;
-                    ws.Cell(i, 11).Value = usuario.UsuNoCelularNuevo;
+                    ws.Cell(i, 10).Value = usuario.UsuNoCelularNuevo;
+                    ws.Cell(i, 11).Value = usuario.UsuNoCelularAnterior;
                 }
 
                 IXLRange row = ws.Range(ws.Cell(i, 1), ws.Cell(i, cambio_celular ? 11 : 9));
