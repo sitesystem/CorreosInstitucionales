@@ -1,11 +1,21 @@
-﻿(REDACCION PENDIENTE)
+﻿<h1>Solicitud atendida por Mesa de control</h1>
+
+Saludos @usuario.UsuNombre, por medio del presente nos permitimos informarle
+que su solicitud (@solicitud.IdSolicitudTicket) hasido atendida por Mesa de 
+control con la siguiente observación:
+
+<blockquote>@solicitud.SolRespuestaDcyC</blockquote>
+
+Sin más por el momento le deseamos un excelente día y le recordamos que para
+poder realizar una nueva solcitud, debe llenar la encuesta de calidad 
+(URL ENCUESTA DE CALIDAD: @solicitud.SolToken)
 
 Para poder acceder al servicio deberá dirigirse a: https://outlook.com/correo.ipn.mx
 Otra manera de ingresar es ir a la página de la UPIICSA y en el apartado de "Correo electrónico" que se encuentra en la parte superior derecha. Seleccionar la opción "Alumno y egresados"
 
 Puedes cambiar tu contraseña después de 48 horas de haber recibido su buzón de correo, (si Ud. Intenta cambiar la contraseña antes de las 48 hrs. el sistema no se lo permitirá), por lo que, es necesario seguir las instrucciones del procedimiento alojado en la siguiente URL: https://www.ipn.mx/assets/files/dcyc/docs/computo/guia-tecnica-correo.pdf
 
-@code 
-{
-    [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new();
+@code {
+    [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new() { SolIdUsuarioNavigation = new() };
+    MpTbUsuario usuario { get { return solicitud.SolIdUsuarioNavigation; } }
 }

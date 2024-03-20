@@ -1,12 +1,13 @@
 ﻿<h1>Solicitud enviada a Mesa de control</h1>
 
-Saludos @solicitud.SolIdUsuarioNavigation.UsuNombre, 
+Saludos @usuario.UsuNombre, 
 por medio del presente nos permitimos informarle que su 
 solicitud @solicitud.IdSolicitudTicket, ha sido canalizada 
 hacia área central para su oportuna atención.
 
-Se le informará a la brevedad 
+Sin más por el momento que tenga un excelente día.
 
 @code {
-    [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new();
+    [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new() {SolIdUsuarioNavigation = new() };
+    MpTbUsuario usuario {get { return solicitud.SolIdUsuarioNavigation; }}
 }
