@@ -995,14 +995,17 @@ else
 	                                </footer>
                                 </body>";
 
+            string credenciales_acceso_WA = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
+                                            "Por este medio se le hace entrega de sus _Credenciales de Acceso_:\n" +
+                                            "   ✉ *Usuario:       " + oUsuario.UsuCorreoPersonalCuentaNueva + "*\n" +
+                                            "   🔑 *Contraseña: " + password + "*\n\n" : "";
+
             oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
             oSendWhatsApp.Message = "*SACI (Sistema de Atención para Correos Institucionales)*\n" +
                                     "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
                                     "Se le informa que su " + agregar_actualizar + " fué exitoso en la Plataforma " +
                                     "*SACI* de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
-                                    "Por este medio se le hace entrega de sus _Credenciales de Acceso_:\n" +
-                                    "   ✉ *Usuario:       " + oUsuario.UsuCorreoPersonalCuentaNueva + "*\n" +
-                                    "   🔑 *Contraseña: " + password + "*\n\n" +
+                                    credenciales_acceso_WA +
                                     "✅ Rol: *Usuario*\n" +
                                     "✅ Tipo de Personal: *" + oTipoPersonal.Data.TipoperNombre + "*\n" +
                                     "✅ Nombre: *" + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "*\n" +
@@ -1337,8 +1340,7 @@ else
 
 
                             @*//  ENVÍO DE WHATSAPP PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
-                            if (!string.IsNullOrEmpty(UsuContraseña))
-                                await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
+                            await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
 
                             @*//  ENVÍO DE EMAIL PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
                             servicioSendEmail.SendEmailAsync(
