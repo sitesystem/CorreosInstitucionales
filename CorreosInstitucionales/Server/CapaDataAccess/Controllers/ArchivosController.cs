@@ -1,14 +1,18 @@
 ﻿using ClosedXML.Excel;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Server.Correos;
+using CorreosInstitucionales.Server.MensajesWA;
 using CorreosInstitucionales.Shared.CapaEntities.Common;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Collections.Generic;
 using System.Linq.Dynamic.Core;
 using System.Text;
 
@@ -21,12 +25,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
     public class ArchivosController (
             DbCorreosInstitucionalesUpiicsaContext db, 
             ISendEmailService servicioEmail,
-            IServiceProvider serviceProvider
+            IServiceProvider serviceProvider,
+            ISendWhatsAppService servicioWA
         ) : Controller
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
         private readonly ISendEmailService _servicioCorreo = servicioEmail;
         private readonly IServiceProvider _serviceProvider = serviceProvider;
+        private readonly ISendWhatsAppService _servicioWA = servicioWA;
 
         [ApiExplorerSettings(IgnoreApi = true)]
         protected string? EnlaceRoto(string? archivo, string ruta)
@@ -50,14 +56,15 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        protected async Task<string?> EstablecerEstado(int[] lista_solicitudes, int estado)
+        protected async Task<string?> EstablecerEstado(IEnumerable<MtTbSolicitudesTicket> lista_solicitudes, int estado)
         {
             string? response = null;
-
+            int[] pendientes = lista_solicitudes.Select(st => st.IdSolicitudTicket).ToArray();
+            
             try
             {
                 List<MtTbSolicitudesTicket> solicitudes = await _db.MtTbSolicitudesTickets
-                    .Where(ts => lista_solicitudes.Contains(ts.IdSolicitudTicket))
+                    .Where(ts => pendientes.Contains(ts.IdSolicitudTicket))
                     .ToListAsync();
 
                 solicitudes.ForEach(st => st.SolIdEstadoSolicitud = estado);
@@ -73,8 +80,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task EnvioMasivoRespuesta(List<MtTbSolicitudesTicket> lista)
+        private async Task EnvioMasivoRespuesta(List<MtTbSolicitudesTicket> lista, bool debug = true)
         {
+            string id = Guid.NewGuid().ToString();
+            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/procesados";
+
             ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
             
             RequestDTO_SendEmail correo = new()
@@ -105,20 +115,35 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         break;
                 }
 
+                if (debug)
+                {
+                    System.IO.File.WriteAllText($"{archivo}/{id}_{solicitud.IdSolicitudTicket}.html", correo.Body);
+                }
+
                 await _servicioCorreo.SendEmail(correo);
+                
             }//FOREACH solicitud
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task EnvioMasivo(List<MtTbSolicitudesTicket> lista)
+        private async Task EnvioMasivoPendientes(List<MtTbSolicitudesTicket> lista, bool debug = true)
         {
+            string id = Guid.NewGuid().ToString();
+            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/pendientes";
+
             ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
 
             RequestDTO_SendEmail correo = new()
             {
                 Subject = "Su solcicitud ha sido canalizada hacia la mesa de control",
-                EmailTo = "agmartinezc@ipn.mx",
+                EmailTo = "postmaster@localhost",
                 Body = "NO DEFINIDO"
+            };
+
+            RequestDTO_SendWhatsApp mensaje = new()
+            {
+                Message = "PRUEBA",
+                Number = "5500000000"
             };
 
             Dictionary<string, object?> variables_correo = new Dictionary<string, object?>
@@ -131,8 +156,18 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 variables_correo["solicitud"] = solicitud;
 
                 correo.Body = await renderer.GetHTML<EnProceso>(variables_correo);
+                mensaje.Message = await renderer.GetHTML<EnProcesoWA>(variables_correo);
 
-                await _servicioCorreo.SendEmail(correo);
+                if(debug)
+                {
+                    System.IO.File.WriteAllText($"{archivo}/{id}_{solicitud.IdSolicitudTicket}.html", correo.Body);
+                    System.IO.File.WriteAllText($"{archivo}/{id}_{solicitud.IdSolicitudTicket}.txt", mensaje.Message);
+                }
+
+
+                // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
+                _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
+                _ = Task.Run(() => _servicioWA.SendWhatsAppAsync(mensaje));
             }//FOREACH solicitud
         }// ENVIO  MASIVO (EN PROCESO)
 
@@ -323,159 +358,207 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
+        public List<WebUtils.Link> GenerarXLSX(string plantilla, IEnumerable<MtTbSolicitudesTicket> lista, string archivo, bool cambio_celular = false)
+        {
+            List<WebUtils.Link> links = new();
+
+            // EXCEL
+            XLWorkbook wb = new XLWorkbook(plantilla);
+            IXLWorksheet ws = wb.Worksheet(1);
+            
+            int i = 5; //PRIMER FILA A LEER
+            
+            ws.Cell("H2").Value = DateTime.Now.ToString("dd/MM/yyyy");//FECHA
+            
+
+            // ARCHIVOS
+            string ruta_repositorio = string.Empty;
+            string ruta_usuario = string.Empty;
+
+            // ADJUNTOS
+            bool adjuntar_com_inscripcion = false;
+            bool adjuntar_cap_antivirus = false;
+            bool adjuntar_cap_bloqueo = false;
+            bool adjuntar_cap_error = false;
+
+            // DATOS USUARIO
+            MpTbUsuario usuario;
+
+            // DATOS SOLICITUD
+            string? id_externo_usuario = null;
+            string? extension = null;
+            
+            foreach (MtTbSolicitudesTicket solicitud in lista)
+            {
+                ruta_repositorio = $"Repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
+                ruta_usuario = $"Repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
+
+                usuario = solicitud.SolIdUsuarioNavigation!;
+
+                id_externo_usuario = usuario.UsuNumeroEmpleado;
+                extension = usuario.UsuNoExtension;
+
+                switch ((TipoPersonal)usuario.UsuIdTipoPersonal)
+                {
+                    case TipoPersonal.ALUMNO:
+                    case TipoPersonal.EGRESADO:
+                        id_externo_usuario = usuario.UsuBoletaAlumno;
+                        adjuntar_com_inscripcion = true;
+                        break;
+                    case TipoPersonal.MAESTRIA:
+                        id_externo_usuario = usuario.UsuBoletaMaestria;
+                        adjuntar_com_inscripcion = true;
+                        break;
+                }
+
+                switch ((TipoSolicitud)solicitud.SolIdTipoSolicitud)
+                {
+                    case TipoSolicitud.DESBLOQUEO_CUENTA:
+                        adjuntar_cap_bloqueo = true;
+                        adjuntar_cap_antivirus = true;
+                        break;
+                    case TipoSolicitud.OTRO:
+                        adjuntar_cap_error = true;
+                        break;
+                }
+
+                ws.Cell(i, 1).Value = usuario.UsuNombre;
+                ws.Cell(i, 2).Value = usuario.UsuPrimerApellido;
+                ws.Cell(i, 3).Value = usuario.UsuSegundoApellido;
+                ws.Cell(i, 4).Value = ((TipoPersonal)usuario.UsuIdTipoPersonal).GetNombre();
+                ws.Cell(i, 5).Value = usuario.UsuCurp;
+                ws.Cell(i, 6).Value = id_externo_usuario;//BOLETA (DE MAESTÍRA) | NÚMERO DE CONTRATO
+                ws.Cell(i, 7).Value = extension; // NUEVA?
+                ws.Cell(i, 8).Value = usuario.UsuCorreoPersonalCuentaNueva;
+                ws.Cell(i, 9).Value = usuario.UsuCorreoInstitucionalCuenta;
+
+                if(cambio_celular)
+                {
+                    ws.Cell(i, 10).Value = usuario.UsuNoCelularAnterior;
+                    ws.Cell(i, 11).Value = usuario.UsuNoCelularNuevo;
+                }
+
+                IXLRange row = ws.Range(ws.Cell(i, 1), ws.Cell(i, cambio_celular ? 11 : 9));
+
+                row.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+                row.Style.Border.SetOutsideBorderColor(XLColor.Black);
+
+                row.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
+                row.Style.Border.SetInsideBorderColor(XLColor.Black);
+
+                // ADJUNTOS
+                links.Add(GenerarLink(solicitud, TipoDocumento.CURP, ruta_usuario));
+
+                if (adjuntar_com_inscripcion)
+                {
+                    links.Add(GenerarLink(solicitud, TipoDocumento.COM_INSCRIPCION, ruta_usuario));
+                }
+
+                if (adjuntar_cap_bloqueo)
+                {
+                    links.Add(GenerarLink(solicitud, TipoDocumento.CAP_BLOQUEO, ruta_repositorio));
+                }
+
+                if (adjuntar_cap_antivirus)
+                {
+                    links.Add(GenerarLink(solicitud, TipoDocumento.CAP_ANTIVIRUS, ruta_repositorio));
+                }
+
+                if (adjuntar_cap_error)
+                {
+                    links.Add(GenerarLink(solicitud, TipoDocumento.CAP_ERROR, ruta_repositorio));
+                }
+
+                i++;
+            }
+
+            ws.Columns(1, 11).AdjustToContents();
+
+            wb.SaveAs($"{ServerFS.GetBaseDir(true)}/{archivo}");
+
+            links.Add(new WebUtils.Link(archivo));
+
+            return links;
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> LlenarFormulario(int[] selected, bool return_zip)
         {
             Guid id = Guid.NewGuid();
             string id_fecha = DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
             Response<List<WebUtils.Link>> oResponse = new() { Data = new() } ;
-            List<MtTbSolicitudesTicket> pendientes = new List<MtTbSolicitudesTicket>();
 
-            string base_directory = ServerFS.GetBaseDir(true);
-            string filename = $"repositorio/pendientes/{id_fecha}_solicitud_alta_desbloqueo_{id}";
-            string template_fn = $"{base_directory}/assets/sol_alta_desbloqueo.xlsx";
+            string root = ServerFS.GetBaseDir(true);
+            string archivo = $"repositorio/pendientes/{id_fecha}_{id}";
+
+            string xlsx_normal = $"{root}/assets/sol_alta_desbloqueo.xlsx";
+            string xlsx_celular = $"{root}/assets/sol_cambio_celular.xlsx";
+
+            List<MtTbSolicitudesTicket> pendientes = new();
+            List<MtTbSolicitudesTicket> pendientes_normal = new();
+            List<MtTbSolicitudesTicket> pendientes_celular = new();
             
-            XLWorkbook wb = new XLWorkbook(template_fn);
-            IXLWorksheet ws = wb.Worksheet(1);
+            StringBuilder mensajes = new();
 
-            StringBuilder errors = new();
-            bool save_log = false;
+            List<WebUtils.Link> archivos_normal = new();
+            List<WebUtils.Link> archivos_celular = new();
+            List<WebUtils.Link> archivos = new();
 
-            int i = 5;
-            string rol = string.Empty;
-            string ruta_repositorio = string.Empty;
-            string ruta_usuario = string.Empty;
-
-            List<WebUtils.Link> files = new();
-
-            //Documentos adjuntos
-            bool adjuntar_com_inscripcion = false;
-            bool adjuntar_cap_antivirus = false;
-            bool adjuntar_cap_bloqueo = false;
-            bool adjuntar_cap_error = false;
-
-            //FECHA
-            ws.Cell("H2").Value = DateTime.Now.ToString("dd/MM/yyyy");
-
-            string? id_externo_usuario = null;
-            string? extension = null;
             string? error = null;
 
             try
             {
                 pendientes = await _db.MtTbSolicitudesTickets
-                        .Where(st => selected.Contains(st.IdSolicitudTicket))
-                        .Include(st => st.SolIdUsuarioNavigation)
-                        .Include(st => st.SolIdTipoSolicitudNavigation)
-                        .ToListAsync();
+                    .Where
+                    (
+                        st => 
+                            selected.Contains(st.IdSolicitudTicket) &&
+                            st.SolIdEstadoSolicitud == (int)TipoEstadoSolicitud.PENDIENTE
+                    )
+                    .Include(st => st.SolIdUsuarioNavigation)
+                    .Include(st => st.SolIdTipoSolicitudNavigation)
+                    .ToListAsync();
 
-                foreach (MtTbSolicitudesTicket solicitud in pendientes)
+                pendientes_celular = pendientes.Where(p => p.SolIdTipoSolicitud == (int)TipoSolicitud.CAMBIO_CELULAR).ToList();
+                pendientes_normal = pendientes.Except(pendientes_celular).ToList();
+
+                if(pendientes_normal.Count>0)
                 {
-                    ruta_repositorio = $"Repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
-                    ruta_usuario = $"Repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
-
-                    switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
-                    {
-                        case TipoPersonal.ALUMNO: 
-                        case TipoPersonal.EGRESADO: 
-                            id_externo_usuario = solicitud.SolIdUsuarioNavigation.UsuBoletaAlumno;
-                            adjuntar_com_inscripcion = true;
-                            break;
-                        case TipoPersonal.MAESTRIA: 
-                            id_externo_usuario = solicitud.SolIdUsuarioNavigation.UsuBoletaMaestria;
-                            adjuntar_com_inscripcion = true;
-                            break;
-                        default: 
-                            id_externo_usuario = solicitud.SolIdUsuarioNavigation.UsuNumeroEmpleado;
-                            extension = solicitud.SolIdUsuarioNavigation.UsuNoExtension;
-                            break;
-                    }
-
-                    switch((TipoSolicitud)solicitud.SolIdTipoSolicitud)
-                    {
-                        case TipoSolicitud.DESBLOQUEO_CUENTA:
-                            adjuntar_cap_bloqueo = true;
-                            adjuntar_cap_antivirus = true;
-                            break;
-                        case TipoSolicitud.OTRO:
-                            adjuntar_cap_error = true;
-                            break;
-                    }
-
-                    ws.Cell(i, 1).Value = solicitud.SolIdUsuarioNavigation.UsuNombre;
-                    ws.Cell(i, 2).Value = solicitud.SolIdUsuarioNavigation.UsuPrimerApellido;
-                    ws.Cell(i, 3).Value = solicitud.SolIdUsuarioNavigation.UsuSegundoApellido;
-                    ws.Cell(i, 5).Value = solicitud.SolIdUsuarioNavigation.UsuCurp;
-                    ws.Cell(i, 8).Value = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
-                    ws.Cell(i, 9).Value = solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta;
-
-                    ws.Cell(i, 4).Value = ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal).GetNombre();
-                    ws.Cell(i, 6).Value = id_externo_usuario;
-
-                    ws.Cell(i, 7).Value = extension;
-
-                    IXLRange row = ws.Range(ws.Cell(i, 1), ws.Cell(i, 9));
-
-                    row.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
-                    row.Style.Border.SetOutsideBorderColor(XLColor.Black);
-
-                    row.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
-                    row.Style.Border.SetInsideBorderColor(XLColor.Black);
-
-                    files.Add(GenerarLink(solicitud, TipoDocumento.CURP, ruta_usuario));
-
-                    if (adjuntar_com_inscripcion)
-                    {
-                        files.Add(GenerarLink(solicitud, TipoDocumento.COM_INSCRIPCION, ruta_usuario));
-                    }
-
-                    if(adjuntar_cap_bloqueo)
-                    {
-                        files.Add(GenerarLink(solicitud, TipoDocumento.CAP_BLOQUEO, ruta_repositorio));
-                    }
-
-                    if(adjuntar_cap_antivirus)
-                    {
-                        files.Add(GenerarLink(solicitud, TipoDocumento.CAP_ANTIVIRUS, ruta_repositorio));
-                    }
-
-                    if(adjuntar_cap_error)
-                    {
-                        files.Add(GenerarLink(solicitud, TipoDocumento.CAP_ERROR, ruta_repositorio));
-                    }
-
-                    i++;
+                    archivos_normal = GenerarXLSX(xlsx_normal, pendientes_normal, $"{archivo}_N.xlsx");
                 }
+                
 
-                ws.Columns(1, 10).AdjustToContents();
+                if(pendientes_celular.Count>0)
+                {
+                    archivos_celular = GenerarXLSX(xlsx_celular, pendientes_celular, $"{archivo}_C.xlsx", true);
+                }                
 
-                wb.SaveAs($"{base_directory}/{filename}.xlsx");
+                archivos = archivos_normal.Union(archivos_celular).ToList();
+                
+                error = ServerFS.WriteZip($"{archivo}.zip", archivos);
 
-                files.Add(new WebUtils.Link(filename + ".xlsx"));
-
-                error = ServerFS.WriteZip($"{filename}.zip", files);
 
                 if(error is not null)
                 {
-                    errors.AppendLine(error);
-                    save_log = true;
+                    mensajes.AppendLine(error);
                 }
                 
                 if (return_zip)
                 {
-                    oResponse.Data = new List<WebUtils.Link>() {  new WebUtils.Link(filename + ".zip") };
+                    oResponse.Data = new List<WebUtils.Link>() {  new WebUtils.Link($"{archivo}.zip") };
                 }
                 else
                 {
-                    oResponse.Data = files;
+                    oResponse.Data = archivos;
                 }
                 
                 oResponse.Success = 1;
             }
             catch (Exception ex)
             {
-                errors.AppendLine(ex.Message);
-                save_log = true;
+                mensajes.AppendLine(ex.Message);
+                mensajes.AppendLine(ex.StackTrace);
 
                 //Response.Clear();
                 Response.StatusCode = 500;
@@ -485,31 +568,28 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 try
                 {
-                    error = await EstablecerEstado(selected, (int)TipoEstadoSolicitud.EN_PROCESO);
+                    error = await EstablecerEstado(pendientes, (int)TipoEstadoSolicitud.EN_PROCESO);
                     
                     if (error is null)
                     {
-                        await EnvioMasivo(pendientes);
+                        await EnvioMasivoPendientes(pendientes);
                     }
                     else
                     {
-                        errors.AppendLine(error);
-                        save_log = true;
+                        mensajes.AppendLine(error);
                     }
                 }
                 catch (Exception ex)
                 {
-                    errors.AppendLine(ex.Message);
-                    save_log = true;
+                    mensajes.AppendLine(ex.Message);
+                    mensajes.AppendLine(ex.StackTrace);
                 }
             }
 
-            if (save_log)
+            if (mensajes.Length>0)
             {
-                System.IO.File.WriteAllText($"{base_directory}/{filename}.log", errors.ToString());
-
-                oResponse.Message = errors.ToString();
-                oResponse.Data.Add(new WebUtils.Link($"{base_directory}/{filename}.log"));
+                System.IO.File.WriteAllText($"{root}/{archivo}.log", mensajes.ToString());
+                oResponse.Message = mensajes.ToString();
             }
 
             return Ok(oResponse);

@@ -11,6 +11,8 @@ using CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Shared.CapaEntities.Common;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -119,6 +121,8 @@ builder.Services.AddAuthentication(auth =>
 // Dependency Injection (Inyectar e Implementar la Interfaz)
 builder.Services.AddScoped<ILoginAuthService, RLoginAuthService>();
 builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
+builder.Services.AddScoped<ISendWhatsAppService, RSendWhatsAppService>();
+builder.Services.AddScoped(sp => new HttpClient());
 
 /******************************************************************************************************/
 
