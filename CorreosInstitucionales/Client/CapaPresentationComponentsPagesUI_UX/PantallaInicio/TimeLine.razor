@@ -546,13 +546,13 @@ else
                 {
                     oEscuela = await servicioEscuela.GetDataByIdAsync(1);
 
-                    @*//  ENVÍO DE WHATSAPP PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
+                    @*//  ENVÍO DE WHATSAPP ENCUESTA DE CALIDAD CONTESTADA Y ENVÍO DE CREDENCIALES  //*@
                     oSendWhatsApp.Number = oUsuario.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
-                    oSendWhatsApp.Message = "*SACI (Sistema de Atención para Correos Institucionales)*\n" +
+                    oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                            "Estimad@: " + oUsuario.Data.UsuNombre + " " + oUsuario.Data.UsuPrimerApellido + " " + oUsuario.Data.UsuSegundoApellido + "\n\n" +
-                                            "Se le informa que su respuesta de la Encuesta de Calidad fué exitosa en la Plataforma " +
-                                            "*SACI* de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
+                                            "Estimad@:\n*" + oUsuario.Data.UsuNombre + " " + oUsuario.Data.UsuPrimerApellido + " " + oUsuario.Data.UsuSegundoApellido + "*\n\n" +
+                                            "Se le informa que su respuesta de la Encuesta de Calidad fué exitosa en la *Plataforma SACI* " +
+                                            "de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
                                             "Por este medio se le hace entrega de sus _Credenciales de Acceso_ a la Cuenta de *Correo Electrónico Institucional*:\n\n" +
                                             "   ✉ Correo Electrónico Institucional:\n                    *" + oUsuario.Data.UsuCorreoInstitucionalCuenta + "*\n" +
                                             "   🔑 Contraseña:\n                    *" + oUsuario.Data.UsuCorreoInstitucionalContraseña + "*\n\n" +
@@ -580,7 +580,7 @@ else
 				                            <p style='text-align:justify; color:black;'>
                                                 ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
                                                 Estimad@: <br><b>{oUsuario.Data.UsuNombre} {oUsuario.Data.UsuPrimerApellido} {oUsuario.Data.UsuSegundoApellido}</b><br><br>
-				                                Se le informa que su respuesta de la Encuesta de Calidad fué exitosa en la Plataforma <b>SACI</b>
+				                                Se le informa que su respuesta de la Encuesta de Calidad fué exitosa en la <b>Plataforma SACI</b>
 				                                de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
                                                 <br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>
 				                            </p>
@@ -631,7 +631,7 @@ else
                             Severity = NotificationSeverity.Success,
                             Duration = 3000,
                             Summary = "¡Encuesta de Calidad contestada con éxito!",
-                            Detail = "Se le notificará por las vías de comunicación."
+                            Detail = "Se le notificará por las vías / medios de comunicación."
                             // SummaryContent = ns => @<RadzenText TextStyle="TextStyle.H6">Custom summary: <br /> @DateTime.Now</RadzenText>,
                             // DetailContent = ns => @<RadzenButton Text="Clear" Click="@(args => ns.Messages.Clear())" />
                         });
@@ -671,7 +671,7 @@ else
                                 <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light"
                                              ShowIcon="true" AllowClose="false" class="mb-0" Visible="true">
                                     Sus <b>Credenciales del Correo Electrónico Institucional</b> se generaron / recuperaron exitosamente y sus datos fueron actualizados,<br />
-                                    podrá visualizarlas en la plataforma SACI así como se le notificará por las vías de comunicación.
+                                    podrá visualizarlas en la plataforma SACI así como se le notificará por las vías / medios de comunicación.
                                 </RadzenAlert>
                                 <RadzenButton Text="Cerrar"
                                               BusyText=""

@@ -870,33 +870,32 @@ else
                                         $@"
                                         <div align='center'>
                                             <article class='container-fluid' style='background-color: rgb(244,244,244); width:700px; border-radius:10px; padding:5px; text-align:justify;'>
-				                            <div align='center'>
-						                        <table style='padding:5px; border: 1px solid black; border-collapse:collapse;' >
-							                        <thead>
-								                        <tr style='background-color: #dddddd;'>
-									                        <th scope='col' colspan='2' style='font-size:calc(12px + 0.290625vw); border: 1px solid black;'>Credenciales de Acceso</th>
-								                        </tr>
-							                        </thead>
-							                        <tbody>
-								                        <tr style='background-color: #ffffff;'>
-									                        <td width='250px' style='border: 1px solid black;'><b>✉️ Usuario:</b></td>
-									                        <td width='250px' style='border: 1px solid black;'><b>{oUsuario.UsuCorreoPersonalCuentaNueva}</b></td>
-								                        </tr>
-								                        <tr style='background-color: #dddddd;'>
-									                        <td width='250px' style='border: 1px solid black;'><b>🔑 Contraseña:</b></td>
-									                        <td width='250px' style='border: 1px solid black;'><b>{password}</b></td>
-								                        </tr>
-							                        </tbody>
-						                        </table>
-				                            </div>
+				                                <div align='center'>
+						                            <table style='padding:5px; border: 1px solid black; border-collapse:collapse;' >
+							                            <thead>
+								                            <tr style='background-color: #dddddd;'>
+									                            <th scope='col' colspan='2' style='border: 1px solid black;'><b>Credenciales de Acceso</b></th>
+								                            </tr>
+							                            </thead>
+							                            <tbody>
+								                            <tr style='background-color: #ffffff;'>
+									                            <td width='250px' style='border: 1px solid black;'><b>✉️ Usuario:</b></td>
+									                            <td width='250px' style='border: 1px solid black;'><b>{oUsuario.UsuCorreoPersonalCuentaNueva}</b></td>
+								                            </tr>
+								                            <tr style='background-color: #dddddd;'>
+									                            <td width='250px' style='border: 1px solid black;'><b>🔑 Contraseña:</b></td>
+									                            <td width='250px' style='border: 1px solid black;'><b>{password}</b></td>
+								                            </tr>
+							                            </tbody>
+						                            </table>
+				                                </div>
 			                                </article>
                                         </div>": "";
 
-            string msgEmail = $@"
-                                <body>
+            string msgEmail = $@"<body>
 	                                <header>
 		                                <div align='center'>
-			                                <p style='font-weight:bold; text-align:center; color:black;'>SACI (Sistema de Atención para Correos Institucionales)</p>
+			                                <p style='font-weight:bold; text-align:center; color:black;'>SACI | Sistema de Atención para Correos Institucionales</p>
 		                                </div>
 	                                </header>
 	                                <main class='container-fluid'>
@@ -905,7 +904,7 @@ else
 				                                <p style='text-align:justify; color:black;'>
                                                     ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
                                                     Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
-				                                    Se le informa que su {agregar_actualizar} fué exitoso en la Plataforma <b>SACI</b>
+				                                    Se le informa que su {agregar_actualizar} fué exitoso en la <b>Plataforma SACI</b>
 				                                    de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
                                                     {entrega_credenciales_acceso}
 				                                </p>
@@ -915,7 +914,6 @@ else
 				                                <article style='background-color: rgb(255, 255, 255); width:700px; border-radius:10px; padding:5px;'>
 					                                <p style='color:black;'>
 						                                Sus datos son los siguientes:<br>
-
 						                                <table style='text-align:justify;'>
 							                                <thead>
 								                                <tr>
@@ -997,14 +995,14 @@ else
 
             string credenciales_acceso_WA = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
                                             "Por este medio se le hace entrega de sus _Credenciales de Acceso_:\n" +
-                                            "   ✉ *Usuario:       " + oUsuario.UsuCorreoPersonalCuentaNueva + "*\n" +
-                                            "   🔑 *Contraseña: " + password + "*\n\n" : "";
+                                            "   ✉ *Usuario:\n               " + oUsuario.UsuCorreoPersonalCuentaNueva + "*\n" +
+                                            "   🔑 *Contraseña:\n               " + password + "*\n\n" : "";
 
             oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
             oSendWhatsApp.Message = "*SACI (Sistema de Atención para Correos Institucionales)*\n" +
                                     "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                    "Se le informa que su " + agregar_actualizar + " fué exitoso en la Plataforma " +
-                                    "*SACI* de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
+                                    "Se le informa que su " + agregar_actualizar + " fué exitoso en la *Plataforma SACI* " + 
+                                    "de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
                                     credenciales_acceso_WA +
                                     "✅ Rol: *Usuario*\n" +
                                     "✅ Tipo de Personal: *" + oTipoPersonal.Data.TipoperNombre + "*\n" +
@@ -1051,7 +1049,7 @@ else
                             new RequestDTO_SendEmail()
                             {
                                 EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                                Subject = "REGISTRO EN PLATAFORMA SACI",
+                                Subject = "SACI | REGISTRO DE USUARI@",
                                 Body = msgEmail
                             });
 
@@ -1347,7 +1345,7 @@ else
                                 new RequestDTO_SendEmail()
                                 {
                                     EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                                    Subject = "SACI | Actualización de datos",
+                                    Subject = "SACI | Actualización de Datos",
                                     Body = msgEmail
                                 });
 

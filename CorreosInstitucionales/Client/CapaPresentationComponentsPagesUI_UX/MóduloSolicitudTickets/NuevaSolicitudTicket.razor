@@ -654,8 +654,8 @@ else
 				                        <p style='text-align:justify; color:black;'>
                                             ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
                                             Estimad@: <br><b>{oResponseUsuario.Data.UsuNombre} {oResponseUsuario.Data.UsuPrimerApellido} {oResponseUsuario.Data.UsuSegundoApellido}</b><br><br>
-				                            Se aperturó con éxito el Ticket <b>#{idResponse}</b> de la Solicitud {oTipoSolicitud.Data.TiposolDescripcion} - {oSolicitudTicket.SolObservacionesSolicitud}
-                                            en la Plataforma <b>SACI</b> de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
+				                            Se aperturó con éxito el Ticket <b>#{idResponse}</b> de la Solicitud <b>{oTipoSolicitud.Data.TiposolDescripcion} - {oSolicitudTicket.SolObservacionesSolicitud}</b>
+                                            en la <b>Plataforma SACI</b> de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
 				                        </p>
 			                        </article>
 
@@ -663,7 +663,6 @@ else
 				                        <article style='background-color: rgb(255, 255, 255); width:700px; border-radius:10px; padding:5px; '>
 					                        <p class='text-start' style='color:black;'>
 						                        Sus datos son los siguientes:<br>
-
 						                        <table style='text-align:justify;'>
 							                        <thead>
 								                        <tr>
@@ -706,7 +705,8 @@ else
                                     <div align='center'>
                                         <strong>ATENCIÓN:</strong><br><br>
                                         <article style='background-color: rgb(244,244,244); width:700px; border-radius:10px; padding:5px; text-align:justify;'>
-				                            Te informamos que las solicitudes tendrán una <b>respuesta entre 3 y 5 días</b>, se te notificará por los medios / vías de comunicación los avances del estado de tu solicitud.
+				                            Te informamos que las solicitudes tendrán una <b>respuesta entre 3 y 5 días</b>,
+                                            se te notificará por los medios / vías de comunicación los avances del estado de tu solicitud.
 			                            </article>
                                     </div>
                                     <br>
@@ -734,10 +734,10 @@ else
                     oSendWhatsApp.Number = oResponseUsuario.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
                     oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                            "Estimad@: *" + oResponseUsuario.Data.UsuNombre + " " + oResponseUsuario.Data.UsuPrimerApellido + " " + oResponseUsuario.Data.UsuSegundoApellido + "*\n\n" +
+                                            "Estimad@:\n*" + oResponseUsuario.Data.UsuNombre + " " + oResponseUsuario.Data.UsuPrimerApellido + " " + oResponseUsuario.Data.UsuSegundoApellido + "*\n\n" +
                                             "Se le informa que se aperturó con éxito el Ticket *#" + idResponse + "* " +
-                                            "de la Solicitud " + oTipoSolicitud.Data.TiposolDescripcion + " - " + oSolicitudTicket.SolObservacionesSolicitud + " " +
-                                            "en la Plataforma *SACI* de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
+                                            "de la Solicitud *" + oTipoSolicitud.Data.TiposolDescripcion + " - " + oSolicitudTicket.SolObservacionesSolicitud + "* " +
+                                            "en la *Plataforma SACI* de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
                                             "Por este medio se le dan los _Datos de la Solicitud_:\n" +
                                             "✅ Ticket: *#" + idResponse + "*\n" +
                                             "✅ Motivo/Incidencia de la Solicitud: *" + oTipoSolicitud.Data.TiposolDescripcion + "*\n" +
@@ -745,8 +745,8 @@ else
                                             "✅ Estado: *Pendiente* (Se aperturó la Solicitud-Ticket y se ha colocado en la Bandeja de Espera para su pronta atención).\n" +
                                             "✅ Fecha / Hora de Creación: *" + fecha_hora_creación + "*\n\n" +
                                             "*ATENCIÓN:*\n\n" +
-                                            " > 👀 Te informamos que las solicitudes tendrán una *respuesta entre 3 y 5 días*, se te notificará por los medios / vías de comunicación los avances del estado de tu solicitud.\n\n" +
-                                            " > 💡 *Para alumnos de nuevo ingreso* te informamos que las solicitudes tendrán una respuesta de un *máximo de 2 meses.*\n\n" +
+                                            " 👀 > Te informamos que las solicitudes tendrán una *respuesta entre 3 y 5 días*, se te notificará por los medios / vías de comunicación los avances del estado de tu solicitud.\n\n" +
+                                            " 💡 > *Para alumnos de nuevo ingreso* te informamos que las solicitudes tendrán una respuesta de un *máximo de 2 meses.*\n\n" +
                                             "Que tenga un excelente día.\n" +
                                             "> *NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
 
@@ -804,8 +804,8 @@ else
                         {
                             Severity = NotificationSeverity.Success,
                             Duration = 3000,
-                            Summary = "¡Solicitud de Ticket generada Exitosa!",
-                            Detail = $@"Se aperturó la Solicitud-Ticket #{idResponse} y se te notificará por los medios / vías de comunicación."
+                            Summary = "¡Solicitud de Ticket generada con éxito!",
+                            Detail = $@"Se aperturó la Solicitud-Ticket #{idResponse} y se le notificará por los medios / vías de comunicación."
                             // SummaryContent = ns => @<RadzenText TextStyle="TextStyle.H6">Custom summary: <br /> @DateTime.Now</RadzenText>,
                             // DetailContent = ns => @<RadzenButton Text="Clear" Click="@(args => ns.Messages.Clear())" />
                         });
@@ -819,7 +819,7 @@ else
                                         <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
                                     </svg>
                                 </span>
-                                <RadzenText TextStyle="TextStyle.Body1" class="text-success"><b>¡Solicitud-Ticket generada con exito!</b></RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body1" class="text-success"><b>¡Solicitud-Ticket generada con éxito!</b></RadzenText>
                             </RadzenStack>
                             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="">
                                 <RadzenStack Gap="0px">

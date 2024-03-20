@@ -2,7 +2,7 @@
 
 @* @attribute [Authorize(Policy = "[Rol] Ambos")] *@
 
-<PageTitle>SACI | Cambiar a Nueva Contraseña</PageTitle>
+<PageTitle>SACI | Nueva Contraseña</PageTitle>
 
 <style type="text/css">
 </style>
@@ -158,13 +158,13 @@
 
             if (oRespuesta.Success == 1)
             {
-                @*//  ENVÍO DE WHATSAPP PARA AVISO DE RECUPERACIÓN DE CONTRASEÑA TEMPORAL EXITOSA  //*@
+                @*//  ENVÍO DE WHATSAPP PARA AVISO DE CAMBIO DE CONTRASEÑA EXITOSO  //*@
                 oSendWhatsApp.Number = oResponse.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
-                oSendWhatsApp.Message = "*SACI (Sistema de Atención para Correos Institucionales)*\n" +
+                oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                         "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                        "Se le hace entrega de sus _Credenciales de Acceso_ a la Plataforma SACI:\n" +
-                                        "  ✉ Usuario:        *" + oResponse.Data.UsuCorreoPersonalCuentaNueva + "*\n" +
-                                        "  🔑 Contraseña:  *" + oChangePassword.NewPassword + "*\n\n" +
+                                        "Se le hace entrega de sus _Credenciales de Acceso_ a la *Plataforma SACI*:\n" +
+                                        "  ✉ Usuario:\n               *" + oResponse.Data.UsuCorreoPersonalCuentaNueva + "*\n" +
+                                        "  🔑 Contraseña:\n               *" + oChangePassword.NewPassword + "*\n\n" +
                                         "> Que tenga un excelente día.\n" +
                                         "> *NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
 
@@ -180,19 +180,19 @@
                         <body>
                             <header>
 		                        <div align='center'>
-			                        <p style='font-weight:bold; text-align:center; color:black;'>SACI (Sistema de Atención para Correos Institucionales)</p>
+			                        <p style='font-weight:bold; text-align:center; color:black;'>SACI | Sistema de Atención para Correos Institucionales</p>
 		                        </div>
 	                        </header>
 
                             <p style='text-align:justify; color:black;'>
                                 ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
                                 Estimad@: <br><b>{oResponse.Data.UsuNombre} {oResponse.Data.UsuPrimerApellido} {oResponse.Data.UsuSegundoApellido}</b><br><br>
-                                Se le informa que generó de manera correcta la contraseña de plataforma <b>SACI (Sistema de Ayuda para Correos Institucionales)</b>
+                                Se le informa que generó de manera correcta la contraseña de la <b>Plataforma SACI (Sistema de Ayuda para Correos Institucionales)</b>
                                 de la Unidad Académica <b>{oEscuela?.Data?.EscNombreCorto} ({oEscuela?.Data?.EscNombreLargo})</b>.
                             </p>
 
                             <div align='center'>
-                                <article class='container-fluid' style='background-color: rgb(244,244,244); width:700px; border-radius:10px; padding:5px; text-align:justify;'>
+                                <article style='background-color: rgb(244,244,244); width:700px; border-radius:10px; padding:5px; text-align:justify;'>
 				                    <div align='center'>
 						                <table style='padding:5px; border: 1px solid black; border-collapse:collapse;' >
 							                <thead>
@@ -216,7 +216,8 @@
                             </div>
 
                             <p style='text-align:justify; color:black;'>
-                                Que tenga un excelente día.<br>NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD DEL SERVICIO.
+                                Que tenga un excelente día.<br>
+                                NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
                             </p>
 
                             <footer>
@@ -234,7 +235,7 @@
                         Severity = NotificationSeverity.Success,
                         Duration = 3000,
                         Summary = "¡Cambios Guardados!",
-                        Detail = "Se cambió la contraseña y se le notificará por las vías de comunicación."
+                        Detail = "Se cambió la contraseña y se le notificará por las vías / medios de comunicación."
                         // SummaryContent = ns => @<RadzenText TextStyle="TextStyle.H6">Custom summary: <br /> @DateTime.Now</RadzenText>,
                         // DetailContent = ns => @<RadzenButton Text="Clear" Click="@(args => ns.Messages.Clear())" />
                     });
@@ -257,8 +258,8 @@
                             </RadzenStack>
                             <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false" class="my-2">
                                 <ul>
-                                    <li>Se le notificará por las vías de comunicación con la Nueva Contraseña.</li>
-                                    <li>Se cerrará la Sesión.</li>
+                                    <li>Se le notificará por las vías / medios de comunicación con la Nueva Contraseña.</li>
+                                    <li>Se cerrará la sesión.</li>
                                 </ul>
                             </RadzenAlert>
                             <RadzenButton Text="Cerrar"

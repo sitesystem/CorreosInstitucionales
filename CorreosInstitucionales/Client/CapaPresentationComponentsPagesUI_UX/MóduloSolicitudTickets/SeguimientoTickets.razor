@@ -5,16 +5,6 @@
 <PageTitle>SACI | Historial de Solicitudes-Tickets</PageTitle>
 
 <style type="text/css">
-    .circle-border {
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        color: green;
-        width: 60px;
-        height: 60px;
-        border: 5px solid rgb(215,215,215);
-        border-radius: 50%;
-    }
 </style>
 
 <RadzenCard Variant="Variant.Filled" Class="mb-3">
@@ -30,8 +20,8 @@
 
 @if (oSolicitudesTickets is not null && oSolicitudesTickets.Data != null)
 {
-    @* <AuthorizeView>
-        <Authorized> *@
+    <AuthorizeView>
+        <Authorized>
             @* <p>Autorizado</p> *@
             <RadzenDataGrid @ref="oSolicitudesTicketsRef" Data="@oSolicitudesTickets.Data" @bind-Value="@selectedItems" TItem="RequestDTO_Solicitud" Density="@Density"
                             AllowFiltering="true" AllowColumnResize="true" AllowColumnReorder="true" AllowAlternatingRows="true" AllowSorting="true"
@@ -275,14 +265,14 @@
                     <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No hay registros encontrados para mostrar.</p>
                 </EmptyTemplate>
             </RadzenDataGrid>
-        @* </Authorized>
+        </Authorized>
         <NotAuthorized>
             <p>No Autorizado</p>
         </NotAuthorized>
         <Authorizing>
             <p>Autorizando..</p>
         </Authorizing>
-    </AuthorizeView> *@
+    </AuthorizeView>
 }
 else
 {
