@@ -76,7 +76,13 @@
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
-    private readonly int[] estados = { 4, 5 };
+
+    private readonly int[] estados = 
+    {
+        (int)TipoEstadoSolicitud.ATENDIDA, 
+        (int)TipoEstadoSolicitud.ENCUESTA_CALIDAD, 
+        (int)TipoEstadoSolicitud.CANCELADA 
+    };
 
     private string debug = string.Empty;
 
