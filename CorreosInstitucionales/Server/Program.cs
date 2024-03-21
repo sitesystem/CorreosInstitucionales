@@ -120,9 +120,27 @@ builder.Services.AddAuthentication(auth =>
 
 // Dependency Injection (Inyectar e Implementar la Interfaz)
 builder.Services.AddScoped<ILoginAuthService, RLoginAuthService>();
+
+// Inyección de Dependencias - Módulo de Send Email & WhatsApp
 builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
 builder.Services.AddScoped<ISendWhatsAppService, RSendWhatsAppService>();
-builder.Services.AddScoped(sp => new HttpClient());
+
+// HTTCLIENT QUE ACEPTA HTTPS CON CERTIFICADOS AUTOFIRMADOS
+builder.Services.AddScoped
+(
+    sp => new HttpClient
+    (
+        new HttpClientHandler()
+        {
+            ClientCertificateOptions = ClientCertificateOption.Manual,
+            ServerCertificateCustomValidationCallback =
+                            (httpRequestMessage, cert, cetChain, policyErrors) =>
+                            {
+                                return true;
+                            }
+        }
+    )
+);
 
 /******************************************************************************************************/
 
