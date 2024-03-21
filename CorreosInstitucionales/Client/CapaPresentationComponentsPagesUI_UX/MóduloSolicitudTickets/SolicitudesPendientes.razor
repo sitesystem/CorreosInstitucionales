@@ -396,8 +396,14 @@
 
         if(!string.IsNullOrEmpty(mensaje))
         {
+            RequestDTO_CancelarSolicitud oCancelarSolicitud = new()
+            {
+                IdSolicitud = item.IdSolicitudTicket,
+                MotivoCancelación = mensaje
+            };
+
             item.SolRespuestaDcyC = mensaje;
-            HttpResponseMessage response = await servicioSolicitud.Cancelar(new KeyValuePair<int, string>(item.IdSolicitudTicket, mensaje));
+            HttpResponseMessage response = await servicioSolicitud.Cancelar(oCancelarSolicitud); // new KeyValuePair<int, string>(item.IdSolicitudTicket, mensaje));
 
             if(response.IsSuccessStatusCode)
             {
@@ -408,7 +414,5 @@
                 debug += Environment.NewLine + "ERROR CANCELANDO SOLICITUD {item.IdSolicitudTicket}";
             }
         }
-
-
     }
 }

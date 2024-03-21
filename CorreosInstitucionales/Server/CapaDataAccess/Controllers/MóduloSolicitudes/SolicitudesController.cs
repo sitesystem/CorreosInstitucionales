@@ -449,20 +449,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
         }// GENERAR SOLICITUDES
 
 
-        [HttpPut("cancelar")]
-        public async Task<IActionResult> CancelarSolicitud(KeyValuePair<int, string> datos)
+        [HttpPatch("cancelar")]
+        public async Task<IActionResult> CancelarSolicitud(RequestDTO_CancelarSolicitud oCancelarSolicitud) // KeyValuePair<int, string> datos)
         {
             Response<object> oRespuesta = new();
 
             try
             {
-                MtTbSolicitudesTicket? oSolicitud = await _db.MtTbSolicitudesTickets.FindAsync(datos.Key);
+                MtTbSolicitudesTicket? oSolicitud = await _db.MtTbSolicitudesTickets.FindAsync(oCancelarSolicitud.IdSolicitud); // (datos.Key)
                 //db.Remove(oPersona);
 
                 if (oSolicitud != null)
                 {
                     oSolicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.CANCELADA;
-                    oSolicitud.SolRespuestaDcyC = datos.Value;
+                    oSolicitud.SolRespuestaDcyC = oCancelarSolicitud.MotivoCancelación; // datos.Value;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     await _db.SaveChangesAsync();

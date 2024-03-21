@@ -103,9 +103,9 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             throw new NotImplementedException();
         }
 
-        public async Task<HttpResponseMessage> Cancelar(KeyValuePair<int,string> datos)
+        public async Task<HttpResponseMessage> Cancelar(RequestDTO_CancelarSolicitud oCancelarSolicitud) // KeyValuePair<int,string> datos)
         {
-            return await _httpClient.PutAsJsonAsync($"{url}/cancelar", datos, options: _options);
+            return await _httpClient.PatchAsJsonAsync($"{url}/cancelar", oCancelarSolicitud, options: _options);
         }
     }
 }

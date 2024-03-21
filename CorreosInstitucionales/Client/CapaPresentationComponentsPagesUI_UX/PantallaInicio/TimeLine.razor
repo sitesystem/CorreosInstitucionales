@@ -348,7 +348,7 @@
 
     @if (oSolicitudLastTicketRespuesta != null && oSolicitudLastTicketRespuesta.Data is not null && !string.IsNullOrEmpty(oSolicitudLastTicketRespuesta.Data.SolRespuestaDcyC))
     {
-        <RadzenAlert Title="Respuesta de Mesa de Control" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Medium" Shade="Shade.Default"
+        <RadzenAlert Title="Respuesta de Mesa de Control" Text="" AlertStyle="@(oSolicitudLastTicket.Data.SolIdEstadoSolicitud == 5 ? AlertStyle.Info : AlertStyle.Danger)" Variant="Variant.Filled" Size="AlertSize.Medium" Shade="Shade.Default"
                      ShowIcon="true" AllowClose="false" Style="max-width: 500px" class="rz-mx-auto" Visible="true">
                      <b>Acción:</b> @(oSolicitudLastTicketRespuesta?.Data?.SolRespuestaDcyC)
         </RadzenAlert>

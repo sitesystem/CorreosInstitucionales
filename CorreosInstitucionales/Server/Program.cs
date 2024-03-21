@@ -81,7 +81,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("[Rol] Developer", policy => policy.RequireClaim("Rol", "1", "2"));
+    //options.AddPolicy("[Rol] Developer", policy => policy.RequireClaim("Rol", "1", "2"));
     //options.AddPolicy("RequireManagerRole", policy => policy.RequireRole("Manager"));
 });
 
