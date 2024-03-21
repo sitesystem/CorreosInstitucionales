@@ -78,8 +78,24 @@
                     <RadzenFormField Text="Contraseña" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                         <Start><RadzenIcon Icon="vpn_key" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                         <ChildContent>
-                            <RadzenTextBox @bind-Value="@oUsuario.UsuContraseña" style="border-bottom: 3px solid red;" />
+                            <RadzenTextBox Name="@($@"contraseña_{TipoPersonal}")" @bind-Value="@UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
+                                           Visible="@(!VisibleContraseña)"
+                                           @oninput="(e => UsuContraseña = e.Value.ToString())"
+                                           @onkeyup="@CompararContraseñas" />
+                            <RadzenPassword Name="@($@"contraseña_visible_{TipoPersonal}")" @bind-Value="@UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
+                                            Visible="@VisibleContraseña"
+                                            @oninput="(e => UsuContraseña = e.Value.ToString())"
+                                            @onkeyup="@CompararContraseñas" />
                         </ChildContent>
+                        <End>
+                            <RadzenButton Icon="@(VisibleContraseña ? "visibility" : "visibility_off")"
+                                          Click="@ToggleContraseña"
+                                          Variant="Variant.Text"
+                                          Size="ButtonSize.Small"
+                                          ButtonStyle="ButtonStyle.Secondary"
+                                          Shade="Shade.Dark" />
+                        </End>
+                        <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                     </RadzenFormField>
                     <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
                 </div>
@@ -148,10 +164,53 @@
 
     @*///////////////////////////////////////////////  INICIALIZAR OBJETOS Y OBTENER DATA ASYNC  ///////////////////////////////////////////////*@
     public Response<object>? oRespuesta = new();
+    private Response<RequestViewModel_Escuela>? oEscuela = new();
 
     protected override async Task OnInitializedAsync()
     {
-
+        @* DATOS ID DEL USUARIO *@
+        oUsuario.IdUsuario = oEditUsuario.IdUsuario;
+        oUsuario.UsuIdRol = oEditUsuario.UsuIdRol;                          // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
+        oUsuario.UsuIdTipoPersonal = oEditUsuario.UsuIdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
+        @* DATOS PERSONALES *@
+        oUsuario.UsuNombre = oEditUsuario.UsuNombre;                        // Nombre del Usuario Solicitante o Administrador
+        oUsuario.UsuPrimerApellido = oEditUsuario.UsuPrimerApellido;        // Primer Apellido del Usuario Solicitante o Administrador
+        oUsuario.UsuSegundoApellido = oEditUsuario.UsuSegundoApellido;      // Segundo Apellido del Usuario Solicitante o Administrador
+        oUsuario.UsuCurp = oEditUsuario.UsuCurp;                            // CURP con 18 caracteres como mínimo
+        oUsuario.UsuFileNameCurp = oEditUsuario.UsuFileNameCurp;            // Nombre del Archivo y extensión .pdf del CURP
+        
+        oUsuario.UsuFileSizeCurp = oEditUsuario.UsuFileSizeCurp;            // Tamaño del Archivo .pdf del CURP
+        oUsuario.UsuNoCelularAnterior = oEditUsuario.UsuNoCelularAnterior;  // Número de Celular Anterior si llega a cambiar por uno nuevo
+        oUsuario.UsuNoCelularNuevo = oEditUsuario.UsuNoCelularNuevo;        // Número de Celular Nuevo que sería el número de celular actual
+        @* DATOS ACADÉMICOS *@
+        oUsuario.UsuBoletaAlumno = oEditUsuario.UsuBoletaAlumno;            // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+        oUsuario.UsuBoletaMaestria = oEditUsuario.UsuBoletaMaestria;        // Número de Boleta del Usuario (Alumno de Maestria)
+        oUsuario.UsuIdCarrera = oEditUsuario.UsuIdCarrera;                  // FK ID de la Carrera del Alumno
+        oUsuario.UsuSemestre = oEditUsuario.UsuSemestre;                    // Semestre que cursa el Alumno Inscrito o de Maestria
+        oUsuario.UsuAñoEgreso = oEditUsuario.UsuAñoEgreso;                  // Año de Egreso en dado caso
+        oUsuario.UsuFileNameComprobanteInscripcion = oEditUsuario.UsuFileNameComprobanteInscripcion;    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+        oUsuario.UsuFileSizeComprobanteInscripcion = oEditUsuario.UsuFileSizeComprobanteInscripcion;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+        @* DATOS LABORALES *@
+        oUsuario.UsuNumeroEmpleado = oEditUsuario.UsuNumeroEmpleado;        // Número del Empleado del Usuario (Administrador o Docente)
+        oUsuario.UsuIdAreaDepto = oEditUsuario.UsuIdAreaDepto;              // FK ID del Área/Departamento del Usuario Empleado
+        oUsuario.UsuNoExtensionAnterior = oEditUsuario.UsuNoExtensionAnterior; // Número de Extensión del Empleado
+        oUsuario.UsuNoExtension = oEditUsuario.UsuNoExtension;              // Número de Extensión del Empleado
+        @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
+        oUsuario.UsuCorreoPersonalCuentaAnterior = oEditUsuario.UsuCorreoPersonalCuentaAnterior;        // Correo Personal de la Cuenta Anterior
+        oUsuario.UsuCorreoPersonalCuentaNueva = oEditUsuario.UsuCorreoPersonalCuentaNueva;              // Correo Personal de la Cuenta Nueva o Actual
+        oUsuario.UsuContraseña = oEditUsuario.UsuContraseña;                                            // Contraseña en la PLataforma del Usuario Solicitante o Administrador
+        oUsuario.UsuRecuperarContraseña = oEditUsuario.UsuRecuperarContraseña;                          // Contraseña Temporal que se le proporciona al Usuario Solicitante
+        @* DATOS DEL CORREO INSTITUCIONAL *@
+        oUsuario.UsuCorreoInstitucionalCuenta = oEditUsuario.UsuCorreoInstitucionalCuenta;              // Cuenta Correo Institucional IPN generada por DCyC
+        oUsuario.UsuCorreoInstitucionalContraseña = oEditUsuario.UsuCorreoInstitucionalContraseña;      // Contraseña del Correo Institucional IPN Generada por DCyC
+        @* OTROS DATOS *@
+        oUsuario.UsuFechaHoraAlta = oEditUsuario.UsuFechaHoraAlta;          // Fecha y Hora de Alta del Usuario
+        oUsuario.UsuStatus = oEditUsuario.UsuStatus;                        // Usuario (1 - Activo / 0 - Inactivo)
+        @* DATOS FK NAVIGATION *@
+        oUsuario.UsuIdAreaDeptoNavigation = null;
+        oUsuario.UsuIdCarreraNavigation = null;
+        oUsuario.UsuIdRolNavigation = null;
+        oUsuario.UsuIdTipoPersonalNavigation = null;
 
         IconButton = "save_as";
         TextButton = "Editar Datos";
@@ -189,7 +248,7 @@
         await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('names_{TipoPersonal}').select()");
     }
 
-    @*///////////////////////////////////////////////  REGISTRAR USUARIO  //////////////////////////////////////////////////////////////////////*@
+    @*///////////////////////////////////////////////  MODIFICAR USUARIO  //////////////////////////////////////////////////////////////////////*@
     private bool busyLoading = false;
     private string TextButton = string.Empty;
     private string BusyTextButton = string.Empty;
@@ -207,6 +266,18 @@
                 {
                     var responseUsuario = await servicioUsuario.GetDataByIdAsync(oUsuario.IdUsuario);
                     oUsuario = responseUsuario.Data;
+
+                    @*//  NOTIFICATION TOAST ACTUALIZACIÓN DE DATOS EXITOSO  //*@
+                    NotificationService.Notify(
+                        new NotificationMessage
+                            {
+                                Severity = NotificationSeverity.Success,
+                                Duration = 3000,
+                                Summary = "¡Actualización Correcta!",
+                                Detail = "Se guardaron los cambios."
+                                // SummaryContent = ns => @<RadzenText TextStyle="TextStyle.H6">Custom summary: <br /> @DateTime.Now</RadzenText>,
+                                // DetailContent = ns => @<RadzenButton Text="Clear" Click="@(args => ns.Messages.Clear())" />
+                            });
                 }
             }
         }
