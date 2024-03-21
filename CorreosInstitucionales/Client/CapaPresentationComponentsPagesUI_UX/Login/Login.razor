@@ -131,7 +131,7 @@
 
                                     <div class="row">
                                         <div class="col-md-12 mt-4">
-                                            <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6Ld5KwcTAAAAAIQePJpN1xS27jttxdwMo9CimLd5" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                                            <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6Ld6058pAAAAACiEYq0Khine3FWbHZpfyEraTlOX" OnSuccess="OnSuccess" OnExpired="OnExpired" />
                                         </div>
                                         <div class="col-md-12 d-grid gap-2 text-center">
                                             <button type="submit" class="btn btn-success mt-4 mb-3" disabled="@DisablePostButton">
@@ -409,7 +409,7 @@
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
                                     <RadzenText TextStyle="TextStyle.Body1"><b>@($@"{oRespuesta.Data.UsuNombre} {oRespuesta.Data.UsuPrimerApellido} {oRespuesta.Data.UsuSegundoApellido}")</b></RadzenText>
                                 </RadzenStack>
-                                <RadzenAlert Title="Atención:" Text="Se le notificará por las vías de comunicación con la nueva Contraseña temporal." AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false" class="my-2" />
+                                <RadzenAlert Title="Atención:" Text="Se le notificará por las vías de comunicación con la nueva contraseña temporal." AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false" class="my-2" />
                                 <RadzenButton Text="Cerrar"
                                               BusyText=""
                                               ButtonStyle="ButtonStyle.Warning"
