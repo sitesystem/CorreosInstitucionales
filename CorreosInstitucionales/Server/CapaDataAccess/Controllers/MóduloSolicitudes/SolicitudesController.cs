@@ -7,15 +7,29 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.Constantes;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+using CorreosInstitucionales.Shared.CapaTools;
+using CorreosInstitucionales.Server.Correos;
+using CorreosInstitucionales.Server.MensajesWA;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
 {
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
-    public class SolicitudesController(DbCorreosInstitucionalesUpiicsaContext db) : ControllerBase
+    public class SolicitudesController
+        (
+            DbCorreosInstitucionalesUpiicsaContext db,
+            ISendEmailService servicioEmail,
+            IServiceProvider serviceProvider,
+            ISendWhatsAppService servicioWA
+        ) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
+        private readonly ISendEmailService _servicioCorreo = servicioEmail;
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
+        private readonly ISendWhatsAppService _servicioWA = servicioWA;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
@@ -453,10 +467,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
         public async Task<IActionResult> CancelarSolicitud(RequestDTO_CancelarSolicitud oCancelarSolicitud) // KeyValuePair<int, string> datos)
         {
             Response<object> oRespuesta = new();
+            int guardados = 0;
+
+            MtTbSolicitudesTicket? oSolicitud = null;
 
             try
             {
-                MtTbSolicitudesTicket? oSolicitud = await _db.MtTbSolicitudesTickets.FindAsync(oCancelarSolicitud.IdSolicitud); // (datos.Key)
+                oSolicitud = await _db.MtTbSolicitudesTickets.FindAsync(oCancelarSolicitud.IdSolicitud); // (datos.Key)
                 //db.Remove(oPersona);
 
                 if (oSolicitud != null)
@@ -465,10 +482,36 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     oSolicitud.SolRespuestaDcyC = oCancelarSolicitud.MotivoCancelación; // datos.Value;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
-                    await _db.SaveChangesAsync();
+                    guardados = await _db.SaveChangesAsync();
                 }
+                if(guardados == 1)
+                {
+                    oRespuesta.Success = 1;
 
-                oRespuesta.Success = 1;
+                    ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
+
+                    Dictionary<string, object?> variables = new Dictionary<string, object?>
+                    {
+                        { "solicitud", oSolicitud }
+                    };
+
+                    RequestDTO_SendEmail correo = new()
+                    {
+                        Subject = "Su solcicitud ha sido cancelada",
+                        EmailTo = "postmaster@localhost",
+                        Body = await renderer.GetHTML<Cancelada>(variables)
+                    };
+
+                    RequestDTO_SendWhatsApp mensaje = new()
+                    {
+                        Message = await renderer.GetHTML<CanceladoWA>(variables),
+                        Number = "5500000000"
+                    };
+
+                    // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
+                    _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
+                    _ = Task.Run(() => _servicioWA.SendWhatsAppAsync(mensaje));
+                }
             }
             catch (Exception ex)
             {
