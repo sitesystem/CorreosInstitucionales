@@ -449,7 +449,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
         }// GENERAR SOLICITUDES
 
 
-        [HttpPatch("cancelar")]
+        [HttpPut("cancelar")]
         public async Task<IActionResult> CancelarSolicitud(KeyValuePair<int, string> datos)
         {
             Response<object> oRespuesta = new();

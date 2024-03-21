@@ -105,7 +105,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 
         public async Task<HttpResponseMessage> Cancelar(KeyValuePair<int,string> datos)
         {
-            return await _httpClient.PatchAsJsonAsync($"{url}/cancelar", datos, options: _options);
+            return await _httpClient.PutAsJsonAsync($"{url}/cancelar", datos, options: _options);
         }
     }
 }
