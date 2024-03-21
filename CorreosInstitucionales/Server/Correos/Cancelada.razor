@@ -1,0 +1,15 @@
+﻿<h1>Solicitud Cancelada</h1>
+
+Saludos @usuario.UsuNombre,
+por medio del presente nos permitimos informarle que su
+solicitud @solicitud.IdSolicitudTicket, ha sido cancelada
+por el siguiente motivo:
+
+<blockquote>@solicitud.SolRespuestaDcyC</blockquote>
+
+Sin más por el momento que tenga un excelente día.
+
+@code {
+    [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new() { SolIdUsuarioNavigation = new() };
+    MpTbUsuario usuario { get { return solicitud.SolIdUsuarioNavigation; } }
+}
