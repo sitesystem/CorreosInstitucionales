@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\Users\Win10\Documents\DeployRelease</_PublishTargetUrl>
-    <History>True|2024-03-19T18:41:42.9209491Z;True|2024-03-07T11:05:15.7569281-06:00;True|2024-03-04T15:56:53.8090446-06:00;</History>
+    <History>True|2024-03-21T07:38:15.3334268Z;True|2024-03-21T01:11:07.1940313-06:00;True|2024-03-19T12:41:42.9209491-06:00;True|2024-03-07T11:05:15.7569281-06:00;True|2024-03-04T15:56:53.8090446-06:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>
