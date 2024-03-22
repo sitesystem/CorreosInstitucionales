@@ -101,7 +101,7 @@
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 3" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
                                         <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
-                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Mesa de Control para la Generación o Recuperación de las Credenciales del Correo Institucional.</div>
+                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Mesa de Control para la Generación / Recuperación de las Credenciales del Correo Institucional y/o actualización de tus datos.</div>
                                         </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
@@ -189,7 +189,7 @@
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 3" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
                                         <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
-                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Mesa de Control para la Generación o Recuperación de las Credenciales del Correo Institucional.</div>
+                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Mesa de Control para la Generación / Recuperación de las Credenciales del Correo Institucional y/o actualización de tus datos.</div>
                                         </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
@@ -296,7 +296,7 @@
                                     <Start><RadzenIcon Icon="message" IconColor="@Colors.Base400" /></Start>
                                     <ChildContent>
                                         <RadzenTextArea Name="@($@"observaciones")" Placeholder="Escribe un comentario, nota o aclaración por el servicio de la Solicitud-Ticket atendida..." @bind-Value="@oEncuestaCalidad.Comentarios" aria-label="TextArea"
-                                                        @oninput="@(e => oEncuestaCalidad.Comentarios = e.Value.ToString())" Cols="30" Rows="2" style="border-bottom: 3px solid red;" MinLength="1" MaxLength="300" class="w-100" Disabled="false" ReadOnly="false" />
+                                                        @oninput="@(e => oEncuestaCalidad.Comentarios = e.Value.ToString())" Cols="30" Rows="3" style="border-bottom: 3px solid red;" MinLength="1" MaxLength="300" class="w-100" Disabled="false" ReadOnly="false" />
                                     </ChildContent>
                                     <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                                 </RadzenFormField>
