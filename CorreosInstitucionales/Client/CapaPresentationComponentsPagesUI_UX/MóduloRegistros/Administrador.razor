@@ -423,6 +423,49 @@ else
             navigationManager.Refresh(true);
         }
     }
-
+    @*///////////////////////////////////////////////  SHOW DIALOG MODAL iFRAME  //////////////////////////////////////////////////////////////////////*@
+    private async Task ShowDialogModal_iFrame(string srciFrame, string title)
+    {
+        await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>{title}<span>", ds =>
+    @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="5px" class="w-100">
+        <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-m-0 rz-p-0 w-100">
+            <iframe src="@srciFrame" frameborder="1" scrolling="yes" class="w-100" style="height:500px;" />
+        </RadzenCard>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" class="w-100">
+            <RadzenButton Text="Cerrar"
+                          BusyText=""
+                          ButtonStyle="ButtonStyle.Warning"
+                          ButtonType="ButtonType.Button"
+                          IsBusy="false"
+                          Icon="cancel"
+                          class="rz-color-white rz-ripple rz-my-0 w-100"
+                          Shade="Shade.Darker"
+                          Click="@(() => ds.Close(false))" />
+            <a href="@srciFrame" target="_blank" class="w-100">
+                <RadzenButton Text="Descargar"
+                              BusyText=""
+                              ButtonStyle="ButtonStyle.Secondary"
+                              ButtonType="ButtonType.Button"
+                              IsBusy="false"
+                              Icon="download"
+                              class="rz-ripple rz-my-0 w-100"
+                              Shade="Shade.Dark" />
+            </a>
+        </RadzenStack>
+    </RadzenStack>,
+    new DialogOptions()
+            {
+                CloseDialogOnOverlayClick = true,
+                CloseDialogOnEsc = true,
+                Width = "600px",
+                Height = "Auto",
+                Resizable = true,
+                ShowTitle = true,
+                ShowClose = true,
+                Draggable = true,
+                CssClass = "custom-dialog-class",
+                WrapperCssClass = "custom-dialog-wrapper-class"
+            });
+    }
 
 }
