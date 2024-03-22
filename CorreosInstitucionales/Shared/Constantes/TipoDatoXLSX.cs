@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CorreosInstitucionales.Shared.Constantes
 {
-    public enum TipoDatoActualizar
+    public enum TipoDatoXLSX
     {
         TODO                    = -1,
         NINGUNO                 = 0,
@@ -15,5 +15,7 @@ namespace CorreosInstitucionales.Shared.Constantes
         CONTRA                  = 3,
         CELULAR                 = 4,
         EXTENSION               = 5,
+        AREA                    = 6,
+        ID_EXTERNO              = 7
     }
 }

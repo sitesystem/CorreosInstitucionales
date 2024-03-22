@@ -8,6 +8,7 @@ namespace CorreosInstitucionales.Shared.Constantes
 {
     public enum TipoSolicitud
     {
+        NO_ESPECIFICADA = 0,
         DESBLOQUEO_CUENTA = 1,
         CAMBIO_CORREO_PERSONAL = 2,
         CAMBIO_CELULAR = 3,
