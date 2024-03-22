@@ -13,8 +13,6 @@
             @*************************** Solicitudes (Ticket's) Pendientes y Atendidas ***************************@
             <RadzenPanelMenuItem Text="@($@"Historial de Solicitudes [ {oSolicitudes?.Message} Tickets ]")" Icon="hourglass_bottom" IconColor="@Colors.SuccessLight" Path="HistorialSolicitudesTickets" class="nav-menu-hover" />
         </RadzenPanelMenuItem>
-        @*************************** Perfil ***************************@
-        <RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoLight" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
     </Authorized>
     <Authorizing>
     </Authorizing>
@@ -74,8 +72,8 @@
 
         @*************************** tbUsuarios ***************************@
         <RadzenPanelMenuItem Text="Lista de Usuarios" Icon="people_alt" IconColor="@Colors.SecondaryLight" Style="font-size:16px;" Path="catalogo/usuarios" />
-        @*************************** Perfil ***************************@
-        <RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoLight" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
+        @*************************** Manual del Administrador ***************************@
+        <RadzenPanelMenuItem Text="Manual de Uso" Icon="book" IconColor="@Colors.White" Style="font-size:16px;" Path="ManualUso" class="nav-menu-hover" />
     </Authorized>
     <Authorizing>
     </Authorizing>
@@ -83,6 +81,8 @@
     </NotAuthorized>
 </AuthorizeView>
 
+@*************************** Perfil ***************************@
+<RadzenPanelMenuItem Text="Perfil" Icon="account_circle" IconColor="@Colors.InfoLight" Style="font-size:16px;" Path="PerfilUsuario" class="nav-menu-hover" />
 @*************************** Cerrar Sesión (LogOut) ***************************@
 <RadzenPanelMenuItem Text="Cerrar Sesión" Icon="logout" IconColor="@Colors.DangerLight" Style="font-size:16px;" Click="@LogOut" class="nav-menu-hover" />
 
