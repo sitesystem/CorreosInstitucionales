@@ -33,7 +33,7 @@
     }
 
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
-                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true"
+                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Usuario" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
                     SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems
@@ -117,6 +117,9 @@
     public List<RequestViewModel_Carrera> cat_UsuIdCarrera { get; private set; } = new List<RequestViewModel_Carrera>();
     public List<RequestViewModel_Rol> cat_UsuIdRol { get; private set; } = new List<RequestViewModel_Rol>();
     public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; private set; } = new List<RequestViewModel_TipoPersonal>();
+
+    string debug = string.Empty;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -205,6 +208,9 @@
         string json = JsonSerializer.Serialize(item);
         RequestDTO_Usuario? registro = JsonSerializer.Deserialize<RequestDTO_Usuario>(json);
 
+        List<string> mensajes = new List<string>();
+        string? error = null;
+
         if (registro is not null)
         {
             DocumentoAdjunto<RequestDTO_Usuario>? result = await MostrarFormulario(registro);
@@ -214,7 +220,21 @@
                 HttpResponseMessage response = await servicioUsuario.EditDataAsync(result.Value);
                 if (response.IsSuccessStatusCode)
                 {
+                    foreach (KeyValuePair < TipoDocumento,IBrowserFile?> documento in result.Files)
+                    {
+                        if (documento.Value is null) continue;
+
+                        error = await servicioArchivos.SubirDocumento(documento.Key, documento.Value);
+
+                        if(error is not null)
+                        {
+                            mensajes.Add(error);
+                        }
+                    }
+
                     await CargarLista(result.Value.IdUsuario);
+
+                    debug += Environment.NewLine + string.Join(Environment.NewLine, mensajes);
                 }
             }
         }

@@ -370,7 +370,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             int anio_nacimiento = 1990;
             int anios_estudio = 0;
             int anios_egreso = 0;
-            
+
+            List<MpTbUsuario> registros = new();
+
             try
             {
                 for (int i = 0; i < cantidad; i++)
@@ -461,10 +463,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     tmp.UsuCorreoPersonalCuentaNueva = "noreply@localhost";
                     tmp.UsuNoCelularNuevo = "55 00 00 00 00";
 
-                    await _db.MpTbUsuarios.AddAsync(tmp);
-                    await _db.SaveChangesAsync();
+                    //await _db.MpTbUsuarios.AddAsync(tmp);
+                    registros.Add(tmp);
 
                 }//FOR
+
+                await _db.MpTbUsuarios.AddRangeAsync(registros);
+                await _db.SaveChangesAsync();
 
                 oResponse.Success = 1;
             }

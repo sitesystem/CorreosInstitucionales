@@ -1,8 +1,12 @@
 ﻿using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.Utils;
+using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Reflection.Metadata;
 using System.Text;
@@ -17,6 +21,33 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
         const string url = "/api/archivos";
+
+        public async Task<string?> SubirDocumento(TipoDocumento documento, IBrowserFile file)
+        {
+            string? result = null;
+            using (MultipartFormDataContent content = new MultipartFormDataContent())
+            {
+                using (StreamContent fileContent = new StreamContent(file.OpenReadStream()))
+                {
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+                    content.Add(fileContent, name: "\"file\"", file.Name);
+
+                    //SUBIR 
+                    HttpResponseMessage httpResponse = await _httpClient.PostAsync($"{url}/subir/{(int)documento}", content);
+
+                    string json = await httpResponse.Content.ReadAsStringAsync();
+                    var response = JsonSerializer.Deserialize<Response<string?>>(json, options: _options);
+
+                    if (response is not null)
+                    {
+                        result = response.Data;
+                    }
+                }
+            }
+
+            return result;
+        }
 
         public async Task<Response<string>?> PostFile(string extension, string action, MultipartFormDataContent formData)
         {

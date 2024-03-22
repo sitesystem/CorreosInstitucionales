@@ -9,8 +9,8 @@
     <DataAnnotationsValidator />
     <ValidationSummary/>
 
-    <section class="my-2">
-        <h1>Datos de Cuenta</h1>
+    <section class="my-2 py-2">
+        <h1 class="my-2">Datos de Cuenta</h1>
 
         <div class="row">
             <div class="col-4">
@@ -42,10 +42,10 @@
         </div><!--ROW-->
     </section>
 
-    <section class="my-2">
-        <h1>Datos personales</h1>
+    <section class="mb-2">
+        <h1 class="my-2">Datos personales</h1>
 
-        <div class="row">
+        <div class="row my-2">
             <div class="col-4 mb-2">
                 <span class="fw-bold">Nombre (s)<strong class="red" title="requerido">*</strong></span>
                 <InputText @bind-Value="@registro.UsuNombre" class="required form-control text-uppercase" />
@@ -71,15 +71,16 @@
             </div>
 
             <div class="col-6">
+                <span class="fw-bold">Archivo CURP</span>
                 <InputFile OnChange="fuCURP_OnChange" class="form-control mb-3"></InputFile>
             </div>
         </div>
     </section>
 
 
-    <section class="my-2">
-        <h1>Datos de contacto</h1>
-        <div class="row">
+    <section class="mb-2">
+        <h1 class="my-2">Datos de contacto</h1>
+        <div class="row my-2">
             <div class="col-6">
                 <span class="fw-bold">Celular<strong class="red" title="requerido">*</strong></span>
                 <InputText @bind-Value="@registro.UsuNoCelularNuevo" class="required form-control" />
@@ -92,18 +93,24 @@
             </div>
 
             <div class="col-6">
-                <span class="fw-bold">Contraseña<strong class="red" title="requerido">*</strong></span>
-                <InputText type="password" @bind-Value="@registro.UsuContraseña" class="required form-control" />
-                <ValidationMessage For="()=>registro.UsuContraseña"></ValidationMessage>
+                <span class="fw-bold">Contraseña</span>
+                <InputCheckbox @bind-Value=agregar_clave/> Establecer contraseña
+                <br>    
+                @if(agregar_clave)
+                {
+                    
+                    <InputText type="password" @bind-Value="@registro.UsuContraseña" class="required form-control"/>
+                    <ValidationMessage For="()=>registro.UsuContraseña"></ValidationMessage>
+                }
             </div>
         </div>
     </section>
 
     @if(es_alumno || es_empleado)
     {
-    <section class="my-2">
-        <h1>Información General</h1>
-        <div class="row">
+    <section class="mb-2">
+        <h1 class="my-2">Información General</h1>
+        <div class="row my-2">
             @if (es_alumno)
             {
                 <div class="col-6">
@@ -142,6 +149,7 @@
             @if(es_alumno || es_alumno_maestria)
                 {
                     <div class="col-6">
+                        <span class="fw-bold">Comprobante de Etudios</span>
                         <InputFile OnChange="fuComprobanteInscripcion_OnChange" class="form-control mb-3"></InputFile>
                     </div>
                 }
@@ -157,15 +165,15 @@
 
             @if (es_empleado)
             {
-                <div class="col-6">
+                <div class="col-4">
                     <span class="fw-bold"> Numero de Empleado<strong class="red" title="requerido">*</strong></span>
                     <InputText @bind-Value="@registro.UsuNumeroEmpleado" class="required form-control" />
                     <ValidationMessage For="()=>registro.UsuNumeroEmpleado"></ValidationMessage>
                 </div>
 
-                <div class="col-6">
-                    <span class="fw-bold">UsuIdAreaDepto</span>
-                    <InputSelect @bind-Value="@registro.UsuIdAreaDepto" class=" form-select">
+                <div class="col-4">
+                    <span class="fw-bold">Área o Departamento</span>
+                    <InputSelect @bind-Value="@registro.UsuIdAreaDepto" @bind-Value:after="Area_OnChanged" class=" form-select">
                         @foreach (var item in cat_UsuIdAreaDepto)
                         {
                             <option value="@item.IdAreaDepto">@item.AreNombreAreaDepto</option>
@@ -174,7 +182,7 @@
                     <ValidationMessage For="()=>registro.UsuIdAreaDepto"></ValidationMessage>
                 </div>
 
-                <div class="col-6">
+                <div class="col-4">
                     <span class="fw-bold">Extension<strong class="red" title="requerido">*</strong></span>
                     <InputText @bind-Value="@registro.UsuNoExtension" class="required form-control" />
                     <ValidationMessage For="()=>registro.UsuNoExtension"></ValidationMessage>
@@ -187,9 +195,9 @@
     
     @if(!string.IsNullOrEmpty(registro.UsuCorreoInstitucionalCuenta))
     {
-    <section class="my-2">
-        <h1>Cuenta Institucional</h1>
-        <div class="row">
+    <section class="mb-2">
+        <h1 class="my-2">Cuenta Institucional</h1>
+        <div class="row my-2">
             <div class="col-6">
                 <span class="fw-bold">Correo</span>
                 <br />
@@ -229,6 +237,8 @@
     [Parameter] public List<RequestViewModel_Rol> cat_UsuIdRol { get; set; } = new List<RequestViewModel_Rol>();
     [Parameter] public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; set; } = new List<RequestViewModel_TipoPersonal>();
 
+    [Parameter] public bool agregar_clave { get; set; } = false;
+
     int[] tipo_personal_alumnos = new int[] { (int)TipoPersonal.ALUMNO, (int)TipoPersonal.EGRESADO };
     int[] tipo_peronal_personal = new int[] { (int)TipoPersonal.DOCENTE, (int)TipoPersonal.HONORARIOS };
 
@@ -236,8 +246,8 @@
 
     private bool es_alumno { get { return tipo_personal_alumnos.Contains(registro.UsuIdTipoPersonal); } }
 
-    private bool es_egresado { get {  return registro.UsuIdTipoPersonal == 2 || es_alumno_maestria; } }
-    private bool es_alumno_maestria { get { return registro.UsuIdTipoPersonal == 3; }}
+    private bool es_egresado { get { return registro.UsuIdTipoPersonal == (int)TipoPersonal.EGRESADO || es_alumno_maestria; } }
+    private bool es_alumno_maestria { get { return registro.UsuIdTipoPersonal == (int)TipoPersonal.MAESTRIA; } }
     private bool es_empleado { get { return tipo_peronal_personal.Contains(registro.UsuIdTipoPersonal); }}
 
     private void fuCURP_OnChange(InputFileChangeEventArgs e)
@@ -250,6 +260,12 @@
     {
         archivos[TipoDocumento.COM_INSCRIPCION] = e.File;
         registro.UsuFileNameComprobanteInscripcion = "-";
+    }
+
+    private void Area_OnChanged()
+    {
+        registro.UsuNoExtensionAnterior = registro.UsuNoExtension;
+        registro.UsuNoExtension = cat_UsuIdAreaDepto.First(area => area.IdAreaDepto == registro.UsuIdAreaDepto).AreNoExtension;
     }
 
     private void OnValidForm() => dialogService.Close(new DocumentoAdjunto<RequestDTO_Usuario>(registro, archivos));
