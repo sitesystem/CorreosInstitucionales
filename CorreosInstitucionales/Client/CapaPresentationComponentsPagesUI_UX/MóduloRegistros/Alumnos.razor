@@ -163,29 +163,36 @@
                         <RadzenFormField Text="Boleta" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="dialpad" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
-                                @if (IdTipoPersonal == 1 || IdTipoPersonal == 2)
+                                @if (IdTipoPersonal == 1)
                                 {
-                                    @* <RadzenMask Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="15"
-                                                Mask="@($@"**********")" CharacterPattern="[A-Z0-9]" Placeholder="@($@"****{oEscuela.Data.EscNoEscuela}****")" Pattern="" /> *@
                                     <RadzenTextBox Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
                                                    Placeholder="@($@"****{oEscuela.Data.EscNoEscuela}****")" aria-label="enter password"
                                                    @oninput="(e => oUsuario.UsuBoletaAlumno = e.Value.ToString())" @onkeyup="@ValidarBoleta" />
                                 }
+                                else if (IdTipoPersonal == 2)
+                                {
+                                    <RadzenMask Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
+                                                Mask="@($@"**********")" CharacterPattern="[A-Z0-9]" Placeholder="@($@"**********")" Pattern="" />
+                                }
                                 else if (IdTipoPersonal == 3)
                                 {
                                     <RadzenMask Name="@($"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaMaestria" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
-                                                Mask="*******" CharacterPattern="[A-Z0-9]" Placeholder="B******" />
+                                                Mask="*******" CharacterPattern="[A-Z0-9]" Placeholder="B******" Pattern="" />
                                 }
                             </ChildContent>
                             <Helper>
-                                <RadzenText TextStyle="TextStyle.Caption" Text="@($@"{(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? "(Formato Válido: xxxx60xxxx)" : "")}")" />
+                                <RadzenText TextStyle="TextStyle.Caption" Text="@($@"{(IdTipoPersonal == 1 ? "(Formato Válido: xxxx60xxxx)" : IdTipoPersonal == 2 ? "(Formato Válido: xxxxxxxxxx)" : "(Formato Válido: Bxxxxxxx)")}")" />
                             </Helper>
                         </RadzenFormField>
-                        @if (IdTipoPersonal == 1 || IdTipoPersonal == 2)
+                        @if (IdTipoPersonal == 1)
                         {
                             <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumno)" />
                             <RadzenAlert Title="Ingresa tu Boleta" Text="@($@"Formato Válido: ****{oEscuela.Data.EscNoEscuela}****")" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker"
                                          ShowIcon="true" AllowClose="false" class="mb-0" @bind-Visible="flagErrorBoletaAlumno" />
+                        }
+                        else if (IdTipoPersonal == 2)
+                        {
+                            <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumno)" />
                         }
                         else if (IdTipoPersonal == 3)
                         {
@@ -324,7 +331,7 @@
                     }
 
                     <div class="col-md-12">
-                        <RadzenAlert Title="ATENCIÓN Egresado:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light" ShowIcon="true" AllowClose="false"
+                        <RadzenAlert Title="IMPORTANTE Egresado:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light" ShowIcon="true" AllowClose="false"
                                      Visible="@(flagEsEgresado)" class="mt-3">
                             ✅ Para tener tu Correo de Egresado, levanta una nueva solicitud.<br />
                             ✅ Dejarás de contar con tu Correo de Alumno.<br />
@@ -748,7 +755,6 @@ else
     public int year = DateTime.Parse(DateTime.Now.ToString()).Year;
 
     @*///////////////////////////////////////////////  VALIDAR BOLETA DEL ALUMNO  ///////////////////////////////////////////////*@
-    // [RegularExpression("^\\d{4}60\\d{4}$", ErrorMessage = "BOLETA Inválida (Formato: xxxx60xxxx).")]
     private bool flagErrorBoletaAlumno = false;
     private async Task ValidarBoleta() => flagErrorBoletaAlumno = !System.Text.RegularExpressions.Regex.IsMatch(oUsuario.UsuBoletaAlumno, @"^\d{4}" + oEscuela.Data.EscNoEscuela + @"\d{4}$");
 
