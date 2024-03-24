@@ -2,8 +2,10 @@ global using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Net.Http;
 using System.Text;
 
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers;
@@ -12,7 +14,6 @@ using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Shared.CapaEntities.Common;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
-using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,8 @@ builder.Services.AddRazorPages();
 //}
 
 //builder.Services.Configure<reCAPTCHAVerificationOptions>(Configuration.GetSection("reCAPTCHA"));
-builder.Services.AddDbContext<DbCorreosInstitucionalesUpiicsaContext>();
+builder.Services.AddDbContext<DbCorreosInstitucionalesUpiicsaContext>(optionsBuilder =>
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer_Connection")));
 
 // Habilitar Swagger
 builder.Services.AddEndpointsApiExplorer();
