@@ -5,14 +5,11 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Net.Http;
 using System.Text;
 
-using CorreosInstitucionales.Server.CapaDataAccess.Controllers;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Shared.CapaEntities.Common;
-using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +27,7 @@ builder.Services.AddRazorPages();
 //    services.AddMvc();
 //}
 
-//builder.Services.Configure<reCAPTCHAVerificationOptions>(Configuration.GetSection("reCAPTCHA"));
+// builder.Services.Configure<reCAPTCHAVerificationOptions>(Configuration.GetSection("reCAPTCHA"));
 builder.Services.AddDbContext<DbCorreosInstitucionalesUpiicsaContext>(optionsBuilder =>
     optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer_Connection")));
 
@@ -83,8 +80,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    //options.AddPolicy("[Rol] Developer", policy => policy.RequireClaim("Rol", "1", "2"));
-    //options.AddPolicy("RequireManagerRole", policy => policy.RequireRole("Manager"));
+    // options.AddPolicy("[Rol] Developer", policy => policy.RequireClaim("Rol", "1", "2"));
+    // options.AddPolicy("RequireManagerRole", policy => policy.RequireRole("Manager"));
 });
 
 // JWT (Jason Web Token)
@@ -92,7 +89,7 @@ var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
 
 var appSettings = appSettingsSection.Get<AppSettings>();
-//var key = Encoding.ASCII.GetBytes(appSettings.Secreto);
+// var key = Encoding.ASCII.GetBytes(appSettings.Secreto);
 var key = Encoding.UTF8.GetBytes(appSettings?.Secreto ?? string.Empty);
 
 builder.Services.AddAuthentication(auth =>
@@ -110,9 +107,9 @@ builder.Services.AddAuthentication(auth =>
         ValidateIssuer = false, // Emisor
         ValidateAudience = false, // Resource Server
 
-        //ValidAudience = builder.Configuration["AuthSettings:Audince"],
-        //ValidIssuer = builder.Configuration["AuthSettings:Issuer"],
-        //RequireExpirationTime = true,
+        // ValidAudience = builder.Configuration["AuthSettings:Audince"],
+        // ValidIssuer = builder.Configuration["AuthSettings:Issuer"],
+        // RequireExpirationTime = true,
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero,
 
@@ -123,7 +120,7 @@ builder.Services.AddAuthentication(auth =>
 // Dependency Injection (Inyectar e Implementar la Interfaz)
 builder.Services.AddScoped<ILoginAuthService, RLoginAuthService>();
 
-// Inyección de Dependencias - Módulo de Send Email & WhatsApp
+// Inyección de Dependencias - Módulo de Send Email & Send WhatsApp
 builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
 builder.Services.AddScoped<ISendWhatsAppService, RSendWhatsAppService>();
 

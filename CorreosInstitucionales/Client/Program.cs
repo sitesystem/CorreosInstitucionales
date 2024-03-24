@@ -1,17 +1,16 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
+
 using Radzen;
-using System.Globalization;
 
 using CorreosInstitucionales.Client;
 using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Login;
+using CorreosInstitucionales.Client.Shared.Components.Utils;
+
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
-using CorreosInstitucionales.Client.Shared.Components.Utils;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -33,7 +32,7 @@ builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider =>
 // Inyección de Dependencias - Módulo de Archivos
 builder.Services.AddScoped<RArchivosService>();
 
-// Inyección de Dependencias - Módulo de Send Email & WhatsApp
+// Inyección de Dependencias - Módulo de Send Email & Send WhatsApp
 builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
 builder.Services.AddScoped<ISendWhatsAppService, RSendWhatsAppService>();
 
