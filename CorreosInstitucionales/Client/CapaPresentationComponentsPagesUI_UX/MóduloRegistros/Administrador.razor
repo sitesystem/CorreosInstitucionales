@@ -367,27 +367,40 @@ else
 
                         @*//  DIALOG MODAL MESSAGE ACTUALIZACIÓN EXITOSA  //*@
                         await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>Cerrando Sesión...<span>", ds =>
-                        @<div>
-                            <LoadingComponent />
-                        </div>,
-                        new DialogOptions()
-                        {
-                            CloseDialogOnOverlayClick = false,
-                            CloseDialogOnEsc = false,
-                            Width = "Auto",
-                            Height = "Auto",
-                            Resizable = true,
-                            ShowTitle = true,
-                            ShowClose = true,
-                            Draggable = true,
-                            CssClass = "custom-dialog-class",
-                            WrapperCssClass = "custom-dialog-wrapper-class"
-                        });
+                            @<div>
+                                <LoadingComponent />
+                            </div>
+    ,
+                            new DialogOptions()
+                            {
+                                CloseDialogOnOverlayClick = false,
+                                CloseDialogOnEsc = false,
+                                Width = "Auto",
+                                Height = "Auto",
+                                Resizable = true,
+                                ShowTitle = true,
+                                ShowClose = true,
+                                Draggable = true,
+                                CssClass = "custom-dialog-class",
+                                WrapperCssClass = "custom-dialog-wrapper-class"
+                            });
+
                         await loginService.Logout();
                         navigationManager.NavigateTo("/");
                     }
                 }
-             
+                else
+                {
+                    @*//  NOTIFICATION TOAST ACTUALIZACIÓN ERRONEA  //*@
+                    NotificationService.Notify(
+                        new NotificationMessage
+                        {
+                            Severity = NotificationSeverity.Error,
+                            Duration = 3000,
+                            Summary = "¡No se llevo acabo la actualización!",
+                            Detail = "Intentelo más tarde."
+                        });
+                }
             }
             else
             {
