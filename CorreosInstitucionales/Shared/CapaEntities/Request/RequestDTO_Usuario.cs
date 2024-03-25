@@ -144,14 +144,14 @@ public class RequestDTO_Usuario
     /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP-10
     /// </summary>
     [Column("usuFileNameComprobanteInscripcion")]
-    [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del Comprobante de Inscripción adjuntado debe ser máximo de 200 caracteres.")]
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del Comprobante de Inscripción requerido.")]
+    [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO adjuntado debe ser máximo de 200 caracteres.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO requerido.")]
     public string? UsuFileNameComprobanteInscripcion { get; set; }
 
     /// <summary>
-    /// Tamaño del Archivo PDF del Comprobante de Inscripción del Usuario
+    /// Tamaño del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS del Usuario
     /// </summary>
-    [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF del Comprobante de Inscripción adjuntado debe ser máximo de 2 MB.")]
+    [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO adjuntado debe ser máximo de 2 MB.")]
     public long? UsuFileSizeComprobanteInscripcion { get; set; }
 
     /*******************************  DATOS LABORALES  *******************************/
@@ -220,8 +220,8 @@ public class RequestDTO_Usuario
     /// Correo Electrónico Institucional IPN
     /// </summary>
     [Column("usuCorreoInstitucionalCuenta")]
-    [RegularExpression("^[\\w-\\.]+@ipn\\.mx$|^[\\w-\\.]+@alumno\\.ipn\\.mx$|^[\\w-\\.]+@egresado\\.ipn\\.mx$", ErrorMessage = "CORREO inválido. (Formato: xxxxxx@ipn.mx ó @alumno.ipn.mx ó @egresado.ipn.mx)")]
     [StringLength(100)]
+    [RegularExpression("^[\\w-\\.]+@ipn\\.mx$|^[\\w-\\.]+@alumno\\.ipn\\.mx$|^[\\w-\\.]+@egresado\\.ipn\\.mx$", ErrorMessage = "CORREO inválido. (Formato: xxxxxx@ipn.mx ó @alumno.ipn.mx ó @egresado.ipn.mx)")]
     public string? UsuCorreoInstitucionalCuenta { get; set; }
 
     /// <summary>
@@ -246,9 +246,9 @@ public class RequestDTO_Usuario
     public bool UsuStatus { get; set; }
 
     /*******************************  DATOS FK NAVIGATION  *******************************/
-    //[JsonIgnore]
-    //[InverseProperty("SolIdUsuarioNavigation")]
-    //public virtual ICollection<RequestDTO_Solicitud> MtTbSolicitudesTickets { get; set; } = new List<RequestDTO_Solicitud>();
+    [JsonIgnore]
+    [InverseProperty("SolIdUsuarioNavigation")]
+    public virtual ICollection<RequestDTO_Solicitud> MtTbSolicitudesTickets { get; set; } = [];
 
     [ForeignKey("UsuIdAreaDepto")]
     [InverseProperty("MceTbUsuarios")]
