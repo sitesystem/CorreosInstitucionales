@@ -28,20 +28,12 @@ builder.Services.AddRazorPages();
 //}
 
 // builder.Services.Configure<reCAPTCHAVerificationOptions>(Configuration.GetSection("reCAPTCHA"));
-builder.Services.AddDbContext<DbCorreosInstitucionalesUpiicsaContext>(optionsBuilder =>
-    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer_Connection"),
-    ob=>ob.UseCompatibilityLevel(120)
-    ));
 
-/* IMPORTANTE: AGREGAR LA OPCIÓN DE CONFIGURACIÓN DONDE SE
- * ESTABLECE LA VERSIÓN DE SQL SERVER (120 -> 12.0); DE LO
- * CONTRARIO, SE ROMPEN ALGUNAS INSTRUCCIONES DEL LINQ
- 
+/* IMPORTANTE: AGREGAR LA OPCIÓN DE CONFIGURACIÓN DONDE SE ESTABLECE LA VERSIÓN DE SQL SERVER (120 -> 12.0); DE LO CONTRARIO, SE ROMPEN ALGUNAS INSTRUCCIONES DEL LINQ */
 builder.Services.AddDbContext<DbCorreosInstitucionalesUpiicsaContext>(optionsBuilder =>
     optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer_Connection"),
     ob => ob.UseCompatibilityLevel(120)
-    ));
-*/
+));
 
 // Habilitar Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -101,8 +93,7 @@ var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
 
 var appSettings = appSettingsSection.Get<AppSettings>();
-// var key = Encoding.ASCII.GetBytes(appSettings.Secreto);
-var key = Encoding.UTF8.GetBytes(appSettings?.Secreto ?? string.Empty);
+var key = Encoding.UTF8.GetBytes(appSettings?.Secreto ?? string.Empty); // var key = Encoding.ASCII.GetBytes(appSettings.Secreto);
 
 builder.Services.AddAuthentication(auth =>
 {
