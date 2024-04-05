@@ -9,6 +9,27 @@
                     @{
                         if (context.User.Identity?.IsAuthenticated != true)
                             navigationManager.NavigateTo("/");
+                        else
+                        {
+                            <RadzenAlert Variant="Variant.Filled"
+                                         AlertStyle="AlertStyle.Danger"
+                                         Size="AlertSize.Small"
+                                         Shade="Shade.Darker"
+                                         ShowIcon="true"
+                                         AllowClose="false"
+                                         Title="Error"
+                                         class=""
+                                         Text="Página Web o Dirección URL NO EXISTENTE" />
+                            <RadzenButton Text="Ir al Inicio"
+                                          BusyText=""
+                                          ButtonStyle="ButtonStyle.Warning"
+                                          ButtonType="ButtonType.Button"
+                                          IsBusy="false"
+                                          Icon="arrow_back"
+                                          class="text-white rz-ripple"
+                                          Shade="Shade.Darker"
+                                          Click="@(() => navigationManager.NavigateTo("/"))" />
+                        }
                     }
                 </NotAuthorized>
             </AuthorizeRouteView>

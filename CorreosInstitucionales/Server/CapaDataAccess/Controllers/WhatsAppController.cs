@@ -34,10 +34,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             HttpResponseMessage response = await client.PostAsJsonAsync(url, message, options: _options);
 
             if(response.IsSuccessStatusCode)
-            {
                 oResponse.Success = 1;
-                
-            }
 
             oResponse.Data = await response.Content.ReadAsStringAsync();
 

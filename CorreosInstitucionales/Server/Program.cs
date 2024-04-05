@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
+using Serilog;
+
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Shared.CapaEntities.Common;
@@ -31,9 +33,22 @@ builder.Services.AddRazorPages();
 
 /* IMPORTANTE: AGREGAR LA OPCIÓN DE CONFIGURACIÓN DONDE SE ESTABLECE LA VERSIÓN DE SQL SERVER (120 -> 12.0); DE LO CONTRARIO, SE ROMPEN ALGUNAS INSTRUCCIONES DEL LINQ */
 builder.Services.AddDbContext<DbCorreosInstitucionalesUpiicsaContext>(optionsBuilder =>
+{
     optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer_Connection"),
-    ob => ob.UseCompatibilityLevel(120)
-));
+    ob => ob.UseCompatibilityLevel(120));
+});
+
+// LogReg (Archivo de Registros de Eventos)
+// Log.Logger = new LoggerConfiguration().MinimumLevel.Verbose()
+//    .WriteTo.Console()
+//    .WriteTo.File("wwwroot/Repositorio/Logs/log-.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}")
+//    .CreateLogger();
+// Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
+builder.Host.UseSerilog((hostingContext, loggerConfig) =>
+{
+    loggerConfig.ReadFrom.Configuration(hostingContext.Configuration);
+});
+// builder.Logging.AddConsole();
 
 // Habilitar Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -164,6 +179,8 @@ else
 }
 
 app.UseCors(cors);
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 

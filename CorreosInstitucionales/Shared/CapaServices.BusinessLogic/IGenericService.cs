@@ -1,10 +1,10 @@
-﻿using CorreosInstitucionales.Shared.CapaEntities.Request;
-using CorreosInstitucionales.Shared.CapaEntities.Response;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 {

@@ -1,0 +1,74 @@
+﻿@page "/LogsReg"
+
+@attribute [Authorize(Policy = "[Rol] Administrador")]
+
+<PageTitle>SACI | Logs</PageTitle>
+
+<AuthorizeView Policy="[Rol] Administrador">
+    <Authorized>
+        <div class="row mb-3">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" class="rz-p-0">
+                <div class="col-md-6">
+                    <RadzenFormField Text="Fecha" AllowFloatingLabel="false" Variant="Variant.Filled" class="w-100 text-center">
+                        @* <Start><RadzenIcon Icon="person" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start> *@
+                        <ChildContent>
+                            <RadzenDatePicker Name="DatePicker" @bind-Value="@value" DateFormat="dd/MM/yyyy" Min="DateTime.Today.AddYears(-10)" Max="DateTime.Today.AddDays(0)" ShowCalendarWeek="false" ParseInput="@ParseDate"
+                                              ReadOnly="false" Disabled="false" InputClass="text-center rz-color-base-900" class="w-100">
+                                <FooterTemplate>
+                                    <RadzenButton Click=@(args => value = DateOnly.FromDateTime(DateTime.Now)) Text="Hoy" class="my-3 w-100" />
+                                </FooterTemplate>
+                            </RadzenDatePicker>
+                            @* TValue="DateTime?" Value="@value" Change="@(args => value = args)" *@
+                            @* <RadzenDatePicker @bind-Value="@value" ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="dd/MM/yyyy HH:mm:ss" Name="DatePickerWithTime" />
+                            <RadzenDatePicker @bind-Value="@value" ShowTime="true" HourFormat="12" DateFormat="dd/MM/yyyy h:mm tt" Name="DatePickerHourFormat" /> *@
+                        </ChildContent>
+                        <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
+                    </RadzenFormField>
+                </div>
+                <div class="col-md-6">
+                    <RadzenButton Text="Buscar Archivo Log"
+                                  BusyText=""
+                                  ButtonStyle="ButtonStyle.Secondary"
+                                  ButtonType="ButtonType.Button"
+                                  Size="ButtonSize.Large"
+                                  IsBusy="false"
+                                  Icon="search"
+                                  class="rz-color-white rz-ripple w-100"
+                                  Shade="Shade.Darker"
+                                  Click="@(() => fecha = value.ToString("yyyyMMdd"))" />
+                </div>
+            </RadzenStack>
+        </div>
+
+        <div class="row">
+            <iframe src="@($@"/Logs/log-{fecha}.txt")" frameborder="1" scrolling="yes" class="rz-background-color-white" style="width:100%; height:600px;" />
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        @* <p>No Autorizado</p> *@
+    </NotAuthorized>
+    <Authorizing>
+        <p>Autorizando...</p>
+    </Authorizing>
+</AuthorizeView>
+
+@code
+{
+    // DateTime? value = DateTime.Now;
+    DateOnly value = DateOnly.FromDateTime(DateTime.Now);
+    string? fecha { get; set; }
+    // TimeOnly timeValue = TimeOnly.FromDateTime(DateTime.Now);
+
+    public DateTime? ParseDate(string input)
+    {
+        string[] formats = { "dd-MM-yyyy", "dd/MM/yyyy", "dd-MM-yy", "dd/MM/yy", "ddMMyyyy", "yyyyMMdd", "ddMMyy", "dd-MM", "dd/MM", "ddMM" };
+
+        foreach (var format in formats)
+        {
+            if (DateTime.TryParseExact(input, format, null, System.Globalization.DateTimeStyles.None, out var result))
+                return result;
+        }
+
+        return null;
+    }
+}

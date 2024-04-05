@@ -9,7 +9,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 using CorreosInstitucionales.Shared.CapaEntities.Request;
-using CorreosInstitucionales.Shared.Utils;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp
 {
