@@ -12,8 +12,8 @@
             <InputText class="form-control mb-3" required @bind-Value=correo />
             
             <strong>Mensaje</strong>
-            <InputTextArea class="form-control mb-3" required @bind-Value=mensaje_correo />
-
+            <RadzenHtmlEditor class="form-control mb-3" required @bind-Value=@mensaje_correo />
+            
             <button @onclick="EnviarCorreo" class="btn btn-primary form-control">Enviar Correo</button>
         </div>
 
