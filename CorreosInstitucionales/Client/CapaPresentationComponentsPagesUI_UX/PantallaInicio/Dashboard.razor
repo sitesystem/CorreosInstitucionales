@@ -1,182 +1,98 @@
 ﻿@using CorreosInstitucionales.Shared
-
+@using DataItem = KeyValuePair<string, List<CorreosInstitucionales.Shared.IntDataItem>>
 @inject REstadisticasService estadisticas
 
-@if (!cargado)
-{
-    <div class="p-4 rounded-1 bg-white shadow">
-        <div class="row">
-            <div class="col text-center">
-                <img src="logo_saci.png" class="loading_img" />
-                <br />
-                Cargando...
-            </div>
-        </div>
+<PageTitle>@Title</PageTitle>
+
+<div class="row py-3 mb-2 bg-white rounded-1">
+    <div class="col-6 pt-1">
+        <h1>@Title</h1>
     </div>
-}
+    @if (cargado)
+    {
+        <div class="col-2">
+            <strong>Inicio</strong>
+            <InputDate @bind-Value="inicio" class="form-control" />
+        </div>
 
-<RadzenCard>
-    <RadzenFieldset Visible="cargado" AllowCollapse="false" ExpandTitle="Seguimiento de Solicitud" CollapseTitle="Seguimiento de Solicitud" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 ">
-        <HeaderTemplate>
-            <RadzenIcon Icon="query_stats" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Estádisticas</b>
-        </HeaderTemplate>
+        <div class="col-2">
+            <strong>Fin</strong>
+            <InputDate @bind-Value="fin" class="form-control" />
+        </div>
 
-        <ChildContent>
-            <div class="row my-3">
-                <div class="col-3">
-                    <div class="alert alert-info">
-                        La selección de fechas todavía no funciona :3
-                    </div>
-                </div>
-
-                <div class="col-3">
-                    <strong>Inicio</strong>
-                    <InputDate @bind-Value="@inicio" @onchange="OnValidar" class="form-control" />
-                </div>
-
-                <div class="col-3">
-                    <strong>Fin</strong>
-                    <InputDate @bind-Value="@fin" @onchange="OnValidar" class="form-control" />
-                </div>
-
-                <div class="col-3">
-                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" Class="rz-p-4 rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
-                        <RadzenCheckBox @bind-Value="@showDataLabels" Name="dataLabels"></RadzenCheckBox>
-                        <RadzenLabel Text="Show Data Labels" Component="dataLabels" />
-                    </RadzenStack>
-                </div>
-            </div>
-
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="10px" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Normal" Wrap="FlexWrap.NoWrap">
-                <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center">
-                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
-                        
-                        <h5 class="pt-1">Ciclo de vida de tickets por mes</h5>
-
-                        <RadzenChart>
-                            <RadzenDonutSeries Data="@estado_solicitudes" CategoryProperty="Text" ValueProperty="Value" Title="Total" TotalAngle="360" StartAngle="180">
-                                <ChildContent>
-                                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                                </ChildContent>
-
-                                <TitleTemplate>
-                                    <div class="rz-donut-content">
-                                        Estados
-                                    </div>
-                                </TitleTemplate>
-
-                            </RadzenDonutSeries>
-                        </RadzenChart>
-
-
-                    </RadzenRow>
-                </RadzenCard>
-
-                <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center">
-                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
-                        
-                        <h5 class="pt-1">Número de tickets por día</h5>
-                        <RadzenChart>
-
-                            <RadzenColumnSeries Data="@solicitudes_diarias" CategoryProperty="Text" Title="Solicitudes" ValueProperty="Value">
-                                <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                            </RadzenColumnSeries>
-                            
-                            <RadzenColumnOptions Radius="2" />
-                            
-                            <RadzenValueAxis>
-                                <RadzenGridLines Visible="true" />
-                                <RadzenAxisTitle Text="Solicitudes" />
-                            </RadzenValueAxis>
-                        </RadzenChart>
-                    </RadzenRow>
-                </RadzenCard>
-
-
-                <RadzenCard>
-                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 30vh; width: 25vw;">
-                        
-                        <h5 class="pt-1">Encuestas de satisfacción</h5>
-                        <RadzenChart>
-                            <RadzenPieSeries Data="@encuesta_calidad" Title="Total" CategoryProperty="Text" ValueProperty="Value">
-                                <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                            </RadzenPieSeries>
-                        </RadzenChart>
-
-                    </RadzenRow>
-                </RadzenCard>
-            </RadzenStack>
+        <div class="col-2">
             <br />
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="10px" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Normal" Wrap="FlexWrap.NoWrap">
-                <RadzenCard class="p-1 rz-background-color-base-200 rz-color-black rz-text-align-center" style="height: 60vh; width: 70vw;">
-                    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="height: 60vh; width: 70vw;">
-                        <div Class="rz-p-0 rz-p-md-12">
-                            
-                            <h4>Volumen de tickets atendidos y pendientes</h4>
-                            <RadzenChart Style="width: 65vw; height:vh;">
-                                
-                                <RadzenStackedAreaSeries Smooth="true" Data="@volumen_pendientes" CategoryProperty="Text" Title="Pendientes" ValueProperty="Value" RenderingOrder="1">
-                                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                                </RadzenStackedAreaSeries>
+            <button class="form-control btn btn-primary" @onclick="CargarEstadisticas">Filtrar</button>
+        </div>
+    }
+</div>
 
-                                <RadzenStackedAreaSeries Smooth="@true" Data="@volumen_proceso" CategoryProperty="Text" Title="En Proceso" LineType="LineType.Dashed" ValueProperty="Value">
-                                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                                </RadzenStackedAreaSeries>
+<div class="row">
+    @if (cargado)
+    {
+        <div class="col-4">
+            <Estadistica Datos="estado_solicitudes" Titulo="Solicitudes por estatus" Tipo="TipoEstadistica.DONA" />
+        </div>
 
+        <div class="col-8">
+            <Estadistica Datos="solicitudes_diarias" Titulo="Número de tickets por día" Tipo="TipoEstadistica.AREA" />
+        </div>
 
-                                <RadzenStackedAreaSeries Smooth="@true" Data="@volumen_atendidos" CategoryProperty="Text" Title="Atendidas" LineType="LineType.Dashed" ValueProperty="Value">
-                                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                                </RadzenStackedAreaSeries>
+        <div class="col-4">
+            <Estadistica Datos="encuesta_calidad" Titulo="Encuestas de satisfacción" Tipo="TipoEstadistica.DONA" />
+        </div>
 
-                                <RadzenStackedAreaSeries Smooth="@true" Data="@volumen_cancelados" CategoryProperty="Text" Title="Canceladas" LineType="LineType.Dashed" ValueProperty="Value">
-                                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                                </RadzenStackedAreaSeries>
-
-                                <RadzenCategoryAxis Padding="20"/>
-                                <RadzenValueAxis>
-                                    <RadzenGridLines Visible="true" />
-                                    <RadzenAxisTitle Text="Tickets" />
-                                </RadzenValueAxis>
-                            </RadzenChart>
-                        </div>
-                    </RadzenRow>
-                </RadzenCard>
-            </RadzenStack>
-        </ChildContent>
-    </RadzenFieldset>
-</RadzenCard>
+        <div class="col-8">
+            <Estadistica Datos="area_diarios" Titulo="Estatus de Solicitudes" Tipo="TipoEstadistica.BARRAS" />
+        </div>
+    }
+    else
+    {
+        <div class="col text-center">
+            <img src="logo_saci.png" class="loading_img" />
+            <br />
+            Cargando...
+        </div>
+    }
+</div>
 
 <pre>@debug</pre>
 
 @code
 {
+    private string Title = "Estadísticas";
     // Gráfica de area
     bool showDataLabels = true;
     bool cargado = false;
 
-    DateTime inicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+    DateTime inicio = DateTime.Now.AddMonths(-1);
     DateTime fin    = DateTime.Now;
 
-    List<IntDataItem> estado_solicitudes = new();
-    List<IntDataItem> solicitudes_diarias = new();
-    List<IntDataItem> encuesta_calidad = new();
-
-    List<IntDataItem> volumen_pendientes = new();
-    List<IntDataItem> volumen_proceso = new();
-    List<IntDataItem> volumen_atendidos = new();
-    List<IntDataItem> volumen_cancelados = new();
+    List<DataItem> estado_solicitudes   = new();
+    List<DataItem> solicitudes_diarias  = new();
+    List<DataItem> encuesta_calidad     = new();
+    List<DataItem> area_diarios         = new();
 
     private string debug = string.Empty;
 
     public async Task CargarEstadisticas()
     {
+        if (fin < inicio)
+        {
+            inicio = fin.AddMonths(-1);
+        }
+
+        cargado = false;
+        StateHasChanged();
+
         Response<List<IntDataItem>>? response = await estadisticas.GetStatByName("progreso", inicio, fin);
 
         if (response is not null && response.Data is not null)
         {
             if(response.Success == 1)
             {
-                estado_solicitudes = response.Data;
+                estado_solicitudes.Clear();
+                estado_solicitudes.Add(new DataItem("Estado", response.Data));
             }
             else
             {
@@ -190,7 +106,8 @@
         {
             if (response.Success == 1)
             {
-                solicitudes_diarias = response.Data;
+                solicitudes_diarias.Clear();
+                solicitudes_diarias.Add(new DataItem("Solicitudes", response.Data));
             }
             else
             {
@@ -204,7 +121,8 @@
         {
             if (response.Success == 1)
             {
-                encuesta_calidad = response.Data;
+                encuesta_calidad.Clear();
+                encuesta_calidad.Add(new DataItem("Opinión", response.Data));
             }
             else
             {
@@ -216,24 +134,11 @@
 
         if (volumen_req is not null && volumen_req.Data is not null)
         {
-            volumen_pendientes  = volumen_req.Data["pendientes"];
-            volumen_proceso     = volumen_req.Data["proceso"];
-            volumen_atendidos   = volumen_req.Data["atendidos"];
-            volumen_cancelados  = volumen_req.Data["cancelados"];
+            area_diarios = volumen_req.Data.ToList<DataItem>();
         }
 
         cargado = true;
         StateHasChanged();
-    }
-
-    protected async Task OnValidar()
-    {
-        if(fin<=inicio)
-        {
-            fin = inicio.AddMonths(-1);
-        }
-
-        await CargarEstadisticas();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -1,0 +1,71 @@
+﻿@using CorreosInstitucionales.Shared
+<div class="my-2 p-3 bg-white border-1 rounded-1 shadow">
+    <h5 class="fw-bold pt-1 text-center">@Titulo</h5>
+    <RadzenChart>
+        @foreach (KeyValuePair<string, List<IntDataItem>> series in Datos)
+        {
+            @switch (Tipo)
+            {
+                case TipoEstadistica.BARRAS:
+                    <RadzenStackedColumnSeries Data="@series.Value" CategoryProperty="Text" Title="@series.Key" ValueProperty="Value">
+                        <RadzenSeriesDataLabels Visible="@MostrarEtiquetas" />
+                    </RadzenStackedColumnSeries>
+                    break;
+
+                case TipoEstadistica.DONA:
+                    <RadzenDonutSeries Data="@series.Value" CategoryProperty="Text" ValueProperty="Value" Title="@series.Key" TotalAngle="360" StartAngle="180">
+                        <ChildContent>
+                            <RadzenSeriesDataLabels Visible="@MostrarEtiquetas" />
+                        </ChildContent>
+
+                        <TitleTemplate><div class="rz-donut-content">@series.Key</div></TitleTemplate>
+                    </RadzenDonutSeries>
+                    break;
+
+                case TipoEstadistica.AREA:
+                    <RadzenStackedAreaSeries Smooth="true" Data="@series.Value" CategoryProperty="Text" Title="@series.Key" ValueProperty="Value">
+                        <RadzenSeriesDataLabels Visible="@MostrarEtiquetas" />
+                    </RadzenStackedAreaSeries>
+                    break;
+
+                case TipoEstadistica.LINEA:
+
+                    <RadzenStackedAreaSeries Smooth="true" Data="@series.Value" CategoryProperty="Text" Title="@series.Key" ValueProperty="Value" Fill="None">
+                        <RadzenSeriesDataLabels Visible="@MostrarEtiquetas" />
+                    </RadzenStackedAreaSeries>
+                    break;
+
+            }
+        }
+
+        @switch (Tipo)
+        {
+            case TipoEstadistica.BARRAS:
+                <RadzenColumnOptions Radius="2" />
+
+                <RadzenValueAxis>
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="@Datos.First().Key" />
+                </RadzenValueAxis>
+                break;
+
+            case TipoEstadistica.AREA:
+                <RadzenCategoryAxis Padding="20" />
+                <RadzenValueAxis>
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="@Titulo" />
+                </RadzenValueAxis>
+                break;
+
+        }
+    </RadzenChart>
+</div>
+
+@code 
+{
+    [Parameter] public string Titulo { get; set; } = "SIN TÍTULO";
+    [Parameter] public List<KeyValuePair<string, List<IntDataItem>>> Datos { get; set; } = new();
+    [Parameter] public bool MostrarEtiquetas { get; set; } = true;
+    [Parameter] public TipoEstadistica Tipo { get; set; } = TipoEstadistica.BARRAS;
+
+}

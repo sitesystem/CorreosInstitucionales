@@ -9,4 +9,5 @@
 /CorreosInstitucionales/Server/wwwroot/Repositorio/procesados/*.log
 /CorreosInstitucionales/Server/wwwroot/Repositorio/Solicitudes-Tickets/*/*.pdf
 /CorreosInstitucionales/Server/wwwroot/Repositorio/Usuarios/*/*.pdf
+/CorreosInstitucionales/Server/wwwroot/Logs/
 /api_whatsapp/node_modules

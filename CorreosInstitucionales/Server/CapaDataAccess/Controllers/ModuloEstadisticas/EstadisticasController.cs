@@ -1,5 +1,6 @@
 ﻿using CorreosInstitucionales.Shared;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
+using DocumentFormat.OpenXml.Office.CustomUI;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,30 +29,23 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadis
 
             try
             {
-                List<IntDataItem>? list = await Task.Run(
-                    () =>
-                    {
-                        return _db.MtTbSolicitudesTickets
-                        .Where(st =>
-                            st.SolFechaHoraCreacion.Date >= inicio.Date &&
-                            st.SolFechaHoraCreacion.Date <= fin.Date &&
-                            (
-                                st.SolIdEstadoSolicitud == 1 ||
-                                st.SolIdEstadoSolicitud == 2
-                            )
+                List<IntDataItem>? list = await _db.MtTbSolicitudesTickets
+                    .Where(st =>
+                        st.SolFechaHoraCreacion.Date >= inicio.Date &&
+                        st.SolFechaHoraCreacion.Date <= fin.Date &&
+                        (
+                            st.SolIdEstadoSolicitud == 1 ||
+                            st.SolIdEstadoSolicitud == 2
                         )
-                        .GroupBy(st => st.SolFechaHoraCreacion.Date)
-                        .Select(group => new IntDataItem(group.Count(), group.Key.ToString()))
-                        .ToList();
-                    }
-                );
+                    )
+                    .OrderBy(st=>st.SolFechaHoraCreacion)
+                    .GroupBy(st => st.SolFechaHoraCreacion.Date)
+                    .Select(group => new IntDataItem(group.Count(), group.Key.ToString()))
+                    .ToListAsync();
 
-                oResponse.Data.Add("pendientes", list ?? new());
+                oResponse.Data.Add("Pendientes", list ?? new());
 
-                list = await Task.Run(
-                    () =>
-                    {
-                        return _db.MtTbSolicitudesTickets
+                list = await _db.MtTbSolicitudesTickets
                         .Where(st =>
                             st.SolFechaHoraCreacion.Date >= inicio.Date &&
                             st.SolFechaHoraCreacion.Date <= fin.Date &&
@@ -59,18 +53,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadis
                                 st.SolIdEstadoSolicitud == 3
                             )
                         )
+                        .OrderBy(st => st.SolFechaHoraCreacion)
                         .GroupBy(st => st.SolFechaHoraCreacion.Date)
                         .Select(group => new IntDataItem(group.Count(), group.Key.ToString()))
-                        .ToList();
-                    }
-                );
+                        .ToListAsync();
+                    
+                oResponse.Data.Add("En proceso", list ?? new());
 
-                oResponse.Data.Add("proceso", list ?? new());
-
-                list = await Task.Run(
-                    () =>
-                    {
-                        return _db.MtTbSolicitudesTickets
+                list = await _db.MtTbSolicitudesTickets
                         .Where(st =>
                             st.SolFechaHoraCreacion.Date >= inicio.Date &&
                             st.SolFechaHoraCreacion.Date <= fin.Date &&
@@ -79,18 +69,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadis
                                 st.SolIdEstadoSolicitud == 5
                             )
                         )
+                        .OrderBy(st => st.SolFechaHoraCreacion)
                         .GroupBy(st => st.SolFechaHoraCreacion.Date)
                         .Select(group => new IntDataItem(group.Count(), group.Key.ToString()))
-                        .ToList();
-                    }
-                );
+                        .ToListAsync();
 
-                oResponse.Data.Add("atendidos", list ?? new());
+                oResponse.Data.Add("Atendidos", list ?? new());
 
-                list = await Task.Run(
-                    () =>
-                    {
-                        return _db.MtTbSolicitudesTickets
+                list = await _db.MtTbSolicitudesTickets
                         .Where(st =>
                             st.SolFechaHoraCreacion.Date >= inicio.Date &&
                             st.SolFechaHoraCreacion.Date <= fin.Date &&
@@ -98,13 +84,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadis
                                 st.SolIdEstadoSolicitud == 6
                             )
                         )
+                        .OrderBy(st => st.SolFechaHoraCreacion)
                         .GroupBy(st => st.SolFechaHoraCreacion.Date)
                         .Select(group => new IntDataItem(group.Count(), group.Key.ToString()))
-                        .ToList();
-                    }
-                );
+                        .ToListAsync();
 
-                oResponse.Data.Add("cancelados", list ?? new());
+                oResponse.Data.Add("Cancelados", list ?? new());
 
                 oResponse.Success = 1;
             }
@@ -270,22 +255,22 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadis
 
                 if (pendientes > 0)
                 {
-                    oResponse.Data.Add(new IntDataItem(pendientes, "pendientes"));
+                    oResponse.Data.Add(new IntDataItem(pendientes, "Pendientes"));
                 }
 
                 if (progreso > 0)
                 {
-                    oResponse.Data.Add(new IntDataItem(progreso, "progreso"));
+                    oResponse.Data.Add(new IntDataItem(progreso, "En proceso"));
                 }
 
                 if (terminados > 0)
                 {
-                    oResponse.Data.Add(new IntDataItem(terminados, "terminados"));
+                    oResponse.Data.Add(new IntDataItem(terminados, "Atendidos"));
                 }
 
                 if (cancelados > 0)
                 {
-                    oResponse.Data.Add(new IntDataItem(pendientes, "cancelados"));
+                    oResponse.Data.Add(new IntDataItem(pendientes, "Cancelados"));
                 }
             }
             catch (Exception ex)
