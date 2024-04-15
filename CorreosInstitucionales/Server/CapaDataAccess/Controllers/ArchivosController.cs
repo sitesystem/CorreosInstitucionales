@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Server.Correos;
 using CorreosInstitucionales.Server.MensajesWA;
@@ -9,6 +10,7 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.Utils;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -120,6 +122,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 Body = "NO DEFINIDO"
             };
 
+            RequestDTO_SendWhatsApp mensaje = new()
+            {
+                Message = "PRUEBA",
+                Number = "5500000000"
+            };
+
             Dictionary<string, object?> variables_correo = new Dictionary<string, object?>
             {
                 { "solicitud", null}
@@ -146,8 +154,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     System.IO.File.WriteAllText($"{archivo}/{id}_{solicitud.IdSolicitudTicket}.html", correo.Body);
                 }
 
-                await _servicioCorreo.SendEmail(correo);
-                
+                mensaje.Message = await renderer.GetHTML<AtendidoWA>(variables_correo);
+                mensaje.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
+
+                // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
+                _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
+                _ = Task.Run(() => _servicioWA.SendWhatsAppAsync(mensaje));
+
             }//FOREACH solicitud
         }
 
@@ -242,6 +255,43 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return await LlenarFormulario(selected, true);
         }
 
+        public TipoDatoXLSX GetTipoDato(string columna)
+        {
+            string colname = columna.Replace("Á", "A");
+            colname = colname.Replace("É", "E");
+            colname = colname.Replace("Í", "I");
+            colname = colname.Replace("Ó", "O");
+            colname = colname.Replace("Ú", "U");
+
+            switch (colname)
+            {
+                case "CORREO PERSONAL ACTUAL":  return TipoDatoXLSX.CORREO_PERSONAL;
+                case "CORREO PERSONAL":         return TipoDatoXLSX.CORREO_PERSONAL;
+
+                case "CORREO INSTITUCIONAL": return TipoDatoXLSX.CORREO_INSTITUCIONAL;
+                case "CORREO INSTITUCIONAL ACTUAL": return TipoDatoXLSX.CORREO_INSTITUCIONAL;
+                case "CONTRASEÑA": return TipoDatoXLSX.CONTRA;
+
+                case "ACCION": return TipoDatoXLSX.ACCION;
+
+                case "CELULAR ACTUAL": return TipoDatoXLSX.CELULAR;
+                case "CELULAR": return TipoDatoXLSX.CELULAR;
+
+                case "EXTENSION": return TipoDatoXLSX.EXTENSION;
+                case "EXTENSION ACTUAL": return TipoDatoXLSX.EXTENSION;
+
+                case "AREA": return TipoDatoXLSX.ID_EXTERNO;
+                case "AREA ACTUAL": return TipoDatoXLSX.ID_EXTERNO;
+
+                case "CLAVE CURP": return TipoDatoXLSX.CURP;
+                case "CURP": return TipoDatoXLSX.CURP;
+
+                case "NUMERO DE EMPLEADO O NUMERO DE BOLETA SEGUN SEA EL CASO": return TipoDatoXLSX.ID_EXTERNO;
+            }
+
+            return TipoDatoXLSX.NINGUNO;
+        }
+
         [HttpPost("xlsx/procesados")]
         public async Task<IActionResult> ImportarProcesados_XLSX(IFormFile file)
         {
@@ -265,6 +315,22 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             TipoDatoXLSX[] datos_a_actualizar = [];
             bool actualizar_todo = false;
 
+            Dictionary<TipoDatoXLSX, int> columna = new()
+            {
+                {TipoDatoXLSX.CORREO_PERSONAL,      100 },
+                {TipoDatoXLSX.CORREO_INSTITUCIONAL, 100 },
+                {TipoDatoXLSX.CONTRA,               100 },
+                {TipoDatoXLSX.CELULAR,              100 },
+                {TipoDatoXLSX.EXTENSION,            100 },
+                {TipoDatoXLSX.AREA,                 100 },
+                {TipoDatoXLSX.ID_EXTERNO,           100 },
+                {TipoDatoXLSX.ACCION,               100 },
+                {TipoDatoXLSX.CURP,                 100 },
+            };
+
+            List<string> column_names = new();
+            TipoDatoXLSX tipo_dato = TipoDatoXLSX.NINGUNO;
+
             try
             {
                 using (var stream = file.OpenReadStream())
@@ -273,24 +339,41 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     IXLWorksheet ws = wb.Worksheet(1);
 
                     int n = ws.LastRowUsed().RowNumber();
-
+                    
                     if (n > 4)
                     {
-                        for(int row = 5; row<=n; row++)
+                        int col = ws.Row(4).LastCellUsed().Address.ColumnNumber;
+                        string colname = string.Empty;
+
+                        for(int i = 1; i<= col; i++)
                         {
-                            CURP = ws.Cell(row, 5).Value.ToString().Trim();
+                            colname = ws.Cell(4, i).Value.ToString().ToUpper();
+
+                            tipo_dato = GetTipoDato(colname);
+
+                            columna[tipo_dato] = i;
+
+                            if(tipo_dato != TipoDatoXLSX.NINGUNO)
+                            {
+                                column_names.Add(colname);
+                            }
+                        }
+
+                        for (int row = 5; row<=n; row++)
+                        {
+                            CURP = ws.Cell(row, columna[TipoDatoXLSX.CURP]).Value.ToString().Trim();
                             
                             lista_curps.Add(CURP);
 
                             registro_actual = new RegistroImportacion()
                             {
                                 CURP = CURP,
-                                ID = ws.Cell(row, 6).Value.ToString(),
-                                NoExtension = ws.Cell(row, 7).Value.ToString(),
-                                CorreoPersonal = ws.Cell(row, 8).Value.ToString(),
-                                CorreoInstitucional = ws.Cell(row, 9).Value.ToString(),
-                                Clave = ws.Cell(row, 10).Value.ToString(),
-                                Accion = ws.Cell(row, 11).Value.ToString()
+                                ID = ws.Cell(row, columna[TipoDatoXLSX.ID_EXTERNO]).Value.ToString(),
+                                NoExtension = ws.Cell(row, columna[TipoDatoXLSX.EXTENSION]).Value.ToString(),
+                                CorreoPersonal = ws.Cell(row, columna[TipoDatoXLSX.CORREO_PERSONAL]).Value.ToString(),
+                                CorreoInstitucional = ws.Cell(row, columna[TipoDatoXLSX.CORREO_INSTITUCIONAL]).Value.ToString(),
+                                Clave = ws.Cell(row, columna[TipoDatoXLSX.CONTRA]).Value.ToString(),
+                                Accion = ws.Cell(row, columna[TipoDatoXLSX.ACCION]).Value.ToString()
                             };
 
                             registros.Add(CURP, registro_actual);
@@ -307,16 +390,22 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         .Where
                         (
                             st =>
-                                st.SolIdEstadoSolicitud == (int)TipoEstadoSolicitud.EN_PROCESO &&
+                                st.SolIdEstadoSolicitud == ((int)TipoEstadoSolicitud.EN_PROCESO) &&
                                 lista_curps.Contains(st.SolIdUsuarioNavigation.UsuCurp)
                         )
                         .Include(st => st.SolIdUsuarioNavigation)
                         .ToListAsync();
 
-                    logs.Add($"SE ACTUALIZ{(registros.Count > 1 ? "ARÁN" : "Á")} {registros.Count} SOLICITUD{(registros.Count>1?"ES":string.Empty)} DE {solicitudes.Count} PENDIENTE{(solicitudes.Count>1?"S":string.Empty)}...");                    
+                    logs.Add($"SE ACTUALIZ{(registros.Count > 1 ? "ARÁN" : "Á")} {registros.Count} SOLICITUD{(registros.Count>1?"ES":string.Empty)} DE {solicitudes.Count} PENDIENTE{(solicitudes.Count>1?"S":string.Empty)}...");
+                    logs.Add("SE ENCONTRARON LAS SIGUIENTES COLUMNAS:"); 
+
+                    foreach(string c in column_names)
+                    {
+                        logs.Add($"\t - {c}");
+                    }
 
                     //TODO: Cambio de asignaciones deacuerdo al tipo de solicitud
-                    foreach (MtTbSolicitudesTicket solicitud in solicitudes)
+                    solicitudes.ForEach(solicitud =>
                     {
                         datos_a_actualizar = ((TipoSolicitud)solicitud.SolIdTipoSolicitud).GetDatosActualizar();
 
@@ -324,7 +413,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                         if (datos_a_actualizar.Contains(TipoDatoXLSX.NINGUNO))
                         {
-                            continue;
+                            return;
                         }
 
                         registro_actual = registros[solicitud.SolIdUsuarioNavigation.UsuCurp];
@@ -358,9 +447,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             solicitud.SolIdUsuarioNavigation.UsuNoExtensionAnterior = solicitud.SolIdUsuarioNavigation.UsuNoExtension;
                             solicitud.SolIdUsuarioNavigation.UsuNoExtension = registro_actual.NoExtension;
                         }
-                                                
+
                         solicitud.SolRespuestaDcyC = registro_actual.Accion;
-                    }
+                    });
 
                     await _db.SaveChangesAsync();
 
@@ -585,16 +674,19 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 if(pendientes_normal.Count>0)
                 {
                     archivos.AddRange(GenerarXLSX(pendientes_normal, archivo));
+                    pendientes_normal.ForEach(p => p.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.EN_PROCESO);
                 }
                 
                 if(pendientes_celular.Count>0)
                 {
                     archivos.AddRange(GenerarXLSX(pendientes_celular, archivo, TipoSolicitud.CAMBIO_CELULAR));
+                    pendientes_celular.ForEach(p => p.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.EN_PROCESO);
                 }
 
                 if(pendientes_correo_personal.Count>0)
                 {
                     archivos.AddRange(GenerarXLSX(pendientes_celular, archivo, TipoSolicitud.CAMBIO_CORREO_PERSONAL));
+                    pendientes_correo_personal.ForEach(p => p.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.EN_PROCESO);
                 }
 
                 error = ServerFS.WriteZip($"{archivo}.zip", archivos);
@@ -612,7 +704,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 {
                     oResponse.Data = archivos;
                 }
-                
+
+                await _db.SaveChangesAsync();
+
                 oResponse.Success = 1;
             }
             catch (Exception ex)

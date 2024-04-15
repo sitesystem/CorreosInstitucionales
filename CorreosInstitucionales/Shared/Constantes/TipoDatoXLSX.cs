@@ -16,6 +16,8 @@ namespace CorreosInstitucionales.Shared.Constantes
         CELULAR                 = 4,
         EXTENSION               = 5,
         AREA                    = 6,
-        ID_EXTERNO              = 7
+        ID_EXTERNO              = 7,
+        ACCION                  = 8,
+        CURP                    = 9,
     }
 }

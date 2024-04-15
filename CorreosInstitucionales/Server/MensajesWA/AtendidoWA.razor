@@ -1,0 +1,15 @@
+﻿*Solicitud Atendida*
+
+Saludos @usuario.UsuNombre,
+por medio del presente nos permitimos informarle que su
+solicitud @solicitud.IdSolicitudTicket, ha sido atendida
+con la siguiente observación de mesa de control:
+
+> @solicitud.SolRespuestaDcyC
+
+Sin más por el momento que tenga un excelente día.
+
+@code {
+    [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new() { SolIdUsuarioNavigation = new() };
+    MpTbUsuario usuario { get { return solicitud.SolIdUsuarioNavigation; } }
+}
