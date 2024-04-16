@@ -11,6 +11,7 @@ using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.Utils;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -28,13 +29,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             DbCorreosInstitucionalesUpiicsaContext db, 
             ISendEmailService servicioEmail,
             IServiceProvider serviceProvider,
-            ISendWhatsAppService servicioWA
+            HttpClient _client
         ) : Controller
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
         private readonly ISendEmailService _servicioCorreo = servicioEmail;
         private readonly IServiceProvider _serviceProvider = serviceProvider;
-        private readonly ISendWhatsAppService _servicioWA = servicioWA;
+        private readonly HttpClient client = _client;
 
         [ApiExplorerSettings(IgnoreApi = true)]
         protected string? FormatoTexto(string? texto)
@@ -108,12 +109,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task EnvioMasivoRespuesta(List<MtTbSolicitudesTicket> lista, bool debug = true)
+        private async Task<List<string>> EnvioMasivoRespuesta(List<MtTbSolicitudesTicket> lista, bool debug = true)
         {
             string id = Guid.NewGuid().ToString();
             string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/procesados";
+            List<string> errors = new();
 
             ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
+            WhatsApp WA = new WhatsApp(client);
+
+            //WA.SendMessage()
             
             RequestDTO_SendEmail correo = new()
             {
@@ -137,6 +142,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 variables_correo["solicitud"] = solicitud;
 
+                correo.EmailTo = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+
                 switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
                 {
                     case TipoPersonal.ALUMNO:
@@ -158,19 +165,32 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 mensaje.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
 
                 // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
-                _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
-                _ = Task.Run(() => _servicioWA.SendWhatsAppAsync(mensaje));
+                if (!correo.EmailTo.ToLower().EndsWith("localhost"))
+                {
+                    _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
+                }
+
+                Response<string> response = await WA.SendMessage(mensaje);
+                if (response.Success != 1)
+                {
+                    errors.Add($"{mensaje.Number} :  {response.Message}");
+                }
+
 
             }//FOREACH solicitud
+
+            return errors;
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task EnvioMasivoPendientes(List<MtTbSolicitudesTicket> lista, bool debug = true)
+        private async Task<List<string>> EnvioMasivoPendientes(List<MtTbSolicitudesTicket> lista, bool debug = true)
         {
             string id = Guid.NewGuid().ToString();
             string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/pendientes";
+            List<string> errors = new();
 
             ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
+            WhatsApp WA = new WhatsApp(client);
 
             RequestDTO_SendEmail correo = new()
             {
@@ -190,6 +210,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 { "solicitud", null}
             };
 
+            int id_cambio_celular = (int)TipoSolicitud.CAMBIO_CELULAR;
+
             foreach (MtTbSolicitudesTicket solicitud in lista)
             {
                 variables_correo["solicitud"] = solicitud;
@@ -197,7 +219,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 correo.Body = await renderer.GetHTML<EnProceso>(variables_correo);
                 mensaje.Message = await renderer.GetHTML<EnProcesoWA>(variables_correo);
 
-                if(debug)
+                mensaje.Number = solicitud.SolIdTipoSolicitud == id_cambio_celular ? solicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior! : solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
+
+                if (debug)
                 {
                     System.IO.File.WriteAllText($"{archivo}/{id}_{solicitud.IdSolicitudTicket}.html", correo.Body);
                     System.IO.File.WriteAllText($"{archivo}/{id}_{solicitud.IdSolicitudTicket}.txt", mensaje.Message);
@@ -205,9 +229,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
 
                 // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
-                _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
-                _ = Task.Run(() => _servicioWA.SendWhatsAppAsync(mensaje));
+                if (!correo.EmailTo.ToLower().EndsWith("localhost"))
+                {
+                    _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
+                }
+
+                Response<string> response = await WA.SendMessage(mensaje);
+                if (response.Success != 1)
+                {
+                    errors.Add($"{mensaje.Number} :  {response.Message}");
+                }
+
             }//FOREACH solicitud
+
+            return errors;
         }// ENVIO  MASIVO (EN PROCESO)
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -243,18 +278,21 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return new WebUtils.Link($"{directorio}{archivo}",$"SOL{id}_{curp}_{tipo}{ext}");
         }
 
+        [Authorize]
         [HttpPost("xlsx/pendientes")]
         public async Task<IActionResult> ExportarPendientes_XLSX(int[] selected)
         {
             return await LlenarFormulario(selected, false);
         }
 
+        [Authorize]
         [HttpPost("zip/pendientes")]
         public async Task<IActionResult> ExportarPendientes_ZIP(int[] selected)
         {
             return await LlenarFormulario(selected, true);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public TipoDatoXLSX GetTipoDato(string columna)
         {
             string colname = columna.Replace("Á", "A");
@@ -370,6 +408,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                                 CURP = CURP,
                                 ID = ws.Cell(row, columna[TipoDatoXLSX.ID_EXTERNO]).Value.ToString(),
                                 NoExtension = ws.Cell(row, columna[TipoDatoXLSX.EXTENSION]).Value.ToString(),
+                                Celular = ws.Cell(row, columna[TipoDatoXLSX.CELULAR]).Value.ToString(),
                                 CorreoPersonal = ws.Cell(row, columna[TipoDatoXLSX.CORREO_PERSONAL]).Value.ToString(),
                                 CorreoInstitucional = ws.Cell(row, columna[TipoDatoXLSX.CORREO_INSTITUCIONAL]).Value.ToString(),
                                 Clave = ws.Cell(row, columna[TipoDatoXLSX.CONTRA]).Value.ToString(),
@@ -396,7 +435,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         .Include(st => st.SolIdUsuarioNavigation)
                         .ToListAsync();
 
-                    logs.Add($"SE ACTUALIZ{(registros.Count > 1 ? "ARÁN" : "Á")} {registros.Count} SOLICITUD{(registros.Count>1?"ES":string.Empty)} DE {solicitudes.Count} PENDIENTE{(solicitudes.Count>1?"S":string.Empty)}...");
+                    logs.Add($"SE ACTUALIZ{(registros.Count == 1 ? "Á" : "ARÁN")} {registros.Count} SOLICITUD{(registros.Count==1? string.Empty : "ES")} DE {solicitudes.Count} PENDIENTE{(solicitudes.Count==1?string.Empty: "S")}...");
                     logs.Add("SE ENCONTRARON LAS SIGUIENTES COLUMNAS:"); 
 
                     foreach(string c in column_names)
@@ -509,22 +548,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         {
             List<WebUtils.Link> links = new();
 
+            // ARCHIVOS
             string plantilla = $"{ServerFS.GetBaseDir(true)}/assets/{formato_solicitud.GetPlantilla()}";
+            string archivo_exportacion = $"{archivo}_{formato_solicitud.GetNombreExportacion()}";
+            string ruta_usuario = string.Empty;
+            string ruta_repositorio = string.Empty;
 
             // EXCEL
             XLWorkbook wb = new XLWorkbook(plantilla);
             IXLWorksheet ws = wb.Worksheet(1);
-            
-            int fila = 5; //PRIMER FILA A LEER
-            int columna_final = 1;
-            
             ws.Cell("H2").Value = DateTime.Now.ToString("dd/MM/yyyy");//FECHA
-            
-            // ARCHIVOS
-            string ruta_repositorio = string.Empty;
-            string ruta_usuario = string.Empty;
-            string archivo_exportacion = $"{archivo}_{formato_solicitud.GetNombreExportacion()}";
 
+            
+                       
+            
             // DATOS USUARIO
             MpTbUsuario usuario;
             TipoPersonal tipo_personal;
@@ -544,14 +581,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             ];
 
             Dictionary<TipoDatoXLSX, int> columnas = new Dictionary<TipoDatoXLSX, int>();
+            int fila = 5; //PRIMER FILA A LEER
             int columna = 6;//PRIMER COLUMNA DISPONIBLE
+            int columna_final = 1;
 
             foreach(TipoDatoXLSX dato in datos_exportar)
             {
                 columnas.Add(dato, columna);
                 columna += requiere_datos_previos.Contains(dato) ? 2 : 1;
             }
-
+                        
             columna_final = columna - 1;
 
             foreach (MtTbSolicitudesTicket solicitud in lista)
@@ -673,7 +712,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             string archivo = $"repositorio/pendientes/{id_fecha}_{id}";
 
             List<MtTbSolicitudesTicket> pendientes = new();
-            List<MtTbSolicitudesTicket> pendientes_normal = new();
             List<MtTbSolicitudesTicket> pendientes_celular = new();
             List<MtTbSolicitudesTicket> pendientes_correo_personal = new();
 
@@ -682,6 +720,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             List<WebUtils.Link> archivos = new();
 
             string? error = null;
+
+            int id_estado_proceso = (int)TipoEstadoSolicitud.EN_PROCESO;
 
             try
             {
@@ -703,22 +743,22 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 pendientes = pendientes.Except(pendientes_correo_personal).ToList();
 
 
-                if(pendientes_normal.Count>0)
+                if(pendientes.Count>0)
                 {
-                    archivos.AddRange(GenerarXLSX(pendientes_normal, archivo));
-                    pendientes_normal.ForEach(p => p.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.EN_PROCESO);
+                    archivos.AddRange(GenerarXLSX(pendientes, archivo));
+                    pendientes.ForEach(p => p.SolIdEstadoSolicitud = id_estado_proceso);
                 }
                 
                 if(pendientes_celular.Count>0)
                 {
                     archivos.AddRange(GenerarXLSX(pendientes_celular, archivo, TipoSolicitud.CAMBIO_CELULAR));
-                    pendientes_celular.ForEach(p => p.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.EN_PROCESO);
+                    pendientes_celular.ForEach(p => p.SolIdEstadoSolicitud = id_estado_proceso);
                 }
 
                 if(pendientes_correo_personal.Count>0)
                 {
-                    archivos.AddRange(GenerarXLSX(pendientes_celular, archivo, TipoSolicitud.CAMBIO_CORREO_PERSONAL));
-                    pendientes_correo_personal.ForEach(p => p.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.EN_PROCESO);
+                    archivos.AddRange(GenerarXLSX(pendientes_correo_personal, archivo, TipoSolicitud.CAMBIO_CORREO_PERSONAL));
+                    pendientes_correo_personal.ForEach(p => p.SolIdEstadoSolicitud = id_estado_proceso);
                 }
 
                 error = ServerFS.WriteZip($"{archivo}.zip", archivos);
@@ -759,6 +799,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     if (error is null)
                     {
                         await EnvioMasivoPendientes(pendientes);
+                        await EnvioMasivoPendientes(pendientes_celular);
+                        await EnvioMasivoPendientes(pendientes_correo_personal);
                     }
                     else
                     {

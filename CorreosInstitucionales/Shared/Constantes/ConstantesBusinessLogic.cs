@@ -57,7 +57,7 @@ namespace CorreosInstitucionales.Shared.Constantes
                 case TipoSolicitud.CAMBIO_CORREO_PERSONAL: return "sol_cambios_correo_personal.xlsx";
             }
 
-            return "sol_altas_y_desbloqueos";
+            return "sol_altas_y_desbloqueos.xlsx";
         }
         public static TipoDocumento[] GetDocumentos(this TipoSolicitud solicitud)
         {
