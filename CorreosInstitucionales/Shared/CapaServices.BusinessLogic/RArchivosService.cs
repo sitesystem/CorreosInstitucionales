@@ -69,10 +69,19 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 
         public async Task<Response<List<WebUtils.Link>>?> NewFileFromSelection<T>(string extension, string action, List<T> selected)
         {
-            var response = await _httpClient.PostAsJsonAsync($"{url}/{extension}/{action}", selected);
+            Response<List<WebUtils.Link>>? result = new Response<List<WebUtils.Link>>();
 
-            var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Response<List<WebUtils.Link>>>(content, options: _options);
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync($"{url}/{extension}/{action}", selected);
+
+                var content = await response.Content.ReadAsStringAsync();
+                result = JsonSerializer.Deserialize<Response<List<WebUtils.Link>>>(content, options: _options);
+            }catch(Exception ex)
+            {
+                result!.Message = ex.Message + Environment.NewLine + ex.StackTrace;
+            }
+            
             return result;
         }
 
