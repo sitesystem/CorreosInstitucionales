@@ -407,10 +407,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     //TODO: Cambio de asignaciones deacuerdo al tipo de solicitud
                     solicitudes.ForEach(solicitud =>
                     {
-                        datos_a_actualizar = ((TipoSolicitud)solicitud.SolIdTipoSolicitud).GetDatosActualizar();
-
-                        solicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.ATENDIDA;
-
                         if (datos_a_actualizar.Contains(TipoDatoXLSX.NINGUNO))
                         {
                             return;
@@ -418,37 +414,73 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                         registro_actual = registros[solicitud.SolIdUsuarioNavigation.UsuCurp];
 
+                        if (string.IsNullOrEmpty(registro_actual.Accion))
+                        {
+                            logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE ACCIÓN NO ESTÉ VACÍA.");
+                            return;
+                        }
+
+                        datos_a_actualizar = ((TipoSolicitud)solicitud.SolIdTipoSolicitud).GetDatosActualizar();
+
                         actualizar_todo = datos_a_actualizar.Contains(TipoDatoXLSX.TODO);
 
                         if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CORREO_PERSONAL))
                         {
+                            if(string.IsNullOrEmpty(registro_actual.CorreoPersonal))
+                            {
+                                logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO PERSONAL NO ESTÉ VACÍA.");
+                                return;
+                            }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
                             solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva = registro_actual.CorreoPersonal;
                         }
 
                         if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CORREO_INSTITUCIONAL))
                         {
+                            if (string.IsNullOrEmpty(registro_actual.CorreoInstitucional))
+                            {
+                                logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO INSTITUCIONAL NO ESTÉ VACÍA.");
+                                return;
+                            }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
                         }
 
                         if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CONTRA))
                         {
+                            if (string.IsNullOrEmpty(registro_actual.Clave))
+                            {
+                                logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CONTRASEÑA NO ESTÉ VACÍA.");
+                                return;
+                            }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
                         }
 
                         if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CELULAR))
                         {
+                            if (string.IsNullOrEmpty(registro_actual.Celular))
+                            {
+                                logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE NÚMERO DE CELULAR NO ESTÉ VACÍA.");
+                                return;
+                            }
+
                             solicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
                             solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo = registro_actual.Celular;
                         }
 
                         if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.EXTENSION))
                         {
+                            if (string.IsNullOrEmpty(registro_actual.NoExtension    ))
+                            {
+                                logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE NÚMERO DE EXTENSIÓN NO ESTÉ VACÍA.");
+                                return;
+                            }
+
                             solicitud.SolIdUsuarioNavigation.UsuNoExtensionAnterior = solicitud.SolIdUsuarioNavigation.UsuNoExtension;
                             solicitud.SolIdUsuarioNavigation.UsuNoExtension = registro_actual.NoExtension;
                         }
 
                         solicitud.SolRespuestaDcyC = registro_actual.Accion;
+                        solicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.ATENDIDA;
                     });
 
                     await _db.SaveChangesAsync();
