@@ -39,7 +39,7 @@ namespace CorreosInstitucionales.Shared.Utils
 
             string? log = null;
 
-            List<string> messages = [$"PATH: {Path.GetFullPath(".")}"];
+            List<string> messages = new();// [$"PATH: {Path.GetFullPath(".")}"];
 
             using (FileStream fs = new FileStream($"{basedir}/{filename}", FileMode.CreateNew))
             {

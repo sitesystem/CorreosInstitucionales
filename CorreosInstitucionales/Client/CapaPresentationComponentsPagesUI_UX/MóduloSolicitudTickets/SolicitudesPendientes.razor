@@ -10,7 +10,12 @@
     <h1>@Title</h1>
 
     <div class="row my-4">
-        <div class="offset-10 col-2">
+        <div class="col-2">
+            <button class="btn btn-primary form-control" @onclick="CargarLista">
+                Recargar Listado
+            </button>
+        </div>
+        <div class="offset-8 col-2">
             @if(puede_exportar)
             {
                 <button class="btn btn-primary form-control mb-3" @onclick="Descargar">
@@ -260,14 +265,14 @@
         if (firstRender)
         {
             await CargarLista();
-
-            cargado = true;
-            StateHasChanged();
         }
     }
 
-    private async Task CargarLista(int? selecccionar_id = null)
+    private async Task CargarLista()
     {
+        cargado = false;
+        StateHasChanged();
+
         Response<List<RequestDTO_Solicitud>>? request = await servicioSolicitud.GetAllDataByProgressAsync(estados);
 
         if(request is not null && request.Data is not null)
@@ -281,12 +286,15 @@
                 debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {request.Message}";
             }
         }
+
+        cargado = true;
+        StateHasChanged();
     }
 
     private async void Descargar()
     {
         cargado = false;
-        //StateHasChanged();
+        StateHasChanged();
 
         List<int> selected_ids = items.Where(i=>i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToList();
 
@@ -296,12 +304,12 @@
         {
             if(oResponse.Success == 1)
             {
-                await CargarLista();
-
                 foreach (WebUtils.Link url in oResponse.Data)
                 {
                     await JSRuntime.InvokeVoidAsync("Descargar", url);
                 }
+
+                await CargarLista();
             }
             else
             {
@@ -405,6 +413,7 @@
             if(response.IsSuccessStatusCode)
             {
                 debug += Environment.NewLine + $"SOLICITUD {item.IdSolicitudTicket} CANCELADA.";
+                await CargarLista();
             }
             else
             {
