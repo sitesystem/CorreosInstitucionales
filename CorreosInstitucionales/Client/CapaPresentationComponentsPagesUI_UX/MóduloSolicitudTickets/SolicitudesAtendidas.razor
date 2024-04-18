@@ -1,7 +1,8 @@
 ﻿@page "/SolicitudesAtendidas"
-@attribute [Authorize(Policy = "[Rol] Administrador")]
-<PageTitle>@Title</PageTitle>
 
+@attribute [Authorize(Policy = "[Rol] Administrador")]
+
+<PageTitle>@Title</PageTitle>
 
 <div class="p-4 rounded-1 bg-white shadow">
     <h1>@Title</h1>
@@ -70,7 +71,7 @@
 
 @code
 {
-    private string Title = "Solicitudes Pendientes";
+    private string Title = "Solicitudes Atendidas";
     private bool cargado { get; set; } = false;
     private bool generando = false;
 
