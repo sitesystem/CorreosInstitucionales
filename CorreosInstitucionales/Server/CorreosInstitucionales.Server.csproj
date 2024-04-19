@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Repositorio\procesados - Copia\**" />
+    <Content Remove="wwwroot\Repositorio\procesados - Copia\**" />
+    <EmbeddedResource Remove="wwwroot\Repositorio\procesados - Copia\**" />
+    <None Remove="wwwroot\Repositorio\procesados - Copia\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.3" />
@@ -29,6 +36,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Client\CorreosInstitucionales.Client.csproj" />
     <ProjectReference Include="..\Shared\CorreosInstitucionales.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Repositorio\procesados\" />
   </ItemGroup>
 
 </Project>

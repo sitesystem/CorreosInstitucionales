@@ -123,7 +123,7 @@
                                         <RadzenFormField Text="Archivo PDF del CURP Actualizado" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-0">
                                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
-                                                <RadzenUpload @ref="oUploadFile_SolFileNameCurp" Url="" Accept=".pdf"
+                                                <RadzenUpload @ref="oUploadFile_SolFileNameCurp" Url="@($@"/api/RepositoryFiles/UploadSingleFile/{folderUsuarios}/{oResponseUsuario.Data.IdUsuario}/{oSolicitudTicket.SolFileNameCurp}/{oGuid}")" Accept=".pdf"
                                                               Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
                                                               Change=@(args => OnChangeFiles(args, CURP))
                                                               Error=@(args => OnErrorFiles(args, "FileInput"))
@@ -138,12 +138,12 @@
 
                                         @if (idTipoPersonal == 1 || idTipoPersonal == 2 || idTipoPersonal == 3)
                                         {
-                                            <RadzenFormField Text="@($@"{(idTipoPersonal == 1 || idTipoPersonal == 2 ? "Archivo PDF del Comprobante de Horario (Tira de Materias) del Último Semestre Cursado" : "Archivo PDF del SIP-10")}")"
+                                            <RadzenFormField Text="@($@"{(idTipoPersonal == 1 || idTipoPersonal == 2 ? "Archivo PDF del Comprobante de Inscripción/Estudios/Horario" : "Archivo PDF del SIP-10")}")"
                                                              AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
                                                 <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                                 <ChildContent>
                                                     @* image/*, .pdf, .doc, .docx *@
-                                                    <RadzenUpload @ref="oUploadFile_SolFileNameComprobanteInscripcion" Url="" Accept=".pdf"
+                                                    <RadzenUpload @ref="oUploadFile_SolFileNameComprobanteInscripcion" Url="@($@"/api/RepositoryFiles/UploadSingleFile/{folderUsuarios}/{oResponseUsuario.Data.IdUsuario}/{oSolicitudTicket.SolFileNameComprobanteInscripcion}/{oGuid}")" Accept=".pdf"
                                                                   Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
                                                                   Change=@(args => OnChangeFiles(args, ComprobanteInscripcion))
                                                                   Error=@(args => OnErrorFiles(args, "FileInput"))
@@ -151,7 +151,7 @@
                                                                   Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
                                                                   Complete="@(args => OnCompleteFiles(args))" />
                                                 </ChildContent>
-                                                <Helper></Helper>
+                                                <Helper><RadzenText TextStyle="TextStyle.Caption" Text="(Tira de Materias) del Último Semestre Cursado / SIP-10" /></Helper>
                                             </RadzenFormField>
                                             <ValidationMessage For="@(() => oSolicitudTicket.SolFileNameComprobanteInscripcion)" />
                                             <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeComprobanteInscripcion)" />
@@ -204,7 +204,7 @@
                                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent>
                                                 @* image/*, .pdf, .doc, .docx *@
-                                                <RadzenUpload @ref="oUploadFile_SolCapturaCuentaBloqueada" Url="" Accept=".pdf"
+                                                <RadzenUpload @ref="oUploadFile_SolCapturaCuentaBloqueada" Url="@($@"/api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaCuentaBloqueada}/{oGuid}")" Accept=".pdf"
                                                               Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
                                                               Change=@(args => OnChangeFiles(args, CapturaCuentaBloqueada))
                                                               Error=@(args => OnErrorFiles(args, "FileInput"))
@@ -220,7 +220,7 @@
                                         <RadzenFormField Text="Archivo de la Captura del Escaneo de Antivirus" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCapturaEscaneoAntivirus">
                                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
-                                                <RadzenUpload @ref="oUploadFile_SolCapturaEscaneoAntivirus" Url="" Accept=".pdf"
+                                                <RadzenUpload @ref="oUploadFile_SolCapturaEscaneoAntivirus" Url="@($@"/api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaEscaneoAntivirus}/{oGuid}")" Accept=".pdf"
                                                               Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
                                                               Change=@(args => OnChangeFiles(args, CapturaEscaneoAntivirus))
                                                               Error=@(args => OnErrorFiles(args, "FileInput"))
@@ -233,10 +233,10 @@
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaEscaneoAntivirus)" hidden="@(!isVisibleCapturaEscaneoAntivirus)" />
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus)" hidden="@(!isVisibleCapturaEscaneoAntivirus)" />
 
-                                        <RadzenFormField Text="Archivo de la Captura Otro Motivo" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCapturaError">
+                                        <RadzenFormField Text="Archivo de la Captura por Otro Motivo de Solicitud" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCapturaError">
                                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
-                                                <RadzenUpload @ref="oUploadFile_SolCapturaError" Url="" Accept=".pdf"
+                                                <RadzenUpload @ref="oUploadFile_SolCapturaError" Url="@($@"/api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaError}/{oGuid}")" Accept=".pdf"
                                                               Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
                                                               Change=@(args => OnChangeFiles(args, CapturaError))
                                                               Error=@(args => OnErrorFiles(args, "FileInput"))
@@ -256,7 +256,7 @@
                         <!-- ******************************************************************* ReCAPTCHA Y BOTÓN ENVIAR ******************************************************************* -->
                         <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" class="rz-mt-4">
                             <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6Ld6058pAAAAACiEYq0Khine3FWbHZpfyEraTlOX" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-                            @* <ValidationSummary class="rz-my-0" /> *@
+                            <ValidationSummary class="rz-my-0" />
                             <RadzenButton Text="Enviar Solicitud-Ticket"
                                           BusyText="Enviando Solicitud-Ticket..."
                                           ButtonStyle="ButtonStyle.Success"
@@ -751,38 +751,39 @@ else
                                             "> *NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
 
                     @*//  UPLOAD FILES  //*@
+                    
                     if (oFileInfoSolCurp is not null)
                     {
                         oSolicitudTicket.SolFileNameCurp = $"{CURP}{Path.GetExtension(oSolicitudTicket.SolFileNameCurp).ToLower()}";
-                        oUploadFile_SolFileNameCurp.Url = $@"api/RepositoryFiles/UploadSingleFile/{folderUsuarios}/{oResponseUsuario.Data.IdUsuario}/{oSolicitudTicket.SolFileNameCurp}/{oGuid}";
+                        oUploadFile_SolFileNameCurp.Url = $@"/api/RepositoryFiles/UploadSingleFile/{folderUsuarios}/{oResponseUsuario.Data.IdUsuario}/{oSolicitudTicket.SolFileNameCurp}/{oGuid}";
                         await oUploadFile_SolFileNameCurp.Upload();
                     }
                     
                     if (oFileInfoSolComprobanteInscripcion is not null)
                     {
                         oSolicitudTicket.SolFileNameComprobanteInscripcion = $"{ComprobanteInscripcion}{Path.GetExtension(oSolicitudTicket.SolFileNameComprobanteInscripcion).ToLower()}";
-                        oUploadFile_SolFileNameComprobanteInscripcion.Url = $@"api/RepositoryFiles/UploadSingleFile/{folderUsuarios}/{oResponseUsuario.Data.IdUsuario}/{oSolicitudTicket.SolFileNameComprobanteInscripcion}/{oGuid}";
+                        oUploadFile_SolFileNameComprobanteInscripcion.Url = $@"/api/RepositoryFiles/UploadSingleFile/{folderUsuarios}/{oResponseUsuario.Data.IdUsuario}/{oSolicitudTicket.SolFileNameComprobanteInscripcion}/{oGuid}";
                         await oUploadFile_SolFileNameComprobanteInscripcion.Upload();
                     }
 
                     if (oFileInfoSolCapturaEscaneoAntivirus is not null)
                     {
                         oSolicitudTicket.SolCapturaEscaneoAntivirus = $"{CapturaEscaneoAntivirus}{Path.GetExtension(oSolicitudTicket.SolCapturaEscaneoAntivirus).ToLower()}";
-                        oUploadFile_SolCapturaEscaneoAntivirus.Url = $@"api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaEscaneoAntivirus}/{oGuid}";
+                        oUploadFile_SolCapturaEscaneoAntivirus.Url = $@"/api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaEscaneoAntivirus}/{oGuid}";
                         await oUploadFile_SolCapturaEscaneoAntivirus.Upload();
                     }
 
                     if (oFileInfoSolCapturaCuentaBloqueada is not null)
                     {
                         oSolicitudTicket.SolCapturaCuentaBloqueada = $"{CapturaCuentaBloqueada}{Path.GetExtension(oSolicitudTicket.SolCapturaCuentaBloqueada).ToLower()}";
-                        oUploadFile_SolCapturaCuentaBloqueada.Url = $@"api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaCuentaBloqueada}/{oGuid}";
+                        oUploadFile_SolCapturaCuentaBloqueada.Url = $@"/api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaCuentaBloqueada}/{oGuid}";
                         await oUploadFile_SolCapturaCuentaBloqueada.Upload();
                     }
 
                     if (oFileInfoSolCapturaError is not null)
                     {
                         oSolicitudTicket.SolCapturaError = $"{CapturaError}{Path.GetExtension(oSolicitudTicket.SolCapturaError).ToLower()}";
-                        oUploadFile_SolCapturaError.Url = $@"api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaError}/{oGuid}";
+                        oUploadFile_SolCapturaError.Url = $@"/api/RepositoryFiles/UploadSingleFile/{folderSolicitudes}/{idResponse}/{oSolicitudTicket.SolCapturaError}/{oGuid}";
                         await oUploadFile_SolCapturaError.Upload();
                     }
 

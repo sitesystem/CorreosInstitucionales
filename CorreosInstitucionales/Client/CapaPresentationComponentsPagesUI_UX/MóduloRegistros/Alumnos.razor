@@ -111,7 +111,7 @@
                         <RadzenFormField Text="Archivo del CURP" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
-                                <RadzenUpload @ref="oUploadFile_CURP" Url="@($"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}")" Accept=".pdf"
+                                <RadzenUpload @ref="oUploadFile_CURP" Url="@($"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}")" Accept=".pdf"
                                         Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
                                         Change=@(args => OnChangeFiles(args, CURP))
                                         Error=@(args => OnErrorFiles(args, "FileInput"))
@@ -1039,11 +1039,11 @@ else
 
                         @*//  UPLOAD FILES  //*@
                         oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
-                        oUploadFile_CURP.Url = $"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
+                        oUploadFile_CURP.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
                         await oUploadFile_CURP.Upload();
 
                         oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
-                        oUploadFile_ComprobanteInscripción.Url = $"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
+                        oUploadFile_ComprobanteInscripción.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
                         await oUploadFile_ComprobanteInscripción.Upload();
 
                         @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@

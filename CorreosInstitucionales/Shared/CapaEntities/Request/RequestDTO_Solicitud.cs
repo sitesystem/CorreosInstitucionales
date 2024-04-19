@@ -56,8 +56,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP-10
         /// </summary>
         [Column("solFileNameComprobanteInscripcion")]
-        [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO (TIRA DE MATERIAS) adjuntado debe ser máximo de 200 caracteres.")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO (TIRA DE MATERIAS) requerido.")]
+        [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO (TIRA DE MATERIAS) del Último Semestre Cursado adjuntado debe ser máximo de 200 caracteres.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO (TIRA DE MATERIAS) del Último Semestre Cursado requerido.")]
         public string? SolFileNameComprobanteInscripcion { get; set; }
 
         /// <summary>

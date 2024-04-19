@@ -119,7 +119,7 @@
                             </RadzenStack>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Validación de Datos" Property="SolValidacionDatos"
+                    @* <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Validación de Datos" Property="SolValidacionDatos"
                                           Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="115px">
                         <HeaderTemplate>
                             <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
@@ -128,11 +128,11 @@
                             </span>
                         </HeaderTemplate>
                         <Template Context="data">
-                            @* <RadzenImage Path="@data.Photo" class="rz-gravatar" AlternateText="@(data.FirstName + " " + data.LastName)" /> *@
+                            <RadzenImage Path="@data.Photo" class="rz-gravatar" AlternateText="@(data.FirstName + " " + data.LastName)" />
                             <RadzenCheckBox Value="@(data.SolValidacionDatos)" Name="dataValid" TriState="false" Disabled="false" ReadOnly="true" />
                             <RadzenLabel Text="@($@"{(data.SolValidacionDatos ? "Válidos" : "Sin Validar")}")" Component="" Style="margin-left: 5px; vertical-align: middle;" />
                         </Template>
-                    </RadzenDataGridColumn>
+                    </RadzenDataGridColumn> *@
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Property="SolIdEstadoSolicitudNavigation.EdosolNombreEstado"
                                           Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="280px">
                         <Template Context="data">

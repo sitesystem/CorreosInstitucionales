@@ -9,7 +9,7 @@
             </HeaderTemplate>
             <ChildContent>
                 <div class="row gap-0 mt-1 mb-0">
-                    <div class="col-md-1 text-center">
+                    <div class="col-md-2 text-center">
                         <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" class="">#TICKET:</RadzenText>
                         <RadzenText TextStyle="TextStyle.DisplayH6" Style="border:3px solid rgb(215,215,215); border-radius:25px;" class="text-danger p-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-tag-fill rz-color-success" viewBox="0 0 16 16">
@@ -19,7 +19,7 @@
                         </RadzenText>
                     </div>
 
-                    <div class="col-md-3 text-center">
+                    <div class="col-md-4 text-center">
                         <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Justify" class="">MOTIVO / INCIDENCIA:</RadzenText>
                         <RadzenText TextStyle="TextStyle.Body1" class=""><b>@(oSolicitudLastTicket?.Data?.SolIdTipoSolicitudNavigation?.TiposolDescripcion)</b></RadzenText>
                     </div>
@@ -29,10 +29,10 @@
                         <RadzenText TextStyle="TextStyle.Body1" class=""><b>@(oSolicitudLastTicket?.Data?.SolObservacionesSolicitud)</b></RadzenText>
                     </div>
 
-                    <div class="col-md-2 text-center">
+                    @* <div class="col-md-2 text-center">
                         <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" class="">DATOS:</RadzenText>
                         <RadzenText TextStyle="TextStyle.Body1" class=""><b>@($@"{(oSolicitudLastTicket.Data.SolValidacionDatos ? "Válidos" : "Sin validar")}")</b></RadzenText>
-                    </div>
+                    </div> *@
 
                     <div class="col-md-3 text-center">
                         <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center" class="">FECHA Y HORA DE CREACIÓN:</RadzenText>
@@ -346,7 +346,7 @@
         </RadzenStack>
     </RadzenCard>
 
-    @if (oSolicitudLastTicketRespuesta != null && oSolicitudLastTicketRespuesta.Data is not null && !string.IsNullOrEmpty(oSolicitudLastTicketRespuesta.Data.SolRespuestaDcyC))
+    @if (oSolicitudLastTicketRespuesta != null && oSolicitudLastTicketRespuesta.Data is not null && !string.IsNullOrEmpty(oSolicitudLastTicketRespuesta.Data.SolRespuestaDcyC) && oSolicitudLastTicketRespuesta.Data.SolIdEstadoSolicitud >= 5)
     {
         <RadzenAlert Title="Respuesta de Mesa de Control" Text="" AlertStyle="@(oSolicitudLastTicketRespuesta.Data.SolIdEstadoSolicitud == 5 ? AlertStyle.Info : AlertStyle.Danger)"
                      Variant="Variant.Filled" Size="AlertSize.Medium" Shade="Shade.Default"
