@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Debug;
 using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Server.Correos;
@@ -10,32 +11,36 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.Utils;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Dynamic.Core;
 using System.Text;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
 {
-    [Route("api/[controller]")]
+    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
 
     public class ArchivosController (
             DbCorreosInstitucionalesUpiicsaContext db, 
             ISendEmailService servicioEmail,
             IServiceProvider serviceProvider,
-            HttpClient _client
+            HttpClient client
         ) : Controller
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
+        private readonly ComponentRenderer renderer = new ComponentRenderer(serviceProvider);
+
         private readonly ISendEmailService _servicioCorreo = servicioEmail;
-        private readonly IServiceProvider _serviceProvider = serviceProvider;
-        private readonly HttpClient client = _client;
+        private readonly WhatsApp WA = new WhatsApp(client);
 
         [ApiExplorerSettings(IgnoreApi = true)]
         protected string? FormatoTexto(string? texto)
@@ -109,13 +114,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task<List<string>> EnvioMasivoRespuesta(List<MtTbSolicitudesTicket> lista, bool debug = true)
+        private async Task<List<string>> EnvioMasivoAtendidos(List<MtTbSolicitudesTicket> lista)
         {
             string id = Guid.NewGuid().ToString();
             string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/procesados";
             List<string> errors = new();
 
-            ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
             WhatsApp WA = new WhatsApp(client);
 
             //WA.SendMessage()
@@ -138,7 +142,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 { "solicitud", null}
             };
 
-            foreach (MtTbSolicitudesTicket solicitud in lista)
+            MtTbSolicitudesTicket[] solicitudes = lista.Where(s => s.SolValidacionDatos).ToArray();
+
+            foreach (MtTbSolicitudesTicket solicitud in solicitudes)
             {
                 variables_correo["solicitud"] = solicitud;
 
@@ -156,11 +162,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         break;
                 }
 
-                if (debug)
-                {
-                    System.IO.File.WriteAllText($"{archivo}/{id}_{solicitud.IdSolicitudTicket}.html", correo.Body);
-                }
-
                 mensaje.Message = await renderer.GetHTML<AtendidoWA>(variables_correo);
                 mensaje.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
 
@@ -176,11 +177,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     errors.Add($"{mensaje.Number} :  {response.Message}");
                 }
 
-
             }//FOREACH solicitud
 
             return errors;
-        }
+        }        
 
         [ApiExplorerSettings(IgnoreApi = true)]
         private async Task<List<string>> EnvioMasivoPendientes(List<MtTbSolicitudesTicket> lista, bool debug = false)
@@ -189,7 +189,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/pendientes";
             List<string> errors = new();
 
-            ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
+            
             WhatsApp WA = new WhatsApp(client);
 
             RequestDTO_SendEmail correo = new()
@@ -317,6 +317,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 case "EXTENSION": return TipoDatoXLSX.EXTENSION;
                 case "EXTENSION ACTUAL": return TipoDatoXLSX.EXTENSION;
+                case "EXTENSION (SOLO EMPLEADOS DE CONTAR CON ELLA)": return TipoDatoXLSX.EXTENSION;
 
                 case "AREA": return TipoDatoXLSX.ID_EXTERNO;
                 case "AREA ACTUAL": return TipoDatoXLSX.ID_EXTERNO;
@@ -355,18 +356,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             Dictionary<TipoDatoXLSX, int> columna = new()
             {
+                {TipoDatoXLSX.CURP,                 100 },
+                {TipoDatoXLSX.ID_EXTERNO,           100 },
+                {TipoDatoXLSX.AREA,                 100 },
+                {TipoDatoXLSX.EXTENSION,            100 },
+                {TipoDatoXLSX.CELULAR,              100 },
                 {TipoDatoXLSX.CORREO_PERSONAL,      100 },
                 {TipoDatoXLSX.CORREO_INSTITUCIONAL, 100 },
                 {TipoDatoXLSX.CONTRA,               100 },
-                {TipoDatoXLSX.CELULAR,              100 },
-                {TipoDatoXLSX.EXTENSION,            100 },
-                {TipoDatoXLSX.AREA,                 100 },
-                {TipoDatoXLSX.ID_EXTERNO,           100 },
                 {TipoDatoXLSX.ACCION,               100 },
-                {TipoDatoXLSX.CURP,                 100 },
             };
 
-            List<string> column_names = new();
             TipoDatoXLSX tipo_dato = TipoDatoXLSX.NINGUNO;
 
             try
@@ -389,11 +389,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                             tipo_dato = GetTipoDato(colname);
 
-                            columna[tipo_dato] = i;
-
                             if(tipo_dato != TipoDatoXLSX.NINGUNO)
                             {
-                                column_names.Add(colname);
+                                columna[tipo_dato] = i;
                             }
                         }
 
@@ -416,15 +414,29 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             };
 
                             registros.Add(CURP, registro_actual);
-
-                            logs.Add(registro_actual.ToString());
                         }
+
+                        logs.Add("SE ENCONTRARON LAS SIGUIENTES COLUMNAS:");
+
+                        IXLCell cell;
+
+                        foreach (KeyValuePair<TipoDatoXLSX, int> dato in columna)
+                        {
+                            if(dato.Value == 100)
+                            {
+                                continue;
+                            }
+
+                            cell = ws.Cell(4, dato.Value);
+                            logs.Add($"\t - {cell.Address} : {dato.Key.GetNombre()}");
+                        }
+
                     }//LEER XLSX
                     else
                     {
                         logs.Add("EL ARCHIVO NO CUENTA CON REGISTROS.");
                     }
-
+                    
                     List<MtTbSolicitudesTicket> solicitudes = await _db.MtTbSolicitudesTickets
                         .Where
                         (
@@ -435,103 +447,108 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         .Include(st => st.SolIdUsuarioNavigation)
                         .ToListAsync();
 
-                    logs.Add($"SE ACTUALIZ{(registros.Count == 1 ? "Á" : "ARÁN")} {registros.Count} SOLICITUD{(registros.Count==1? string.Empty : "ES")} DE {solicitudes.Count} PENDIENTE{(solicitudes.Count==1?string.Empty: "S")}...");
-                    logs.Add("SE ENCONTRARON LAS SIGUIENTES COLUMNAS:"); 
-
-                    foreach(string c in column_names)
-                    {
-                        logs.Add($"\t - {c}");
-                    }
-
+                    logs.Add($"{Environment.NewLine}SE ACTUALIZARÁN {solicitudes.Count} PENDIENTE{(solicitudes.Count == 1 ? string.Empty : "S")} DE {registros.Count} REGISTRO{(registros.Count == 1 ? string.Empty : "S")} DEL ARCHIVO...");
+                    
                     //TODO: Cambio de asignaciones deacuerdo al tipo de solicitud
                     solicitudes.ForEach(solicitud =>
                     {
-                        if (datos_a_actualizar.Contains(TipoDatoXLSX.NINGUNO))
-                        {
-                            return;
-                        }
-
                         registro_actual = registros[solicitud.SolIdUsuarioNavigation.UsuCurp];
-
-                        if (string.IsNullOrEmpty(registro_actual.Accion))
-                        {
-                            logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE ACCIÓN NO ESTÉ VACÍA.");
-                            return;
-                        }
+                        logs.Add(registro_actual.ToString());
 
                         datos_a_actualizar = ((TipoSolicitud)solicitud.SolIdTipoSolicitud).GetDatosActualizar();
-
                         actualizar_todo = datos_a_actualizar.Contains(TipoDatoXLSX.TODO);
+
+                        if (datos_a_actualizar.Contains(TipoDatoXLSX.NINGUNO))
+                        {
+                            logs.Add($"\t - EL TIPO DE SOLICITUD NO REQUIRE ACTUALIZAR DATOS(?)");
+                            return;
+                        }
+                        
+                        if (string.IsNullOrEmpty(registro_actual.Accion))
+                        {
+                            logs.Add($"\t - ERROR: SE ESPERABA QUE LA COLUMNA DE ACCIÓN NO ESTÉ VACÍA.");
+                            return;
+                        }                        
 
                         if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CORREO_PERSONAL))
                         {
                             if(string.IsNullOrEmpty(registro_actual.CorreoPersonal))
                             {
-                                logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO PERSONAL NO ESTÉ VACÍA.");
+                                logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO PERSONAL NO ESTÉ VACÍA.");
                                 return;
                             }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
                             solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva = registro_actual.CorreoPersonal;
+
+                            logs.Add($"\t - SE ACTUALIZÓ EL CORREO PERSONAL");
                         }
 
                         if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CORREO_INSTITUCIONAL))
                         {
                             if (string.IsNullOrEmpty(registro_actual.CorreoInstitucional))
                             {
-                                logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO INSTITUCIONAL NO ESTÉ VACÍA.");
+                                logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO INSTITUCIONAL NO ESTÉ VACÍA.");
                                 return;
                             }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
+                            logs.Add($"\t - SE ACTUALIZÓ EL CORREO INSTITUCIONAL");
                         }
 
                         if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CONTRA))
                         {
                             if (string.IsNullOrEmpty(registro_actual.Clave))
                             {
-                                logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CONTRASEÑA NO ESTÉ VACÍA.");
+                                logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CONTRASEÑA NO ESTÉ VACÍA.");
                                 return;
                             }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
+                            logs.Add($"\t - SE ACTUALIZÓ LA CONTRASEÑA");
                         }
 
                         if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CELULAR))
                         {
                             if (string.IsNullOrEmpty(registro_actual.Celular))
                             {
-                                logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE NÚMERO DE CELULAR NO ESTÉ VACÍA.");
+                                logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE NÚMERO DE CELULAR NO ESTÉ VACÍA.");
                                 return;
                             }
 
                             solicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
                             solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo = registro_actual.Celular;
+
+                            logs.Add($"\t - SE ACTUALIZÓ EL NÚMERO DE CELULAR");
                         }
 
                         if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.EXTENSION))
                         {
                             if (string.IsNullOrEmpty(registro_actual.NoExtension    ))
                             {
-                                logs.Add($"ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE NÚMERO DE EXTENSIÓN NO ESTÉ VACÍA.");
+                                logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE NÚMERO DE EXTENSIÓN NO ESTÉ VACÍA.");
                                 return;
                             }
 
                             solicitud.SolIdUsuarioNavigation.UsuNoExtensionAnterior = solicitud.SolIdUsuarioNavigation.UsuNoExtension;
                             solicitud.SolIdUsuarioNavigation.UsuNoExtension = registro_actual.NoExtension;
+
+                            logs.Add($"\t - SE ACTUALIZÓ EL NÚMERO DE EXTENSIÓN");
                         }
 
                         solicitud.SolRespuestaDcyC = registro_actual.Accion;
                         solicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.ATENDIDA;
+                        solicitud.SolValidacionDatos = true;
                     });
 
                     await _db.SaveChangesAsync();
 
-                    await EnvioMasivoRespuesta(solicitudes);
+                    await EnvioMasivoAtendidos(solicitudes);
                 }
 
                 oResponse.Success = 1;
             }
             catch(Exception ex)
             {
-                oResponse.Data = ex.Message + Environment.NewLine + ex.StackTrace;
+                oResponse.Message = ex.Message;
+                logs.Add($"{ex.Message}:{Environment.NewLine}{ex.StackTrace}");
             }
 
             string log_content = string.Join(Environment.NewLine, logs);

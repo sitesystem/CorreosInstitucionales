@@ -38,6 +38,26 @@ namespace CorreosInstitucionales.Shared.Constantes
             return "ADMINISTRATIVO";
         }
 
+        public static string GetNombre(this TipoDatoXLSX dato)
+        {
+            switch(dato)
+            {
+                case TipoDatoXLSX.TODO: return "TODO";
+                case TipoDatoXLSX.NINGUNO: return "NINGUNO";
+                case TipoDatoXLSX.CORREO_PERSONAL: return "CORREO PERSONAL";
+                case TipoDatoXLSX.CORREO_INSTITUCIONAL: return "CORREO INSTITUCIONAL";
+                case TipoDatoXLSX.CONTRA: return "CONTRASEÑA";
+                case TipoDatoXLSX.CELULAR: return "NÚMERO DE CELULAR";
+                case TipoDatoXLSX.EXTENSION: return "EXTENSIÓN";
+                case TipoDatoXLSX.AREA: return "ÁREA";
+                case TipoDatoXLSX.ID_EXTERNO: return "ID (SEGÚN EL CASO)";
+                case TipoDatoXLSX.ACCION: return "ACCIÓN / RESPUESTA AC";
+                case TipoDatoXLSX.CURP: return "CURP";
+            }
+
+            return "NO DEFINIDO?";
+        }
+
         public static string GetPlantilla(this TipoSolicitud solicitud)
         {
             switch (solicitud)

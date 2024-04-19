@@ -1,4 +1,5 @@
 ﻿@using CorreosInstitucionales.Shared;
+@using CorreosInstitucionales.Shared.CapaTools
 
 @inject Radzen.DialogService dialogService
 
@@ -268,6 +269,13 @@
         registro.UsuNoExtension = cat_UsuIdAreaDepto.First(area => area.IdAreaDepto == registro.UsuIdAreaDepto).AreNoExtension;
     }
 
-    private void OnValidForm() => dialogService.Close(new DocumentoAdjunto<RequestDTO_Usuario>(registro, archivos));
+    private void OnValidForm() 
+    {
+        if(agregar_clave)
+        {
+            registro.UsuContraseña = Encrypt.GetSHA256(registro.UsuContraseña);
+        }
+        dialogService.Close(new DocumentoAdjunto<RequestDTO_Usuario>(registro, archivos));
+    }
     private void OnCloseForm() => dialogService.Close(null);
 }

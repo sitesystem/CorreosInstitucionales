@@ -85,24 +85,7 @@
         ILoggerFactory loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         HtmlRenderer htmlRenderer = new HtmlRenderer(serviceProvider, loggerFactory);
 
-        string body = await htmlRenderer.Dispatcher.InvokeAsync
-        (
-            async ()=>
-            {
-
-                var parameters = ParameterView.FromDictionary
-                (
-                    new Dictionary<string, object?>
-                    {
-                        { "mensaje", mensaje_correo}
-                    }
-                );
-
-                var output = await htmlRenderer.RenderComponentAsync<CorreoPrueba>(parameters);
-
-                return output.ToHtmlString();
-            }
-        );
+        string body = mensaje_correo;
 
         debug += Environment.NewLine + "Enviando mensaje";
         StateHasChanged();
