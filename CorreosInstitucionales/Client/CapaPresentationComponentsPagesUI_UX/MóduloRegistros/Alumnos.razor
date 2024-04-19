@@ -111,13 +111,13 @@
                         <RadzenFormField Text="Archivo del CURP" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
-                                <RadzenUpload @ref="oUploadFile_CURP" Url="" Accept=".pdf"
-                                              Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
-                                              Change=@(args => OnChangeFiles(args, CURP))
-                                              Error=@(args => OnErrorFiles(args, "FileInput"))
-                                              InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
-                                              Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
-                                              Complete="@(args => OnCompleteFiles(args))" />
+                                <RadzenUpload @ref="oUploadFile_CURP" Url="@($"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}")" Accept=".pdf"
+                                        Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
+                                        Change=@(args => OnChangeFiles(args, CURP))
+                                        Error=@(args => OnErrorFiles(args, "FileInput"))
+                                        InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
+                                        Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
+                                        Complete="@(args => OnCompleteFiles(args))" />
                             </ChildContent>
                             <End>
                                 <RadzenButton Icon="visibility"
@@ -261,7 +261,7 @@
                         <RadzenFormField Text="@($@"{( (IdTipoPersonal == 1 || IdTipoPersonal == 2) ? "Archivo PDF del Comprobante de Horario (Tira de Materias) del Último Semestre Cursado" : "Archivo PDF del SIP-10" )}")" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
-                                <RadzenUpload @ref="oUploadFile_ComprobanteInscripción" Url="" Accept=".pdf"
+                                <RadzenUpload @ref="oUploadFile_ComprobanteInscripción" Url="@($"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}")" Accept=".pdf"
                                               Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
                                               Change=@(args => OnChangeFiles(args, Comprobante_Inscripción))
                                               Error=@(args => OnErrorFiles(args, "FileInput"))
@@ -789,8 +789,8 @@ else
 
     @*///////////////////////////////////////////////  VALIDAR CAMPOS DEL FORMULARIO ARCHIVOS PARA SUBIR  ///////////////////////////////////////////////*@
     // Subida de archivo
-    private RadzenUpload oUploadFile_CURP = new();
-    private RadzenUpload oUploadFile_ComprobanteInscripción = new();
+    private RadzenUpload? oUploadFile_CURP = new();
+    private RadzenUpload? oUploadFile_ComprobanteInscripción = new();
     private IEnumerable<FileInfo>? oFileInfoCURP { get; set; }
     private IEnumerable<FileInfo>? oFileInfoComprobanteInscripcion { get; set; }
 
@@ -849,7 +849,7 @@ else
     private string folder = "Usuarios";
     private string CURP = "CURP";
     private string Comprobante_Inscripción = "Comprobante-Inscripción";
-    private int idResponse;
+    private int idResponse = 0;
     private Guid oGuid = Guid.NewGuid();
     private Response<RequestViewModel_TipoPersonal> oTipoPersonal = new();
     private Response<RequestViewModel_Carrera> oCarrera = new();
@@ -1039,12 +1039,11 @@ else
 
                         @*//  UPLOAD FILES  //*@
                         oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
-                        oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
-
-                        oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
-                        oUploadFile_ComprobanteInscripción.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
-
+                        oUploadFile_CURP.Url = $"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
                         await oUploadFile_CURP.Upload();
+
+                        oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
+                        oUploadFile_ComprobanteInscripción.Url = $"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
                         await oUploadFile_ComprobanteInscripción.Upload();
 
                         @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@
@@ -1196,20 +1195,20 @@ else
                     {
                         @*//  UPLOAD FILES  //*@
                         idResponse = oUsuario.IdUsuario;
-                        
+
                         oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
-                        oUploadFile_CURP.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
+                        oUploadFile_CURP.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
                         await oUploadFile_CURP.Upload();
 
                         oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
-                        oUploadFile_ComprobanteInscripción.Url = $@"api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
+                        oUploadFile_ComprobanteInscripción.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
                         await oUploadFile_ComprobanteInscripción.Upload();
 
-                        var responseUsuario = await servicioUsuario.GetDataByIdAsync(oUsuario.IdUsuario);
-                        oUsuario = responseUsuario.Data;
-                        srcCURP = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}";
-                        srcComprobanteInscripcion = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteInscripcion}";
-
+                        // var responseUsuario = await servicioUsuario.GetDataByIdAsync(oUsuario.IdUsuario);
+                        // oUsuario = responseUsuario.Data;
+                        // srcCURP = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}";
+                        // srcComprobanteInscripcion = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteInscripcion}";
+                        
                         @*//  NOTIFICATION TOAST ACTUALIZACIÓN DE DATOS EXITOSO  //*@
                         NotificationService.Notify(
                             new NotificationMessage
@@ -1402,7 +1401,7 @@ else
         finally
         {
             busyLoading = false;
-            if (ActionAddEdit == "actualizar" && oFileInfoCURP is not null || oFileInfoComprobanteInscripcion is not null)
+            if (ActionAddEdit == "actualizar" && (oFileInfoCURP is not null || oFileInfoComprobanteInscripcion is not null))
                 navigationManager.Refresh(true);
         }
     }

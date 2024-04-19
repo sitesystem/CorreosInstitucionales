@@ -252,7 +252,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     oRespuesta.Data = oUsuario;
                 }
                 else
-                    oRespuesta.Message = "No se encuentró registrado el Correo Electrónico y/o CURP. Si el problema persisite acudir a la Unidad Informática (UDI).";
+                    oRespuesta.Message = "Verifique sus datos, no se encontró registrado el Correo Electrónico Personal y/o CURP. Si el problema persisite acudir a la Unidad Informática (UDI).";
             }
             catch (Exception ex)
             {
