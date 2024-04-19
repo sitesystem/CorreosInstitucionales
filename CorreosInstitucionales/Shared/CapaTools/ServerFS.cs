@@ -58,6 +58,8 @@ namespace CorreosInstitucionales.Shared.Utils
                         z_name = file.Name == "#" ? Path.GetFileName(file.Url) : file.Name;
 
                         za.CreateEntryFromFile(z_filename, z_name);
+
+                        messages.Add($"{z_filename} -> {z_name}");
                     }
 
                     if (messages.Count > 0)
