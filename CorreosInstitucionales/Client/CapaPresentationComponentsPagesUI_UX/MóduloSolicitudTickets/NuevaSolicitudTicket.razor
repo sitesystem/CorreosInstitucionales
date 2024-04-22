@@ -692,7 +692,7 @@ else
                                                                 <b>Pendiente</b> (Se aperturó la Solicitud-Ticket y se ha colocado en la Bandeja de Espera para su pronta atención).
                                                             </td>
 								                        </tr>
-                                                        <tr style='background-color: #dddddd;'>
+                                                        <tr>
 									                        <td width='200px' style='border: 1px solid black;'><b>✅ Fecha / Hora de Creación</b></td>
 									                        <td width='300px' style='border: 1px solid black;'>{fecha_hora_creación}</td>
 								                        </tr>
@@ -734,7 +734,7 @@ else
                     oSendWhatsApp.Number = oResponseUsuario.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
                     oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                            "Estimad@:\n*" + oResponseUsuario.Data.UsuNombre + " " + oResponseUsuario.Data.UsuPrimerApellido + " " + oResponseUsuario.Data.UsuSegundoApellido + "*\n\n" +
+                                            "Estimad@:\n*" + oResponseUsuario.Data.UsuNombre + " " + oResponseUsuario.Data.UsuPrimerApellido + "* " + oResponseUsuario.Data.UsuSegundoApellido + "\n\n" +
                                             "Se le informa que se aperturó con éxito el Ticket *#" + idResponse + "* " +
                                             "de la Solicitud *" + oTipoSolicitud.Data.TiposolDescripcion + " - " + oSolicitudTicket.SolObservacionesSolicitud + "* " +
                                             "en la *Plataforma SACI* de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
@@ -745,8 +745,8 @@ else
                                             "✅ Estado: *Pendiente* (Se aperturó la Solicitud-Ticket y se ha colocado en la Bandeja de Espera para su pronta atención).\n" +
                                             "✅ Fecha / Hora de Creación: *" + fecha_hora_creación + "*\n\n" +
                                             "*ATENCIÓN:*\n\n" +
-                                            " 👀 > Te informamos que las solicitudes tendrán una *respuesta entre 3 y 5 días*, se te notificará por los medios / vías de comunicación los avances del estado de tu solicitud.\n\n" +
-                                            " 💡 > *Para alumnos de nuevo ingreso* te informamos que las solicitudes tendrán una respuesta de un *máximo de 2 meses.*\n\n" +
+                                            " 👀 Te informamos que las solicitudes tendrán una *respuesta entre 3 y 5 días*, se te notificará por los medios / vías de comunicación los avances del estado de tu solicitud.\n\n" +
+                                            " 💡 *Para alumnos de nuevo ingreso* te informamos que las solicitudes tendrán una respuesta de un *máximo de 2 meses.*\n\n" +
                                             "Que tenga un excelente día.\n" +
                                             "> *NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
 
