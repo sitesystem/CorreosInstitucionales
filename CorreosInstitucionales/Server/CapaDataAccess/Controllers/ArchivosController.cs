@@ -613,8 +613,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             foreach (MtTbSolicitudesTicket solicitud in lista)
             {
-                ruta_repositorio = $"Repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
-                ruta_usuario = $"Repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
+                ruta_repositorio = $"repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
+                ruta_usuario = $"repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
 
                 usuario = solicitud.SolIdUsuarioNavigation!;
 
@@ -865,8 +865,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 foreach (MtTbSolicitudesTicket solicitud in solicitudes)
                 {
-                    ruta_repositorio = $"Repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
-                    ruta_usuario = $"Repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
+                    ruta_repositorio = $"repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
+                    ruta_usuario = $"repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
 
                     enlace = EnlaceRoto(solicitud.SolIdUsuarioNavigation.UsuFileNameCurp, ruta_usuario);
                     if (enlace is not null) oResponse.Data.Add(enlace);

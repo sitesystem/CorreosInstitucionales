@@ -41,7 +41,7 @@ builder.Services.AddDbContext<DbCorreosInstitucionalesUpiicsaContext>(optionsBui
 // LogReg (Archivo de Registros de Eventos)
 // Log.Logger = new LoggerConfiguration().MinimumLevel.Verbose()
 //    .WriteTo.Console()
-//    .WriteTo.File("wwwroot/Repositorio/Logs/log-.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}")
+//    .WriteTo.File("wwwroot/repositorio/Logs/log-.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}")
 //    .CreateLogger();
 // Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
 builder.Host.UseSerilog((hostingContext, loggerConfig) =>

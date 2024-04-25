@@ -25,8 +25,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.RepositorioFi
             {
                 if (file.Length > 0 && file != null)
                 {
-                    // var carpeta = Path.Combine(_hostEnvironment.ContentRootPath, $@"wwwroot\Repositorio\{id}_{guid}");
-                    folder = Path.Combine(_webHostEnvironment.ContentRootPath, $@"wwwroot\Repositorio\{folder}\{id}"); // Development & Deployment wwwroot in Server
+                    // var carpeta = Path.Combine(_hostEnvironment.ContentRootPath, $@"wwwroot\repositorio\{id}_{guid}");
+                    folder = Path.Combine(_webHostEnvironment.ContentRootPath, $"wwwroot/repositorio/{folder}/{id}"); // Development & Deployment wwwroot in Server
                     // var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     if (!Directory.Exists(folder))
                         Directory.CreateDirectory(folder);
@@ -68,8 +68,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.RepositorioFi
 
                 foreach (var file in files)
                 {
-                    // var carpeta = Path.Combine(_hostEnvironment.ContentRootPath, $@"wwwroot\Repositorio\{id}_{guid}");
-                    folder = Path.Combine(_webHostEnvironment.ContentRootPath, $@"wwwroot\Repositorio\{folder}\{id}"); // Development & Deployment wwwroot in Server
+                    // var carpeta = Path.Combine(_hostEnvironment.ContentRootPath, $@"wwwroot\repositorio\{id}_{guid}");
+                    folder = Path.Combine(_webHostEnvironment.ContentRootPath, $"wwwroot/repositorio/{folder}/{id}"); // Development & Deployment wwwroot in Server
                     // var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
 
                     if (!Directory.Exists(folder))
@@ -106,7 +106,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.RepositorioFi
         {
             try
             {
-                var filename = _hostEnvironment.ContentRootPath + $@"\{UploadFiles[0].FileName}";
+                var filename = _hostEnvironment.ContentRootPath + $"/{UploadFiles[0].FileName}";
 
                 if (System.IO.File.Exists(filename))
                     System.IO.File.Delete(filename);

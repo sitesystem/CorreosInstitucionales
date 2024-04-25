@@ -5,11 +5,11 @@
 /CorreosInstitucionales/Server/obj/
 /CorreosInstitucionales/Shared/bin/
 /CorreosInstitucionales/Shared/obj/
-/CorreosInstitucionales/Server/wwwroot/Repositorio/pendientes/
-/CorreosInstitucionales/Server/wwwroot/Repositorio/procesados/*.log
-/CorreosInstitucionales/Server/wwwroot/Repositorio/procesados/*.txt
-/CorreosInstitucionales/Server/wwwroot/Repositorio/procesados/*.html
-/CorreosInstitucionales/Server/wwwroot/Repositorio/Solicitudes-Tickets/*/*.pdf
-/CorreosInstitucionales/Server/wwwroot/Repositorio/Usuarios/*/*.pdf
+/CorreosInstitucionales/Server/wwwroot/repositorio/pendientes/
+/CorreosInstitucionales/Server/wwwroot/repositorio/procesados/*.log
+/CorreosInstitucionales/Server/wwwroot/repositorio/procesados/*.txt
+/CorreosInstitucionales/Server/wwwroot/repositorio/procesados/*.html
+/CorreosInstitucionales/Server/wwwroot/repositorio/Solicitudes-Tickets/*/*.pdf
+/CorreosInstitucionales/Server/wwwroot/repositorio/Usuarios/*/*.pdf
 /CorreosInstitucionales/Server/wwwroot/Logs
 /api_whatsapp/node_modules
