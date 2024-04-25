@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>D:\git\CorreosInstitucionales\CorreosInstitucionales\Server\bin\Release\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2024-04-25T18:29:57.3134101Z;True|2024-04-25T11:54:43.7587211-06:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="SQLServer_Connection">
+      <Value>Server=mssql%3bDatabase=db_CorreosInstitucionales_UPIICSA%3bUser ID=correos_institucionales%3bPassword=correos_institucionales%3bEncrypt=false%3bTrustServerCertificate=true</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>
