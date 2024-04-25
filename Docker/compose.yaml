@@ -1,0 +1,32 @@
+name: saci
+
+services:
+  correos_institucionales:
+    build: ./app
+    ports:
+      - 80:8080
+      - 443:443
+    volumes:
+      - ./app/https/:/https/
+      - ./app/scripts/:/scripts/
+      - ./repositorio:/var/dotnet/wwwroot/repositorio/
+    restart: unless-stopped
+    depends_on:
+      - mssql
+    networks:
+      - internal
+
+  mssql:
+    build: ./mssql
+    environment:
+      - MSSQL_SA_PASSWORD=#Password!!1
+    volumes:
+      - ./mssql/volumes/data:/var/opt/mssql/data
+      - ./mssql/volumes/log:/var/opt/mssql/log
+    networks:
+      - internal
+    restart: unless-stopped
+
+networks:
+  internal:
+    driver: bridge
