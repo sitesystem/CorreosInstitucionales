@@ -1,6 +1,4 @@
 ﻿using ClosedXML.Excel;
-using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Debug;
-using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Server.Correos;
 using CorreosInstitucionales.Server.MensajesWA;
@@ -278,14 +276,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return new WebUtils.Link($"{directorio}{archivo}",$"SOL{id}_{curp}_{tipo}{ext}");
         }
 
-        [Authorize]
         [HttpPost("xlsx/pendientes")]
         public async Task<IActionResult> ExportarPendientes_XLSX(int[] selected)
         {
             return await LlenarFormulario(selected, false);
         }
 
-        [Authorize]
         [HttpPost("zip/pendientes")]
         public async Task<IActionResult> ExportarPendientes_ZIP(int[] selected)
         {
@@ -577,36 +573,26 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             IXLWorksheet ws = wb.Worksheet(1);
             ws.Cell("H2").Value = DateTime.Now.ToString("dd/MM/yyyy");//FECHA
 
-            
-                       
-            
             // DATOS USUARIO
             MpTbUsuario usuario;
             TipoPersonal tipo_personal;
 
             // DATOS SOLICITUD
             string? id_externo_usuario = null;
-            string? extension = null;
-
+            
             TipoDatoXLSX[] datos_exportar = formato_solicitud.GetDatosExportar();
             TipoDocumento[] documentos_adjuntar;
             TipoSolicitud tipo_solicitud;
 
-            TipoDatoXLSX[] requiere_datos_previos = 
-            [
-                TipoDatoXLSX.CORREO_PERSONAL,
-                TipoDatoXLSX.CELULAR
-            ];
-
             Dictionary<TipoDatoXLSX, int> columnas = new Dictionary<TipoDatoXLSX, int>();
             int fila = 5; //PRIMER FILA A LEER
-            int columna = 6;//PRIMER COLUMNA DISPONIBLE
+            int columna = 5;//PRIMER COLUMNA DISPONIBLE
             int columna_final = 1;
 
             foreach(TipoDatoXLSX dato in datos_exportar)
             {
                 columnas.Add(dato, columna);
-                columna += requiere_datos_previos.Contains(dato) ? 2 : 1;
+                columna++;
             }
                         
             columna_final = columna - 1;
@@ -619,8 +605,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 usuario = solicitud.SolIdUsuarioNavigation!;
 
                 id_externo_usuario = usuario.UsuNumeroEmpleado;
-                extension = usuario.UsuNoExtension;
-
+                
                 tipo_personal = (TipoPersonal)usuario.UsuIdTipoPersonal;
                 tipo_solicitud = (TipoSolicitud)solicitud.SolIdTipoSolicitud;
 
@@ -639,47 +624,64 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 ws.Cell(fila, 2).Value = FormatoTexto(usuario.UsuPrimerApellido);
                 ws.Cell(fila, 3).Value = FormatoTexto(usuario.UsuSegundoApellido);
                 ws.Cell(fila, 4).Value = ((TipoPersonal)usuario.UsuIdTipoPersonal).GetNombre();
-                ws.Cell(fila, 5).Value = usuario.UsuCurp;
 
-                if(datos_exportar.Contains(TipoDatoXLSX.CORREO_PERSONAL))
+                foreach(TipoDatoXLSX dato in datos_exportar)
                 {
-                    columna = columnas[TipoDatoXLSX.CORREO_PERSONAL];
-                    ws.Cell(fila, columna).Value = usuario.UsuCorreoPersonalCuentaNueva;//ANTERIOR
-                    ws.Cell(fila, columna + 1).Value = usuario.UsuCorreoPersonalCuentaAnterior;//NUEVO
-                }
+                    columna = columnas[dato];
+                    switch(dato)
+                    {
+                        case TipoDatoXLSX.CORREO_PERSONAL: 
+                            ws.Cell(fila, columna).Value = usuario.UsuCorreoPersonalCuentaAnterior; 
+                            break;
+                        case TipoDatoXLSX.CORREO_INSTITUCIONAL:
+                            ws.Cell(fila, columna).Value = usuario.UsuCorreoInstitucionalCuenta;
+                            break;
+                        case TipoDatoXLSX.CELULAR:
+                            ws.Cell(fila, columna).Value = usuario.UsuNoCelularAnterior;
+                            break;
+                        case TipoDatoXLSX.EXTENSION:
+                            ws.Cell(fila, columna).Value = usuario.UsuNoExtensionAnterior;
+                            break;
+                        case TipoDatoXLSX.AREA:
+                            ws.Cell(fila, columna).Value = usuario.UsuIdAreaDepto;
+                            break;
+                        case TipoDatoXLSX.ID_EXTERNO:
+                            ws.Cell(fila, columna).Value = id_externo_usuario;
+                            break;
+                        case TipoDatoXLSX.CURP:
+                            ws.Cell(fila, columna).Value = usuario.UsuCurp;
+                            break;
 
-                if (datos_exportar.Contains(TipoDatoXLSX.CELULAR))
-                {
-                    columna = columnas[TipoDatoXLSX.CELULAR];
-                    ws.Cell(fila, columna).Value = usuario.UsuNoCelularNuevo;//ANTERIOR
-                    ws.Cell(fila, columna + 1).Value = usuario.UsuNoCelularAnterior;//NUEVO
+                        case TipoDatoXLSX.CORREO_PERSONAL_NUEVO:
+                            ws.Cell(fila, columna).Value = usuario.UsuCorreoPersonalCuentaNueva;
+                            break;
+                        case TipoDatoXLSX.CELULAR_NUEVO:
+                            ws.Cell(fila, columna).Value = usuario.UsuNoCelularNuevo;
+                            break;
+                        case TipoDatoXLSX.EXTENSION_NUEVO:
+                            ws.Cell(fila, columna).Value = usuario.UsuNoExtension;
+                            break;
+                    }
                 }
-
-                if(datos_exportar.Contains(TipoDatoXLSX.ID_EXTERNO))
-                {
-                    ws.Cell(fila, columnas[TipoDatoXLSX.ID_EXTERNO]).Value = id_externo_usuario;
-                }
-
-                if (datos_exportar.Contains(TipoDatoXLSX.EXTENSION))
-                {
-                    ws.Cell(fila, columnas[TipoDatoXLSX.EXTENSION]).Value = extension;
-                }
-
-                if (datos_exportar.Contains(TipoDatoXLSX.AREA))
-                {
-                    ws.Cell(fila, columnas[TipoDatoXLSX.AREA]).Value = usuario.UsuIdAreaDeptoNavigation!.AreNombreAreaDepto;
-                }
-
 
                 /*IXLRange row = ws.Range(ws.Cell(i, 1), ws.Cell(i, cambio_celular ? 11 : 9));*/
 
-                IXLRange row = ws.Range(ws.Cell(fila, 1), ws.Cell(fila, columna_final));
+                IXLRange registros = ws.Range(ws.Cell(fila, 1), ws.Cell(fila, columna_final));
 
-                row.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
-                row.Style.Border.SetOutsideBorderColor(XLColor.Black);
+                registros.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+                registros.Style.Border.SetOutsideBorderColor(XLColor.Black);
 
-                row.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
-                row.Style.Border.SetInsideBorderColor(XLColor.Black);
+                registros.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
+                registros.Style.Border.SetInsideBorderColor(XLColor.Black);
+
+                registros.Style.Font.FontName = "Arial";
+                registros.Style.Font.FontSize = 14;
+
+                registros.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                registros.Style.Alignment.SetVertical(XLAlignmentVerticalValues.Center);
+
+
+                ws.Row(fila).Height = 60;
 
                 // ADJUNTOS
                 documentos_adjuntar = tipo_solicitud.GetDocumentos();

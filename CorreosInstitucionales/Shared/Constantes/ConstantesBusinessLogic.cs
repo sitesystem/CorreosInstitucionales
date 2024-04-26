@@ -44,8 +44,9 @@ namespace CorreosInstitucionales.Shared.Constantes
             {
                 case TipoDatoXLSX.TODO: return "TODO";
                 case TipoDatoXLSX.NINGUNO: return "NINGUNO";
-                case TipoDatoXLSX.CORREO_PERSONAL: return "CORREO PERSONAL";
-                case TipoDatoXLSX.CORREO_INSTITUCIONAL: return "CORREO INSTITUCIONAL";
+
+                case TipoDatoXLSX.CORREO_PERSONAL: return "CORREO PERSONAL ANTERIOR";
+                case TipoDatoXLSX.CORREO_INSTITUCIONAL: return "CORREO INSTITUCIONAL ANTERIOR";
                 case TipoDatoXLSX.CONTRA: return "CONTRASEÑA";
                 case TipoDatoXLSX.CELULAR: return "NÚMERO DE CELULAR";
                 case TipoDatoXLSX.EXTENSION: return "EXTENSIÓN";
@@ -53,6 +54,10 @@ namespace CorreosInstitucionales.Shared.Constantes
                 case TipoDatoXLSX.ID_EXTERNO: return "ID (SEGÚN EL CASO)";
                 case TipoDatoXLSX.ACCION: return "ACCIÓN / RESPUESTA AC";
                 case TipoDatoXLSX.CURP: return "CURP";
+
+                case TipoDatoXLSX.CORREO_PERSONAL_NUEVO: return "CORREO PERSONAL NUEVO";
+                case TipoDatoXLSX.CELULAR_NUEVO: return "NÚMERO DE CELULAR NUEVO";
+                case TipoDatoXLSX.EXTENSION_NUEVO: return "NÚMERO DE EXTENSIÓN NUEVO ";
             }
 
             return "NO DEFINIDO?";
@@ -109,11 +114,11 @@ namespace CorreosInstitucionales.Shared.Constantes
         {
             switch (solicitud)
             {
-                case TipoSolicitud.CAMBIO_CORREO_PERSONAL: return [TipoDatoXLSX.CORREO_PERSONAL];
-                case TipoSolicitud.CAMBIO_CELULAR: return [TipoDatoXLSX.CELULAR];
+                case TipoSolicitud.CAMBIO_CORREO_PERSONAL: return [TipoDatoXLSX.CORREO_INSTITUCIONAL, TipoDatoXLSX.CORREO_PERSONAL, TipoDatoXLSX.CORREO_PERSONAL_NUEVO];
+                case TipoSolicitud.CAMBIO_CELULAR: return [TipoDatoXLSX.CORREO_INSTITUCIONAL, TipoDatoXLSX.CELULAR, TipoDatoXLSX.CELULAR_NUEVO];
             }
 
-            return [TipoDatoXLSX.ID_EXTERNO, TipoDatoXLSX.EXTENSION, TipoDatoXLSX.CORREO_PERSONAL, TipoDatoXLSX.CORREO_INSTITUCIONAL];
+            return [TipoDatoXLSX.CURP,TipoDatoXLSX.ID_EXTERNO, TipoDatoXLSX.EXTENSION, TipoDatoXLSX.CORREO_PERSONAL];
         }
     }
 }

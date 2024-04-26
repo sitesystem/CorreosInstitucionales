@@ -10,6 +10,7 @@ namespace CorreosInstitucionales.Shared.Constantes
     {
         TODO                    = -1,
         NINGUNO                 = 0,
+
         CORREO_PERSONAL         = 1,
         CORREO_INSTITUCIONAL    = 2,
         CONTRA                  = 3,
@@ -19,5 +20,9 @@ namespace CorreosInstitucionales.Shared.Constantes
         ID_EXTERNO              = 7,
         ACCION                  = 8,
         CURP                    = 9,
+
+        CORREO_PERSONAL_NUEVO       = 11,
+        CELULAR_NUEVO               = 14,
+        EXTENSION_NUEVO             = 15,
     }
 }
