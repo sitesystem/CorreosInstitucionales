@@ -15,8 +15,13 @@ namespace CorreosInstitucionales.Shared.CapaTools
         {
             return new RequestDTO_Usuario()
             {
+                UsuIdRol = 2,
+                UsuIdTipoPersonal = 1,
+                UsuCurp = "XAXX010101HDFXXX00",
                 UsuBoletaAlumno = "0000600000",
                 UsuBoletaMaestria = "B000000",
+                UsuCorreoPersonalCuentaNueva = "noreply@localhost",
+                UsuNoCelularNuevo = "55 00 00 00 00",
                 UsuIdCarrera = 1,
                 UsuSemestre = "0",
                 UsuAñoEgreso = 1950,

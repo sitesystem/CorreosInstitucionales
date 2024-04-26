@@ -65,7 +65,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
             char[] c_apellido1 = letras_remover.Replace(apellido1.ToUpper(), "X").Cast<char>().ToArray();
             char[] c_apellido2 = letras_remover.Replace((apellido2??"X").ToUpper(), "X").Cast<char>().ToArray();
 
-            Console.WriteLine($"{string.Join("", c_nombre)} {string.Join("", c_apellido1)} {string.Join("", c_apellido2)}");
+            Console.WriteLine($"{string.Join("", c_nombre)} {string.Join("", c_apellido1)} {string.Join("",c_apellido2)}");
 
             // INICIAL DEL PRIMER APELLIDO
             result += c_apellido1[0];

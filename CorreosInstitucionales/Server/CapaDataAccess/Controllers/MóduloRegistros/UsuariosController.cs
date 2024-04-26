@@ -8,8 +8,6 @@ using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared;
 using CorreosInstitucionales.Shared.Utils;
-using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos;
-using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloRegistros;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegistros
 {
@@ -388,7 +386,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     {
                         UsuSegundoApellido = null,
                         UsuFechaHoraAlta = DateTime.Now,
-                        UsuIdRol = 1,
+                        UsuIdRol = 2,
                         UsuIdTipoPersonal= (int)tipo_personal,
                         UsuFileNameCurp = $"CURP_{id}.pdf",
                         UsuFileNameComprobanteInscripcion = "-",
