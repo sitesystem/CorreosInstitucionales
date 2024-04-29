@@ -141,40 +141,45 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             };
 
             MtTbSolicitudesTicket[] solicitudes = lista.Where(s => s.SolValidacionDatos).ToArray();
+            string dominio = string.Empty;
 
             foreach (MtTbSolicitudesTicket solicitud in solicitudes)
             {
                 variables_correo["solicitud"] = solicitud;
 
                 correo.EmailTo = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
-
-                switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
-                {
-                    case TipoPersonal.ALUMNO:
-                    case TipoPersonal.EGRESADO:
-                    case TipoPersonal.MAESTRIA:
-                        correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_correo);
-                        break;
-                    default:
-                        correo.Body = await renderer.GetHTML<AtendidoPersonal>(variables_correo);
-                        break;
-                }
-
-                mensaje.Message = await renderer.GetHTML<AtendidoWA>(variables_correo);
-                mensaje.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
+                mensaje.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty);
 
                 // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
-                if (!correo.EmailTo.ToLower().EndsWith("localhost"))
+                if (!Dominios.EsCorreoDePrueba(correo.EmailTo))
                 {
+                    switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
+                    {
+                        case TipoPersonal.ALUMNO:
+                        case TipoPersonal.EGRESADO:
+                        case TipoPersonal.MAESTRIA:
+                            correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_correo);
+                            break;
+                        default:
+                            correo.Body = await renderer.GetHTML<AtendidoPersonal>(variables_correo);
+                            break;
+                    }
+
                     _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
                 }
 
-                Response<string> response = await WA.SendMessage(mensaje);
-                if (response.Success != 1)
-                {
-                    errors.Add($"{mensaje.Number} :  {response.Message}");
-                }
 
+                if(mensaje.Number != "5500000000")
+                {
+                    mensaje.Message = await renderer.GetHTML<AtendidoWA>(variables_correo);
+
+                    Response<string> response = await WA.SendMessage(mensaje);
+                    if (response.Success != 1)
+                    {
+                        errors.Add($"{mensaje.Number} :  {response.Message}");
+                    }
+                }
+                
             }//FOREACH solicitud
 
             return errors;
@@ -209,33 +214,31 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             };
 
             int id_cambio_celular = (int)TipoSolicitud.CAMBIO_CELULAR;
+            int id_cambio_correo = (int)TipoSolicitud.CAMBIO_CORREO_PERSONAL;
 
             foreach (MtTbSolicitudesTicket solicitud in lista)
             {
                 variables_correo["solicitud"] = solicitud;
 
-                correo.Body = await renderer.GetHTML<EnProceso>(variables_correo);
-                mensaje.Message = await renderer.GetHTML<EnProcesoWA>(variables_correo);
-
+                correo.EmailTo = solicitud.SolIdTipoSolicitud == id_cambio_correo ? solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior! : solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
                 mensaje.Number = solicitud.SolIdTipoSolicitud == id_cambio_celular ? solicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior! : solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
-
-                if (debug)
-                {
-                    System.IO.File.WriteAllText($"{archivo}/{id}_{solicitud.IdSolicitudTicket}.html", correo.Body);
-                    System.IO.File.WriteAllText($"{archivo}/{id}_{solicitud.IdSolicitudTicket}.txt", mensaje.Message);
-                }
-
+                mensaje.Number.Replace(" ", string.Empty);
 
                 // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
-                if (!correo.EmailTo.ToLower().EndsWith("localhost"))
+                if (!Dominios.EsCorreoDePrueba(correo.EmailTo))
                 {
+                    correo.Body = await renderer.GetHTML<EnProceso>(variables_correo);
                     _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
                 }
 
-                Response<string> response = await WA.SendMessage(mensaje);
-                if (response.Success != 1)
+                if(mensaje.Number != "5500000000")
                 {
-                    errors.Add($"{mensaje.Number} :  {response.Message}");
+                    mensaje.Message = await renderer.GetHTML<EnProcesoWA>(variables_correo);
+                    Response<string> response = await WA.SendMessage(mensaje);
+                    if (response.Success != 1)
+                    {
+                        errors.Add($"{mensaje.Number} :  {response.Message}");
+                    }
                 }
 
             }//FOREACH solicitud
