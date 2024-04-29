@@ -1,4 +1,5 @@
 ﻿@using CorreosInstitucionales.Shared;
+@using CorreosInstitucionales.Shared.Constantes;
 @using CorreosInstitucionales.Shared.CapaTools
 
 @inject Radzen.DialogService dialogService
@@ -8,8 +9,7 @@
         Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
     </div>
     <DataAnnotationsValidator />
-    <ValidationSummary/>
-
+    
     <section class="my-2 py-2">
         <h1 class="my-2">Datos de Cuenta</h1>
 
@@ -55,7 +55,7 @@
 
             <div class="col-4 mb-2">
                 <span class="fw-bold">Primer Apellido<strong class="red text-uppercase" title="requerido">*</strong></span>
-                <InputText @bind-Value="@registro.UsuPrimerApellido" class="required form-control" />
+                <InputText @bind-Value="@registro.UsuPrimerApellido" class="required form-control text-uppercase" />
                 <ValidationMessage For="()=>registro.UsuPrimerApellido"></ValidationMessage>
             </div>
 
@@ -64,7 +64,9 @@
                 <InputText @bind-Value="@registro.UsuSegundoApellido" class="form-control text-uppercase" />
                 <ValidationMessage For="()=>registro.UsuSegundoApellido"></ValidationMessage>
             </div>
+        </div>
 
+        <div class="row my-2">
             <div class="col-6">
                 <span class="fw-bold">CURP<strong class="red" title="requerido">*</strong></span>
                 <InputText @bind-Value="@registro.UsuCurp" class="required form-control text-uppercase" />
@@ -92,15 +94,17 @@
                 <InputText @bind-Value="@registro.UsuCorreoPersonalCuentaNueva" class="required form-control text-lowercase" />
                 <ValidationMessage For="()=>registro.UsuCorreoPersonalCuentaNueva"></ValidationMessage>
             </div>
+        </div>
 
+        <div class="row my-2">
             <div class="col-6">
                 <span class="fw-bold">Contraseña</span>
-                <InputCheckbox @bind-Value=agregar_clave/> Establecer contraseña
-                <br>    
-                @if(agregar_clave)
+                <InputCheckbox @bind-Value=agregar_clave /> Establecer contraseña
+                <br>
+                @if (agregar_clave)
                 {
-                    
-                    <InputText type="password" @bind-Value="@registro.UsuContraseña" class="required form-control"/>
+
+                    <InputText type="password" @bind-Value="@registro.UsuContraseña" class="required form-control" />
                     <ValidationMessage For="()=>registro.UsuContraseña"></ValidationMessage>
                 }
             </div>
@@ -132,9 +136,13 @@
                 </div>
 
                 <div class="col-6">
-                    <span class="fw-bold">Semestre<strong class="red" title="requerido">*</strong></span>
-                    <InputText @bind-Value="@registro.UsuSemestre" class="required form-control" />
-                    <ValidationMessage For="()=>registro.UsuSemestre"></ValidationMessage>
+                    <span class="fw-bold">Semestre</span>
+                    <InputSelect @bind-Value="@registro.UsuSemestre" class=" form-select">
+                        @foreach (var item in CorreosInstitucionales.Shared.Constantes.Catalogo.Semestres)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </InputSelect>
                 </div>
             }
 
@@ -214,9 +222,14 @@
     </section>
     }
     
-    <div class="container-fluid mt-3 py-3 bg-silver">
+    <div class="container-fluid mt-3 py-3 bg-white">
         <div class="row">
-            <div class="offset-8 col-2">
+            <div class="col">
+                <ValidationSummary />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2 offset-8">
                 <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
             </div>
 
@@ -271,6 +284,11 @@
 
     private void OnValidForm() 
     {
+        registro.UsuNombre = registro.UsuNombre.ToUpper();
+        registro.UsuPrimerApellido = registro.UsuPrimerApellido.ToUpper();
+        registro.UsuSegundoApellido = (registro.UsuSegundoApellido ?? "").ToUpper();
+        registro.UsuCorreoPersonalCuentaNueva = registro.UsuCorreoPersonalCuentaNueva.ToLower();
+
         if(agregar_clave)
         {
             registro.UsuContraseña = Encrypt.GetSHA256(registro.UsuContraseña);
