@@ -4,35 +4,33 @@
 
 <PageTitle>@Title</PageTitle>
 
-    <div class="p-4 rounded-1 bg-white shadow">
-    <h1>@Title</h1>
+<div class="p-4 rounded-1 bg-white shadow">
+    <div class="row mb-4">
+        <div class="col-10">
+            <h1 class="mb-2">@Title</h1>
+        </div>
+
+        <div class="col-2">
+            @if (items.Count > 0)
+            {
+                <InputFile OnChange="fuImportacion_OnChange" class="form-control mb-3"></InputFile>
+            }
+            @if (fuImportar is not null)
+            {
+                <button class="btn btn-primary form-control mb-3" @onclick="Importar">
+                    <RadzenIcon Icon="get_app"></RadzenIcon>
+                    Importar
+                </button>
+            }
+        </div>
+    </div>
 
     @if (trabajando)
     {
-        <div class="row my-4">
-            <div class="col text-center">
-                <img src="logo_saci.png" class="loading_img" />
-                <br />
-                <strong>Trabajando...</strong>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="row my-4">
-            <div class="offset-10 col-2">
-                @if (items.Count > 0)
-                {
-                    <InputFile OnChange="fuImportacion_OnChange" class="form-control mb-3"></InputFile>
-                }
-                @if (fuImportar is not null)
-                {
-                    <button class="btn btn-primary form-control mb-3" @onclick="Importar">
-                        <RadzenIcon Icon="get_app"></RadzenIcon>
-                        Importar
-                    </button>
-                }
-            </div>       
+        <div class="col text-center">
+            <img src="img/mail.png" class="loading_img" />
+            <br />
+            <strong>Trabajando...</strong>
         </div>
     }
 
@@ -45,19 +43,21 @@
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Tipo" Filterable="true" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                    <strong>
+                        @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                        @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                        @item.SolIdUsuarioNavigation!.UsuNombre
+                    </strong>
+                    <br>
+                    @item.SolIdUsuarioNavigation.UsuCurp
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Filterable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    @item.SolIdUsuarioNavigation!.UsuPrimerApellido
-                    @item.SolIdUsuarioNavigation!.UsuSegundoApellido
-                    @item.SolIdUsuarioNavigation!.UsuNombre
-                    <br />
-                    <strong>@item.SolCorreoPersonalCuentaNueva</strong>
+                    @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
                 </Template>
             </RadzenDataGridColumn>
         </Columns>

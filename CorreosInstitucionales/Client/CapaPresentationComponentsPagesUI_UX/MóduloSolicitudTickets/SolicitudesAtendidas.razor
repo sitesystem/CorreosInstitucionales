@@ -5,16 +5,18 @@
 <PageTitle>@Title</PageTitle>
 
 <div class="p-4 rounded-1 bg-white shadow">
-    <h1>@Title</h1>
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="mb-2">@Title</h1>
+        </div>
+    </div>
 
     @if (!cargado || generando)
     {
-        <div class="row my-4">
-            <div class="col text-center">
-                <img src="logo_saci.png" class="loading_img" />
-                <br />
-                Trabajando...
-            </div>
+        <div class="col text-center">
+            <img src="img/mail.png" class="loading_img" />
+            <br />
+            <strong>Trabajando...</strong>
         </div>
     }
 
@@ -27,7 +29,22 @@
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Tipo" Filterable="true" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    <strong>
+                        @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                        @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                        @item.SolIdUsuarioNavigation!.UsuNombre
+                    </strong>
+                    
+                    <br />
+                    @item.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva
+                    <br />
+                    @item.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Filterable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
                     @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
                 </Template>
@@ -39,21 +56,11 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
-                <Template Context="item">
-                    @item.SolIdUsuarioNavigation!.UsuPrimerApellido
-                    @item.SolIdUsuarioNavigation!.UsuSegundoApellido
-                    @item.SolIdUsuarioNavigation!.UsuNombre
-                    <br />
-                    <strong>@item.SolCorreoPersonalCuentaNueva</strong>
-                </Template>
-            </RadzenDataGridColumn>
-
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Filterable="false" TextAlign="TextAlign.Center">
                 <Template Context="item">
                     @if (item.SolEncuestaCalidadCalificacion is null)
                     {
-                        <text>(Pendiente de Contestar)</text>
+                        <text>(Sin contestar)</text>
                     }
                     else
                     {

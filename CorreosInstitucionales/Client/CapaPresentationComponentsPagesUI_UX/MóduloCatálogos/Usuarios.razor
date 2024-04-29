@@ -9,26 +9,28 @@
 <PageTitle>@Title</PageTitle>
 
     <div class="p-4 rounded-1 bg-white shadow">
-        <h1>@Title</h1>
+        
+        <div class="row mb-4">
+            <div class="col-10">
+                <h1>@Title</h1>
+            </div>
 
-    @if (cargado)
-    {
-        <div class="row my-3">
-            <div class="offset-10 col-2">
+        @if (cargado)
+        {
+            <div class="col-2">
                 <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
                     Agregar...
                 </button>
             </div>
+        }
         </div>
-    }
-    else
+
+    @if(!cargado)
     {
-        <div class="row my-4">
-            <div class="col text-center">
-                <img src="logo_saci.png" class="loading_img" />
-                <br />
-                Cargando...
-            </div>
+        <div class="col text-center">
+            <img src="logo_saci.png" class="loading_img" />
+            <br />
+            <strong>Cargando...</strong>
         </div>
     }
 
@@ -37,6 +39,7 @@
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Usuario" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
                     SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems
+                    ExpandMode="DataGridExpandMode.Single"
                     Visible=@cargado>
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="IdUsuario" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
@@ -46,17 +49,25 @@
                     @if (item.UsuStatus)
                     {
                         <text>
-                            @item.UsuNombre
-                            @item.UsuPrimerApellido
-                            @item.UsuSegundoApellido
+                            <strong>
+                                @item.UsuNombre
+                                @item.UsuPrimerApellido
+                                @item.UsuSegundoApellido
+                            </strong>
+                            <br />
+                            @item.UsuCurp
                         </text>
                     }
                     else
                     {
                         <del>
-                            @item.UsuNombre
-                            @item.UsuPrimerApellido
-                            @item.UsuSegundoApellido
+                            <strong>
+                                @item.UsuNombre
+                                @item.UsuPrimerApellido
+                                @item.UsuSegundoApellido
+                            </strong>
+                            <br />
+                            @item.UsuCurp
                         </del>
                     }
                 </Template>
@@ -67,7 +78,7 @@
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="UsuCorreoInstitucionalCuenta" Filterable="false" Title="Correo Institucional" TextAlign="TextAlign.End" />
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Context="item"
-                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false"
+                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Frozen="true" Width="80px"
                                   Visible=@puede_editar>
                 <Template Context="item">
                     <RadzenButton title="Editar..."

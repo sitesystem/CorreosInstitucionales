@@ -7,15 +7,18 @@
 <script src="js/descargar.js?v=1.0.0.8"></script>
 
 <div class="p-4 rounded-1 bg-white shadow">
-    <h1>@Title</h1>
+    
 
-    <div class="row my-4">
+    <div class="row mb-2">
+        <div class="col-8">
+            <h1>@Title</h1>
+        </div>
         <div class="col-2">
             <button class="btn btn-primary form-control" @onclick="CargarLista">
                 Recargar Listado
             </button>
         </div>
-        <div class="offset-8 col-2">
+        <div class="col-2">
             @if(puede_exportar)
             {
                 <button class="btn btn-primary form-control mb-3" @onclick="Descargar">
@@ -39,9 +42,9 @@
     {
         <div class="row my-4">
             <div class="col text-center">
-                <img src="logo_saci.png" class="loading_img" />
+                <img src="img/mail.png" class="loading_img" />
                 <br />
-                Trabajando...
+                <strong>Trabajando...</strong>
             </div>
         </div>
     }
@@ -54,32 +57,22 @@
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Tipo" Filterable="true" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                    <strong>
+                        @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                        @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                        @item.SolIdUsuarioNavigation!.UsuNombre
+                    </strong>
+                    <br>
+                    @item.SolIdUsuarioNavigation.UsuCurp
+                    <br />
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Filterable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    @if (item.SolIdEstadoSolicitud != 6)
-                    {
-                        <text>
-                            @item.SolIdUsuarioNavigation!.UsuPrimerApellido
-                            @item.SolIdUsuarioNavigation!.UsuSegundoApellido
-                            @item.SolIdUsuarioNavigation!.UsuNombre
-                        </text>
-                    }
-                    else
-                    {
-                        <del>
-                            @item.SolIdUsuarioNavigation!.UsuPrimerApellido
-                            @item.SolIdUsuarioNavigation!.UsuSegundoApellido
-                            @item.SolIdUsuarioNavigation!.UsuNombre
-                        </del>
-                    }
-                    <br />
-                    <strong>@item.SolCorreoPersonalCuentaNueva</strong>
+                    @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
                 </Template>
             </RadzenDataGridColumn>
 
