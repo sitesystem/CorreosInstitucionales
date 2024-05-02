@@ -81,10 +81,13 @@
                                                                InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Selecciona una opción" }})"
                                                                Change="@(args => OnChangeListBox(args))">
                                                     <Template>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill text-success" viewBox="0 0 16 16">
-                                                            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1" />
-                                                        </svg>&ensp;
-                                                        @((contexto as RequestViewModel_TipoSolicitud)?.TiposolDescripcion)
+                                                        @* <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
+                                                              title="<b>Motivo de la Solicitud-Ticket</b>" data-bs-content="Problema o incidencia requerido por usuario para atención."> *@
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill text-success" viewBox="0 0 16 16">
+                                                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1" />
+                                                            </svg>&ensp;
+                                                            @((contexto as RequestViewModel_TipoSolicitud)?.TiposolDescripcion)
+                                                        @* </span> *@
                                                     </Template>
                                                 </RadzenListBox>
                                             </ChildContent>
@@ -359,6 +362,9 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
+        await JSRuntime.InvokeVoidAsync("blazorInit");
+
         if (firstRender)
         {
             // cat_SolIdEstadoSolicitud = await WebUtils.ListByStatusAsync(servicioEstadoSolicitud);
@@ -654,8 +660,8 @@ else
 				                        <p style='text-align:justify; color:black;'>
                                             ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
                                             Estimad@: <br><b>{oResponseUsuario.Data.UsuNombre} {oResponseUsuario.Data.UsuPrimerApellido} {oResponseUsuario.Data.UsuSegundoApellido}</b><br><br>
-				                            Se aperturó con éxito el Ticket <b>#{idResponse}</b> de la Solicitud <b>{oTipoSolicitud.Data.TiposolDescripcion} - {oSolicitudTicket.SolObservacionesSolicitud}</b>
-                                            en la <b>Plataforma SACI</b> de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
+				                            Se aperturó con éxito el Ticket <b>#{idResponse}</b> de la Solicitud <b>{oTipoSolicitud.Data.TiposolDescripcion}</b>
+                                            con la observación <b>{oSolicitudTicket.SolObservacionesSolicitud}</b>.
 				                        </p>
 			                        </article>
 
@@ -735,9 +741,9 @@ else
                     string aviso_alumnos = oResponseUsuario.Data.UsuIdTipoPersonal == 1 ? " 💡 *Para alumnos de nuevo ingreso* te informamos que las solicitudes tendrán una respuesta de un *máximo de 2 meses.*\n\n" : "";
                     oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                            "Estimad@:\n*" + oResponseUsuario.Data.UsuNombre + " " + oResponseUsuario.Data.UsuPrimerApellido + "* " + oResponseUsuario.Data.UsuSegundoApellido + "\n\n" +
+                                            "Estimad@:\n*" + oResponseUsuario.Data.UsuNombre + " " + oResponseUsuario.Data.UsuPrimerApellido + " " + oResponseUsuario.Data.UsuSegundoApellido + ".*\n\n" +
                                             "Se le informa que se aperturó con éxito el Ticket *#" + idResponse + "* " +
-                                            "de la Solicitud *" + oTipoSolicitud.Data.TiposolDescripcion + ".\n\n" +
+                                            "de la Solicitud *" + oTipoSolicitud.Data.TiposolDescripcion + "*.\n\n" +
                                             "Por este medio se le dan los _Datos de la Solicitud_:\n" +
                                             "✅ Ticket: *#" + idResponse + "*\n" +
                                             "✅ Motivo/Incidencia de la Solicitud: *" + oTipoSolicitud.Data.TiposolDescripcion + "*\n" +

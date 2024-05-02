@@ -459,7 +459,7 @@
                     oSendWhatsApp.Number = oRespuesta.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
                     oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                            "Estimad@:\n*" + oRespuesta.Data.UsuNombre + " " + oRespuesta.Data.UsuPrimerApellido + "* " + oRespuesta.Data.UsuSegundoApellido + "\n\n" +
+                                            "Estimad@:\n*" + oRespuesta.Data.UsuNombre + " " + oRespuesta.Data.UsuPrimerApellido + " " + oRespuesta.Data.UsuSegundoApellido + ".*\n\n" +
                                             "Se le informa que se recuperó con éxito sus _Credenciales de Acceso_ en la *PLATAFORMA SACI*:\n" +
                                             "  ✉ Usuario:\n               *" + oRespuesta.Data.UsuCorreoPersonalCuentaNueva + "*\n" +
                                             "  🔑 Contraseña:\n               *" + oRespuesta.Message + "*\n\n" +
