@@ -2,6 +2,7 @@
 
 @attribute [Authorize(Policy = "[Rol] Ambos")]
 
+@using CorreosInstitucionales.Shared.CapaTools
 @inject DialogService DialogService
 
 <PageTitle>@Title</PageTitle>
@@ -164,7 +165,7 @@
 
     private async Task Agregar()
     {
-        RequestDTO_Solicitud registro = new();
+        RequestDTO_Solicitud registro = TemplateEntity.CreateSolicitud();
 
         RequestDTO_Solicitud? result = await MostrarFormulario(registro);
 

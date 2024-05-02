@@ -27,11 +27,7 @@
 
     @if(!cargado)
     {
-        <div class="col text-center">
-            <img src="logo_saci.png" class="loading_img" />
-            <br />
-            <strong>Cargando...</strong>
-        </div>
+        <Carga/>
     }
 
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
@@ -156,11 +152,11 @@
         }
     }
 
-    private async Task<DocumentoAdjunto<RequestDTO_Usuario>?> MostrarFormulario(RequestDTO_Usuario registro)
+    private async Task<DocumentoAdjunto<RequestDTO_Usuario>?> MostrarFormulario(RequestDTO_Usuario registro, string titulo_ventana)
     {
         return await DialogService.OpenAsync<UsuarioEditor>
                 (
-                    "Actualizar Datos",
+                    titulo_ventana,
                     new Dictionary<string, object>()
                     {
                         {"registro", registro},
@@ -172,8 +168,7 @@
                     new DialogOptions()
                         {
                             ShowClose = false,
-                            Width = "75%",
-                            CssClass = "dialog_simple"
+                            Width = "75%"
                         }
                 );
     }
@@ -191,7 +186,7 @@
     {
         RequestDTO_Usuario registro = TemplateEntity.CreateUsuario();
 
-        DocumentoAdjunto<RequestDTO_Usuario>? result = await MostrarFormulario(registro);
+        DocumentoAdjunto<RequestDTO_Usuario>? result = await MostrarFormulario(registro, "Agregar Usuario");
 
         if (result is not null)
         {
@@ -224,7 +219,7 @@
 
         if (registro is not null)
         {
-            DocumentoAdjunto<RequestDTO_Usuario>? result = await MostrarFormulario(registro);
+            DocumentoAdjunto<RequestDTO_Usuario>? result = await MostrarFormulario(registro, $"Editar registro de {registro.UsuNombre}");
 
             if (result is not null)
             {

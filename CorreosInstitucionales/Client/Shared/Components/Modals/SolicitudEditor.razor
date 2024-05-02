@@ -150,7 +150,16 @@
 
     [Parameter] public bool registro_nuevo { get; set; } = false;
 
-    private void OnValidForm() => dialogService.Close(registro);
+    private void OnValidForm()
+    {
+        registro.SolFileNameCurp = "-";
+        registro.SolNoCelularNuevo = "-";
+        registro.SolCorreoPersonalCuentaNueva = "-";
+        registro.SolFileNameComprobanteInscripcion = "-";
+
+        dialogService.Close(registro);
+    }
+
     private void OnCloseForm() => dialogService.Close(null);
 
     private void OnSubmit()

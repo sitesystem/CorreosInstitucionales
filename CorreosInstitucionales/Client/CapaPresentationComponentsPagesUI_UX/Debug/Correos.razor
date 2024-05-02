@@ -4,40 +4,39 @@
 
 <PageTitle>@Title</PageTitle>
 
-<div class="p-4 rounded-1 bg-white shadow">
+<div class="p-4 rounded-1 mb-3 bg-white shadow">
     <h1>@Title</h1>
-    <div class="row">
-        <div class="col-12 col-md-6 mb-3">
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-6">
+        <div class="rounded-1 bg-white shadow p-3">
             <strong>Correo</strong>
             <InputText class="form-control mb-3" required @bind-Value=correo />
-            
+
             <strong>Mensaje</strong>
-            <RadzenHtmlEditor class="form-control mb-3" required @bind-Value=@mensaje_correo />
-            
+            <RadzenHtmlEditor class="form-control mb-3" style="height:480px" required @bind-Value=@mensaje_correo />
+
             <button @onclick="EnviarCorreo" class="btn btn-primary form-control">Enviar Correo</button>
         </div>
+    </div>
 
-        <div class="col-12 col-md-6 mb-3">
+    <div class="col-12 col-md-6">
+        <div class="rounded-1 bg-white shadow p-3">
             <strong>Número de Celular</strong>
             <InputText class="form-control mb-3" required @bind-Value=numero />
 
             <strong>Mensaje</strong>
-            <InputTextArea class="form-control mb-3" required @bind-Value=mensaje_wa />
+            <InputTextArea class="form-control mb-3" required @bind-Value=mensaje_wa style="height:480px" />
 
             <button @onclick="EnviarMensajeWA" class="btn btn-primary form-control">Enviar WA</button>
         </div>
     </div>
+</div>
 
+<div class="row">
     <div class="row">
-        <div class="row">
-            <pre class="col p-3">@debug</pre>
-        </div>
-    </div>
-
-    <div class="row my-2">
-        <div clas="col-2">
-            
-        </div>
+        <pre class="col p-3">@debug</pre>
     </div>
 </div>
 
