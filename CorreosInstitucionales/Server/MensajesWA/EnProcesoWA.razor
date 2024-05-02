@@ -1,13 +1,21 @@
-﻿*Solicitud enviada a Mesa de control*
+﻿*SACI | Sistema de Atención para Correos Institucionales*
+*ℹ POR FAVOR NO RESPONDER A ESTE MENSAJE*
 
-Saludos @usuario.UsuNombre,
-por medio del presente nos permitimos informarle que su
-solicitud @solicitud.IdSolicitudTicket, ha sido canalizada
-hacia área central para su oportuna atención.
+⏳ *Solicitud enviada a Mesa de Control*
+
+Estimad@@:
+*@usuario.UsuNombre @usuario.UsuPrimerApellido @usuario.UsuSegundoApellido*
+
+Por medio del presente nos permitimos informarle que su
+solicitud con No. de Ticket *#@solicitud.IdSolicitudTicket*
+de *@solicitud.SolIdTipoSolicitudNavigation.TiposolDescripcion,*
+ha sido canalizada para su atención.
 
 Sin más por el momento que tenga un excelente día.
+> NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
 
-@code {
+@code
+{
     [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new() { SolIdUsuarioNavigation = new() };
     MpTbUsuario usuario { get { return solicitud.SolIdUsuarioNavigation; } }
 }

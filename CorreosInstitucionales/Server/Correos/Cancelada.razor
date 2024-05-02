@@ -1,15 +1,22 @@
-﻿<h1>Solicitud Cancelada</h1>
+﻿<b>SACI | Sistema de Atención para Correos Institucionales</b><br />
+ℹ POR FAVOR NO RESPONDER A ESTE MENSAJE<br /><br />
 
-Saludos @usuario.UsuNombre,
-por medio del presente nos permitimos informarle que su
-solicitud @solicitud.IdSolicitudTicket, ha sido cancelada
-por el siguiente motivo:
+<h1>Solicitud Cancelada</h1>
 
-<blockquote>@solicitud.SolRespuestaDcyC</blockquote>
+Saludos:<br />
+<b>@usuario.UsuNombre @usuario.UsuPrimerApellido @usuario.UsuSegundoApellido</b><br /><br />
 
-Sin más por el momento que tenga un excelente día.
+Por medio del presente nos permitimos informarle que su<br />
+solicitud de No. de Ticket <b>#@solicitud.IdSolicitudTicket,</b><br />
+ha sido cancelada por el siguiente motivo:<br /><br />
 
-@code {
+<blockquote>@solicitud.SolRespuestaDcyC</blockquote><br /><br />
+
+Sin más por el momento que tenga un excelente día.<br />
+NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
+
+@code
+{
     [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new() { SolIdUsuarioNavigation = new() };
     MpTbUsuario usuario { get { return solicitud.SolIdUsuarioNavigation; } }
 }

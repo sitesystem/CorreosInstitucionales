@@ -732,12 +732,12 @@ else
                         </body>";
 
                     oSendWhatsApp.Number = oResponseUsuario.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
+                    string aviso_alumnos = oResponseUsuario.Data.UsuIdTipoPersonal == 1 ? " 💡 *Para alumnos de nuevo ingreso* te informamos que las solicitudes tendrán una respuesta de un *máximo de 2 meses.*\n\n" : "";
                     oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
                                             "Estimad@:\n*" + oResponseUsuario.Data.UsuNombre + " " + oResponseUsuario.Data.UsuPrimerApellido + "* " + oResponseUsuario.Data.UsuSegundoApellido + "\n\n" +
                                             "Se le informa que se aperturó con éxito el Ticket *#" + idResponse + "* " +
-                                            "de la Solicitud *" + oTipoSolicitud.Data.TiposolDescripcion + " - " + oSolicitudTicket.SolObservacionesSolicitud + "* " +
-                                            "en la *Plataforma SACI* de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
+                                            "de la Solicitud *" + oTipoSolicitud.Data.TiposolDescripcion + ".\n\n" +
                                             "Por este medio se le dan los _Datos de la Solicitud_:\n" +
                                             "✅ Ticket: *#" + idResponse + "*\n" +
                                             "✅ Motivo/Incidencia de la Solicitud: *" + oTipoSolicitud.Data.TiposolDescripcion + "*\n" +
@@ -746,7 +746,7 @@ else
                                             "✅ Fecha / Hora de Creación: *" + fecha_hora_creación + "*\n\n" +
                                             "*ATENCIÓN:*\n\n" +
                                             " 👀 Te informamos que las solicitudes tendrán una *respuesta entre 3 y 5 días*, se te notificará por los medios / vías de comunicación los avances del estado de tu solicitud.\n\n" +
-                                            " 💡 *Para alumnos de nuevo ingreso* te informamos que las solicitudes tendrán una respuesta de un *máximo de 2 meses.*\n\n" +
+                                            aviso_alumnos +
                                             "Que tenga un excelente día.\n" +
                                             "> *NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
 

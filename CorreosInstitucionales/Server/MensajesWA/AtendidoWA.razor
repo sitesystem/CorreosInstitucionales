@@ -1,15 +1,25 @@
-﻿*Solicitud Atendida*
+﻿*SACI | Sistema de Atención para Correos Institucionales*
+*ℹ POR FAVOR NO RESPONDER A ESTE MENSAJE*
 
-Saludos @usuario.UsuNombre,
-por medio del presente nos permitimos informarle que su
-solicitud @solicitud.IdSolicitudTicket, ha sido atendida
-con la siguiente observación de mesa de control:
+✅ *Solicitud Atendida*
+
+Estimad@@:
+*@usuario.UsuNombre @usuario.UsuPrimerApellido @usuario.UsuSegundoApellido*
+
+Por medio del presente nos permitimos informarle que su
+solicitud con No. de Ticket *#@solicitud.IdSolicitudTicket*,
+ha sido atendida con éxito, con la siguiente observación de la Mesa de Control:
 
 > @solicitud.SolRespuestaDcyC
 
-Sin más por el momento que tenga un excelente día.
+Para poder visualizar su información deberá responder una encuesta de satisfacción y posteriormente se le presentarán sus credenciales.
+https://www.developers.upiicsa.ipn.mx:8080
 
-@code {
+Sin más por el momento que tenga un excelente día.
+> NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
+
+@code
+{
     [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new() { SolIdUsuarioNavigation = new() };
     MpTbUsuario usuario { get { return solicitud.SolIdUsuarioNavigation; } }
 }
