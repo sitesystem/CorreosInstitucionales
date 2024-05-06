@@ -39,6 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\Logs\" />
+    <Folder Include="wwwroot\repositorio\pendientes\" />
     <Folder Include="wwwroot\Repositorio\procesados\" />
   </ItemGroup>
 
