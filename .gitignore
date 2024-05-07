@@ -13,4 +13,4 @@
 /CorreosInstitucionales/Server/wwwroot/repositorio/Usuarios/*/*.pdf
 /CorreosInstitucionales/Server/wwwroot/Logs
 /api_whatsapp/node_modules
-/proxy/src/assets/external
+/Docker/proxy/src/assets/external
