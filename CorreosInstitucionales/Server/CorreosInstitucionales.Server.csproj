@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\Repositorio\procesados - Copia\**" />
-    <Content Remove="wwwroot\Repositorio\procesados - Copia\**" />
-    <EmbeddedResource Remove="wwwroot\Repositorio\procesados - Copia\**" />
-    <None Remove="wwwroot\Repositorio\procesados - Copia\**" />
+    <Compile Remove="wwwroot\repositorio\procesados - Copia\**" />
+    <Content Remove="wwwroot\repositorio\procesados - Copia\**" />
+    <EmbeddedResource Remove="wwwroot\repositorio\procesados - Copia\**" />
+    <None Remove="wwwroot\repositorio\procesados - Copia\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,9 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Logs\" />
-    <Folder Include="wwwroot\repositorio\pendientes\" />
-    <Folder Include="wwwroot\Repositorio\procesados\" />
+    <Folder Include="wwwroot\logs\" />
   </ItemGroup>
 
 </Project>

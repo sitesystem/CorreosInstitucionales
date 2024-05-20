@@ -422,7 +422,7 @@
             {
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="0px" Class="" Style="font-family:var(--rz-text-font-family);">
                     <RadzenCheckBox Name="@($@"aviso_privacidad_{TipoPersonal}")" TValue="bool" @bind-Value="@aceptar_aviso_privacidad" TriState="false" Change="@(args => aceptar_aviso_privacidad = args)" Disabled="false" ReadOnly="false" />
-                    <RadzenLabel Text="He leído y Acepto los términos y condiciones del" Component="@($@"aviso_privacidad_{TipoPersonal}")" Style="margin-left: 8px; vertical-align: middle;" />&ensp;
+                    <RadzenLabel Text="He leído y acepto los términos y condiciones del" Component="@($@"aviso_privacidad_{TipoPersonal}")" Style="margin-left: 8px; vertical-align: middle;" />&ensp;
                     <a style="cursor:pointer;" @onclick="@(() => ShowDialogModal_iFrame("./documentos/saci_aviso_privacidad.pdf", "Aviso de Privacidad para la Protección de Datos Personales"))" class="icon-link icon-link-hover">
                         <b>Aviso</b> de <strong>Privacidad</strong>
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
@@ -545,7 +545,7 @@ else
             oUsuario.UsuSegundoApellido = oEditUsuario.UsuSegundoApellido;      // Segundo Apellido del Usuario Solicitante o Administrador
             oUsuario.UsuCurp = oEditUsuario.UsuCurp;                            // CURP con 18 caracteres como mínimo
             oUsuario.UsuFileNameCurp = oEditUsuario.UsuFileNameCurp;            // Nombre del Archivo y extensión .pdf del CURP
-            srcCURP = oUsuario.UsuFileNameCurp != "CURP.pdf" ? $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}" : $@"/Repositorio/CURP.pdf";
+            srcCURP = oUsuario.UsuFileNameCurp != "CURP.pdf" ? $@"/repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}" : $@"/repositorio/CURP.pdf";
             oUsuario.UsuFileSizeCurp = oEditUsuario.UsuFileSizeCurp;            // Tamaño del Archivo .pdf del CURP
             oUsuario.UsuNoCelularAnterior = oEditUsuario.UsuNoCelularAnterior;  // Número de Celular Anterior si llega a cambiar por uno nuevo
             oUsuario.UsuNoCelularNuevo = oEditUsuario.UsuNoCelularNuevo;        // Número de Celular Nuevo que sería el número de celular actual
@@ -665,7 +665,7 @@ else
     private string TextButton = string.Empty;
     private string BusyTextButton = string.Empty;
     private string IconButton = string.Empty;
-    private string folder = "Usuarios";
+    private string folder = "usuarios";
     private string CURP = "CURP";
     private int idResponse;
     private Guid oGuid = Guid.NewGuid();

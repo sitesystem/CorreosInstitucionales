@@ -93,7 +93,7 @@
                                               Variant="Variant.Flat"
                                               Icon="visibility"
                                               class="rz-ripple rz-my-0 w-100"
-                                              Click="@(() => ShowDialogModal_iFrame($@"/Repositorio/Solicitudes-Tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaCuentaBloqueada}", "Archivo PDF de la Captura de Cuenta Bloqueada"))"
+                                              Click="@(() => ShowDialogModal_iFrame($@"/repositorio/solicitudes-tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaCuentaBloqueada}", "Archivo PDF de la Captura de Cuenta Bloqueada"))"
                                               Shade="Shade.Light"
                                               Visible="@(data.SolCapturaCuentaBloqueada != "-")" />
                                 <RadzenButton Text="Captura Escaneo Antivirus"
@@ -103,7 +103,7 @@
                                               Variant="Variant.Flat"
                                               Icon="visibility"
                                               class="rz-ripple rz-my-0 w-100"
-                                              Click="@(() => ShowDialogModal_iFrame($@"/Repositorio/Solicitudes-Tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaEscaneoAntivirus}", "Archivo PDF de la Captura de Escaneo Antivirus"))"
+                                              Click="@(() => ShowDialogModal_iFrame($@"/repositorio/solicitudes-tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaEscaneoAntivirus}", "Archivo PDF de la Captura de Escaneo Antivirus"))"
                                               Shade="Shade.Light"
                                               Visible="@(data.SolCapturaEscaneoAntivirus != "-")" />
                                 <RadzenButton Text="Captura Error"
@@ -113,7 +113,7 @@
                                               Variant="Variant.Flat"
                                               Icon="visibility"
                                               class="rz-ripple rz-my-0 w-100"
-                                              Click="@(() => ShowDialogModal_iFrame($@"/Repositorio/Solicitudes-Tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaError}", "Archivo PDF de la Captura de Error"))"
+                                              Click="@(() => ShowDialogModal_iFrame($@"/repositorio/solicitudes-tickets/{data.IdSolicitudTicket}/{data.IdSolicitudTicket}_{@data.SolCapturaError}", "Archivo PDF de la Captura de Error"))"
                                               Shade="Shade.Darker"
                                               Visible="@(data.SolCapturaError != "-")" />
                             </RadzenStack>

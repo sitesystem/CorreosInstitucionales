@@ -329,7 +329,7 @@
         </RadzenFieldset>
     </RadzenPanel>
 
-    <RadzenCard Variant="Variant.Filled" Style="max-width: 500px" class="rz-mx-auto rz-py-12" Visible="@(!existenSolicitudes)">
+    <RadzenCard Variant="Variant.Filled" Style="max-width: 800px" class="rz-mx-auto rz-py-12" Visible="@(!existenSolicitudes)">
         <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="10px" class="">
             <RadzenImage Path="logo_saci.png" Style="width:100px; height:100px;" />
             <RadzenText TextStyle="TextStyle.H3" Style="font-variant: small-caps;">Credenciales</RadzenText>
@@ -350,7 +350,7 @@
     {
         <RadzenAlert Title="Respuesta de Mesa de Control" Text="" AlertStyle="@(oSolicitudLastTicketRespuesta.Data.SolIdEstadoSolicitud == 5 ? AlertStyle.Info : AlertStyle.Danger)"
                      Variant="Variant.Filled" Size="AlertSize.Medium" Shade="Shade.Default"
-                     ShowIcon="true" AllowClose="false" Style="max-width: 500px" class="rz-mx-auto" Visible="true">
+                     ShowIcon="true" AllowClose="false" Style="max-width: 800px" class="rz-mx-auto" Visible="true">
                      <b>Acción:</b> @(oSolicitudLastTicketRespuesta?.Data?.SolRespuestaDcyC)
         </RadzenAlert>
     }
