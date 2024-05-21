@@ -311,6 +311,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 case "ACCION": return TipoDatoXLSX.ACCION;
 
+                case "NUMERO DE CELULAR ACTUAL": return TipoDatoXLSX.CELULAR;
                 case "CELULAR ACTUAL": return TipoDatoXLSX.CELULAR;
                 case "CELULAR": return TipoDatoXLSX.CELULAR;
 
@@ -602,8 +603,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             foreach (MtTbSolicitudesTicket solicitud in lista)
             {
-                ruta_repositorio = $"repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
-                ruta_usuario = $"repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
+                ruta_repositorio = $"repositorio/solicitudes-tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
+                ruta_usuario = $"repositorio/usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
 
                 usuario = solicitud.SolIdUsuarioNavigation!;
 
@@ -870,8 +871,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 foreach (MtTbSolicitudesTicket solicitud in solicitudes)
                 {
-                    ruta_repositorio = $"repositorio/Solicitudes-Tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
-                    ruta_usuario = $"repositorio/Usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
+                    ruta_repositorio = $"repositorio/solicitudes-tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
+                    ruta_usuario = $"repositorio/usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
 
                     enlace = EnlaceRoto(solicitud.SolIdUsuarioNavigation.UsuFileNameCurp, ruta_usuario);
                     if (enlace is not null) oResponse.Data.Add(enlace);

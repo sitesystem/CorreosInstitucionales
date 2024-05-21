@@ -15,12 +15,12 @@ namespace CorreosInstitucionales.Shared.Utils
 
         public static string ArchivoUsuario(int id_usuario, string archivo, bool ruta_absoluta = false)
         {
-            return $"repositorio/Usuarios/{id_usuario}/{id_usuario}_{archivo}";
+            return $"repositorio/usuarios/{id_usuario}/{id_usuario}_{archivo}";
         }
 
         public static string ArchivoRepositorio(int id_solicitud, string archivo, bool ruta_absoluta = false)
         {
-            return $"repositorio/Solicitudes-Tickets/{id_solicitud}/{id_solicitud}_{archivo}";
+            return $"repositorio/solicitudes-tickets/{id_solicitud}/{id_solicitud}_{archivo}";
         }
 
         public static bool SubirArchivo()
