@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\repositorio\procesados - Copia\**" />
-    <Content Remove="wwwroot\repositorio\procesados - Copia\**" />
-    <EmbeddedResource Remove="wwwroot\repositorio\procesados - Copia\**" />
-    <None Remove="wwwroot\repositorio\procesados - Copia\**" />
+    <Compile Remove="wwwroot\logs\**" />
+    <Compile Remove="wwwroot\repositorio\**" />
+    <Content Remove="wwwroot\logs\**" />
+    <Content Remove="wwwroot\repositorio\**" />
+    <EmbeddedResource Remove="wwwroot\logs\**" />
+    <EmbeddedResource Remove="wwwroot\repositorio\**" />
+    <None Remove="wwwroot\logs\**" />
+    <None Remove="wwwroot\repositorio\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,10 +40,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Client\CorreosInstitucionales.Client.csproj" />
     <ProjectReference Include="..\Shared\CorreosInstitucionales.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\logs\" />
   </ItemGroup>
 
 </Project>
