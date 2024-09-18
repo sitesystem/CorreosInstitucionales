@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
@@ -19,7 +19,8 @@ public partial class McCatAreasDepto
     /// <summary>
     /// Nombre del Área / Departamento
     /// </summary>
-    [Column("areNombreAreaDepto", TypeName = "text")]
+    [Column("areNombreAreaDepto")]
+    [StringLength(300)]
     public string AreNombreAreaDepto { get; set; } = null!;
 
     /// <summary>

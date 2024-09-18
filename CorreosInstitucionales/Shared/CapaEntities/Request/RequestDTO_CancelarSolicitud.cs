@@ -9,6 +9,6 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
     public class RequestDTO_CancelarSolicitud
     {
         public int IdSolicitud { get; set; }
-        public string? MotivoCancelación { get; set; }
+        public string? MotivoCancelacion { get; set; }
     }
 }

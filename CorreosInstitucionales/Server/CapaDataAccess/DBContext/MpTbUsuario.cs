@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
@@ -117,8 +117,8 @@ public partial class MpTbUsuario
     /// <summary>
     /// Año de Egreso en caso de ser Alumno Egresado
     /// </summary>
-    [Column("usuAñoEgreso")]
-    public int? UsuAñoEgreso { get; set; }
+    [Column("usuAnioEgreso")]
+    public int? UsuAnioEgreso { get; set; }
 
     /// <summary>
     /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP
@@ -174,16 +174,16 @@ public partial class MpTbUsuario
     /// <summary>
     /// Contraseña Encriptada en la Plataforma SACI
     /// </summary>
-    [Column("usuContraseña")]
+    [Column("usuContrasenia")]
     [StringLength(300)]
     [Unicode(false)]
-    public string UsuContraseña { get; set; } = null!;
+    public string UsuContrasenia { get; set; } = null!;
 
     /// <summary>
     /// Bandera { 0 = Inicia Sesión, 1 = Pide cambiar contraseña temporal }
     /// </summary>
-    [Column("usuRecuperarContraseña")]
-    public bool UsuRecuperarContraseña { get; set; }
+    [Column("usuRecuperarContrasenia")]
+    public bool UsuRecuperarContrasenia { get; set; }
 
     /// <summary>
     /// Correo Electrónico Institucional IPN
@@ -196,16 +196,19 @@ public partial class MpTbUsuario
     /// <summary>
     /// Contraseña del Correo Electrónico Institucional IPN
     /// </summary>
-    [Column("usuCorreoInstitucionalContraseña")]
+    [Column("usuCorreoInstitucionalContrasenia")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? UsuCorreoInstitucionalContraseña { get; set; }
+    public string? UsuCorreoInstitucionalContrasenia { get; set; }
 
     /// <summary>
     /// Fecha Hora del Alta del Usuario
     /// </summary>
     [Column("usuFechaHoraAlta", TypeName = "datetime")]
     public DateTime? UsuFechaHoraAlta { get; set; }
+
+    [Column("usuFechaHoraActualizacion", TypeName = "datetime")]
+    public DateTime UsuFechaHoraActualizacion { get; set; }
 
     /// <summary>
     /// Estatus { 0 = Inactivo, 1 = Activo }

@@ -14,6 +14,6 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         public string UsuCorreoPersonal { get; set; } = null!;
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string UsuContraseña { get; set; } = null!;
+        public string UsuContrasenia { get; set; } = null!;
     }
 }

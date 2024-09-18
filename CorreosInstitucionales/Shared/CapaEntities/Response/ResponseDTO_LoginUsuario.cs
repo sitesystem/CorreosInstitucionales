@@ -96,9 +96,9 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Response
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
         public string? UsuSemestre { get; set; }
 
-        [Column("usuAñoEgreso")]
+        [Column("usuAnioEgreso")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public int? UsuAñoEgreso { get; set; }
+        public int? UsuAnioEgreso { get; set; }
 
         /// <summary>
         /// Numero del Empleado del Usuario Solicitante
@@ -135,7 +135,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Response
         [Column("usuContraseña")]
         [StringLength(300)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string? UsuContraseña { get; set; }
+        public string? UsuContrasenia { get; set; }
 
         [Column("usuToken")]
         [StringLength(300)]
@@ -145,7 +145,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Response
         /// Contraseña Temporal que se le proporciona al Usuario Solicitante
         /// </summary>
         [Column("usuRecuperarContraseña")]
-        public bool? UsuRecuperarContraseña { get; set; }
+        public bool? UsuRecuperarContrasenia { get; set; }
 
         [Column("usuCorreoInstitucionalCuenta")]
         [StringLength(100)]
@@ -153,7 +153,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Response
 
         [Column("usuCorreoInstitucionalContraseña")]
         [StringLength(100)]
-        public string? UsuCorreoInstitucionalContraseña { get; set; }
+        public string? UsuCorreoInstitucionalContrasenia { get; set; }
 
         [Column("usuFechaHoraAlta", TypeName = "datetime")]
         public DateTime? UsuFechaHoraAlta { get; set; }

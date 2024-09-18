@@ -138,7 +138,7 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuAñoEgreso")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo AÑO DE EGRESO requerido.")]
-    public int? UsuAñoEgreso { get; set; }
+    public int? UsuAnioEgreso { get; set; }
 
     /// <summary>
     /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP-10
@@ -207,13 +207,13 @@ public class RequestDTO_Usuario
     [Column("usuContraseña")]
     [StringLength(300)]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CONTRASEÑA requerido.")]
-    public string UsuContraseña { get; set; } = null!;
+    public string UsuContrasenia { get; set; } = null!;
 
     /// <summary>
     /// Bandera { 0 = Inicia Sesión, 1 = Pide cambiar contraseña temporal }
     /// </summary>
     [Column("usuRecuperarContraseña")]
-    public bool UsuRecuperarContraseña { get; set; }
+    public bool UsuRecuperarContrasenia { get; set; }
 
     /*******************************  DATOS DEL CORREO INSTITUCIONAL  *******************************/
     /// <summary>
@@ -229,7 +229,7 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuCorreoInstitucionalContraseña")]
     [StringLength(100)]
-    public string? UsuCorreoInstitucionalContraseña { get; set; }
+    public string? UsuCorreoInstitucionalContrasenia { get; set; }
 
     /*******************************  OTROS DATOS  *******************************/
     /// <summary>

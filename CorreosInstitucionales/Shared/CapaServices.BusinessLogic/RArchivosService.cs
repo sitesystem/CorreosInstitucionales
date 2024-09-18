@@ -1,6 +1,7 @@
 ﻿using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.Utils;
+
 using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
@@ -92,7 +93,5 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 
             return JsonSerializer.Deserialize<Response<List<string>>>(content, options: _options);
         }
-
-
     }
 }

@@ -479,7 +479,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 if (oSolicitud != null)
                 {
                     oSolicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.CANCELADA;
-                    oSolicitud.SolRespuestaDcyC = oCancelarSolicitud.MotivoCancelación; // datos.Value;
+                    oSolicitud.SolRespuestaDcyC = oCancelarSolicitud.MotivoCancelacion; // datos.Value;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     guardados = await _db.SaveChangesAsync();

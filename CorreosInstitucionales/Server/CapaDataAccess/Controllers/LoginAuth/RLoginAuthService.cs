@@ -21,9 +21,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
         {
             ResponseDTO_LoginUsuario usuarioResponse = new();
 
-            string spassword = Encrypt.GetSHA256(model.UsuContraseña);
+            string spassword = Encrypt.GetSHA256(model.UsuContrasenia);
             var usuario = await _db.MpTbUsuarios
-                                   .Where(l => l.UsuCorreoPersonalCuentaNueva == model.UsuCorreoPersonal && l.UsuContraseña == spassword && l.UsuStatus.Equals(true))
+                                   .Where(l => l.UsuCorreoPersonalCuentaNueva == model.UsuCorreoPersonal && l.UsuContrasenia == spassword && l.UsuStatus.Equals(true))
                                    .FirstOrDefaultAsync();
             if (usuario != null)
             {
@@ -43,7 +43,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
                 usuarioResponse.UsuBoletaMaestria = usuario.UsuBoletaMaestria;
                 usuarioResponse.UsuIdCarrera = usuario.UsuIdCarrera;
                 usuarioResponse.UsuSemestre = usuario.UsuSemestre;
-                usuarioResponse.UsuAñoEgreso = usuario.UsuAñoEgreso;
+                usuarioResponse.UsuAnioEgreso = usuario.UsuAnioEgreso;
                 // DATOS LABORALES
                 usuarioResponse.UsuNumeroEmpleado = usuario.UsuNumeroEmpleado;
                 usuarioResponse.UsuIdAreaDepto = usuario.UsuIdAreaDepto;
@@ -51,10 +51,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
                 // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                 usuarioResponse.UsuCorreoPersonalCuentaAnterior = usuario.UsuCorreoPersonalCuentaAnterior;
                 usuarioResponse.UsuCorreoPersonalCuentaNueva = usuario.UsuCorreoPersonalCuentaNueva;
-                usuarioResponse.UsuRecuperarContraseña = usuario.UsuRecuperarContraseña;
+                usuarioResponse.UsuRecuperarContrasenia = usuario.UsuRecuperarContrasenia;
                 // DATOS DEL CORREO INSTITUCIONAL
                 usuarioResponse.UsuCorreoInstitucionalCuenta = usuario.UsuCorreoInstitucionalCuenta;
-                usuarioResponse.UsuCorreoInstitucionalContraseña = usuario.UsuCorreoInstitucionalContraseña;
+                usuarioResponse.UsuCorreoInstitucionalContrasenia = usuario.UsuCorreoInstitucionalContrasenia;
                 // OTROS DATOS
                 usuarioResponse.UsuFechaHoraAlta = usuario.UsuFechaHoraAlta;
                 usuarioResponse.UsuStatus = usuario.UsuStatus;
@@ -76,8 +76,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
                 Issuer = null,
                 Audience = null,
                 Subject = new ClaimsIdentity(
-                        new Claim[]
-                        {
+                        [
                             new(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
                             new(ClaimTypes.Name, usuario.UsuNombre.ToString()),
                             new(ClaimTypes.Role, usuario.UsuIdRol.ToString()),
@@ -86,8 +85,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
                             new("Email", usuario.UsuCorreoPersonalCuentaNueva.ToString()),
                             new("Rol", usuario.UsuIdRol.ToString()),
                             new("TipoPersonal", usuario.UsuIdTipoPersonal.ToString()),
-                            new("RecuperarContraseña", usuario.UsuRecuperarContraseña.ToString().ToLower())
-                        }
+                            new("RecuperarContraseña", usuario.UsuRecuperarContrasenia.ToString().ToLower())
+                        ]
                     ),
                 Expires = DateTime.UtcNow.AddMonths(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)

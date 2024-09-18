@@ -119,7 +119,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     UsuBoletaMaestria = model.UsuBoletaMaestria,
                     UsuIdCarrera = model.UsuIdCarrera,
                     UsuSemestre = model.UsuSemestre,
-                    UsuAñoEgreso = model.UsuAñoEgreso,
+                    UsuAnioEgreso = model.UsuAnioEgreso,
                     UsuFileNameComprobanteInscripcion = model.UsuFileNameComprobanteInscripcion,
                     // DATOS LABORALES
                     UsuNumeroEmpleado = model.UsuNumeroEmpleado,
@@ -129,11 +129,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                     UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior,
                     UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva,
-                    UsuContraseña = Encrypt.GetSHA256(model.UsuContraseña),
-                    UsuRecuperarContraseña = false,
+                    UsuContrasenia = Encrypt.GetSHA256(model.UsuContrasenia),
+                    UsuRecuperarContrasenia = false,
                     // DATOS DEL CORREO INSTITUCIONAL
                     UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta,
-                    UsuCorreoInstitucionalContraseña = model.UsuCorreoInstitucionalContraseña,
+                    UsuCorreoInstitucionalContrasenia = model.UsuCorreoInstitucionalContrasenia,
                     // OTROS DATOS
                     UsuFechaHoraAlta = DateTime.Now,
                     UsuStatus = model.UsuStatus,
@@ -187,7 +187,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     oUsuario.UsuBoletaMaestria = model.UsuBoletaMaestria;
                     oUsuario.UsuIdCarrera = model.UsuIdCarrera;
                     oUsuario.UsuSemestre = model.UsuSemestre;
-                    oUsuario.UsuAñoEgreso = model.UsuAñoEgreso;
+                    oUsuario.UsuAnioEgreso = model.UsuAnioEgreso;
                     oUsuario.UsuFileNameComprobanteInscripcion = model.UsuFileNameComprobanteInscripcion;
                     // DATOS LABORALES
                     oUsuario.UsuNumeroEmpleado = model.UsuNumeroEmpleado;
@@ -197,11 +197,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                     oUsuario.UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior;
                     oUsuario.UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva;
-                    oUsuario.UsuContraseña = model.UsuContraseña;
-                    oUsuario.UsuRecuperarContraseña = false;
+                    oUsuario.UsuContrasenia = model.UsuContrasenia;
+                    oUsuario.UsuRecuperarContrasenia = false;
                     // DATOS DEL CORREO INSTITUCIONAL
                     oUsuario.UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta;
-                    oUsuario.UsuCorreoInstitucionalContraseña = model.UsuCorreoInstitucionalContraseña;
+                    oUsuario.UsuCorreoInstitucionalContrasenia = model.UsuCorreoInstitucionalContrasenia;
                     // OTROS DATOS
                     // oUsuario.UsuFechaHoraAlta = DateTime.UtcNow;
                     oUsuario.UsuStatus = true;
@@ -239,8 +239,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&";
                     string tmpPassword = new(Enumerable.Repeat(chars, 10).Select(s => s[new Random().Next(s.Length)]).ToArray());
 
-                    oUsuario.UsuContraseña = Encrypt.GetSHA256(tmpPassword);
-                    oUsuario.UsuRecuperarContraseña = true;
+                    oUsuario.UsuContrasenia = Encrypt.GetSHA256(tmpPassword);
+                    oUsuario.UsuRecuperarContrasenia = true;
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
@@ -271,8 +271,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                 if (oUsuario != null)
                 {
-                    oUsuario.UsuContraseña = Encrypt.GetSHA256(newPassword);
-                    oUsuario.UsuRecuperarContraseña = false;
+                    oUsuario.UsuContrasenia = Encrypt.GetSHA256(newPassword);
+                    oUsuario.UsuRecuperarContrasenia = false;
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
@@ -428,7 +428,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                             anios_egreso = rnd.Next(0, 20);
 
                             tmp.UsuSemestre = "8";
-                            tmp.UsuAñoEgreso = DateTime.Now.Year - (anios_egreso + anios_estudio);
+                            tmp.UsuAnioEgreso = DateTime.Now.Year - (anios_egreso + anios_estudio);
                             break;
 
                         case TipoPersonal.MAESTRIA:
@@ -436,7 +436,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                             anios_estudio = rnd.Next(4, 6);
                             anios_egreso = rnd.Next(0, 20);
 
-                            tmp.UsuAñoEgreso = DateTime.Now.Year - (anios_egreso + anios_estudio);
+                            tmp.UsuAnioEgreso = DateTime.Now.Year - (anios_egreso + anios_estudio);
                             break;
                     }
 
@@ -457,7 +457,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                         tmp.UsuFileNameComprobanteInscripcion = $"COMPROBANTE_INSCRIPCION_{id}.pdf";
                     }
 
-                    tmp.UsuContraseña = Encrypt.GetSHA256(tmp.UsuCurp);
+                    tmp.UsuContrasenia = Encrypt.GetSHA256(tmp.UsuCurp);
                     tmp.UsuCorreoPersonalCuentaNueva = "noreply@localhost";
                     tmp.UsuNoCelularNuevo = "55 00 00 00 00";
 

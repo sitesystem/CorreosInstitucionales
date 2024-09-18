@@ -108,6 +108,5 @@ namespace CorreosInstitucionales.Shared.CapaTools
 
             return result;
         }//GENERAR
-
     }
 }

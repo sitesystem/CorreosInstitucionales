@@ -81,8 +81,8 @@
                                     <RadzenFormField Text="Contraseña" Placeholder="Password" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-5" MaxLength="50" Disabled="false" AllowFloatingLabel="true">
                                         <Start><RadzenIcon Icon="vpn_key" /></Start>
                                         <ChildContent>
-                                            <RadzenTextBox Name="visiblePassword" @bind-Value="@oLoginCredentials.UsuContraseña" Visible="@(!password)" />
-                                            <RadzenPassword Name="noVisiblePassword" @bind-Value="@oLoginCredentials.UsuContraseña" Visible="@password" />
+                                            <RadzenTextBox Name="visiblePassword" @bind-Value="@oLoginCredentials.UsuContrasenia" Visible="@(!password)" />
+                                            <RadzenPassword Name="noVisiblePassword" @bind-Value="@oLoginCredentials.UsuContrasenia" Visible="@password" />
                                         </ChildContent>
                                         <End>
                                             <RadzenButton Icon="@(password ? "visibility" : "visibility_off")"
@@ -94,7 +94,7 @@
                                         </End>
                                         <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                                     </RadzenFormField>
-                                    <ValidationMessage For="@(() => oLoginCredentials.UsuContraseña)" />
+                                    <ValidationMessage For="@(() => oLoginCredentials.UsuContrasenia)" />
 
                                     <RadzenButton Text="Iniciar Sesión"
                                                   BusyText="Iniciando Sesión ..."

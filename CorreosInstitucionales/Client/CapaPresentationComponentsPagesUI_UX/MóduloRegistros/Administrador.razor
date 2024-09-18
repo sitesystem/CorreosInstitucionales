@@ -99,7 +99,7 @@
                             </End>
                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
+                        <ValidationMessage For="@(() => oUsuario.UsuContrasenia)" />
                     </div>
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Confirmar Contraseña" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
@@ -194,7 +194,7 @@ else
         oUsuario.UsuBoletaMaestria = "B000000";        // Número de Boleta del Usuario (Alumno de Maestria)
         oUsuario.UsuIdCarrera = 8;                  // FK ID de la Carrera del Alumno
         oUsuario.UsuSemestre = "0";                    // Semestre que cursa el Alumno Inscrito o de Maestria
-        oUsuario.UsuAñoEgreso = 1950;                  // Año de Egreso en dado caso
+        oUsuario.UsuAnioEgreso = 1950;                  // Año de Egreso en dado caso
         oUsuario.UsuFileNameComprobanteInscripcion = "-";    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
         oUsuario.UsuFileSizeComprobanteInscripcion = 1L;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
         @* DATOS LABORALES *@
@@ -205,11 +205,11 @@ else
         @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
         oUsuario.UsuCorreoPersonalCuentaAnterior = null;        // Correo Personal de la Cuenta Anterior
         oUsuario.UsuCorreoPersonalCuentaNueva = oEditUsuario.UsuCorreoPersonalCuentaNueva;              // Correo Personal de la Cuenta Nueva o Actual
-        oUsuario.UsuContraseña = oEditUsuario.UsuContraseña;                                            // Contraseña en la PLataforma del Usuario Solicitante o Administrador
-        oUsuario.UsuRecuperarContraseña = false;                          // Contraseña Temporal que se le proporciona al Usuario Solicitante
+        oUsuario.UsuContrasenia = oEditUsuario.UsuContrasenia;                                            // Contraseña en la PLataforma del Usuario Solicitante o Administrador
+        oUsuario.UsuRecuperarContrasenia = false;                          // Contraseña Temporal que se le proporciona al Usuario Solicitante
         @* DATOS DEL CORREO INSTITUCIONAL *@
         oUsuario.UsuCorreoInstitucionalCuenta = "";              // Cuenta Correo Institucional IPN generada por DCyC
-        oUsuario.UsuCorreoInstitucionalContraseña = "";      // Contraseña del Correo Institucional IPN Generada por DCyC
+        oUsuario.UsuCorreoInstitucionalContrasenia = "";      // Contraseña del Correo Institucional IPN Generada por DCyC
         @* OTROS DATOS *@
         oUsuario.UsuFechaHoraAlta = oEditUsuario.UsuFechaHoraAlta;          // Fecha y Hora de Alta del Usuario
         oUsuario.UsuStatus = true;                        // Usuario (1 - Activo / 0 - Inactivo)
@@ -238,7 +238,7 @@ else
     private async Task CompararContraseñas()
     {
         flagErrorPasswords = !string.Equals(UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal);
-        oUsuario.UsuContraseña = !string.IsNullOrEmpty(UsuContraseña) && !flagErrorPasswords ? CorreosInstitucionales.Shared.CapaTools.Encrypt.GetSHA256(UsuContraseña) : oEditUsuario.UsuContraseña;
+        oUsuario.UsuContrasenia = !string.IsNullOrEmpty(UsuContraseña) && !flagErrorPasswords ? CorreosInstitucionales.Shared.CapaTools.Encrypt.GetSHA256(UsuContraseña) : oEditUsuario.UsuContrasenia;
     }
 
     @*///////////////////////////////////////////////  VALIDAR ReCAPTCHA  ////////////////////////////////////////////////////////////////////////*@
@@ -465,18 +465,17 @@ else
         </RadzenStack>
     </RadzenStack>,
     new DialogOptions()
-            {
-                CloseDialogOnOverlayClick = true,
-                CloseDialogOnEsc = true,
-                Width = "600px",
-                Height = "Auto",
-                Resizable = true,
-                ShowTitle = true,
-                ShowClose = true,
-                Draggable = true,
-                CssClass = "custom-dialog-class",
-                WrapperCssClass = "custom-dialog-wrapper-class"
-            });
+        {
+            CloseDialogOnOverlayClick = true,
+            CloseDialogOnEsc = true,
+            Width = "600px",
+            Height = "Auto",
+            Resizable = true,
+            ShowTitle = true,
+            ShowClose = true,
+            Draggable = true,
+            CssClass = "custom-dialog-class",
+            WrapperCssClass = "custom-dialog-wrapper-class"
+        });
     }
-
 }

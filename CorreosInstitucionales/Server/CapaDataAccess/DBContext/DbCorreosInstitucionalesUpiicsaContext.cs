@@ -18,6 +18,8 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
         _config = config;
     }
 
+    public virtual DbSet<McCatAnuncio> McCatAnuncios { get; set; }
+
     public virtual DbSet<McCatAreasDepto> McCatAreasDeptos { get; set; }
 
     public virtual DbSet<McCatCarrera> McCatCarreras { get; set; }
@@ -34,7 +36,11 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
     public virtual DbSet<McCatPiso> McCatPisos { get; set; }
 
+    public virtual DbSet<McCatPlantilla> McCatPlantillas { get; set; }
+
     public virtual DbSet<McCatRole> McCatRoles { get; set; }
+
+    public virtual DbSet<McCatSemestre> McCatSemestres { get; set; }
 
     public virtual DbSet<McCatTiposPersonal> McCatTiposPersonals { get; set; }
 
@@ -44,14 +50,20 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
     public virtual DbSet<MtTbSolicitudesTicket> MtTbSolicitudesTickets { get; set; }
 
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-    //=> optionsBuilder.UseSqlServer("Server=localhost;Database=db_CorreosInstitucionales_UPIICSA;Trusted_Connection=True;TrustServerCertificate=True;");
-    //=> optionsBuilder.UseSqlServer(_config.GetConnectionString("SQLServer"), options=> options.UseCompatibilityLevel(120));
-    //=> optionsBuilder.UseSqlServer(_config.GetSection("ConnectionStrings:SQLServer").Value);
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        //=> optionsBuilder.UseSqlServer("Server=www.developers.upiicsa.ipn.mx;Database=db_CorreosInstitucionales_UPIICSA;User ID=correos_institucionales;Password=correos_institucionales;Trusted_Connection=False;TrustServerCertificate=True;");
+        //=> optionsBuilder.UseSqlServer("Server=localhost;Database=db_CorreosInstitucionales_UPIICSA;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer(_config.GetConnectionString("SQLServer_Connection"));
+        //=> optionsBuilder.UseSqlServer(_config.GetSection("ConnectionStrings:SQLServer_Connection").Value);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<McCatAnuncio>(entity =>
+        {
+            entity.Property(e => e.AnuStatus).HasDefaultValue(true);
+        });
+
         modelBuilder.Entity<McCatAreasDepto>(entity =>
         {
             entity.HasKey(e => e.IdAreaDepto).HasName("PK_MCE_catExtencionesAreas");
@@ -173,6 +185,11 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
                 .HasComment("Estado (1 = Activo, 0 = Inactivo)");
         });
 
+        modelBuilder.Entity<McCatPlantilla>(entity =>
+        {
+            entity.Property(e => e.PlaStatus).HasDefaultValue(true);
+        });
+
         modelBuilder.Entity<McCatRole>(entity =>
         {
             entity.HasKey(e => e.IdRol).HasName("PK_MCE_catRoles");
@@ -212,17 +229,18 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
             entity.HasKey(e => e.IdUsuario).HasName("PK_ML_tbUsuariosSolicitantes");
 
             entity.Property(e => e.IdUsuario).HasComment("PK ID Único del Usuario Solicitante o Administrador");
-            entity.Property(e => e.UsuAñoEgreso)
+            entity.Property(e => e.UsuAnioEgreso)
                 .HasDefaultValue(1900)
                 .HasComment("Año de Egreso en caso de ser Alumno Egresado");
             entity.Property(e => e.UsuBoletaAlumno).HasComment("Número de Boleta del Usuario Alumno/Egresado");
             entity.Property(e => e.UsuBoletaMaestria).HasComment("Número de Boleta del Usuario Alumno de Maestría");
-            entity.Property(e => e.UsuContraseña).HasComment("Contraseña Encriptada en la Plataforma SACI");
-            entity.Property(e => e.UsuCorreoInstitucionalContraseña).HasComment("Contraseña del Correo Electrónico Institucional IPN");
+            entity.Property(e => e.UsuContrasenia).HasComment("Contraseña Encriptada en la Plataforma SACI");
+            entity.Property(e => e.UsuCorreoInstitucionalContrasenia).HasComment("Contraseña del Correo Electrónico Institucional IPN");
             entity.Property(e => e.UsuCorreoInstitucionalCuenta).HasComment("Correo Electrónico Institucional IPN");
             entity.Property(e => e.UsuCorreoPersonalCuentaAnterior).HasComment("Correo Personal Anterior");
             entity.Property(e => e.UsuCorreoPersonalCuentaNueva).HasComment("Correo Personal Actual / Nuevo");
             entity.Property(e => e.UsuCurp).HasComment("CURP del Usuario");
+            entity.Property(e => e.UsuFechaHoraActualizacion).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.UsuFechaHoraAlta)
                 .HasDefaultValueSql("(getdate())")
                 .HasComment("Fecha Hora del Alta del Usuario");
@@ -250,7 +268,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
             entity.Property(e => e.UsuPrimerApellido)
                 .HasDefaultValue("-")
                 .HasComment("Primer Apellido del Usuario");
-            entity.Property(e => e.UsuRecuperarContraseña).HasComment("Bandera { 0 = Inicia Sesión, 1 = Pide cambiar contraseña temporal }");
+            entity.Property(e => e.UsuRecuperarContrasenia).HasComment("Bandera { 0 = Inicia Sesión, 1 = Pide cambiar contraseña temporal }");
             entity.Property(e => e.UsuSegundoApellido).HasComment("Segundo Apellido del Usuario");
             entity.Property(e => e.UsuSemestre)
                 .HasDefaultValueSql("((1))")

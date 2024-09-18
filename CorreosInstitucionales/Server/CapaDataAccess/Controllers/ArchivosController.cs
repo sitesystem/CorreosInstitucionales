@@ -501,7 +501,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                                 logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CONTRASEÑA NO ESTÉ VACÍA.");
                                 return;
                             }
-                            solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContraseña = registro_actual.Clave;
+                            solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContrasenia = registro_actual.Clave;
                             logs.Add($"\t - SE ACTUALIZÓ LA CONTRASEÑA");
                         }
 

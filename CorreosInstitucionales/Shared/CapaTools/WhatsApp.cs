@@ -1,12 +1,13 @@
-﻿using CorreosInstitucionales.Shared.CapaEntities.Request;
-using CorreosInstitucionales.Shared.CapaEntities.Response;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+
+using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaTools
 {
@@ -38,12 +39,12 @@ namespace CorreosInstitucionales.Shared.CapaTools
 
                 oResponse.Data = await response.Content.ReadAsStringAsync();
 
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 oResponse.Message = ex.Message + Environment.NewLine + ex.StackTrace;
             }
             
-
             return oResponse;
         }
     }

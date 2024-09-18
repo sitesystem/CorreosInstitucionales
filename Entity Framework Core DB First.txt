@@ -27,5 +27,5 @@ public DbCorreosInstitucionalesUpiicsaContext(DbContextOptions<DbCorreosInstituc
 }
 
 //=> optionsBuilder.UseSqlServer("Server=localhost;Database=db_CorreosInstitucionales_UPIICSA;Trusted_Connection=True;TrustServerCertificate=True;");
-//=> optionsBuilder.UseSqlServer(_config.GetConnectionString("SQLServer"));
-//=> optionsBuilder.UseSqlServer(_config.GetSection("ConnectionStrings:SQLServer").Value);
+//=> optionsBuilder.UseSqlServer(_config.GetConnectionString("SQLServer_Connection"));
+//=> optionsBuilder.UseSqlServer(_config.GetSection("ConnectionStrings:SQLServer_Connection").Value);

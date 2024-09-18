@@ -2,8 +2,7 @@
 
 @attribute [AllowAnonymous]
 
-<style type="text/css">
-</style>
+<style type="text/css"></style>
 
 @if (oCarreras is not null && oCarreras.Data != null)
 {
@@ -320,13 +319,13 @@
                             <RadzenFormField Text="Año de Egreso" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Disabled="false" Visible="@flagEsEgresado">
                                 <Start><RadzenIcon Icon="dialpad" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                 <ChildContent>
-                                    <RadzenNumeric Name="@($@"año_egreso_{TipoPersonal}")" TValue="int?" @bind-Value="@oUsuario.UsuAñoEgreso" Change=@(args => oUsuario.UsuAñoEgreso = args)
+                                    <RadzenNumeric Name="@($@"año_egreso_{TipoPersonal}")" TValue="int?" @bind-Value="@oUsuario.UsuAnioEgreso" Change=@(args => oUsuario.UsuAnioEgreso = args)
                                                    AutoComplete="true" Placeholder="@($@"1950-{year}")"
                                                    TextAlign="TextAlign.Center" Min="1950" Max="@year" ShowUpDown="true" Step="1" Format="" />
                                 </ChildContent>
                                 <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                             </RadzenFormField>
-                            <ValidationMessage For="@(() => oUsuario.UsuAñoEgreso)" />
+                            <ValidationMessage For="@(() => oUsuario.UsuAnioEgreso)" />
                         </div>
                     }
 
@@ -375,13 +374,13 @@
                             <ChildContent>
                                 @if (ActionAddEdit == "agregar")
                                 {
-                                    <RadzenTextBox Name="@($@"contraseña_{TipoPersonal}")" @bind-Value="@oUsuario.UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
+                                    <RadzenTextBox Name="@($@"contraseña_{TipoPersonal}")" @bind-Value="@oUsuario.UsuContrasenia" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
                                                    Visible="@(!VisibleContraseña)"
-                                                   @oninput="(e => oUsuario.UsuContraseña = e.Value.ToString())"
+                                                   @oninput="(e => oUsuario.UsuContrasenia = e.Value.ToString())"
                                                    @onkeyup="@CompararContraseñas" />
-                                    <RadzenPassword Name="@($@"contraseña_visible_{TipoPersonal}")" @bind-Value="@oUsuario.UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
+                                    <RadzenPassword Name="@($@"contraseña_visible_{TipoPersonal}")" @bind-Value="@oUsuario.UsuContrasenia" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
                                                     Visible="@VisibleContraseña"
-                                                    @oninput="(e => oUsuario.UsuContraseña = e.Value.ToString())"
+                                                    @oninput="(e => oUsuario.UsuContrasenia = e.Value.ToString())"
                                                     @onkeyup="@CompararContraseñas" />
                                 }
                                 else if (ActionAddEdit == "actualizar")
@@ -406,7 +405,7 @@
                             </End>
                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuContraseña)" />
+                        <ValidationMessage For="@(() => oUsuario.UsuContrasenia)" />
                     </div>
 
                     <div class="col-md-4 col-lg-4 mb-3">
@@ -477,14 +476,14 @@
                             <RadzenFormField Text="Contraseña del Correo Electrónico Institucional" AllowFloatingLabel="false" AllowClear="true" Variant="Variant.Filled" Class="rz-shadow-3 w-100 mt-3" Disabled="false">
                                 <Start><RadzenIcon Icon="password" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                 <ChildContent>
-                                    <RadzenTextBox Name="@($@"password_email_institucional_{TipoPersonal}")" @bind-Value="@oUsuario.UsuCorreoInstitucionalContraseña" MinLength="0" MaxLength="100"
+                                    <RadzenTextBox Name="@($@"password_email_institucional_{TipoPersonal}")" @bind-Value="@oUsuario.UsuCorreoInstitucionalContrasenia" MinLength="0" MaxLength="100"
                                                    Disabled="true" ReadOnly="true" class="text-center" Style="font-family:var(--rz-text-font-family); font-weight:bold; font-size:18px;" />
                                 </ChildContent>
                                 <Helper>
                                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.P" TextAlign="TextAlign.Justify" Style="font-family:var(--rz-text-font-family);" />
                                 </Helper>
                             </RadzenFormField>
-                            <ValidationMessage For="@(() => oUsuario.UsuCorreoInstitucionalContraseña)" />
+                            <ValidationMessage For="@(() => oUsuario.UsuCorreoInstitucionalContrasenia)" />
                         </div>
                     }
                 </div>
@@ -622,7 +621,7 @@ else
                 oUsuario.UsuIdCarrera = 1;                      // FK ID de la Carrera del Alumno
                 oUsuario.UsuSemestre = "0";                     // Semestre que cursa el Alumno Inscrito o de Maestria
             }
-            oUsuario.UsuAñoEgreso = 1950;                       // Año de Egreso en dado caso
+            oUsuario.UsuAnioEgreso = 1950;                       // Año de Egreso en dado caso
             oUsuario.UsuFileNameComprobanteInscripcion = "";    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             oUsuario.UsuFileSizeComprobanteInscripcion = 0l;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             @* DATOS LABORALES *@
@@ -633,11 +632,11 @@ else
             @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
             oUsuario.UsuCorreoPersonalCuentaAnterior = null;    // Correo Personal de la Cuenta Anterior
             oUsuario.UsuCorreoPersonalCuentaNueva = "";         // Correo Personal de la Cuenta Nueva o Actual
-            oUsuario.UsuContraseña = "";                        // Contraseña en la PLataforma del Usuario Solicitante o Administrador
-            oUsuario.UsuRecuperarContraseña = false;            // Contraseña Temporal que se le proporciona al Usuario Solicitante
+            oUsuario.UsuContrasenia = "";                        // Contraseña en la PLataforma del Usuario Solicitante o Administrador
+            oUsuario.UsuRecuperarContrasenia = false;            // Contraseña Temporal que se le proporciona al Usuario Solicitante
             @* DATOS DEL CORREO INSTITUCIONAL *@
             oUsuario.UsuCorreoInstitucionalCuenta = "";         // Cuenta Correo Institucional IPN generada por DCyC
-            oUsuario.UsuCorreoInstitucionalContraseña = "";     // Contraseña del Correo Institucional IPN Generada por DCyC
+            oUsuario.UsuCorreoInstitucionalContrasenia = "";     // Contraseña del Correo Institucional IPN Generada por DCyC
             @* OTROS DATOS *@
             // oUsuario.UsuFechaHoraAlta = DateTime.Parse(DateTime.Now.ToString()).Year; // Fecha y Hora de Alta del Usuario
             oUsuario.UsuStatus = true;                          // Usuario (1 - Activo / 0 - Inactivo)
@@ -672,7 +671,7 @@ else
             oUsuario.UsuBoletaMaestria = oEditUsuario.UsuBoletaMaestria;        // Número de Boleta del Usuario (Alumno de Maestria)
             oUsuario.UsuIdCarrera = oEditUsuario.UsuIdCarrera;                  // FK ID de la Carrera del Alumno
             oUsuario.UsuSemestre = oEditUsuario.UsuSemestre;                    // Semestre que cursa el Alumno Inscrito o de Maestria
-            oUsuario.UsuAñoEgreso = oEditUsuario.UsuAñoEgreso;                  // Año de Egreso en dado caso
+            oUsuario.UsuAnioEgreso = oEditUsuario.UsuAnioEgreso;                  // Año de Egreso en dado caso
             oUsuario.UsuFileNameComprobanteInscripcion = oEditUsuario.UsuFileNameComprobanteInscripcion;    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             srcComprobanteInscripcion = oUsuario.UsuFileNameComprobanteInscripcion != "Comprobante-Inscripción.pdf" ? $"/repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteInscripcion}" : $"/repositorio/Comprobante-Inscripción.pdf";
             oUsuario.UsuFileSizeComprobanteInscripcion = oEditUsuario.UsuFileSizeComprobanteInscripcion;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
@@ -684,11 +683,11 @@ else
             @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
             oUsuario.UsuCorreoPersonalCuentaAnterior = oEditUsuario.UsuCorreoPersonalCuentaAnterior;        // Correo Personal de la Cuenta Anterior
             oUsuario.UsuCorreoPersonalCuentaNueva = oEditUsuario.UsuCorreoPersonalCuentaNueva;              // Correo Personal de la Cuenta Nueva o Actual
-            oUsuario.UsuContraseña = oEditUsuario.UsuContraseña;                                            // Contraseña en la PLataforma del Usuario Solicitante o Administrador
-            oUsuario.UsuRecuperarContraseña = oEditUsuario.UsuRecuperarContraseña;                          // Contraseña Temporal que se le proporciona al Usuario Solicitante
+            oUsuario.UsuContrasenia = oEditUsuario.UsuContrasenia;                                            // Contraseña en la PLataforma del Usuario Solicitante o Administrador
+            oUsuario.UsuRecuperarContrasenia = oEditUsuario.UsuRecuperarContrasenia;                          // Contraseña Temporal que se le proporciona al Usuario Solicitante
             @* DATOS DEL CORREO INSTITUCIONAL *@
             oUsuario.UsuCorreoInstitucionalCuenta = oEditUsuario.UsuCorreoInstitucionalCuenta;              // Cuenta Correo Institucional IPN generada por DCyC
-            oUsuario.UsuCorreoInstitucionalContraseña = oEditUsuario.UsuCorreoInstitucionalContraseña;      // Contraseña del Correo Institucional IPN Generada por DCyC
+            oUsuario.UsuCorreoInstitucionalContrasenia = oEditUsuario.UsuCorreoInstitucionalContrasenia;      // Contraseña del Correo Institucional IPN Generada por DCyC
             @* OTROS DATOS *@
             oUsuario.UsuFechaHoraAlta = oEditUsuario.UsuFechaHoraAlta;          // Fecha y Hora de Alta del Usuario
             oUsuario.UsuStatus = oEditUsuario.UsuStatus;                        // Usuario (1 - Activo / 0 - Inactivo)
@@ -747,7 +746,7 @@ else
     public async Task ChangeSelectBarEgresado()
     {
         oUsuario.UsuIdTipoPersonal = !flagEsEgresado ? 1 : 2;
-        oUsuario.UsuAñoEgreso = 1950;
+        oUsuario.UsuAnioEgreso = 1950;
         onChangeSelectBarEgresado = true;
     }
 
@@ -772,11 +771,11 @@ else
     private async Task CompararContraseñas()
     {
         if (ActionAddEdit == "agregar")
-            flagErrorPasswords = !string.Equals(oUsuario.UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal);
+            flagErrorPasswords = !string.Equals(oUsuario.UsuContrasenia, UsuConfirmarContraseña, StringComparison.Ordinal);
         else if (ActionAddEdit == "actualizar")
         {
             flagErrorPasswords = !string.Equals(UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal);
-            oUsuario.UsuContraseña = !string.IsNullOrEmpty(UsuContraseña) && !flagErrorPasswords ? CorreosInstitucionales.Shared.CapaTools.Encrypt.GetSHA256(UsuContraseña) : oEditUsuario.UsuContraseña;
+            oUsuario.UsuContrasenia = !string.IsNullOrEmpty(UsuContraseña) && !flagErrorPasswords ? CorreosInstitucionales.Shared.CapaTools.Encrypt.GetSHA256(UsuContraseña) : oEditUsuario.UsuContrasenia;
         }
     }
 
@@ -867,9 +866,9 @@ else
             string carrera = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oCarrera?.Data?.CarrNombre : "N/A");
             string semestre = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuSemestre : "N/A");
             string isEgresado = flagEsEgresado ? "SI" : "NO";
-            string añoEgreso = flagEsEgresado ? oUsuario.UsuAñoEgreso.ToString() : "N/A";
+            string añoEgreso = flagEsEgresado ? oUsuario.UsuAnioEgreso.ToString() : "N/A";
             string fecha_hora_alta = ActionAddEdit == "agregar" ? DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'") : oUsuario.UsuFechaHoraAlta?.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");
-            string password = ActionAddEdit == "agregar" ? oUsuario.UsuContraseña : UsuContraseña;
+            string password = ActionAddEdit == "agregar" ? oUsuario.UsuContrasenia : UsuContraseña;
             string agregar_actualizar = ActionAddEdit == "agregar" ? "registro" : "actualización de datos";
             string entrega_credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) ? "<br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>" : "";
             string credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
@@ -1116,7 +1115,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Año de Egreso:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@(flagEsEgresado ? oUsuario.UsuAñoEgreso : "N/A")</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@(flagEsEgresado ? oUsuario.UsuAnioEgreso : "N/A")</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenButton Text="Cerrar"
                                                   BusyText=""
@@ -1267,7 +1266,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Año de Egreso:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@(flagEsEgresado ? oUsuario.UsuAñoEgreso : "N/A")</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@(flagEsEgresado ? oUsuario.UsuAnioEgreso : "N/A")</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light"
                                                  ShowIcon="true" AllowClose="false" class="mb-0" Visible="@(!string.IsNullOrEmpty(UsuContraseña) || onChangeSelectBarEgresado)">

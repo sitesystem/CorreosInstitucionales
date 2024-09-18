@@ -1,15 +1,11 @@
-﻿@using CorreosInstitucionales.Shared;
-@using CorreosInstitucionales.Shared.Constantes;
-@using CorreosInstitucionales.Shared.CapaTools
-
-@inject Radzen.DialogService dialogService
+﻿@inject DialogService dialogService
 
 <EditForm Model=@registro OnValidSubmit="@OnValidForm">
     <div class="alert alert-info">
         Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
     </div>
     <DataAnnotationsValidator />
-    
+
     <section class="my-2 py-2">
         <h1 class="my-4">Datos de Cuenta</h1>
 
@@ -80,7 +76,6 @@
         </div>
     </section>
 
-
     <section class="mb-2">
         <h1 class="my-4">Datos de contacto</h1>
         <div class="row my-2">
@@ -104,82 +99,81 @@
                 @if (agregar_clave)
                 {
 
-                    <InputText type="password" @bind-Value="@registro.UsuContraseña" class="required form-control" />
-                    <ValidationMessage For="()=>registro.UsuContraseña"></ValidationMessage>
+                    <InputText type="password" @bind-Value="@registro.UsuContrasenia" class="required form-control" />
+                    <ValidationMessage For="()=>registro.UsuContrasenia"></ValidationMessage>
                 }
             </div>
         </div>
     </section>
 
-    @if(es_alumno || es_alumno_maestria || es_empleado)
+    @if (es_alumno || es_alumno_maestria || es_empleado)
     {
-    <section class="mb-2">
-        <h1 class="my-4">Información General</h1>
-        <div class="row my-2">
-            @if (es_alumno)
-            {
-                <div class="col-2">
-                    <span class="fw-bold">Boleta (Alumno)<strong class="red" title="requerido">*</strong></span>
-                    <InputText @bind-Value="@registro.UsuBoletaAlumno" class="required form-control" />
-                    <ValidationMessage For="()=>registro.UsuBoletaAlumno"></ValidationMessage>
-                </div>
+        <section class="mb-2">
+            <h1 class="my-4">Información General</h1>
+            <div class="row my-2">
+                @if (es_alumno)
+                {
+                    <div class="col-2">
+                        <span class="fw-bold">Boleta (Alumno)<strong class="red" title="requerido">*</strong></span>
+                        <InputText @bind-Value="@registro.UsuBoletaAlumno" class="required form-control" />
+                        <ValidationMessage For="()=>registro.UsuBoletaAlumno"></ValidationMessage>
+                    </div>
 
-                <div class="col-3">
-                    <span class="fw-bold">Carrera</span>
-                    <InputSelect @bind-Value="@registro.UsuIdCarrera" class=" form-select">
-                        @foreach (var item in cat_UsuIdCarrera)
-                        {
-                            <option value="@item.IdCarrera">@item.CarrNombre</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="()=>registro.UsuIdCarrera"></ValidationMessage>
-                </div>
+                    <div class="col-3">
+                        <span class="fw-bold">Carrera</span>
+                        <InputSelect @bind-Value="@registro.UsuIdCarrera" class=" form-select">
+                            @foreach (var item in cat_UsuIdCarrera)
+                            {
+                                <option value="@item.IdCarrera">@item.CarrNombre</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="()=>registro.UsuIdCarrera"></ValidationMessage>
+                    </div>
 
-                <div class="col-2">
-                    <span class="fw-bold">Semestre</span>
-                    <InputSelect @bind-Value="@registro.UsuSemestre" class=" form-select">
-                        @foreach (var item in CorreosInstitucionales.Shared.Constantes.Catalogo.Semestres)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </InputSelect>
-                </div>
-            }
+                    <div class="col-2">
+                        <span class="fw-bold">Semestre</span>
+                        <InputSelect @bind-Value="@registro.UsuSemestre" class=" form-select">
+                            @foreach (var item in CorreosInstitucionales.Shared.Constantes.Catalogo.Semestres)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </InputSelect>
+                    </div>
+                }
 
-            @if (es_alumno_maestria)
-            {
-                <div class="col-2">
-                    <span class="fw-bold">Boleta (Maestria)<strong class="red" title="requerido">*</strong></span>
-                    <InputText @bind-Value="@registro.UsuBoletaMaestria" class="required form-control" />
-                    <ValidationMessage For="()=>registro.UsuBoletaMaestria"></ValidationMessage>
-                </div>
-            }
+                @if (es_alumno_maestria)
+                {
+                    <div class="col-2">
+                        <span class="fw-bold">Boleta (Maestria)<strong class="red" title="requerido">*</strong></span>
+                        <InputText @bind-Value="@registro.UsuBoletaMaestria" class="required form-control" />
+                        <ValidationMessage For="()=>registro.UsuBoletaMaestria"></ValidationMessage>
+                    </div>
+                }
 
-            @if (es_egresado)
-            {
-                <div class="col-2">
-                    <span class="fw-bold">Año Egreso<strong class="red" title="requerido">*</strong></span>
-                    <InputNumber @bind-Value="@registro.UsuAñoEgreso" class="required form-control" />
-                    <ValidationMessage For="()=>registro.UsuAñoEgreso"></ValidationMessage>
-                </div>
-            }
+                @if (es_egresado)
+                {
+                    <div class="col-2">
+                        <span class="fw-bold">Año Egreso<strong class="red" title="requerido">*</strong></span>
+                        <InputNumber @bind-Value="@registro.UsuAnioEgreso" class="required form-control" />
+                        <ValidationMessage For="()=>registro.UsuAnioEgreso"></ValidationMessage>
+                    </div>
+                }
 
-            @if(es_alumno || es_alumno_maestria)
-            {
-                <div class="col-3">
-                    <span class="fw-bold">Comprobante de Etudios</span>
-                    <InputFile OnChange="fuComprobanteInscripcion_OnChange" class="form-control mb-3"></InputFile>
-                </div>
-            }
+                @if (es_alumno || es_alumno_maestria)
+                {
+                    <div class="col-3">
+                        <span class="fw-bold">Comprobante de Etudios</span>
+                        <InputFile OnChange="fuComprobanteInscripcion_OnChange" class="form-control mb-3"></InputFile>
+                    </div>
+                }
 
-
-            @if (es_empleado)
-            {
-                <div class="col-2">
-                    <span class="fw-bold"> Numero de Empleado<strong class="red" title="requerido">*</strong></span>
-                    <InputText @bind-Value="@registro.UsuNumeroEmpleado" class="required form-control" />
-                    <ValidationMessage For="()=>registro.UsuNumeroEmpleado"></ValidationMessage>
-                </div>
+                @if (es_empleado)
+                {
+                    <div class="col-2">
+                        <span class="fw-bold"> Numero de Empleado<strong class="red" title="requerido">*</strong></span>
+                        <InputText @bind-Value="@registro.UsuNumeroEmpleado" class="required form-control" />
+                        <ValidationMessage For="()=>registro.UsuNumeroEmpleado"></ValidationMessage>
+                    </div>
 
                     <div class="col-2">
                         <span class="fw-bold">Extension<strong class="red" title="requerido">*</strong></span>
@@ -187,42 +181,39 @@
                         <ValidationMessage For="()=>registro.UsuNoExtension"></ValidationMessage>
                     </div>
 
-                <div class="col-8">
-                    <span class="fw-bold">Área o Departamento</span>
-                    <InputSelect @bind-Value="@registro.UsuIdAreaDepto" @bind-Value:after="Area_OnChanged" class=" form-select">
-                        @foreach (var item in cat_UsuIdAreaDepto)
-                        {
-                            <option value="@item.IdAreaDepto">@item.AreNombreAreaDepto</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="()=>registro.UsuIdAreaDepto"></ValidationMessage>
+                    <div class="col-8">
+                        <span class="fw-bold">Área o Departamento</span>
+                        <InputSelect @bind-Value="@registro.UsuIdAreaDepto" @bind-Value:after="Area_OnChanged" class=" form-select">
+                            @foreach (var item in cat_UsuIdAreaDepto)
+                            {
+                                <option value="@item.IdAreaDepto">@item.AreNombreAreaDepto</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="()=>registro.UsuIdAreaDepto"></ValidationMessage>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+
+    @if (!string.IsNullOrEmpty(registro.UsuCorreoInstitucionalCuenta))
+    {
+        <section class="mb-2">
+            <h1 class="my-2">Cuenta Institucional</h1>
+            <div class="row my-2">
+                <div class="col-6">
+                    <span class="fw-bold">Correo</span>
+                    <br />
+                    @registro.UsuCorreoInstitucionalCuenta
                 </div>
 
-                
-            }
-        </div>
-    </section>
-    }
-    
-    
-    @if(!string.IsNullOrEmpty(registro.UsuCorreoInstitucionalCuenta))
-    {
-    <section class="mb-2">
-        <h1 class="my-2">Cuenta Institucional</h1>
-        <div class="row my-2">
-            <div class="col-6">
-                <span class="fw-bold">Correo</span>
-                <br />
-                @registro.UsuCorreoInstitucionalCuenta
+                <div class="col-6">
+                    <span class="fw-bold">Contraseña</span>
+                    <br />
+                    @registro.UsuCorreoInstitucionalContrasenia
+                </div>
             </div>
-
-            <div class="col-6">
-                <span class="fw-bold">Contraseña</span>
-                <br />
-                @registro.UsuCorreoInstitucionalContraseña
-            </div>
-        </div>
-    </section>
+        </section>
     }
     <div class="row my-2">
         <div class="col">
@@ -256,13 +247,13 @@
     int[] tipo_personal_alumnos = new int[] { (int)TipoPersonal.ALUMNO, (int)TipoPersonal.EGRESADO };
     int[] tipo_peronal_personal = new int[] { (int)TipoPersonal.DOCENTE, (int)TipoPersonal.HONORARIOS };
 
-    private Dictionary<TipoDocumento,IBrowserFile?> archivos = new();
+    private Dictionary<TipoDocumento, IBrowserFile?> archivos = new();
 
     private bool es_alumno { get { return tipo_personal_alumnos.Contains(registro.UsuIdTipoPersonal); } }
 
     private bool es_egresado { get { return registro.UsuIdTipoPersonal == (int)TipoPersonal.EGRESADO || es_alumno_maestria; } }
     private bool es_alumno_maestria { get { return registro.UsuIdTipoPersonal == (int)TipoPersonal.MAESTRIA; } }
-    private bool es_empleado { get { return tipo_peronal_personal.Contains(registro.UsuIdTipoPersonal); }}
+    private bool es_empleado { get { return tipo_peronal_personal.Contains(registro.UsuIdTipoPersonal); } }
 
     private void fuCURP_OnChange(InputFileChangeEventArgs e)
     {
@@ -282,16 +273,16 @@
         registro.UsuNoExtension = cat_UsuIdAreaDepto.First(area => area.IdAreaDepto == registro.UsuIdAreaDepto).AreNoExtension;
     }
 
-    private void OnValidForm() 
+    private void OnValidForm()
     {
         registro.UsuNombre = registro.UsuNombre.ToUpper();
         registro.UsuPrimerApellido = registro.UsuPrimerApellido.ToUpper();
         registro.UsuSegundoApellido = (registro.UsuSegundoApellido ?? "").ToUpper();
         registro.UsuCorreoPersonalCuentaNueva = registro.UsuCorreoPersonalCuentaNueva.ToLower();
 
-        if(agregar_clave)
+        if (agregar_clave)
         {
-            registro.UsuContraseña = Encrypt.GetSHA256(registro.UsuContraseña);
+            registro.UsuContrasenia = Encrypt.GetSHA256(registro.UsuContrasenia);
         }
         dialogService.Close(new DocumentoAdjunto<RequestDTO_Usuario>(registro, archivos));
     }
