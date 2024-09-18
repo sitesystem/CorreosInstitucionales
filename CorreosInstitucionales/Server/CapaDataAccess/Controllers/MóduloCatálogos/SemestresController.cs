@@ -2,31 +2,29 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.CapaEntities.Request;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatálogos
 {
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
-    public class PisosController(DbCorreosInstitucionalesUpiicsaContext db) : ControllerBase
+    public class SemestresController(DbCorreosInstitucionalesUpiicsaContext db) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
         {
-            Response<List<McCatPiso>> oResponse = new();
+            Response<List<McCatSemestre>> oResponse = new();
 
             try
             {
-                var list = new List<McCatPiso>();
+                var list = new List<McCatSemestre>();
 
                 if (filterByStatus)
-                    list = await _db.McCatPisos.Where(p => p.PisoStatus.Equals(filterByStatus)).ToListAsync();
-                else
-                    list = await _db.McCatPisos.ToListAsync();
+                    list = await _db.McCatSemestres.ToListAsync();
 
                 oResponse.Success = 1;
                 oResponse.Data = list;
@@ -42,11 +40,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
         [HttpGet("filterById/{id}")]
         public async Task<IActionResult> GetDataById(int id)
         {
-            Response<McCatPiso> oResponse = new();
+            Response<McCatAnuncio> oResponse = new();
 
             try
             {
-                var item = await _db.McCatPisos.FindAsync(id);
+                var item = await _db.McCatAnuncios.FindAsync(id);
                 oResponse.Success = 1;
                 oResponse.Data = item;
             }
@@ -59,20 +57,19 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddData(RequestViewModel_Piso model)
+        public async Task<IActionResult> AddData(RequestViewModel_Semestre model)
         {
             Response<object> oResponse = new();
 
             try
             {
-                McCatPiso oPiso = new()
+                McCatSemestre oSemestre = new()
                 {
-                    IdPiso = model.IdPiso,
-                    PisoDescripcion = model.PisoDescripcion,
-                    PisoStatus = true
+                    IdSemestre = model.IdSemestre,
+                    SemNombre = model.SemNombre
                 };
 
-                await _db.McCatPisos.AddAsync(oPiso);
+                await _db.McCatSemestres.AddAsync(oSemestre);
                 await _db.SaveChangesAsync();
 
                 oResponse.Success = 1;
@@ -86,47 +83,19 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditData(RequestViewModel_Piso model)
+        public async Task<IActionResult> EditData(RequestViewModel_Semestre model)
         {
             Response<object> oRespuesta = new();
 
             try
             {
-                McCatPiso? oPiso = await _db.McCatPisos.FindAsync(model.IdPiso);
+                McCatSemestre? oSemestre = await _db.McCatSemestres.FindAsync(model.IdSemestre);
 
-                if (oPiso != null)
+                if (oSemestre != null)
                 {
-                    oPiso.PisoDescripcion = model.PisoDescripcion;
-                    oPiso.PisoStatus = model.PisoStatus;
+                    oSemestre.SemNombre = model.SemNombre;
 
-                    _db.Entry(oPiso).State = EntityState.Modified;
-                    await _db.SaveChangesAsync();
-                }
-
-                oRespuesta.Success = 1;
-            }
-            catch (Exception ex)
-            {
-                oRespuesta.Message = ex.Message;
-            }
-
-            return Ok(oRespuesta);
-        }
-
-        [HttpPut("editByIdStatus/{id}/{isActivate}")]
-        public async Task<IActionResult> EnableDisableDataById(int id, bool isActivate)
-        {
-            Response<object> oRespuesta = new();
-
-            try
-            {
-                McCatPiso? oPiso = await _db.McCatPisos.FindAsync(id);
-                //db.Remove(oPiso);
-
-                if (oPiso != null)
-                {
-                    oPiso.PisoStatus = isActivate;
-                    _db.Entry(oPiso).State = EntityState.Modified;
+                    _db.Entry(oSemestre).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
                 }
 

@@ -1,8 +1,4 @@
-﻿using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Shared.Constantes;
-using CorreosInstitucionales.Shared.Utils;
-
-using Microsoft.AspNetCore.Components.Forms;
+﻿using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +9,11 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+
+using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.Constantes;
+using CorreosInstitucionales.Shared.Utils;
+
 using static System.Collections.Specialized.BitVector32;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic

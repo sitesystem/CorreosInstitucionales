@@ -2,31 +2,31 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.CapaEntities.Request;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatálogos
 {
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
-    public class PisosController(DbCorreosInstitucionalesUpiicsaContext db) : ControllerBase
+    public class AnunciosController(DbCorreosInstitucionalesUpiicsaContext db) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
         {
-            Response<List<McCatPiso>> oResponse = new();
+            Response<List<McCatAnuncio>> oResponse = new();
 
             try
             {
-                var list = new List<McCatPiso>();
+                var list = new List<McCatAnuncio>();
 
                 if (filterByStatus)
-                    list = await _db.McCatPisos.Where(p => p.PisoStatus.Equals(filterByStatus)).ToListAsync();
+                    list = await _db.McCatAnuncios.Where(a => a.AnuStatus.Equals(filterByStatus)).ToListAsync();
                 else
-                    list = await _db.McCatPisos.ToListAsync();
+                    list = await _db.McCatAnuncios.ToListAsync();
 
                 oResponse.Success = 1;
                 oResponse.Data = list;
@@ -42,11 +42,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
         [HttpGet("filterById/{id}")]
         public async Task<IActionResult> GetDataById(int id)
         {
-            Response<McCatPiso> oResponse = new();
+            Response<McCatAnuncio> oResponse = new();
 
             try
             {
-                var item = await _db.McCatPisos.FindAsync(id);
+                var item = await _db.McCatAnuncios.FindAsync(id);
                 oResponse.Success = 1;
                 oResponse.Data = item;
             }
@@ -59,20 +59,23 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddData(RequestViewModel_Piso model)
+        public async Task<IActionResult> AddData(RequestViewModel_Anuncio model)
         {
             Response<object> oResponse = new();
 
             try
             {
-                McCatPiso oPiso = new()
+                McCatAnuncio oAnuncio = new()
                 {
-                    IdPiso = model.IdPiso,
-                    PisoDescripcion = model.PisoDescripcion,
-                    PisoStatus = true
+                    IdAnuncio = model.IdAnuncio,
+                    AnuDescripcion = model.AnuDescripcion,
+                    AnuArchivo = model.AnuArchivo,
+                    AnuVisibleDesde = model.AnuVisibleDesde,
+                    AnuVisibleHasta = model.AnuVisibleHasta,
+                    AnuStatus = true
                 };
 
-                await _db.McCatPisos.AddAsync(oPiso);
+                await _db.McCatAnuncios.AddAsync(oAnuncio);
                 await _db.SaveChangesAsync();
 
                 oResponse.Success = 1;
@@ -86,20 +89,23 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditData(RequestViewModel_Piso model)
+        public async Task<IActionResult> EditData(RequestViewModel_Anuncio model)
         {
             Response<object> oRespuesta = new();
 
             try
             {
-                McCatPiso? oPiso = await _db.McCatPisos.FindAsync(model.IdPiso);
+                McCatAnuncio? oAnuncio = await _db.McCatAnuncios.FindAsync(model.IdAnuncio);
 
-                if (oPiso != null)
+                if (oAnuncio != null)
                 {
-                    oPiso.PisoDescripcion = model.PisoDescripcion;
-                    oPiso.PisoStatus = model.PisoStatus;
+                    oAnuncio.AnuDescripcion = model.AnuDescripcion;
+                    oAnuncio.AnuArchivo = model.AnuArchivo;
+                    oAnuncio.AnuVisibleDesde = model.AnuVisibleDesde;
+                    oAnuncio.AnuVisibleHasta = model.AnuVisibleHasta;
+                    oAnuncio.AnuStatus = model.AnuStatus;
 
-                    _db.Entry(oPiso).State = EntityState.Modified;
+                    _db.Entry(oAnuncio).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
                 }
 
@@ -120,13 +126,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-                McCatPiso? oPiso = await _db.McCatPisos.FindAsync(id);
-                //db.Remove(oPiso);
+                McCatAnuncio? oAnuncio = await _db.McCatAnuncios.FindAsync(id);
+                //db.Remove(oAnuncio);
 
-                if (oPiso != null)
+                if (oAnuncio != null)
                 {
-                    oPiso.PisoStatus = isActivate;
-                    _db.Entry(oPiso).State = EntityState.Modified;
+                    oAnuncio.AnuStatus = isActivate;
+                    _db.Entry(oAnuncio).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
                 }
 
