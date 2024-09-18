@@ -79,3 +79,5 @@ artifacts/
 /api_whatsapp/node_modules
 /Docker/proxy/src/assets/external
 /publish.zip
+/Docker/SACI/app/publish
+/Docker/SACI/mssql/volumes
