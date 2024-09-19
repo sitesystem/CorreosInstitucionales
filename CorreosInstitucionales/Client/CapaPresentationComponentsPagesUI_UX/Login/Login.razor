@@ -532,7 +532,7 @@
 		                    </div>
 	                    </footer>";
 
-                    servicioSendEmail.SendEmailAsync(
+                    await servicioSendEmail.SendEmailAsync(
                         new RequestDTO_SendEmail()
                         {
                             EmailTo = oRecuperarContraseñaCorreo.CorreoElectronicoPersonal,
