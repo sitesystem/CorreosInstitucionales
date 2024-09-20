@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
     public class RSendEmailService(HttpClient httpClient) : ISendEmailService
     {
         private readonly HttpClient _httpClient = httpClient;
-        private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
+        private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true };
         const string url = "api/SendEmail/";
 
         public async Task<HttpResponseMessage> SendEmailAsync(RequestDTO_SendEmail oSendEmail)

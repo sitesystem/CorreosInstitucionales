@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
     public class RArchivosService(HttpClient httpClient)
     {
         private readonly HttpClient _httpClient = httpClient;
-        private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
+        private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true };
         const string url = "/api/archivos";
 
         public async Task<string?> SubirDocumento(TipoDocumento documento, IBrowserFile file)
@@ -79,7 +80,8 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 
                 var content = await response.Content.ReadAsStringAsync();
                 result = JsonSerializer.Deserialize<Response<List<WebUtils.Link>>>(content, options: _options);
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 result!.Message = ex.Message + Environment.NewLine + ex.StackTrace;
             }

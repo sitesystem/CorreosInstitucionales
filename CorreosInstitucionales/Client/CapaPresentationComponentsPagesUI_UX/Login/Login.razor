@@ -2,6 +2,8 @@
 
 @attribute [AllowAnonymous]
 
+@using System.Text.Encodings.Web
+
 <PageTitle>SACI | Inicio de Sesión</PageTitle>
 
 @layout LoginLayout
@@ -314,6 +316,7 @@
     private string contentErrorMsg = string.Empty;
     private bool password = true;
     private Response<RequestViewModel_Escuela>? oEscuela = new();
+    private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true };
 
     protected override async Task OnInitializedAsync() => oEscuela = await servicioEscuela.GetDataByIdAsync(1);
 
@@ -323,7 +326,7 @@
         try
         {
             busy = true;
-            HttpResponseMessage loginResponse = await httpClient.PostAsJsonAsync<RequestDTO_LoginAuth>("/api/LoginAuth/login", oLoginCredentials);
+            HttpResponseMessage loginResponse = await httpClient.PostAsJsonAsync<RequestDTO_LoginAuth>("/api/LoginAuth/login", oLoginCredentials, options: _options);
 
             if (loginResponse.IsSuccessStatusCode)
             {
@@ -532,7 +535,7 @@
 		                    </div>
 	                    </footer>";
 
-                    await servicioSendEmail.SendEmailAsync(
+                    servicioSendEmail.SendEmailAsync(
                         new RequestDTO_SendEmail()
                         {
                             EmailTo = oRecuperarContraseñaCorreo.CorreoElectronicoPersonal,
