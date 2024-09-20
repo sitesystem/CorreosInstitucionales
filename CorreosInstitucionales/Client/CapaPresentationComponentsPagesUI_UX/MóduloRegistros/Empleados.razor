@@ -1085,17 +1085,6 @@ else
 
                         if (!string.IsNullOrEmpty(UsuContraseña))
                         {
-                            @*//  ENVÍO DE WHATSAPP PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
-                            await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
-
-                            @*//  ENVÍO DE EMAIL PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
-                            servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
-                                {
-                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
-                                    Subject = "SACI | Actualización de Datos",
-                                    Body = msgEmail
-                                });
-
                             @*//  NOTIFICATION TOAST ACTUALIZACIÓN EXITOSA  //*@
                             NotificationService.Notify(
                                 new NotificationMessage
@@ -1109,7 +1098,7 @@ else
                                     });
 
                             @*//  DIALOG MODAL MESSAGE ACTUALIZACIÓN EXITOSA  //*@
-                            await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>Cerrando Sesión...<span>", ds =>
+                            DialogModalService.Open($@"<span style='font-variant: small-caps; font-size:18px;'>Enviando notificaciones y cerrando sesión...<span>", ds =>
                                 @<div>
                                     <LoadingComponent />
                                 </div>,
@@ -1127,8 +1116,22 @@ else
                                     WrapperCssClass = "custom-dialog-wrapper-class"
                                 });
 
+                            @*//  ENVÍO DE WHATSAPP PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
+                            await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
+
+                            @*//  ENVÍO DE EMAIL PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
+                            servicioSendEmail.SendEmailAsync(
+                                new RequestDTO_SendEmail()
+                                {
+                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                                    Subject = "SACI | Actualización de Datos",
+                                    Body = msgEmail
+                                });
+
                             await loginService.Logout();
                         }
+
+                        navigationManager.Refresh(true);
                     }
                     else
                     {
@@ -1173,8 +1176,8 @@ else
         finally
         {
             busyLoading = false;
-            if (ActionAddEdit == "actualizar" && oFileInfoCURP is not null || !string.IsNullOrEmpty(UsuContraseña))
-                navigationManager.Refresh(true);
+            // if (ActionAddEdit == "actualizar" && oFileInfoCURP is not null || !string.IsNullOrEmpty(UsuContraseña))
+            //     navigationManager.Refresh(true);
         }
     }
 

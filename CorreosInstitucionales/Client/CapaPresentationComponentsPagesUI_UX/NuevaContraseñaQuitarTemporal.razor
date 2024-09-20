@@ -158,6 +158,66 @@
 
             if (respuesta.IsSuccessStatusCode)
             {
+                @*//  NOTIFICATION TOAST CAMBIO DE CONTRASEÑA EXITOSO  //*@
+                NotificationService.Notify(
+                    new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Success,
+                        Duration = 3000,
+                        Summary = "¡Cambios Guardados!",
+                        Detail = "Se cambió la contraseña y se le notificará por las vías / medios de comunicación."
+                        // SummaryContent = ns => @<RadzenText TextStyle="TextStyle.H6">Custom summary: <br /> @DateTime.Now</RadzenText>,
+                        // DetailContent = ns => @<RadzenButton Text="Clear" Click="@(args => ns.Messages.Clear())" />
+                    });
+
+                @*//  DIALOG MESSAGE CAMBIO DE CONTRASEÑA EXITOSO  //*@
+                DialogModalService.Open($@"<span style='font-variant: small-caps; font-size:18px;'>Mensaje<span>", ds =>
+                    @<div>
+                        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="5px" Class="">
+                            <span class="circle-border">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16" style="color: green; font-weight: bold;">
+                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+                                </svg>
+                            </span>
+                            <RadzenText TextStyle="TextStyle.Body1" class="text-success"><b>¡Cambio de Nueva Contraseña Exitosa!</b></RadzenText>
+                        </RadzenStack>
+                        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="">
+                            <RadzenStack Gap="0px">
+                                <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body1"><b>@($@"{oResponse.Data.UsuNombre} {oResponse.Data.UsuPrimerApellido} {oResponse.Data.UsuSegundoApellido}")</b></RadzenText>
+                            </RadzenStack>
+                            <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false" class="my-2">
+                                <ul>
+                                    <li>Se le notificará por las vías / medios de comunicación con la Nueva Contraseña.</li>
+                                    <li>Se cerrará la sesión.</li>
+                                </ul>
+                            </RadzenAlert>
+                            <RadzenButton Text="Cerrar"
+                                          BusyText=""
+                                          ButtonStyle="ButtonStyle.Warning"
+                                          ButtonType="ButtonType.Button"
+                                          IsBusy="false"
+                                          Icon="cancel"
+                                          Class="rz-ripple rz-my-0 w-100 text-white"
+                                          Shade="Shade.Darker"
+                                          Click="@(() => ds.Close(false))" />
+                        </RadzenStack>
+                    </div>,
+                    new DialogOptions()
+                    {
+                        CloseDialogOnOverlayClick = false,
+                        CloseDialogOnEsc = false,
+                        AutoFocusFirstElement = true,
+                        Width = "Auto",
+                        Height = "Auto",
+                        Resizable = true,
+                        Draggable = true,
+                        ShowTitle = true,
+                        ShowClose = true,
+                        CssClass = "custom-dialog-class",
+                        WrapperCssClass = "custom-dialog-wrapper-class"
+                    });
+
                 @*//  ENVÍO DE WHATSAPP PARA AVISO DE CAMBIO DE CONTRASEÑA EXITOSO  //*@
                 oSendWhatsApp.Number = oResponse.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
                 oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
@@ -226,66 +286,6 @@
 		                        </div>
 	                        </footer>
                         </body>"
-                    });
-
-                @*//  NOTIFICATION TOAST CAMBIO DE CONTRASEÑA EXITOSO  //*@
-                NotificationService.Notify(
-                    new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Success,
-                        Duration = 3000,
-                        Summary = "¡Cambios Guardados!",
-                        Detail = "Se cambió la contraseña y se le notificará por las vías / medios de comunicación."
-                        // SummaryContent = ns => @<RadzenText TextStyle="TextStyle.H6">Custom summary: <br /> @DateTime.Now</RadzenText>,
-                        // DetailContent = ns => @<RadzenButton Text="Clear" Click="@(args => ns.Messages.Clear())" />
-                    });
-
-                @*//  DIALOG MESSAGE CAMBIO DE CONTRASEÑA EXITOSO  //*@
-                await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>Mensaje<span>", ds =>
-                    @<div>
-                        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="5px" Class="">
-                            <span class="circle-border">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16" style="color: green; font-weight: bold;">
-                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
-                                </svg>
-                            </span>
-                            <RadzenText TextStyle="TextStyle.Body1" class="text-success"><b>¡Cambio de Nueva Contraseña Exitosa!</b></RadzenText>
-                        </RadzenStack>
-                        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="">
-                            <RadzenStack Gap="0px">
-                                <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
-                                <RadzenText TextStyle="TextStyle.Body1"><b>@($@"{oResponse.Data.UsuNombre} {oResponse.Data.UsuPrimerApellido} {oResponse.Data.UsuSegundoApellido}")</b></RadzenText>
-                            </RadzenStack>
-                            <RadzenAlert Title="Atención:" Text="" AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false" class="my-2">
-                                <ul>
-                                    <li>Se le notificará por las vías / medios de comunicación con la Nueva Contraseña.</li>
-                                    <li>Se cerrará la sesión.</li>
-                                </ul>
-                            </RadzenAlert>
-                            <RadzenButton Text="Cerrar"
-                                          BusyText=""
-                                          ButtonStyle="ButtonStyle.Warning"
-                                          ButtonType="ButtonType.Button"
-                                          IsBusy="false"
-                                          Icon="cancel"
-                                          Class="rz-ripple rz-my-0 w-100 text-white"
-                                          Shade="Shade.Darker"
-                                          Click="@(() => ds.Close(false))" />
-                        </RadzenStack>
-                    </div>,
-                    new DialogOptions()
-                    {
-                        CloseDialogOnOverlayClick = false,
-                        CloseDialogOnEsc = false,
-                        AutoFocusFirstElement = true,
-                        Width = "Auto",
-                        Height = "Auto",
-                        Resizable = true,
-                        Draggable = true,
-                        ShowTitle = true,
-                        ShowClose = true,
-                        CssClass = "custom-dialog-class",
-                        WrapperCssClass = "custom-dialog-wrapper-class"
                     });
 
                 await loginService.Logout();
