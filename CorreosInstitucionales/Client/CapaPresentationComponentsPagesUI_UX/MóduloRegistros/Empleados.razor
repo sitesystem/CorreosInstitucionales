@@ -976,25 +976,24 @@ else
             }
             else if (ActionAddEdit == "actualizar")
             {
-                var verification = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaNueva, oUsuario.UsuCurp);
+                // var verification = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaNueva, oUsuario.UsuCurp);
 
                 if (ValidReCAPTCHA)
                 {
                     var respuesta = await servicioUsuario.EditDataAsync(oUsuario);
                     oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
 
-                    if (oRespuesta.Success == 1)
+                    if (respuesta.IsSuccessStatusCode)
                     {
                         @*//  UPLOAD FILES  //*@
                         idResponse = oUsuario.IdUsuario;
 
-                        oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
-                        oUploadFile_CURP.Url = $@"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
-                        await oUploadFile_CURP.Upload();
-
-                        // var responseUsuario = await servicioUsuario.GetDataByIdAsync(oUsuario.IdUsuario);
-                        // oUsuario = responseUsuario.Data;
-                        // srcCURP = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}";
+                        if (!string.IsNullOrEmpty(oUsuario.UsuFileNameCurp))
+                        {
+                            oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
+                            oUploadFile_CURP.Url = $@"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
+                            await oUploadFile_CURP.Upload();
+                        }
 
                         @*//  NOTIFICATION TOAST ACTUALIZACIÓN DE DATOS EXITOSO  //*@
                         NotificationService.Notify(
@@ -1129,7 +1128,6 @@ else
                                 });
 
                             await loginService.Logout();
-                            navigationManager.NavigateTo("/");
                         }
                     }
                     else
@@ -1175,7 +1173,7 @@ else
         finally
         {
             busyLoading = false;
-            if (ActionAddEdit == "actualizar" && oFileInfoCURP is not null)
+            if (ActionAddEdit == "actualizar" && oFileInfoCURP is not null || !string.IsNullOrEmpty(UsuContraseña))
                 navigationManager.Refresh(true);
         }
     }

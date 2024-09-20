@@ -1183,7 +1183,7 @@ else
             }
             else if (ActionAddEdit == "actualizar")
             {
-                var verification = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaNueva, oUsuario.UsuCurp);
+                // var verification = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaNueva, oUsuario.UsuCurp);
 
                 if (ValidReCAPTCHA)
                 {
@@ -1360,7 +1360,6 @@ else
                                 });
 
                             await loginService.Logout();
-                            navigationManager.NavigateTo("/");
                         }
                     }
                     else
@@ -1406,7 +1405,7 @@ else
         finally
         {
             busyLoading = false;
-            if (ActionAddEdit == "actualizar" && (oFileInfoCURP is not null || oFileInfoComprobanteInscripcion is not null))
+            if (ActionAddEdit == "actualizar" && (oFileInfoCURP is not null || oFileInfoComprobanteInscripcion is not null || !string.IsNullOrEmpty(UsuContraseña) || onChangeSelectBarEgresado))
                 navigationManager.Refresh(true);
         }
     }
