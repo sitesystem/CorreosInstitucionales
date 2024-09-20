@@ -262,7 +262,7 @@
                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
                                 <RadzenUpload @ref="oUploadFile_ComprobanteInscripción" Url="@($"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}")" Accept=".pdf"
                                               Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
-                                              Change=@(args => OnChangeFiles(args, Comprobante_Inscripción))
+                                              Change=@(args => OnChangeFiles(args, Comprobante_Inscripcion))
                                               Error=@(args => OnErrorFiles(args, "FileInput"))
                                               InputAttributes="@(new Dictionary<string,object>(){{ "cursor", "pointer" }})"
                                               Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
@@ -623,7 +623,7 @@ else
             }
             oUsuario.UsuAnioEgreso = 1950;                       // Año de Egreso en dado caso
             oUsuario.UsuFileNameComprobanteInscripcion = "";    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
-            oUsuario.UsuFileSizeComprobanteInscripcion = 0l;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            oUsuario.UsuFileSizeComprobanteInscripcion = 0L;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             @* DATOS LABORALES *@
             oUsuario.UsuNumeroEmpleado = "0";                   // Número del Empleado del Usuario (Administrador o Docente)
             oUsuario.UsuIdAreaDepto = 1;                        // FK ID del Área/Departamento del Usuario Empleado
@@ -673,7 +673,7 @@ else
             oUsuario.UsuSemestre = oEditUsuario.UsuSemestre;                    // Semestre que cursa el Alumno Inscrito o de Maestria
             oUsuario.UsuAnioEgreso = oEditUsuario.UsuAnioEgreso;                  // Año de Egreso en dado caso
             oUsuario.UsuFileNameComprobanteInscripcion = oEditUsuario.UsuFileNameComprobanteInscripcion;    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
-            srcComprobanteInscripcion = oUsuario.UsuFileNameComprobanteInscripcion != "Comprobante-Inscripción.pdf" ? $"/repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteInscripcion}" : $"/repositorio/Comprobante-Inscripción.pdf";
+            srcComprobanteInscripcion = oUsuario.UsuFileNameComprobanteInscripcion != "Comprobante-Inscripcion.pdf" ? $"/repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteInscripcion}" : $"/repositorio/Comprobante-Inscripcion.pdf";
             oUsuario.UsuFileSizeComprobanteInscripcion = oEditUsuario.UsuFileSizeComprobanteInscripcion;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             @* DATOS LABORALES *@
             oUsuario.UsuNumeroEmpleado = oEditUsuario.UsuNumeroEmpleado;        // Número del Empleado del Usuario (Administrador o Docente)
@@ -803,9 +803,9 @@ else
                 oUsuario.UsuFileSizeCurp = file.Size; // bytes
                 oFileInfoCURP = args.Files;
             }
-            else if (name == Comprobante_Inscripción)
+            else if (name == Comprobante_Inscripcion)
             {
-                oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}_{oGuid}{Path.GetExtension(file.Name).ToLower()}";
+                oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripcion}_{oGuid}{Path.GetExtension(file.Name).ToLower()}";
                 oUsuario.UsuFileSizeComprobanteInscripcion = file.Size; // bytes
                 oFileInfoComprobanteInscripcion = args.Files;
             }
@@ -847,7 +847,7 @@ else
     private string IconButton = string.Empty;
     private string folder = "usuarios";
     private string CURP = "CURP";
-    private string Comprobante_Inscripción = "Comprobante-Inscripción";
+    private string Comprobante_Inscripcion = "Comprobante-Inscripcion";
     private int idResponse = 0;
     private Guid oGuid = Guid.NewGuid();
     private Response<RequestViewModel_TipoPersonal> oTipoPersonal = new();
@@ -1041,7 +1041,7 @@ else
                         oUploadFile_CURP.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
                         await oUploadFile_CURP.Upload();
 
-                        oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
+                        oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripcion}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
                         oUploadFile_ComprobanteInscripción.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
                         await oUploadFile_ComprobanteInscripción.Upload();
 
@@ -1190,18 +1190,24 @@ else
                     var respuesta = await servicioUsuario.EditDataAsync(oUsuario);
                     oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
 
-                    if (oRespuesta.Success == 1)
+                    if (respuesta.IsSuccessStatusCode)
                     {
                         @*//  UPLOAD FILES  //*@
                         idResponse = oUsuario.IdUsuario;
 
-                        oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
-                        oUploadFile_CURP.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
-                        await oUploadFile_CURP.Upload();
+                        if (!string.IsNullOrEmpty(oUsuario.UsuFileNameCurp))
+                        {
+                            oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
+                            oUploadFile_CURP.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
+                            await oUploadFile_CURP.Upload();
+                        }
 
-                        oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripción}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
-                        oUploadFile_ComprobanteInscripción.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
-                        await oUploadFile_ComprobanteInscripción.Upload();
+                        if (!string.IsNullOrEmpty(oUsuario.UsuFileNameComprobanteInscripcion))
+                        {
+                            oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripcion}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
+                            oUploadFile_ComprobanteInscripción.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
+                            await oUploadFile_ComprobanteInscripción.Upload();
+                        }
 
                         // var responseUsuario = await servicioUsuario.GetDataByIdAsync(oUsuario.IdUsuario);
                         // oUsuario = responseUsuario.Data;

@@ -156,7 +156,7 @@
             var respuesta = await servicioUsuario.ChangePassword(oResponse.Data.IdUsuario, oChangePassword.NewPassword);
             oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
 
-            if (oRespuesta.Success == 1)
+            if (respuesta.IsSuccessStatusCode)
             {
                 @*//  ENVÍO DE WHATSAPP PARA AVISO DE CAMBIO DE CONTRASEÑA EXITOSO  //*@
                 oSendWhatsApp.Number = oResponse.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);

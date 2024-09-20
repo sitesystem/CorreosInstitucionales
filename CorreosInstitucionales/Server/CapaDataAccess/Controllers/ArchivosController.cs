@@ -1,14 +1,4 @@
 ﻿using ClosedXML.Excel;
-using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
-using CorreosInstitucionales.Server.Correos;
-using CorreosInstitucionales.Server.MensajesWA;
-using CorreosInstitucionales.Shared.CapaEntities.Common;
-using CorreosInstitucionales.Shared.CapaEntities.Request;
-using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
-using CorreosInstitucionales.Shared.CapaTools;
-using CorreosInstitucionales.Shared.Constantes;
-using CorreosInstitucionales.Shared.Utils;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
@@ -21,8 +11,19 @@ using System.Diagnostics;
 using System.Linq.Dynamic.Core;
 using System.Text;
 
-namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
+using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
+using CorreosInstitucionales.Server.Correos;
+using CorreosInstitucionales.Server.MensajesWA;
 
+using CorreosInstitucionales.Shared.CapaEntities.Common;
+using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+using CorreosInstitucionales.Shared.CapaTools;
+using CorreosInstitucionales.Shared.Constantes;
+using CorreosInstitucionales.Shared.Utils;
+
+namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
@@ -63,7 +64,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }
 
             return tmp;
-
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

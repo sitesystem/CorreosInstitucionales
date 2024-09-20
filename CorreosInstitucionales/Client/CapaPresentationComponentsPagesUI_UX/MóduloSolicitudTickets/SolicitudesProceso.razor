@@ -1,6 +1,8 @@
 ﻿@page "/SolicitudesProceso"
-@using System.Net.Http.Headers
+
 @attribute [Authorize(Policy = "[Rol] Administrador")]
+
+@using System.Net.Http.Headers
 
 <PageTitle>@Title</PageTitle>
 

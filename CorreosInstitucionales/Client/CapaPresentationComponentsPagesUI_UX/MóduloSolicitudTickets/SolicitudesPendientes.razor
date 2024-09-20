@@ -1,14 +1,16 @@
 ﻿@page "/SolicitudesPendientes"
+
 @attribute [Authorize(Policy = "[Rol] Administrador")]
+
 @inject IJSRuntime JsRuntime
-@inject Radzen.DialogService dialogService
+@inject DialogService dialogService
 
 <PageTitle>@Title</PageTitle>
+
 <script src="js/descargar.js?v=1.0.0.8"></script>
 
 <div class="p-4 rounded-1 bg-white shadow">
     
-
     <div class="row mb-2">
         <div class="col-8">
             <h1>@Title</h1>
@@ -182,7 +184,8 @@
 
 <pre>@debug</pre>
 
-@code{
+@code
+{
     private string Title = "Solicitudes Pendientes";
 
     private bool cargado { get; set; } = false;
