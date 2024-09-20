@@ -827,6 +827,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     
                     if (error is null)
                     {
+                        //TODO: Verificar
                         await EnvioMasivoPendientes(pendientes);
                         await EnvioMasivoPendientes(pendientes_celular);
                         await EnvioMasivoPendientes(pendientes_correo_personal);

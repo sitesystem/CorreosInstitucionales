@@ -12,11 +12,11 @@ using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 {
-    public class RAvisoService(HttpClient httpClient) : IGenericService<RequestViewModel_Anuncio>
+    public class RAnuncioService(HttpClient httpClient) : IGenericService<RequestViewModel_Anuncio>
     {
         private readonly HttpClient _httpClient = httpClient;
-        private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true };
-        const string url = "/api/Avisos";
+        private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
+        const string url = "/api/Anuncios";
 
         public async Task<Response<List<RequestViewModel_Anuncio>>?> GetAllDataByStatusAsync(bool filterByStatus)
         {

@@ -50,5 +50,13 @@ namespace CorreosInstitucionales.Shared.CapaTools
                 SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.PENDIENTE
             };
         }
+
+        public static RequestViewModel_Anuncio CreateAnuncio()
+        {
+            return new RequestViewModel_Anuncio()
+            {
+                AnuStatus = true
+            };
+        }
     }
 }

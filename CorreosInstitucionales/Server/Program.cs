@@ -168,6 +168,9 @@ builder.Services.AddScoped
     )
 );
 
+
+builder.Services.AddMemoryCache();
+
 /******************************************************************************************************/
 
 var app = builder.Build();
@@ -207,3 +210,4 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.Run();
+

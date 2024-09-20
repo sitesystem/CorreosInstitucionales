@@ -13,5 +13,6 @@ namespace CorreosInstitucionales.Shared.Constantes
         CAP_ANTIVIRUS   = 2,
         CAP_BLOQUEO     = 3,
         CAP_ERROR       = 4,
+        ANUNCIO         = 5,
     }
 }

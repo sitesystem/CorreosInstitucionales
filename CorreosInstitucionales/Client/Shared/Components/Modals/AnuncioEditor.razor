@@ -1,0 +1,87 @@
+﻿@inject Radzen.DialogService dialogService
+
+
+<EditForm Model=@registro OnValidSubmit="@OnValidForm">
+    <div class="alert alert-info">
+        Los campos marcados con <strong class="red" title="requerido">*</strong> son <strong>requeridos</strong>.
+    </div>
+    <DataAnnotationsValidator />
+    <div class="row">
+        <!--ROW-->
+
+        <div class="col-12 mb-2">
+            <span class="fw-bold">Descripcion<strong class="red" title="requerido">*</strong></span>
+            <InputTextArea @bind-Value="@registro.AnuDescripcion" class=" required form-control" />
+            <ValidationMessage For="()=>registro.AnuDescripcion"></ValidationMessage>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">Visible desde</span>
+            <InputDate @bind-Value="@registro.AnuVisibleDesde" class="form-control"></InputDate>
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">Visible hasta</span>
+            <InputDate @bind-Value="@registro.AnuVisibleHasta" class="form-control"></InputDate>
+        </div>
+
+        <div class="col-12 mb-2">
+            <span class="fw-bold">Archivo</span>
+            <br />
+
+            @if(string.IsNullOrEmpty(registro.AnuArchivo))
+            {
+                <text>AGREGAR</text>
+                <InputFile OnChange="fuAnuncio_OnChange" class="form-control mb-3"></InputFile>
+            }
+            else
+            {
+                <text>@registro.AnuArchivo</text>
+                <img src="~/banners/@registro.AnuArchivo" />
+            }
+        </div>
+
+        <div class="col-6 mb-2">
+            <span class="fw-bold">Status<strong class="red" title="requerido">*</strong></span>
+            <InputCheckbox @bind-Value="@registro.AnuStatus" class=" required form-check-input" />
+            <ValidationMessage For="()=>registro.AnuStatus"></ValidationMessage>
+        </div>
+
+
+    </div><!--ROW-->
+
+    <div class="container-fluid mt-3 py-3 bg-silver">
+        <div class="row">
+            <div class="offset-8 col-2">
+                <button type="button" class="btn btn-secondary form-control" @onclick=@OnCloseForm>Cancelar</button>
+            </div>
+
+            <div class="col-2">
+                <button type="submit" class="btn btn-primary form-control">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code
+{
+    [Parameter] public RequestViewModel_Anuncio registro { get; set; } = new RequestViewModel_Anuncio();
+
+    private Dictionary<TipoDocumento, IBrowserFile?> archivos = new();
+
+    private void OnValidForm()
+    {
+        dialogService.Close(new DocumentoAdjunto<RequestViewModel_Anuncio>(registro, archivos));
+    }
+
+    private void OnCloseForm() => dialogService.Close(null);
+
+    private void fuAnuncio_OnChange(InputFileChangeEventArgs e)
+    {
+        archivos[TipoDocumento.ANUNCIO] = e.File;
+        registro.AnuArchivo = "-";
+    }
+}

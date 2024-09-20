@@ -44,6 +44,9 @@
     int selected_index = 0;
     List<UIObject> items = new List<UIObject>()
     {
+        new UIObject(new RequestViewModel_Anuncio(),"servicioAnuncio"),
+        new UIObject(new RequestViewModel_Semestre(),"servicioSemestre"),
+
         new UIObject(new RequestDTO_Usuario(),"servicioUsuario"),
         new UIObject(new RequestDTO_Solicitud(),"servicioSolicitud"),
 

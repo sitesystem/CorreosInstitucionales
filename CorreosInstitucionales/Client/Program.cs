@@ -11,6 +11,7 @@ using CorreosInstitucionales.Client.Shared.Components.Utils;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolDebug;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -54,9 +55,13 @@ builder.Services.AddScoped<RRolesService>();
 builder.Services.AddScoped<RPisoService>();
 builder.Services.AddScoped<RTipoPersonalService>();
 builder.Services.AddScoped<RTipoSolicitudService>();
+builder.Services.AddScoped<RAnuncioService>();
 
 // Inyección de Dependencias - Módulo de Estadísticas
 builder.Services.AddScoped<REstadisticasService>();
+
+// Inyección de Dependencias - Módulo de Pruebas
+builder.Services.AddScoped<RDebugService>();
 
 // Radzen Components and Services
 builder.Services.AddRadzenComponents();
