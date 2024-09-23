@@ -42,7 +42,7 @@
                             <ChildContent>
                                 <RadzenTextBox id="@($@"names_{TipoPersonal}")" @bind-Value="@oUsuario.UsuNombre" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"
                                                @oninput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
-                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                               onkeypress="return /^[a-zA-ZñÑ. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
@@ -55,7 +55,7 @@
                             <ChildContent>
                                 <RadzenTextBox Name="@($@"lastName1_{TipoPersonal}")" @bind-Value="@oUsuario.UsuPrimerApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
                                                @oninput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
-                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                               onkeypress="return /^[a-zA-ZñÑ. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
@@ -68,7 +68,7 @@
                             <ChildContent>
                                 <RadzenTextBox Name="@($@"lastName2_{TipoPersonal}")" @bind-Value="@oUsuario.UsuSegundoApellido" MinLength="0" MaxLength="150" Placeholder="Segundo Apellido"
                                                @oninput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
-                                               onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                               onkeypress="return /^[a-zA-ZñÑ. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
@@ -423,7 +423,7 @@
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="0px" Class="" Style="font-family:var(--rz-text-font-family);">
                     <RadzenCheckBox Name="@($@"aviso_privacidad_{TipoPersonal}")" TValue="bool" @bind-Value="@aceptar_aviso_privacidad" TriState="false" Change="@(args => aceptar_aviso_privacidad = args)" Disabled="false" ReadOnly="false" />
                     <RadzenLabel Text="He leído y acepto los términos y condiciones del" Component="@($@"aviso_privacidad_{TipoPersonal}")" Style="margin-left: 8px; vertical-align: middle;" />&ensp;
-                    <a style="cursor:pointer;" @onclick="@(() => ShowDialogModal_iFrame("./documentos/saci_aviso_privacidad.pdf", "Aviso de Privacidad para la Protección de Datos Personales"))" class="icon-link icon-link-hover">
+                    <a style="cursor:pointer;" @onclick="@(() => ShowDialogModal_iFrame("./documentos/saci_aviso_privacidad_integral.pdf", "Aviso de Privacidad para la Protección de Datos Personales"))" class="icon-link icon-link-hover">
                         <b>Aviso</b> de <strong>Privacidad</strong>
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
