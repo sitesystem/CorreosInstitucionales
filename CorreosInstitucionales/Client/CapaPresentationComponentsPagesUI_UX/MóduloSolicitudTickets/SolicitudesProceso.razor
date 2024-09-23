@@ -4,6 +4,8 @@
 
 @using System.Net.Http.Headers
 
+@inject DialogService dialogService
+
 <PageTitle>@Title</PageTitle>
 
 <div class="p-4 rounded-1 bg-white shadow">
@@ -52,16 +54,107 @@
                         @item.SolIdUsuarioNavigation!.UsuSegundoApellido
                         @item.SolIdUsuarioNavigation!.UsuNombre
                     </strong>
-                    <br>
+                    <br />
                     @item.SolIdUsuarioNavigation.UsuCurp
+                    <br />
+                    @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva
+                    <br />
                 </Template>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Filterable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
                     @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                    <br />
+                    
                 </Template>
             </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Adjuntos" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    <ul>
+                        <li>
+                            <strong>CURP</strong>
+                            <br />
+                            <a href="@GenerarURLArchivoUsuario(item, TipoDocumento.CURP)"
+                               download="@GenerarNombreArchivo(item, TipoDocumento.CURP)">
+                                Descargar
+                            </a>
+                            <br />
+                            <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerDocumento(item, TipoDocumento.CURP))">Ver</button>
+                        </li>
+
+                        @if (item.SolIdUsuarioNavigation!.UsuFileNameComprobanteInscripcion != "-")
+                        {
+                            <li>
+                                <strong>Comprobante de Inscripción</strong>
+                                <br />
+                                <a href="@GenerarURLArchivoUsuario(item, TipoDocumento.COM_INSCRIPCION)"
+                                   download="@GenerarNombreArchivo(item, TipoDocumento.COM_INSCRIPCION)">
+                                    Descargar
+                                </a>
+                                <br />
+                                <button class="btn btn-primary form-control"
+                                        @onclick="@(async () => await VerDocumento(item, TipoDocumento.COM_INSCRIPCION))">
+                                    Ver
+                                </button>
+                            </li>
+                        }
+
+                        @if ((item.SolCapturaCuentaBloqueada ?? "-") != "-")
+                        {
+                            <li>
+                                <strong>Captura de Bloqueo</strong>
+                                <br />
+                                <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_BLOQUEO)"
+                                   download="@GenerarNombreArchivo(item, TipoDocumento.CAP_BLOQUEO)">
+                                    Descargar
+                                </a>
+                                <br />
+                                <button class="btn btn-primary form-control"
+                                        @onclick="@(async () => await VerDocumento(item, TipoDocumento.CAP_BLOQUEO))">
+                                    Ver
+                                </button>
+                            </li>
+                        }
+
+                        @if ((item.SolCapturaEscaneoAntivirus ?? "-") != "-")
+                        {
+                            <li>
+                                <strong>Captura de Escaneo de Antivirus</strong>
+                                <br />
+                                <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ANTIVIRUS)"
+                                   download="@GenerarNombreArchivo(item, TipoDocumento.CAP_ANTIVIRUS)">
+                                    Descargar
+                                </a>
+                                <br />
+                                <button class="btn btn-primary form-control"
+                                        @onclick="@(async () => await VerDocumento(item, TipoDocumento.CAP_ANTIVIRUS))">
+                                    Ver
+                                </button>
+                            </li>
+                        }
+
+                        @if ((item.SolCapturaError ?? "-") != "-")
+                        {
+                            <li>
+                                <strong>Captura de Error</strong>
+                                <br />
+                                <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ERROR)"
+                                   download="@GenerarNombreArchivo(item, TipoDocumento.CAP_ERROR)">
+                                    Descargar
+                                </a>
+                                <br />
+                                <button class="btn btn-primary form-control"
+                                        @onclick="@(async () => await VerDocumento(item, TipoDocumento.CAP_ERROR))">
+                                    Ver
+                                </button>
+                            </li>
+                        }
+                    </ul>
+
+                </Template>
+            </RadzenDataGridColumn><!--ARCHIVOS-->
         </Columns>
     </RadzenDataGrid>
 </div>
@@ -159,5 +252,123 @@
         fuImportar = null;
         trabajando = false;
         StateHasChanged();
+    }
+
+    private string ArchivoSolicitud(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
+    {
+        string archivo = "ARCHIVO_404";
+
+        switch(tipo_documento)
+        {
+            case TipoDocumento.CURP: 
+                archivo = solicitud.SolIdUsuarioNavigation!.UsuFileNameCurp!; 
+                break;
+
+            case TipoDocumento.COM_INSCRIPCION: 
+                archivo = solicitud.SolIdUsuarioNavigation!.UsuFileNameComprobanteInscripcion!;
+                break;
+
+            case TipoDocumento.CAP_BLOQUEO:
+                archivo = solicitud.SolCapturaCuentaBloqueada!;
+                break;
+
+            case TipoDocumento.CAP_ANTIVIRUS:
+                archivo = solicitud.SolCapturaEscaneoAntivirus!;
+                break;
+
+            case TipoDocumento.CAP_ERROR:
+                archivo = solicitud.SolCapturaError!;
+                break;
+        }
+
+        return archivo;
+    }
+
+    private string GenerarURLArchivoUsuario(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
+    {
+        string archivo = ArchivoSolicitud(solicitud, tipo_documento);
+        return ServerFS.ArchivoUsuario(solicitud.SolIdUsuario, archivo);
+    }
+
+    private string GenerarURLArchivoRepositorio(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
+    {
+        string archivo = ArchivoSolicitud(solicitud, tipo_documento);
+        return ServerFS.ArchivoRepositorio(solicitud.IdSolicitudTicket, archivo);
+    }
+
+    private string GenerarNombreArchivo(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
+    {
+        string archivo = ArchivoSolicitud(solicitud, tipo_documento);
+        string ext = Path.GetExtension(archivo);
+        string nombre = tipo_documento.GetNombre();
+        return $"SOL{solicitud.IdSolicitudTicket}_{solicitud.SolIdUsuarioNavigation!.UsuCurp}_{nombre}{ext}";
+    }
+
+
+    private async Task VerPDF(string archivo, string titulo = "Ver")
+    {
+        await dialogService.OpenAsync<PDFViewer>
+                (
+                    titulo,
+                    new Dictionary<string, object>()
+                        {
+                        {"file", archivo}
+                        },
+                    new DialogOptions()
+                        {
+                            Width = "calc( 100vw - 8em )",
+                            Height = "calc( 100vh - 8em )",
+                            CssClass = "dialog_simple p-0",
+                            CloseDialogOnEsc = true,
+                            CloseDialogOnOverlayClick = true,
+                            Resizable = true,
+                            Draggable = true
+                        }
+                );
+    }
+
+    private async Task VerDocumento(RequestDTO_Solicitud solicitud, TipoDocumento documento)
+    {
+        string titulo = "Documento";
+        string archivo = string.Empty;
+        string nombre = string.Empty;
+
+        bool documento_repositorio = true;
+        RequestDTO_Usuario usuario = solicitud.SolIdUsuarioNavigation!;
+
+        switch (documento)
+        {
+            case TipoDocumento.CURP:
+                titulo = $@"{usuario.UsuNombre} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido} - {usuario.UsuCurp}";
+
+                documento_repositorio = false;
+                nombre = usuario.UsuFileNameCurp!;
+                break;
+
+            case TipoDocumento.COM_INSCRIPCION:
+                titulo = "COMPROBANTE DE INSCRIPCIÓN";
+                documento_repositorio = false;
+                nombre = usuario.UsuFileNameComprobanteInscripcion!;
+                break;
+
+            case TipoDocumento.CAP_BLOQUEO:
+                titulo = "CAPTURA DE PANTALLA DE BLOQUEO";
+                nombre = solicitud.SolCapturaCuentaBloqueada!;
+                break;
+
+            case TipoDocumento.CAP_ANTIVIRUS:
+                titulo = "CAPTURA DE PANTALLA DE ANTIVIRUS";
+                nombre = solicitud.SolCapturaEscaneoAntivirus!;
+                break;
+
+            case TipoDocumento.CAP_ERROR:
+                titulo = "CAPTURA DE PANTALLA DE ERROR";
+                nombre = solicitud.SolCapturaError!;
+                break;
+        }
+
+        archivo = documento_repositorio ? ServerFS.ArchivoRepositorio(solicitud.IdSolicitudTicket, nombre) : ServerFS.ArchivoUsuario(solicitud.SolIdUsuario, nombre);
+
+        await VerPDF(archivo, titulo);
     }
 }

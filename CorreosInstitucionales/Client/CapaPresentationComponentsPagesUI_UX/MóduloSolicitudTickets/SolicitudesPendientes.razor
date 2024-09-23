@@ -55,7 +55,9 @@
                     FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Solicitud"
-                    Visible=@cargado>
+                    Visible=@cargado
+    Style=""
+                    >
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
@@ -69,20 +71,27 @@
                     <br>
                     @item.SolIdUsuarioNavigation.UsuCurp
                     <br />
+                    <p style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva</p>
                 </Template>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Filterable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                    <strong>
+                        @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion    
+                    </strong>
+                    <br />
+                    <p style="white-space: pre-wrap">@item.SolObservacionesSolicitud</p>
+                    
                 </Template>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Adjuntos" Filterable="false" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    <ul>
+                    <ul class="mb-4">
                         <li>
                             <strong>CURP</strong>
+                            <br />
                             <a href="@GenerarURLArchivoUsuario(item, TipoDocumento.CURP)"
                                download="@GenerarNombreArchivo(item, TipoDocumento.CURP)">
                                 Descargar
@@ -95,6 +104,7 @@
                         {
                             <li>
                                 <strong>Comprobante de Inscripción</strong>
+                                <br />
                                 <a href="@GenerarURLArchivoUsuario(item, TipoDocumento.COM_INSCRIPCION)"
                                    download="@GenerarNombreArchivo(item, TipoDocumento.COM_INSCRIPCION)">
                                     Descargar
@@ -111,6 +121,7 @@
                         {
                             <li>
                                 <strong>Captura de Bloqueo</strong>
+                                <br />
                                 <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_BLOQUEO)"
                                    download="@GenerarNombreArchivo(item, TipoDocumento.CAP_BLOQUEO)">
                                     Descargar
@@ -127,6 +138,7 @@
                         {
                             <li>
                                 <strong>Captura de Escaneo de Antivirus</strong>
+                                <br />
                                 <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ANTIVIRUS)"
                                    download="@GenerarNombreArchivo(item, TipoDocumento.CAP_ANTIVIRUS)">
                                     Descargar
@@ -143,6 +155,7 @@
                         {
                             <li>
                                 <strong>Captura de Error</strong>
+                                <br />
                                 <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ERROR)"
                                    download="@GenerarNombreArchivo(item, TipoDocumento.CAP_ERROR)">
                                     Descargar
