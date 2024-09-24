@@ -464,7 +464,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
 
         [HttpPatch("cancelar")]
-        public async Task<IActionResult> CancelarSolicitud(RequestDTO_CancelarSolicitud oCancelarSolicitud) // KeyValuePair<int, string> datos)
+        public async Task<IActionResult> CancelarSolicitud(RequestDTO_FinalizarSolicitud oCancelarSolicitud) // KeyValuePair<int, string> datos)
         {
             Response<object> oRespuesta = new();
             int guardados = 0;
@@ -479,7 +479,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 if (oSolicitud != null)
                 {
                     oSolicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.CANCELADA;
-                    oSolicitud.SolRespuestaDcyC = oCancelarSolicitud.MotivoCancelacion; // datos.Value;
+                    oSolicitud.SolRespuestaDcyC = oCancelarSolicitud.Mensaje; // datos.Value;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     guardados = await _db.SaveChangesAsync();
@@ -520,5 +520,65 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
             return Ok(oRespuesta);
         }
+        // CANCELAR
+
+        [HttpPatch("finalizar")]
+        public async Task<IActionResult> FinalizarSolicitud(RequestDTO_FinalizarSolicitud oFinalizarSolicitud) // KeyValuePair<int, string> datos)
+        {
+            Response<object> oRespuesta = new();
+            int guardados = 0;
+
+            MtTbSolicitudesTicket? oSolicitud = null;
+
+            try
+            {
+                oSolicitud = await _db.MtTbSolicitudesTickets.FindAsync(oFinalizarSolicitud.IdSolicitud); // (datos.Key)
+                //db.Remove(oPersona);
+
+                if (oSolicitud != null)
+                {
+                    oSolicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.ATENDIDA;
+                    oSolicitud.SolRespuestaDcyC = oFinalizarSolicitud.Mensaje; // datos.Value;
+
+                    _db.Entry(oSolicitud).State = EntityState.Modified;
+                    guardados = await _db.SaveChangesAsync();
+                }
+                if (guardados == 1)
+                {
+                    oRespuesta.Success = 1;
+
+                    ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
+
+                    Dictionary<string, object?> variables = new Dictionary<string, object?>
+                    {
+                        { "solicitud", oSolicitud }
+                    };
+
+                    RequestDTO_SendEmail correo = new()
+                    {
+                        Subject = "Su solcicitud ha sido atendida por la mesa de control",
+                        EmailTo = "postmaster@localhost",
+                        Body = await renderer.GetHTML<Cancelada>(variables)
+                    };
+
+                    RequestDTO_SendWhatsApp mensaje = new()
+                    {
+                        Message = await renderer.GetHTML<CanceladoWA>(variables),
+                        Number = "5500000000"
+                    };
+
+                    // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
+                    _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
+                    _ = Task.Run(() => _servicioWA.SendWhatsAppAsync(mensaje));
+                }
+            }
+            catch (Exception ex)
+            {
+                oRespuesta.Message = ex.Message;
+            }
+
+            return Ok(oRespuesta);
+        }
+        // CANCELAR
     }
 }

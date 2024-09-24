@@ -10,22 +10,29 @@
 
 <div class="p-4 rounded-1 bg-white shadow">
     <div class="row mb-4">
-        <div class="col-10">
-            <h1 class="mb-2">@Title</h1>
+        <div class="col-6">
+            <h1>@Title</h1>
+            <hr />
+
+            <button class="btn btn-primary" @onclick="CargarLista">
+                Recargar Listado
+            </button>
         </div>
 
-        <div class="col-2">
-            @if (items.Count > 0)
-            {
-                <InputFile OnChange="fuImportacion_OnChange" class="form-control mb-3"></InputFile>
-            }
-            @if (fuImportar is not null)
-            {
-                <button class="btn btn-primary form-control mb-3" @onclick="Importar">
-                    <RadzenIcon Icon="get_app"></RadzenIcon>
-                    Importar
-                </button>
-            }
+        <div class="col-4 offset-2">
+            <div class="m-2 p-3 shadow card">
+                @if (items.Count > 0)
+                {
+                    <InputFile OnChange="fuImportacion_OnChange" class="form-control mb-3"></InputFile>
+                }
+                @if (fuImportar is not null)
+                {
+                    <button class="btn btn-primary form-control mb-3" @onclick="Importar">
+                        <RadzenIcon Icon="get_app"></RadzenIcon>
+                        Importar
+                    </button>
+                }
+            </div>
         </div>
     </div>
 
@@ -38,10 +45,10 @@
         </div>
     }
 
-    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
-                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
+    <RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false"
+                    AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px"
                     Visible=@(!trabajando)
                     SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems>
         <Columns>
@@ -64,8 +71,11 @@
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Filterable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                    <strong>
+                        @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                    </strong>
                     <br />
+                    <p style="white-space: pre-wrap">@item.SolObservacionesSolicitud</p>
                     
                 </Template>
             </RadzenDataGridColumn>
@@ -155,6 +165,21 @@
 
                 </Template>
             </RadzenDataGridColumn><!--ARCHIVOS-->
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Cancelar" Context="item"
+                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Frozen="true" Width="120px" 
+                                    Visible="false"
+            >
+                <Template Context="item">
+                    <RadzenButton title="Cancelar"
+                                  Icon="delete"
+                                  ButtonStyle="ButtonStyle.Danger"
+                                  Variant="Variant.Filled"
+                                  Size="ButtonSize.Medium"
+                                  Click="@(async ()=> await Finalizar(item))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+                </Template>
+            </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
 </div>
@@ -185,7 +210,7 @@
         }
     }
 
-    private async Task CargarLista(int? selecccionar_id = null)
+    private async Task CargarLista()
     {
         Response<List<RequestDTO_Solicitud>>? request = await servicioSolicitud.GetAllDataByProgressAsync(estados);
 
@@ -199,11 +224,6 @@
             {
                 debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {request.Message}";
             }
-        }
-
-        if (selecccionar_id is not null)
-        {
-            selectedItems = items.Where(i => (i.IdSolicitudTicket == selecccionar_id)).ToList();
         }
     }
 
@@ -370,5 +390,42 @@
         archivo = documento_repositorio ? ServerFS.ArchivoRepositorio(solicitud.IdSolicitudTicket, nombre) : ServerFS.ArchivoUsuario(solicitud.SolIdUsuario, nombre);
 
         await VerPDF(archivo, titulo);
+    }
+
+    private async Task Finalizar(RequestDTO_Solicitud item)
+    {
+        string? mensaje = await dialogService.OpenAsync<MensajeRespuesta>
+        (
+            $"Finalizar solicitud {item.IdSolicitudTicket} de {item.SolIdUsuarioNavigation!.UsuNombre} {item.SolIdUsuarioNavigation!.UsuPrimerApellido} {item.SolIdUsuarioNavigation!.UsuSegundoApellido}",
+            null,
+            new DialogOptions()
+                {
+                    ShowClose = false,
+                    Width = "75%",
+                    CssClass = "dialog_simple"
+                }
+        );
+
+        if (!string.IsNullOrEmpty(mensaje))
+        {
+            RequestDTO_FinalizarSolicitud oCancelarSolicitud = new()
+                {
+                    IdSolicitud = item.IdSolicitudTicket,
+                    Mensaje = mensaje
+                };
+
+            item.SolRespuestaDcyC = mensaje;
+            HttpResponseMessage response = await servicioSolicitud.Finalizar(oCancelarSolicitud); // new KeyValuePair<int, string>(item.IdSolicitudTicket, mensaje));
+
+            if (response.IsSuccessStatusCode)
+            {
+                debug += Environment.NewLine + $"SOLICITUD {item.IdSolicitudTicket} CANCELADA.";
+                await CargarLista();
+            }
+            else
+            {
+                debug += Environment.NewLine + "ERROR CANCELANDO SOLICITUD {item.IdSolicitudTicket}";
+            }
+        }
     }
 }

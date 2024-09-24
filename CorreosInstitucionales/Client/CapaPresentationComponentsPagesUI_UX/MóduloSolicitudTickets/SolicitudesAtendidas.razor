@@ -6,8 +6,13 @@
 
 <div class="p-4 rounded-1 bg-white shadow">
     <div class="row mb-4">
-        <div class="col">
-            <h1 class="mb-2">@Title</h1>
+        <div class="col-6">
+            <h1>@Title</h1>
+            <hr />
+
+            <button class="btn btn-primary" @onclick="CargarLista">
+                Recargar Listado
+            </button>
         </div>
     </div>
 
@@ -20,12 +25,13 @@
         </div>
     }
 
-    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
+    <RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false"
                     FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
                     Visible=@cargado
-                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems>
+                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems
+                    >
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
@@ -46,13 +52,22 @@
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Filterable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                    <strong>
+                        @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
+                    </strong>
+                    <br />
+                    <p style="white-space: pre-wrap">@item.SolObservacionesSolicitud</p>
+                    
                 </Template>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Filterable="false" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    @item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
+                    <strong>
+                        @item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
+                    </strong>
+                    
+                    <p style="white-space: pre-wrap">@item.SolRespuestaDcyC</p>
                 </Template>
             </RadzenDataGridColumn>
 
@@ -107,7 +122,7 @@
         }
     }
 
-    private async Task CargarLista(int? selecccionar_id = null)
+    private async Task CargarLista()
     {
         Response<List<RequestDTO_Solicitud>>? request = await servicioSolicitud.GetAllDataByProgressAsync(estados);
 
@@ -121,11 +136,6 @@
             {
                 debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {request.Message}";
             }
-        }
-
-        if (selecccionar_id is not null)
-        {
-            selectedItems = items.Where(i => (i.IdSolicitudTicket == selecccionar_id)).ToList();
         }
     }
 }

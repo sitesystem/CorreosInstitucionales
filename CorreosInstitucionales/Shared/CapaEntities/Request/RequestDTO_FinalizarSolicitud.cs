@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestDTO_CancelarSolicitud
+    public class RequestDTO_FinalizarSolicitud
     {
         public int IdSolicitud { get; set; }
-        public string? MotivoCancelacion { get; set; }
+        public string? Mensaje { get; set; }
     }
 }

@@ -106,9 +106,14 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             throw new NotImplementedException();
         }
 
-        public async Task<HttpResponseMessage> Cancelar(RequestDTO_CancelarSolicitud oCancelarSolicitud) // KeyValuePair<int,string> datos)
+        public async Task<HttpResponseMessage> Cancelar(RequestDTO_FinalizarSolicitud oCancelarSolicitud) // KeyValuePair<int,string> datos)
         {
             return await _httpClient.PatchAsJsonAsync($"{url}/cancelar", oCancelarSolicitud, options: _options);
+        }
+
+        public async Task<HttpResponseMessage> Finalizar(RequestDTO_FinalizarSolicitud oFinalizarSolicitud) // KeyValuePair<int,string> datos)
+        {
+            return await _httpClient.PatchAsJsonAsync($"{url}/finalizar", oFinalizarSolicitud, options: _options);
         }
     }
 }

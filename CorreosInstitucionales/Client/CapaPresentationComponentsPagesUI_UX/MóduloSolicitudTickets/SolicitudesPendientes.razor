@@ -11,33 +11,32 @@
 
 <div class="p-4 rounded-1 bg-white shadow">
     
-    <div class="row mb-2">
-        <div class="col-8">
+    <div class="row mb-4">
+        <div class="col-6">
             <h1>@Title</h1>
-        </div>
-        <div class="col-2">
-            <button class="btn btn-primary form-control" @onclick="CargarLista">
+            <hr />
+
+            <button class="btn btn-primary" @onclick="CargarLista">
                 Recargar Listado
             </button>
         </div>
-        <div class="col-2">
-            @if(puede_exportar)
-            {
-                <button class="btn btn-primary form-control mb-3" @onclick="Descargar">
-                    <RadzenIcon Icon="get_app"></RadzenIcon>
-                    Exportar
-                </button>
-                <div>
-                    <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Generar Archivo Zip
+        @if (puede_exportar)
+        {
+            <div class="col-4 offset-2">
+                <div class="shadow card m-2 p-3">
+                
+                    <button class="btn btn-primary form-control mb-3" @onclick="Descargar">
+                        <RadzenIcon Icon="get_app"></RadzenIcon>
+                        Exportar
+                    </button>
+                    <div>
+                        <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Generar Archivo Zip
+                    </div>
+                
                 </div>
-            }
-            
-            @if(!string.IsNullOrEmpty(link))
-            {
-                <br/>
-                <a href="@link">Archivo de Exportación</a>
-            }
-        </div>
+            </div>
+        }
+
     </div>
 
     @if (!cargado)
@@ -51,13 +50,12 @@
         </div>
     }
 
-    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
+    <RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false"
                     FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Solicitud"
                     Visible=@cargado
-    Style=""
-                    >
+                    SelectionMode="DataGridSelectionMode.Single">
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
@@ -204,8 +202,6 @@
     private bool cargado { get; set; } = false;
     private bool generando = false;
     private bool exportar_zip = false;
-
-    private string link = string.Empty;
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
 
@@ -412,10 +408,10 @@
 
         if(!string.IsNullOrEmpty(mensaje))
         {
-            RequestDTO_CancelarSolicitud oCancelarSolicitud = new()
+            RequestDTO_FinalizarSolicitud oCancelarSolicitud = new()
             {
                 IdSolicitud = item.IdSolicitudTicket,
-                MotivoCancelacion = mensaje
+                Mensaje = mensaje
             };
 
             item.SolRespuestaDcyC = mensaje;
