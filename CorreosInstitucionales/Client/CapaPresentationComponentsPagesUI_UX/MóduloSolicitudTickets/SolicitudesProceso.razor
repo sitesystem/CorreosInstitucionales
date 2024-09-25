@@ -19,7 +19,24 @@
             </button>
         </div>
 
-        <div class="col-4 offset-2">
+        @if (puede_exportar)
+        {
+            <div class="col-3">
+                <div class="shadow card m-2 p-3">
+
+                    <button class="btn btn-primary form-control mb-3" @onclick="Descargar">
+                        <RadzenIcon Icon="get_app"></RadzenIcon>
+                        Exportar
+                    </button>
+                    <div>
+                        <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Generar Archivo Zip
+                    </div>
+
+                </div>
+            </div>
+        }
+
+        <div class="col-3">
             <div class="m-2 p-3 shadow card">
                 @if (items.Count > 0)
                 {
@@ -49,8 +66,7 @@
                     AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px"
-                    Visible=@(!trabajando)
-                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems>
+                    Visible=@(!trabajando)>
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
@@ -62,10 +78,28 @@
                         @item.SolIdUsuarioNavigation!.UsuNombre
                     </strong>
                     <br />
-                    @item.SolIdUsuarioNavigation.UsuCurp
-                    <br />
-                    @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva
-                    <br />
+                    <ul>
+                        <li>
+                            @item.SolIdUsuarioNavigation.UsuCurp
+                        </li>
+                        <li>
+                            @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
+                        </li>
+                        @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
+                        {
+                            <li>
+                                @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
+                            </li>
+                        }
+                        <li style="white-space: pre-wrap">
+                            @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva
+                        </li>
+
+                        <li style="white-space: pre-wrap">
+                            @item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta
+                        </li>
+
+                    </ul>
                 </Template>
             </RadzenDataGridColumn>
 
@@ -166,6 +200,12 @@
                 </Template>
             </RadzenDataGridColumn><!--ARCHIVOS-->
 
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Seleccionar" Filterable="false" TextAlign="TextAlign.Center" Frozen="true" Width="120px">
+                <Template Context="item">
+                    <RadzenSwitch @bind-Value=@item.SolValidacionDatos Change="StateHasChanged" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})" />
+                </Template>
+            </RadzenDataGridColumn>
+
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Cancelar" Context="item"
                                   Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Frozen="true" Width="120px" 
                                     Visible="false"
@@ -198,6 +238,7 @@
     private IBrowserFile? fuImportar = null;
 
     private string debug = string.Empty;
+    private bool exportar_zip = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -425,6 +466,43 @@
             else
             {
                 debug += Environment.NewLine + "ERROR CANCELANDO SOLICITUD {item.IdSolicitudTicket}";
+            }
+        }
+    }//FINALIZAR
+
+    private bool puede_exportar
+    {
+        get
+        {
+            return items.Any(i => i.SolValidacionDatos);
+        }
+    }
+
+    private async void Descargar()
+    {
+        trabajando = false;
+        StateHasChanged();
+
+        int[] tickets = items.Where(i => i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToArray();
+
+        TExport<int[]> selected_ids = new(tickets, (int)TipoEstadoSolicitud.EN_PROCESO);
+
+        Response<List<WebUtils.Link>>? oResponse = await servicioArchivos.NewFileExportFromSelection<int[]>(exportar_zip ? "zip" : "xlsx", "pendientes", selected_ids);
+
+        if (oResponse is not null && oResponse.Data is not null)
+        {
+            if (oResponse.Success == 1)
+            {
+                foreach (WebUtils.Link url in oResponse.Data)
+                {
+                    await JSRuntime.InvokeVoidAsync("Descargar", url);
+                }
+
+                await CargarLista();
+            }
+            else
+            {
+                debug += Environment.NewLine + oResponse.Message;
             }
         }
     }

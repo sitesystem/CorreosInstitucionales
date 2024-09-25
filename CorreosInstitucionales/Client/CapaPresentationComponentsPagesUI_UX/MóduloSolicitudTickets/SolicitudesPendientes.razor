@@ -54,8 +54,7 @@
                     FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Solicitud"
-                    Visible=@cargado
-                    SelectionMode="DataGridSelectionMode.Single">
+                    Visible=@cargado>
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
@@ -66,10 +65,29 @@
                         @item.SolIdUsuarioNavigation!.UsuSegundoApellido
                         @item.SolIdUsuarioNavigation!.UsuNombre
                     </strong>
-                    <br>
-                    @item.SolIdUsuarioNavigation.UsuCurp
                     <br />
-                    <p style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva</p>
+                    <ul>
+                        <li>
+                            @item.SolIdUsuarioNavigation.UsuCurp
+                        </li>
+                        <li>
+                            @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
+                        </li>
+                        @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
+                        {
+                            <li>
+                                @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
+                            </li>
+                        }
+                        <li style="white-space: pre-wrap">
+                            @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva
+                        </li>
+
+                        <li style="white-space: pre-wrap">
+                            @item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta
+                        </li>
+
+                    </ul>
                 </Template>
             </RadzenDataGridColumn>
 
@@ -102,6 +120,12 @@
                         {
                             <li>
                                 <strong>Comprobante de Inscripción</strong>
+                                @if ((anio - int.Parse(item.SolIdUsuarioNavigation!.UsuBoletaAlumno??"")) > 3)
+                                {
+                                    <span class="fw-bold text-danger">Requerdio</span>
+                                    <br />
+                                }
+
                                 <br />
                                 <a href="@GenerarURLArchivoUsuario(item, TipoDocumento.COM_INSCRIPCION)"
                                    download="@GenerarNombreArchivo(item, TipoDocumento.COM_INSCRIPCION)">
@@ -203,6 +227,8 @@
     private bool generando = false;
     private bool exportar_zip = false;
 
+    private int anio = DateTime.Now.Year;
+
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
 
     private readonly int[] estados = { (int)TipoEstadoSolicitud.ALTA, (int)TipoEstadoSolicitud.PENDIENTE };
@@ -303,9 +329,11 @@
         cargado = false;
         StateHasChanged();
 
-        List<int> selected_ids = items.Where(i=>i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToList();
+        int[] tickets = items.Where(i => i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToArray();
 
-        Response<List<WebUtils.Link>>? oResponse = await servicioArchivos.NewFileFromSelection(exportar_zip?"zip":"xlsx", "pendientes", selected_ids);
+        TExport<int[]> selected_ids = new(tickets, (int)TipoEstadoSolicitud.PENDIENTE, true, true);
+
+        Response<List<WebUtils.Link>>? oResponse = await servicioArchivos.NewFileExportFromSelection<int[]>(exportar_zip?"zip":"xlsx", "pendientes", selected_ids);
 
         if(oResponse is not null && oResponse.Data is not null)
         {
