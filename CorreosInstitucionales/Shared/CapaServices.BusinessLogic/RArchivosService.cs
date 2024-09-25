@@ -89,6 +89,25 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
+        public async Task<Response<List<WebUtils.Link>>?> NewFileExportFromSelection<T>(string extension, string action, TExport<T> selected)
+        {
+            Response<List<WebUtils.Link>>? result = new Response<List<WebUtils.Link>>();
+
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync($"{url}/{extension}/{action}", selected);
+
+                var content = await response.Content.ReadAsStringAsync();
+                result = JsonSerializer.Deserialize<Response<List<WebUtils.Link>>>(content, options: _options);
+            }
+            catch (Exception ex)
+            {
+                result!.Message = ex.Message + Environment.NewLine + ex.StackTrace;
+            }
+
+            return result;
+        }
+
         public async Task<Response<List<string>>?> ArreglarEnlacesRotos()
         {
             var response = await _httpClient.GetAsync($"{url}/*/arreglar_rotos");

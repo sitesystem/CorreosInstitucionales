@@ -29,9 +29,7 @@
                     FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
-                    Visible=@cargado
-                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems
-                    >
+                    Visible=@cargado>
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
@@ -42,11 +40,38 @@
                         @item.SolIdUsuarioNavigation!.UsuSegundoApellido
                         @item.SolIdUsuarioNavigation!.UsuNombre
                     </strong>
-                    
                     <br />
-                    @item.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva
-                    <br />
-                    @item.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta
+                    <ul>
+                        <li>
+                            @item.SolIdUsuarioNavigation.UsuCurp
+                        </li>
+                        <li>
+                            @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
+                        </li>
+                        @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
+                        {
+                            <li>
+                                @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
+                            </li>
+                        }
+                        <li style="white-space: pre-wrap">
+                            @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva
+                        </li>
+
+                        @if (!string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta))
+                        {
+                            <li style="white-space: pre-wrap">
+                                @item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta
+                            </li>
+                        }
+                        
+                        <li>
+                            @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
+                            <br />
+                            @item.SolIdUsuarioNavigation!.UsuNoCelularAnterior
+                        </li>
+
+                    </ul>
                 </Template>
             </RadzenDataGridColumn>
 

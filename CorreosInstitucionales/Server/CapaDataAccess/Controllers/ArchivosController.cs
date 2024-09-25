@@ -22,6 +22,7 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.Utils;
+using CorreosInstitucionales.Shared;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
@@ -280,15 +281,15 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [HttpPost("xlsx/pendientes")]
-        public async Task<IActionResult> ExportarPendientes_XLSX(int[] selected)
+        public async Task<IActionResult> ExportarPendientes_XLSX(TExport<int[]>data)
         {
-            return await LlenarFormulario(selected, false);
+            return await LlenarFormulario(data, false);
         }
 
         [HttpPost("zip/pendientes")]
-        public async Task<IActionResult> ExportarPendientes_ZIP(int[] selected)
+        public async Task<IActionResult> ExportarPendientes_ZIP(TExport<int[]> data)
         {
-            return await LlenarFormulario(selected, true);
+            return await LlenarFormulario(data, true);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -331,8 +332,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return TipoDatoXLSX.NINGUNO;
         }
 
-        [HttpPost("xlsx/procesados")]
-        public async Task<IActionResult> ImportarProcesados_XLSX(IFormFile file)
+        [HttpPost("xlsx/procesados/{debug}")]
+        public async Task<IActionResult> ImportarProcesados_XLSX(
+            IFormFile file,
+            bool debug = false)
         {
             Response<string> oResponse = new();
 
@@ -538,9 +541,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         solicitud.SolValidacionDatos = true;
                     });
 
-                    await _db.SaveChangesAsync();
+                    //await _db.SaveChangesAsync();
 
-                    await EnvioMasivoAtendidos(solicitudes);
+                    //await EnvioMasivoAtendidos(solicitudes);
                 }
 
                 oResponse.Success = 1;
@@ -726,7 +729,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IActionResult> LlenarFormulario(int[] selected, bool return_zip)
+        public async Task<IActionResult> LlenarFormulario(
+                TExport<int[]> data,
+                bool return_zip
+            )
         {
             Guid id = Guid.NewGuid();
             string id_fecha = DateTime.Now.ToString("yyyyMMdd_HHmmss");
@@ -754,8 +760,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     .Where
                     (
                         st => 
-                            selected.Contains(st.IdSolicitudTicket) &&
-                            st.SolIdEstadoSolicitud == (int)TipoEstadoSolicitud.PENDIENTE
+                            data.Value.Contains(st.IdSolicitudTicket) &&
+                            st.SolIdEstadoSolicitud == data.Status
                     )
                     .Include(st => st.SolIdUsuarioNavigation)
                     .Include(st => st.SolIdTipoSolicitudNavigation)
@@ -806,8 +812,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     oResponse.Data = archivos;
                 }
 
-                await _db.SaveChangesAsync();
-
+                if(data.Update)
+                {
+                    await _db.SaveChangesAsync();
+                }
+                
                 oResponse.Success = 1;
             }
             catch (Exception ex)
@@ -823,9 +832,15 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 try
                 {
-                    error = await EstablecerEstado(pendientes, (int)TipoEstadoSolicitud.EN_PROCESO);
+                    error = null;
+
+                    if(data.Update)
+                    {
+                        error = await EstablecerEstado(pendientes, (int)TipoEstadoSolicitud.EN_PROCESO);
+                    }
                     
-                    if (error is null)
+                    
+                    if (error is null && data.Notify)
                     {
                         //TODO: Verificar
                         await EnvioMasivoPendientes(pendientes);
