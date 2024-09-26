@@ -541,9 +541,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         solicitud.SolValidacionDatos = true;
                     });
 
-                    //await _db.SaveChangesAsync();
+                    await _db.SaveChangesAsync();
 
-                    //await EnvioMasivoAtendidos(solicitudes);
+                    await EnvioMasivoAtendidos(solicitudes);
                 }
 
                 oResponse.Success = 1;
