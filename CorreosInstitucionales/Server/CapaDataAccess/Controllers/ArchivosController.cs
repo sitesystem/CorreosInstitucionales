@@ -23,6 +23,7 @@ using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.Utils;
 using CorreosInstitucionales.Shared;
+using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
@@ -223,6 +224,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 correo.EmailTo = solicitud.SolIdTipoSolicitud == id_cambio_correo ? solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior! : solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
                 mensaje.Number = solicitud.SolIdTipoSolicitud == id_cambio_celular ? solicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior! : solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
+
+                mensaje.Number = mensaje.Number ?? "5500000000";
                 mensaje.Number.Replace(" ", string.Empty);
 
                 // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
@@ -587,22 +590,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             // DATOS SOLICITUD
             string? id_externo_usuario = null;
             
-            TipoDatoXLSX[] datos_exportar = formato_solicitud.GetDatosExportar();
+            List<TipoDatoXLSX> datos_exportar = formato_solicitud.GetDatosExportar().ToList();
             TipoDocumento[] documentos_adjuntar;
             TipoSolicitud tipo_solicitud;
 
-            Dictionary<TipoDatoXLSX, int> columnas = new Dictionary<TipoDatoXLSX, int>();
             int fila = 5; //PRIMER FILA A LEER
             int columna = 5;//PRIMER COLUMNA DISPONIBLE
-            int columna_final = 1;
-
+            int columna_final = 5;
+            
             foreach(TipoDatoXLSX dato in datos_exportar)
             {
-                columnas.Add(dato, columna);
-                columna++;
+                ws.Cell(4, columna_final).Value = FormatoTexto(dato.GetNombre().ToUpper());
+                columna_final++;
             }
-                        
-            columna_final = columna - 1;
+            columna_final--;
 
             foreach (MtTbSolicitudesTicket solicitud in lista)
             {
@@ -634,59 +635,48 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 foreach(TipoDatoXLSX dato in datos_exportar)
                 {
-                    columna = columnas[dato];
+                    columna = 5 + datos_exportar.IndexOf(dato);
+
                     switch(dato)
                     {
-                        case TipoDatoXLSX.CORREO_PERSONAL: 
-                            ws.Cell(fila, columna).Value = usuario.UsuCorreoPersonalCuentaAnterior; 
+                        case TipoDatoXLSX.CURP:
+                            ws.Cell(fila, columna).Value = usuario.UsuCurp;
                             break;
+
+                        case TipoDatoXLSX.CORREO_PERSONAL: 
+                            ws.Cell(fila, columna).Value = usuario.UsuCorreoPersonalCuentaNueva; 
+                            break;
+                        case TipoDatoXLSX.CORREO_PERSONAL_NUEVO:
+                            ws.Cell(fila, columna).Value = usuario.UsuCorreoPersonalCuentaAnterior;
+                            break;
+
                         case TipoDatoXLSX.CORREO_INSTITUCIONAL:
                             ws.Cell(fila, columna).Value = usuario.UsuCorreoInstitucionalCuenta;
+
                             break;
                         case TipoDatoXLSX.CELULAR:
+                            ws.Cell(fila, columna).Value = usuario.UsuNoCelularNuevo;
+                            break;
+
+                        case TipoDatoXLSX.CELULAR_NUEVO:
                             ws.Cell(fila, columna).Value = usuario.UsuNoCelularAnterior;
                             break;
+
                         case TipoDatoXLSX.EXTENSION:
+                            ws.Cell(fila, columna).Value = (usuario.UsuNoExtension ?? string.Empty) == "0" ? string.Empty : usuario.UsuNoExtension;
+                            break;
+                        case TipoDatoXLSX.EXTENSION_NUEVO:
                             ws.Cell(fila, columna).Value = usuario.UsuNoExtensionAnterior;
                             break;
+
                         case TipoDatoXLSX.AREA:
                             ws.Cell(fila, columna).Value = usuario.UsuIdAreaDepto;
                             break;
                         case TipoDatoXLSX.ID_EXTERNO:
                             ws.Cell(fila, columna).Value = id_externo_usuario;
                             break;
-                        case TipoDatoXLSX.CURP:
-                            ws.Cell(fila, columna).Value = usuario.UsuCurp;
-                            break;
-
-                        case TipoDatoXLSX.CORREO_PERSONAL_NUEVO:
-                            ws.Cell(fila, columna).Value = usuario.UsuCorreoPersonalCuentaNueva;
-                            break;
-                        case TipoDatoXLSX.CELULAR_NUEVO:
-                            ws.Cell(fila, columna).Value = usuario.UsuNoCelularNuevo;
-                            break;
-                        case TipoDatoXLSX.EXTENSION_NUEVO:
-                            ws.Cell(fila, columna).Value = usuario.UsuNoExtension;
-                            break;
                     }
                 }
-
-                /*IXLRange row = ws.Range(ws.Cell(i, 1), ws.Cell(i, cambio_celular ? 11 : 9));*/
-
-                IXLRange registros = ws.Range(ws.Cell(fila, 1), ws.Cell(fila, columna_final));
-
-                registros.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
-                registros.Style.Border.SetOutsideBorderColor(XLColor.Black);
-
-                registros.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
-                registros.Style.Border.SetInsideBorderColor(XLColor.Black);
-
-                registros.Style.Font.FontName = "Arial";
-                registros.Style.Font.FontSize = 14;
-
-                registros.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                registros.Style.Alignment.SetVertical(XLAlignmentVerticalValues.Center);
-
 
                 ws.Row(fila).Height = 60;
 
@@ -717,9 +707,27 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 //SIGUIENTE FILA
                 fila++;
-            }//FOR
+            }//FOREACH SOLICITUD
 
-            ws.Columns(1, 11).AdjustToContents();
+            ws.Columns(1, columna_final).AdjustToContents();
+
+            IXLRange registros = ws.Range(ws.Cell(5, 1), ws.Cell(4 + lista.Count(), columna_final));
+
+            registros.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+            registros.Style.Border.SetOutsideBorderColor(XLColor.Black);
+
+            registros.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
+            registros.Style.Border.SetInsideBorderColor(XLColor.Black);
+
+            registros.Style.Font.FontName = "Arial";
+            registros.Style.Font.FontSize = 14;
+
+            registros.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            registros.Style.Alignment.SetVertical(XLAlignmentVerticalValues.Center);
+
+            //registros.Style.Fill.BackgroundColor = XLColor.Yellow;
+
+
 
             wb.SaveAs($"{ServerFS.GetBaseDir(true)}/{archivo_exportacion}");
 
@@ -752,7 +760,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             string? error = null;
 
-            int id_estado_proceso = (int)TipoEstadoSolicitud.EN_PROCESO;
+            int id_estado_proceso = data.Status;
 
             try
             {
@@ -767,15 +775,19 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     .Include(st => st.SolIdTipoSolicitudNavigation)
                     .ToListAsync();
 
+                mensajes.AppendLine($"PENDIENTES EN TOTAL: {pendientes.Count}");
+
                 pendientes_celular = pendientes.Where(p => p.SolIdTipoSolicitud == (int)TipoSolicitud.CAMBIO_CELULAR).ToList();
                 pendientes = pendientes.Except(pendientes_celular).ToList();
+
+                mensajes.AppendLine($"PENDIENTES DE CAMBIO DE CELULAR: {pendientes_celular.Count}");
 
                 pendientes_correo_personal = pendientes.Where(p => p.SolIdTipoSolicitud == (int)TipoSolicitud.CAMBIO_CORREO_PERSONAL).ToList();
                 pendientes = pendientes.Except(pendientes_correo_personal).ToList();
 
-                
+                mensajes.AppendLine($"PENDIENTES DE CAMBIO DE CORREO PERSONAL: {pendientes_correo_personal.Count}");
 
-                if(pendientes.Count>0)
+                if (pendientes.Count>0)
                 {
                     exportados = GenerarXLSX(pendientes, archivo);
                     archivos.AddRange(exportados);
@@ -836,7 +848,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                     if(data.Update)
                     {
-                        error = await EstablecerEstado(pendientes, (int)TipoEstadoSolicitud.EN_PROCESO);
+                        if((TipoEstadoSolicitud)data.Status == TipoEstadoSolicitud.PENDIENTE)
+                        {
+                            data.Status = (int)TipoEstadoSolicitud.EN_PROCESO;
+                        }
+
+                        error = await EstablecerEstado(pendientes, data.Status);
+                        error += await EstablecerEstado(pendientes_celular, data.Status);
+                        error += await EstablecerEstado(pendientes_correo_personal, data.Status);
                     }
                     
                     

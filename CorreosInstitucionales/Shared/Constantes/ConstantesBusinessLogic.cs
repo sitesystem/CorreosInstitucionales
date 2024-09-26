@@ -45,13 +45,13 @@ namespace CorreosInstitucionales.Shared.Constantes
                 case TipoDatoXLSX.TODO: return "TODO";
                 case TipoDatoXLSX.NINGUNO: return "NINGUNO";
 
-                case TipoDatoXLSX.CORREO_PERSONAL: return "CORREO PERSONAL ANTERIOR";
-                case TipoDatoXLSX.CORREO_INSTITUCIONAL: return "CORREO INSTITUCIONAL ANTERIOR";
+                case TipoDatoXLSX.CORREO_PERSONAL: return "CORREO PERSONAL";
+                case TipoDatoXLSX.CORREO_INSTITUCIONAL: return "CORREO INSTITUCIONAL";
                 case TipoDatoXLSX.CONTRA: return "CONTRASEÑA";
-                case TipoDatoXLSX.CELULAR: return "NÚMERO DE CELULAR";
+                case TipoDatoXLSX.CELULAR: return "NÚMERO DE CELULAR ANTERIOR";
                 case TipoDatoXLSX.EXTENSION: return "EXTENSIÓN";
                 case TipoDatoXLSX.AREA: return "ÁREA";
-                case TipoDatoXLSX.ID_EXTERNO: return "ID (SEGÚN EL CASO)";
+                case TipoDatoXLSX.ID_EXTERNO: return "NUMERO DE EMPLEADO O NUMERO DE BOLETA SEGÚN SEA EL CASO";
                 case TipoDatoXLSX.ACCION: return "ACCIÓN / RESPUESTA AC";
                 case TipoDatoXLSX.CURP: return "CURP";
 

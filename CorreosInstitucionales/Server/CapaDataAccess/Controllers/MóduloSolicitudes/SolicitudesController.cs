@@ -487,6 +487,26 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     oSolicitud.SolIdEstadoSolicitud = oFinalizarSolicitud.Estado;
                     oSolicitud.SolRespuestaDcyC = oFinalizarSolicitud.Mensaje; // datos.Value;
 
+                    if(oFinalizarSolicitud.Estado == (int)TipoEstadoSolicitud.CANCELADA)
+                    {
+                        switch((TipoSolicitud)oSolicitud.SolIdTipoSolicitud)
+                        {
+                            case TipoSolicitud.CAMBIO_CELULAR:
+                                string? num_anterior = oSolicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior;
+                                string num_actual = oSolicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
+                                oSolicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior = num_actual;
+                                oSolicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo = num_anterior?? "5500000000";
+                                break;
+
+                            case TipoSolicitud.CAMBIO_CORREO_PERSONAL:
+                                string? email_anterior = oSolicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior;
+                                string email_actual = oSolicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+                                oSolicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior = email_actual;
+                                oSolicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva = email_anterior??"";
+                                break;
+                        }
+                    }
+
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     guardados = await _db.SaveChangesAsync();
                 }

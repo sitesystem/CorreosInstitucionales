@@ -19,7 +19,7 @@
             </button>
         </div>
 
-        @if (puede_exportar)
+        @if (puede_exportar && !trabajando)
         {
             <div class="col-3">
                 <div class="shadow card m-2 p-3">
@@ -460,7 +460,7 @@
 
     private async void Descargar()
     {
-        trabajando = false;
+        trabajando = true;
         StateHasChanged();
 
         int[] tickets = items.Where(i => i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToArray();
@@ -485,5 +485,8 @@
                 debug += Environment.NewLine + oResponse.Message;
             }
         }
+
+        trabajando = false;
+        StateHasChanged();
     }// DESCARGAR
 }
