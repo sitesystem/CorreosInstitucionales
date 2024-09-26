@@ -20,14 +20,11 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 // Customize Encoding Settings
-builder.Services.AddSingleton<HtmlEncoder>(
-     HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.BasicLatin,
-                                               UnicodeRanges.LatinExtendedA }));
+builder.Services.AddSingleton(HtmlEncoder.Create(allowedRanges: [ UnicodeRanges.BasicLatin, UnicodeRanges.LatinExtendedA ]));
 builder.Services.Configure<WebEncoderOptions>(options => options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
 
 // Inyección de Dependencias
@@ -168,7 +165,6 @@ builder.Services.AddScoped
     )
 );
 
-
 builder.Services.AddMemoryCache();
 
 /******************************************************************************************************/
@@ -210,4 +206,3 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.Run();
-

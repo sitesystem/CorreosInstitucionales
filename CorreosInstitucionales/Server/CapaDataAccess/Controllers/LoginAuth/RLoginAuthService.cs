@@ -85,7 +85,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
                             new("Email", usuario.UsuCorreoPersonalCuentaNueva.ToString()),
                             new("Rol", usuario.UsuIdRol.ToString()),
                             new("TipoPersonal", usuario.UsuIdTipoPersonal.ToString()),
-                            new("RecuperarContraseña", usuario.UsuRecuperarContrasenia.ToString().ToLower())
+                            new("RecuperarContrasenia", usuario.UsuRecuperarContrasenia.ToString().ToLower())
                         ]
                     ),
                 Expires = DateTime.UtcNow.AddMonths(1),
