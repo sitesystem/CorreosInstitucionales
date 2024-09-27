@@ -108,7 +108,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 
         public async Task<HttpResponseMessage> Cancelar(RequestDTO_FinalizarSolicitud oCancelarSolicitud) // KeyValuePair<int,string> datos)
         {
-            return await _httpClient.PatchAsJsonAsync($"{url}/cancelar", oCancelarSolicitud, options: _options);
+            return await _httpClient.PatchAsJsonAsync($"{url}/finalizar", oCancelarSolicitud, options: _options);
         }
 
         public async Task<HttpResponseMessage> Finalizar(RequestDTO_FinalizarSolicitud oFinalizarSolicitud) // KeyValuePair<int,string> datos)

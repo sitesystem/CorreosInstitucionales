@@ -12,6 +12,8 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Server.Correos;
 using CorreosInstitucionales.Server.MensajesWA;
+using DocumentFormat.OpenXml.Wordprocessing;
+using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Debug;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
 {
@@ -462,66 +464,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             return Ok(oRespuesta);
         }// GENERAR SOLICITUDES
 
-
-        [HttpPatch("cancelar")]
-        public async Task<IActionResult> CancelarSolicitud(RequestDTO_FinalizarSolicitud oCancelarSolicitud) // KeyValuePair<int, string> datos)
-        {
-            Response<object> oRespuesta = new();
-            int guardados = 0;
-
-            MtTbSolicitudesTicket? oSolicitud = null;
-
-            try
-            {
-                oSolicitud = await _db.MtTbSolicitudesTickets.FindAsync(oCancelarSolicitud.IdSolicitud); // (datos.Key)
-                //db.Remove(oPersona);
-
-                if (oSolicitud != null)
-                {
-                    oSolicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.CANCELADA;
-                    oSolicitud.SolRespuestaDcyC = oCancelarSolicitud.Mensaje; // datos.Value;
-
-                    _db.Entry(oSolicitud).State = EntityState.Modified;
-                    guardados = await _db.SaveChangesAsync();
-                }
-                if(guardados == 1)
-                {
-                    oRespuesta.Success = 1;
-
-                    ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
-
-                    Dictionary<string, object?> variables = new Dictionary<string, object?>
-                    {
-                        { "solicitud", oSolicitud }
-                    };
-
-                    RequestDTO_SendEmail correo = new()
-                    {
-                        Subject = "Su solcicitud ha sido cancelada",
-                        EmailTo = "postmaster@localhost",
-                        Body = await renderer.GetHTML<Cancelada>(variables)
-                    };
-
-                    RequestDTO_SendWhatsApp mensaje = new()
-                    {
-                        Message = await renderer.GetHTML<CanceladoWA>(variables),
-                        Number = "5500000000"
-                    };
-
-                    // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
-                    _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
-                    _ = Task.Run(() => _servicioWA.SendWhatsAppAsync(mensaje));
-                }
-            }
-            catch (Exception ex)
-            {
-                oRespuesta.Message = ex.Message;
-            }
-
-            return Ok(oRespuesta);
-        }
-        // CANCELAR
-
         [HttpPatch("finalizar")]
         public async Task<IActionResult> FinalizarSolicitud(RequestDTO_FinalizarSolicitud oFinalizarSolicitud) // KeyValuePair<int, string> datos)
         {
@@ -529,15 +471,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             int guardados = 0;
 
             MtTbSolicitudesTicket? oSolicitud = null;
-
+            
             try
             {
-                oSolicitud = await _db.MtTbSolicitudesTickets.FindAsync(oFinalizarSolicitud.IdSolicitud); // (datos.Key)
+                oSolicitud = await _db.MtTbSolicitudesTickets!
+                                    .Where(st => st.IdSolicitudTicket == oFinalizarSolicitud.IdSolicitud)
+                                    .Include(u => u.SolIdUsuarioNavigation)
+                                    .FirstAsync();
+
+                //FindAsync(oFinalizarSolicitud.IdSolicitud); // (datos.Key)
                 //db.Remove(oPersona);
 
-                if (oSolicitud != null)
+                if (oSolicitud is not null)
                 {
-                    oSolicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.ATENDIDA;
+                    oSolicitud.SolIdEstadoSolicitud = oFinalizarSolicitud.Estado;
                     oSolicitud.SolRespuestaDcyC = oFinalizarSolicitud.Mensaje; // datos.Value;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
@@ -546,30 +493,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 if (guardados == 1)
                 {
                     oRespuesta.Success = 1;
-
-                    ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
-
-                    Dictionary<string, object?> variables = new Dictionary<string, object?>
-                    {
-                        { "solicitud", oSolicitud }
-                    };
-
-                    RequestDTO_SendEmail correo = new()
-                    {
-                        Subject = "Su solcicitud ha sido atendida por la mesa de control",
-                        EmailTo = "postmaster@localhost",
-                        Body = await renderer.GetHTML<Cancelada>(variables)
-                    };
-
-                    RequestDTO_SendWhatsApp mensaje = new()
-                    {
-                        Message = await renderer.GetHTML<CanceladoWA>(variables),
-                        Number = "5500000000"
-                    };
-
-                    // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
-                    _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
-                    _ = Task.Run(() => _servicioWA.SendWhatsAppAsync(mensaje));
+                    await Notificar(oSolicitud!, (TipoEstadoSolicitud)oFinalizarSolicitud.Estado);
                 }
             }
             catch (Exception ex)
@@ -580,5 +504,77 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             return Ok(oRespuesta);
         }
         // CANCELAR
+
+        [HttpPost("notificar")]
+        public async Task<IActionResult> Notificar(MtTbSolicitudesTicket solicitud, TipoEstadoSolicitud estado)
+        {
+            Response<object> oRespuesta = new();
+            string correo_personal = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+            
+            if (Dominios.EsCorreoDePrueba(correo_personal))
+            {
+                oRespuesta.Success = 1;
+                return Ok(oRespuesta);
+            }
+
+            try
+            {
+                ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
+
+                Dictionary<string, object?> variables_correo = new Dictionary<string, object?>
+                {
+                    { "solicitud", solicitud }
+                };
+
+                RequestDTO_SendEmail correo = new()
+                {
+                    EmailTo = correo_personal,
+                };
+
+                RequestDTO_SendWhatsApp mensaje = new()
+                {
+                    Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty)
+                };
+
+                switch(estado)
+                {
+                    case TipoEstadoSolicitud.ATENDIDA:
+                        correo.Subject = "Su solcicitud ha sido atendida por la mesa de control";
+
+                        switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
+                        {
+                            case TipoPersonal.ALUMNO:
+                            case TipoPersonal.EGRESADO:
+                            case TipoPersonal.MAESTRIA:
+                                correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_correo);
+                                break;
+                            default:
+                                correo.Body = await renderer.GetHTML<AtendidoPersonal>(variables_correo);
+                                break;
+                        }
+
+                        mensaje.Message = await renderer.GetHTML<AtendidoWA>(variables_correo);
+
+                        break;
+
+                    case TipoEstadoSolicitud.CANCELADA:
+                        correo.Subject = "Su solcicitud ha sido cancelada";
+                        correo.Body = await renderer.GetHTML<Cancelada>(variables_correo);
+
+                        mensaje.Message = await renderer.GetHTML<CanceladoWA>(variables_correo);
+                        break;
+                }
+
+                // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
+                _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
+                _ = Task.Run(() => _servicioWA.SendWhatsAppAsync(mensaje));
+            }
+            catch (Exception ex)
+            {
+                oRespuesta.Message = ex.Message;
+            }
+
+            return Ok(oRespuesta);
+        }
     }
 }

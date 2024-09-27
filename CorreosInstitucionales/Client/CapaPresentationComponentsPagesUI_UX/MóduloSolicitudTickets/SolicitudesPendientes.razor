@@ -6,8 +6,7 @@
 @inject DialogService dialogService
 
 <PageTitle>@Title</PageTitle>
-
-<script src="js/descargar.js?v=1.0.0.8"></script>
+<script src="js/descargar.js?v=1.0.0.9"></script>
 
 <div class="p-4 rounded-1 bg-white shadow">
     
@@ -32,12 +31,15 @@
                     <div>
                         <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Generar Archivo Zip
                     </div>
-                
+
+                    <div>@links</div>
                 </div>
             </div>
         }
 
     </div>
+
+    <div>@((MarkupString)links)</div>
 
     @if (!cargado)
     {
@@ -108,8 +110,8 @@
                         <li>
                             <strong>CURP</strong>
                             <br />
-                            <a href="@GenerarURLArchivoUsuario(item, TipoDocumento.CURP)"
-                               download="@GenerarNombreArchivo(item, TipoDocumento.CURP)">
+                            <a href="@WebUtils.GenerarURLArchivoUsuario(item, TipoDocumento.CURP)"
+                               download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CURP)">
                                 Descargar
                             </a>
                             <br />
@@ -127,8 +129,8 @@
                                 }
 
                                 <br />
-                                <a href="@GenerarURLArchivoUsuario(item, TipoDocumento.COM_INSCRIPCION)"
-                                   download="@GenerarNombreArchivo(item, TipoDocumento.COM_INSCRIPCION)">
+                                <a href="@WebUtils.GenerarURLArchivoUsuario(item, TipoDocumento.COM_INSCRIPCION)"
+                                   download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.COM_INSCRIPCION)">
                                     Descargar
                                 </a>
                                 <br />
@@ -144,8 +146,8 @@
                             <li>
                                 <strong>Captura de Bloqueo</strong>
                                 <br />
-                                <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_BLOQUEO)"
-                                   download="@GenerarNombreArchivo(item, TipoDocumento.CAP_BLOQUEO)">
+                                <a href="@WebUtils.GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_BLOQUEO)"
+                                   download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CAP_BLOQUEO)">
                                     Descargar
                                 </a>
                                 <br />
@@ -161,8 +163,8 @@
                             <li>
                                 <strong>Captura de Escaneo de Antivirus</strong>
                                 <br />
-                                <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ANTIVIRUS)"
-                                   download="@GenerarNombreArchivo(item, TipoDocumento.CAP_ANTIVIRUS)">
+                                <a href="@WebUtils.GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ANTIVIRUS)"
+                                   download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CAP_ANTIVIRUS)">
                                     Descargar
                                 </a>
                                 <br />
@@ -178,8 +180,8 @@
                             <li>
                                 <strong>Captura de Error</strong>
                                 <br />
-                                <a href="@GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ERROR)"
-                                   download="@GenerarNombreArchivo(item, TipoDocumento.CAP_ERROR)">
+                                <a href="@WebUtils.GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ERROR)"
+                                   download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CAP_ERROR)">
                                     Descargar
                                 </a>
                                 <br />
@@ -209,7 +211,7 @@
                                   ButtonStyle="ButtonStyle.Danger"
                                   Variant="Variant.Filled"
                                   Size="ButtonSize.Medium"
-                                  Click="@(async ()=> await Cancelar(item))" @onclick:stopPropagation="true">
+                                  Click="@(async ()=> await Actualizar(item, TipoEstadoSolicitud.CANCELADA, "Cancelar"))" @onclick:stopPropagation="true">
                     </RadzenButton>
                 </Template>
             </RadzenDataGridColumn>
@@ -226,6 +228,7 @@
     private bool cargado { get; set; } = false;
     private bool generando = false;
     private bool exportar_zip = false;
+    private string links = string.Empty;
 
     private int anio = DateTime.Now.Year;
 
@@ -243,55 +246,9 @@
 
     private string debug = string.Empty;
 
-    private string ArchivoSolicitud(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
-    {
-        string archivo = "ARCHIVO_404";
+    
 
-        switch(tipo_documento)
-        {
-            case TipoDocumento.CURP: 
-                archivo = solicitud.SolIdUsuarioNavigation!.UsuFileNameCurp!; 
-                break;
-
-            case TipoDocumento.COM_INSCRIPCION: 
-                archivo = solicitud.SolIdUsuarioNavigation!.UsuFileNameComprobanteInscripcion!;
-                break;
-
-            case TipoDocumento.CAP_BLOQUEO:
-                archivo = solicitud.SolCapturaCuentaBloqueada!;
-                break;
-
-            case TipoDocumento.CAP_ANTIVIRUS:
-                archivo = solicitud.SolCapturaEscaneoAntivirus!;
-                break;
-
-            case TipoDocumento.CAP_ERROR:
-                archivo = solicitud.SolCapturaError!;
-                break;
-        }
-
-        return archivo;
-    }
-
-    private string GenerarURLArchivoUsuario(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
-    {
-        string archivo = ArchivoSolicitud(solicitud, tipo_documento);
-        return ServerFS.ArchivoUsuario(solicitud.SolIdUsuario, archivo);
-    }
-
-    private string GenerarURLArchivoRepositorio(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
-    {
-        string archivo = ArchivoSolicitud(solicitud, tipo_documento);
-        return ServerFS.ArchivoRepositorio(solicitud.IdSolicitudTicket,archivo);
-    }
-
-    private string GenerarNombreArchivo(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
-    {
-        string archivo = ArchivoSolicitud(solicitud, tipo_documento);
-        string ext = Path.GetExtension(archivo);
-        string nombre = tipo_documento.GetNombre();
-        return $"SOL{solicitud.IdSolicitudTicket}_{solicitud.SolIdUsuarioNavigation!.UsuCurp}_{nombre}{ext}";
-    }
+    
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -339,11 +296,16 @@
         {
             if(oResponse.Success == 1)
             {
+                links = "<ul>";
                 foreach (WebUtils.Link url in oResponse.Data)
                 {
                     await JSRuntime.InvokeVoidAsync("Descargar", url);
-                }
 
+                    links += $"<li><a href=\"{url.Url}\" download=\"{url.Url}\">{url.Name}</a></li>";
+                }
+                links += "</ul>";
+
+                StateHasChanged();
                 await CargarLista();
             }
             else
@@ -351,23 +313,23 @@
                 debug += Environment.NewLine + oResponse.Message;
             }
         }
-    }
+    }// DESCARGAR (EXPORTAR)
 
-    private async Task VerPDF(string archivo, string titulo = "Ver") 
+    private async Task VerPDF(string archivo, string titulo = "Ver")
     {
         await dialogService.OpenAsync<PDFViewer>
                 (
                     titulo,
                     new Dictionary<string, object>()
-                    {
+                            {
                         {"file", archivo}
-                    },
+                            },
                     new DialogOptions()
                         {
                             Width = "calc( 100vw - 8em )",
                             Height = "calc( 100vh - 8em )",
-                            CssClass = "dialog_simple p-0", 
-                            CloseDialogOnEsc = true, 
+                            CssClass = "dialog_simple p-0",
+                            CloseDialogOnEsc = true,
                             CloseDialogOnOverlayClick = true,
                             Resizable = true,
                             Draggable = true
@@ -384,9 +346,9 @@
         bool documento_repositorio = true;
         RequestDTO_Usuario usuario = solicitud.SolIdUsuarioNavigation!;
 
-        switch(documento)
+        switch (documento)
         {
-            case TipoDocumento.CURP: 
+            case TipoDocumento.CURP:
                 titulo = $@"{usuario.UsuNombre} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido} - {usuario.UsuCurp}";
 
                 documento_repositorio = false;
@@ -415,45 +377,64 @@
                 break;
         }
 
-        archivo = documento_repositorio ? ServerFS.ArchivoRepositorio(solicitud.IdSolicitudTicket,nombre) : ServerFS.ArchivoUsuario(solicitud.SolIdUsuario, nombre);
+        archivo = documento_repositorio ? ServerFS.ArchivoRepositorio(solicitud.IdSolicitudTicket, nombre) : ServerFS.ArchivoUsuario(solicitud.SolIdUsuario, nombre);
 
         await VerPDF(archivo, titulo);
     }
 
-    private async Task Cancelar(RequestDTO_Solicitud item)
+    private async Task Actualizar(RequestDTO_Solicitud item, TipoEstadoSolicitud estado, string mensaje_confirmar)
     {
         string? mensaje = await dialogService.OpenAsync<MensajeRespuesta>
         (
-            $"Cancelar solicitud {item.IdSolicitudTicket} de {item.SolIdUsuarioNavigation!.UsuNombre} {item.SolIdUsuarioNavigation!.UsuPrimerApellido} {item.SolIdUsuarioNavigation!.UsuSegundoApellido}",
+            $"{mensaje_confirmar} {item.IdSolicitudTicket} de {item.SolIdUsuarioNavigation!.UsuNombre} {item.SolIdUsuarioNavigation!.UsuPrimerApellido} {item.SolIdUsuarioNavigation!.UsuSegundoApellido}",
             null,
             new DialogOptions()
-            {
-                ShowClose = false,
-                Width = "75%",
-                CssClass = "dialog_simple"
-            }
+                {
+                    ShowClose = false,
+                    Width = "75%",
+                    CssClass = "dialog_simple"
+                }
         );
 
-        if(!string.IsNullOrEmpty(mensaje))
+        if (!string.IsNullOrEmpty(mensaje))
         {
-            RequestDTO_FinalizarSolicitud oCancelarSolicitud = new()
-            {
-                IdSolicitud = item.IdSolicitudTicket,
-                Mensaje = mensaje
-            };
+            RequestDTO_FinalizarSolicitud oSolicitud = new()
+                {
+                    IdSolicitud = item.IdSolicitudTicket,
+                    Mensaje = mensaje, 
+                    Estado = (int)estado
+                };
 
             item.SolRespuestaDcyC = mensaje;
-            HttpResponseMessage response = await servicioSolicitud.Cancelar(oCancelarSolicitud); // new KeyValuePair<int, string>(item.IdSolicitudTicket, mensaje));
 
-            if(response.IsSuccessStatusCode)
+            HttpResponseMessage response = new() { StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+            switch (estado)
             {
-                debug += Environment.NewLine + $"SOLICITUD {item.IdSolicitudTicket} CANCELADA.";
+                case TipoEstadoSolicitud.ATENDIDA:
+                    response = await servicioSolicitud.Finalizar(oSolicitud);
+                    break;
+
+                case TipoEstadoSolicitud.CANCELADA:
+                    response = await servicioSolicitud.Cancelar(oSolicitud);
+                    break;
+            }
+
+            // new KeyValuePair<int, string>(item.IdSolicitudTicket, mensaje));
+
+            if (response.IsSuccessStatusCode)
+            {
+                debug += Environment.NewLine + $"ACTIALUZADO: SOLICITUD {item.IdSolicitudTicket} ({mensaje_confirmar}).";
                 await CargarLista();
             }
             else
             {
-                debug += Environment.NewLine + "ERROR CANCELANDO SOLICITUD {item.IdSolicitudTicket}";
+                debug += Environment.NewLine + $"ERROR: SOLICITUD {item.IdSolicitudTicket} ({mensaje_confirmar}).";
             }
         }
-    }
+    }//ACTUALIZAR
+
+    
+
+    
 }
