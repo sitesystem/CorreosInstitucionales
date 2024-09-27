@@ -32,14 +32,14 @@
                         <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Generar Archivo Zip
                     </div>
 
-                    <div>
-                        <ul class="links"></ul>
-                    </div>
+                    <div>@links</div>
                 </div>
             </div>
         }
 
     </div>
+
+    <div>@((MarkupString)links)</div>
 
     @if (!cargado)
     {
@@ -228,6 +228,7 @@
     private bool cargado { get; set; } = false;
     private bool generando = false;
     private bool exportar_zip = false;
+    private string links = string.Empty;
 
     private int anio = DateTime.Now.Year;
 
@@ -295,11 +296,16 @@
         {
             if(oResponse.Success == 1)
             {
+                links = "<ul>";
                 foreach (WebUtils.Link url in oResponse.Data)
                 {
                     await JSRuntime.InvokeVoidAsync("Descargar", url);
-                }
 
+                    links += $"<li><a href=\"{url.Url}\" download=\"{url.Url}\">{url.Name}</a></li>";
+                }
+                links += "</ul>";
+
+                StateHasChanged();
                 await CargarLista();
             }
             else

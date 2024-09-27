@@ -332,10 +332,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return TipoDatoXLSX.NINGUNO;
         }
 
-        [HttpPost("xlsx/procesados/{debug}")]
+        [HttpPost("xlsx/procesados")]
         public async Task<IActionResult> ImportarProcesados_XLSX(
-            IFormFile file,
-            bool debug = false)
+            IFormFile file)
         {
             Response<string> oResponse = new();
 
@@ -415,6 +414,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                                 Clave = ws.Cell(row, columna[TipoDatoXLSX.CONTRA]).Value.ToString(),
                                 Accion = ws.Cell(row, columna[TipoDatoXLSX.ACCION]).Value.ToString()
                             };
+
+                            if(string.IsNullOrEmpty(registro_actual.Accion ))
+                            {
+                                registro_actual.Accion = "Registro actualizado";
+                            }
 
                             registros.Add(CURP, registro_actual);
                         }
