@@ -250,7 +250,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             }//FOREACH solicitud
 
-            System.IO.File.WriteAllText(archivo, log.ToString());
+            System.IO.File.WriteAllText(archivo, string.Join(Environment.NewLine, log));
             return log;
         }
 
@@ -268,6 +268,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             string curp = solicitud.SolIdUsuarioNavigation.UsuCurp;
             string id = string.Format("{0:00000}", solicitud.IdSolicitudTicket);
+
+            MpTbUsuario usuario = solicitud.SolIdUsuarioNavigation;
 
             switch (tipo_documento)
             {
@@ -289,8 +291,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }
 
             string ext = Path.GetExtension(archivo);
-
-            return new WebUtils.Link($"{directorio}{archivo}",$"SOL{id}_{curp}_{tipo}{ext}");
+            string nombre_usuario = $"{usuario.UsuNombre} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}";
+            return new WebUtils.Link($"{directorio}{archivo}",$"{nombre_usuario}-{tipo}{ext}");
         }
 
         [HttpPost("xlsx/pendientes")]
@@ -702,7 +704,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 // ADJUNTOS
                 documentos_adjuntar = tipo_solicitud.GetDocumentos();
 
-                links.Add(GenerarLink(solicitud, TipoDocumento.CURP, ruta_usuario));
+                //links.Add(GenerarLink(solicitud, TipoDocumento.CURP, ruta_usuario));
 
                 if (tipo_personal is TipoPersonal.ALUMNO)
                 {
