@@ -19,9 +19,9 @@
             </button>
         </div>
 
-        @if (puede_exportar)
-        {
-            <div class="col-3">
+        <div class="col-3">
+            @if (puede_exportar && !trabajando)
+            {
                 <div class="shadow card m-2 p-3">
 
                     <button class="btn btn-primary form-control mb-3" @onclick="Descargar">
@@ -32,8 +32,8 @@
                         <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Generar Archivo Zip
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
 
         <div class="col-3">
             <div class="m-2 p-3 shadow card">
@@ -231,7 +231,8 @@
                                   ButtonStyle="ButtonStyle.Success"
                                   Variant="Variant.Filled"
                                   Size="ButtonSize.Medium"
-                                  Click="@(async ()=> await Actualizar(item, TipoEstadoSolicitud.ATENDIDA, "Finalizar"))" @onclick:stopPropagation="true">
+                                  Click="@(async ()=> await Actualizar(item, TipoEstadoSolicitud.ATENDIDA, "Finalizar"))" @onclick:stopPropagation="true"
+                                  Visible="@(idTipoSolicitudSimple.Contains(item.SolIdTipoSolicitud))">
                     </RadzenButton>
                 </Template>
             </RadzenDataGridColumn>
@@ -256,10 +257,23 @@
     private bool exportar_zip = false;
     private string links = string.Empty;
 
+    /// <summary>
+    /// Lista de tipos de solicitud que no requieren datos adicionales (como correo o traseña) para finalizar.
+    /// </summary>
+    private List<int> idTipoSolicitudSimple = new();
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            foreach(TipoSolicitud tipo in Enum.GetValues<TipoSolicitud>())
+            {
+                if(tipo.GetDatosActualizar().Length == 0)
+                {
+                    idTipoSolicitudSimple.Add((int)tipo);
+                }
+            }
+
             await CargarLista();
 
             trabajando = false;
@@ -460,7 +474,7 @@
 
     private async void Descargar()
     {
-        trabajando = false;
+        trabajando = true;
         StateHasChanged();
 
         int[] tickets = items.Where(i => i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToArray();
@@ -490,5 +504,8 @@
                 debug += Environment.NewLine + oResponse.Message;
             }
         }
+
+        trabajando = false;
+        StateHasChanged();
     }// DESCARGAR
 }
