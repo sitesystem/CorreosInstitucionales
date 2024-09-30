@@ -81,3 +81,4 @@ artifacts/
 /publish.zip
 /Docker/SACI/app/publish
 /Docker/SACI/mssql/volumes
+/CorreosInstitucionales/Server/wwwroot/repositorio/envios

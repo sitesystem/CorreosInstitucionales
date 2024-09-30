@@ -19,39 +19,50 @@
             </button>
         </div>
 
-        @if (puede_exportar)
-        {
-            <div class="col-3">
-                <div class="shadow card m-2 p-3">
-
-                    <button class="btn btn-primary form-control mb-3" @onclick="Descargar">
-                        <RadzenIcon Icon="get_app"></RadzenIcon>
+        <div class="col-3">
+            @if (puede_exportar && !trabajando)
+            {
+                <div class="shadow card">
+                    <div class="card-header fw-bold">
                         Exportar
-                    </button>
-                    <div>
-                        <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Generar Archivo Zip
+                    </div>
+
+                    <div class="card-body">
+                        <div class="my-2">
+                            <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Descargar como archivo Zip
+                        </div>
+
+                        <button class="btn btn-primary form-control" @onclick="Descargar">
+                            <RadzenIcon Icon="get_app"></RadzenIcon>
+                            Iniciar Exportación
+                        </button>
                     </div>
                 </div>
-            </div>
-        }
-
-        <div class="col-3">
-            <div class="m-2 p-3 shadow card">
-                @if (items.Count > 0)
-                {
-                    <strong class="mb-2">Importar</strong>
-                    <InputFile OnChange="fuImportacion_OnChange" class="form-control mb-3"></InputFile>
-                }
-                @if (fuImportar is not null)
-                {
-                    <button class="btn btn-primary form-control mb-3" @onclick="Importar">
-                        <RadzenIcon Icon="get_app"></RadzenIcon>
-                        Importar
-                    </button>
-                }
-            </div>
+            }
         </div>
 
+        <div class="col-3">
+            @if (items.Count > 0)
+            {
+                <div class="shadow card">
+                    <div class="card-header fw-bold">
+                        Importar
+                    </div>
+
+                    <div class="card-body">
+                        <InputFile OnChange="fuImportacion_OnChange" class="form-control mb-3"></InputFile>
+
+                        @if (fuImportar is not null)
+                        {
+                            <button class="btn btn-primary form-control" @onclick="Importar">
+                                <RadzenIcon Icon="get_app"></RadzenIcon>
+                                Iniciar Importación
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 
     <div>@((MarkupString)links)</div>
@@ -237,6 +248,30 @@
             </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
+
+    <div class="row my-2">
+        <div class="col-3 offset-9">
+            @if (puede_exportar && !trabajando)
+            {
+                <div class="shadow card">
+                    <div class="card-header fw-bold">
+                        Exportar
+                    </div>
+
+                    <div class="card-body">
+                        <div class="my-2">
+                            <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Descargar como archivo Zip
+                        </div>
+
+                        <button class="btn btn-primary form-control" @onclick="Descargar">
+                            <RadzenIcon Icon="get_app"></RadzenIcon>
+                            Iniciar Exportación
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>
 
 <pre>@debug</pre>
@@ -261,14 +296,14 @@
         if (firstRender)
         {
             await CargarLista();
-
-            trabajando = false;
-            StateHasChanged();
         }
     }
 
     private async Task CargarLista()
     {
+        trabajando = true;
+        StateHasChanged();
+
         Response<List<RequestDTO_Solicitud>>? request = await servicioSolicitud.GetAllDataByProgressAsync(estados);
 
         if (request is not null && request.Data is not null)
@@ -282,6 +317,9 @@
                 debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {request.Message}";
             }
         }
+
+        trabajando = false;
+        StateHasChanged();
     }
 
     private void fuImportacion_OnChange(InputFileChangeEventArgs e)

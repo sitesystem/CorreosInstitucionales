@@ -15,33 +15,42 @@
             <h1>@Title</h1>
             <hr />
 
-            <button class="btn btn-primary" @onclick="CargarLista">
+            <button class="btn btn-secondary" @onclick="CargarLista">
                 Recargar Listado
             </button>
         </div>
-        @if (puede_exportar)
-        {
-            <div class="col-4 offset-2">
-                <div class="shadow card m-2 p-3">
-                
-                    <button class="btn btn-primary form-control mb-3" @onclick="Descargar">
-                        <RadzenIcon Icon="get_app"></RadzenIcon>
+        
+        <div class="col-3"></div>
+
+        <div class="col-3">
+            @if (puede_exportar && !trabajando)
+            {
+                <div class="shadow card">
+                    <div class="card-header fw-bold">
                         Exportar
-                    </button>
-                    <div>
-                        <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Generar Archivo Zip
+                    </div>
+
+                    <div class="card-body">
+                        <div class="my-2">
+                            <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Descargar como archivo Zip
+                        </div>
+
+                        <button class="btn btn-primary form-control" @onclick="Descargar">
+                            <RadzenIcon Icon="get_app"></RadzenIcon>
+                            Iniciar Exportación
+                        </button>
                     </div>
 
                     <div>@links</div>
                 </div>
-            </div>
-        }
+            }
+        </div>
 
     </div>
 
     <div>@((MarkupString)links)</div>
 
-    @if (!cargado)
+    @if (trabajando)
     {
         <div class="row my-4">
             <div class="col text-center">
@@ -56,7 +65,7 @@
                     FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestDTO_Solicitud"
-                    Visible=@cargado>
+                    Visible=@(!trabajando)>
         <Columns>
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
@@ -70,37 +79,55 @@
                     <br />
                     <ul>
                         <li>
+                            <strong>CURP:</strong> 
                             @item.SolIdUsuarioNavigation.UsuCurp
                         </li>
                         <li>
-                            @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
-                        </li>
-                        @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
-                        {
-                            <li>
+                            @if (alumno_o_egresado.Contains(item.SolIdUsuarioNavigation.UsuIdTipoPersonal))
+                            {
+                                <strong>Número de Boleta:</strong>
+                                @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
+                            }
+                            else
+                            {
+                                <strong>Número de Empleado:</strong>
+                                @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
+                            }
+                            @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
+                            {
+                                <strong>Número de Boleta de Maestría</strong>
                                 @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
-                            </li>
-                        }
-                        <li style="white-space: pre-wrap">
-                            @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva
+                            }
+                        </li>
+                        
+                        <li>
+                            <strong>Correo Personal</strong>
+                            
+                            <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva</div>
+                            
                         </li>
 
                         <li style="white-space: pre-wrap">
-                            @item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta
+                            <strong>Correo Institucional</strong>
+
+                            <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta</div>
+                            
                         </li>
 
+                        <li>
+                            <strong>Número de Celular</strong>
+                            <br />
+                            @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
+                        </li>
                     </ul>
                 </Template>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Filterable="true" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    <strong>
-                        @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion    
-                    </strong>
-                    <br />
-                    <p style="white-space: pre-wrap">@item.SolObservacionesSolicitud</p>
-                    
+                    <strong>@item.SolIdTipoSolicitudNavigation!.TiposolDescripcion</strong>
+                    <p style="white-space: pre-wrap" class="my-2">@item.SolObservacionesSolicitud</p>
+                    <div class="text-end">@item.SolFechaHoraCreacion</div>
                 </Template>
             </RadzenDataGridColumn>
 
@@ -217,6 +244,30 @@
             </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
+
+    <div class="row my-2">
+        <div class="col-3 offset-9">
+            @if (puede_exportar && !trabajando)
+            {
+                <div class="shadow card">
+                    <div class="card-header fw-bold">
+                        Exportar
+                    </div>
+
+                    <div class="card-body">
+                        <div class="my-2">
+                            <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Descargar como archivo Zip
+                        </div>
+
+                        <button class="btn btn-primary form-control" @onclick="Descargar">
+                            <RadzenIcon Icon="get_app"></RadzenIcon>
+                            Iniciar Exportación
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>
 
 <pre>@debug</pre>
@@ -225,7 +276,7 @@
 {
     private string Title = "Solicitudes Pendientes";
 
-    private bool cargado { get; set; } = false;
+    private bool trabajando { get; set; } = false;
     private bool generando = false;
     private bool exportar_zip = false;
     private string links = string.Empty;
@@ -235,6 +286,12 @@
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
 
     private readonly int[] estados = { (int)TipoEstadoSolicitud.ALTA, (int)TipoEstadoSolicitud.PENDIENTE };
+    private readonly int[] alumno_o_egresado =
+    {
+        (int)TipoPersonal.ALUMNO,
+        (int)TipoPersonal.EGRESADO,
+        (int)TipoPersonal.MAESTRIA,
+    };
 
     private bool puede_exportar
     {
@@ -260,7 +317,7 @@
 
     private async Task CargarLista()
     {
-        cargado = false;
+        trabajando = true;
         StateHasChanged();
 
         Response<List<RequestDTO_Solicitud>>? request = await servicioSolicitud.GetAllDataByProgressAsync(estados);
@@ -277,13 +334,13 @@
             }
         }
 
-        cargado = true;
+        trabajando = false;
         StateHasChanged();
     }
 
     private async void Descargar()
     {
-        cargado = false;
+        trabajando = true;
         StateHasChanged();
 
         int[] tickets = items.Where(i => i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToArray();

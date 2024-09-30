@@ -10,7 +10,7 @@
             <h1>@Title</h1>
             <hr />
 
-            <button class="btn btn-primary" @onclick="CargarLista">
+            <button class="btn btn-secondary" @onclick="CargarLista">
                 Recargar Listado
             </button>
         </div>
@@ -141,14 +141,14 @@
         if (firstRender)
         {
             await CargarLista();
-
-            cargado = true;
-            StateHasChanged();
         }
     }
 
     private async Task CargarLista()
     {
+        cargado = false;
+        StateHasChanged();
+
         Response<List<RequestDTO_Solicitud>>? request = await servicioSolicitud.GetAllDataByProgressAsync(estados);
 
         if (request is not null && request.Data is not null)
@@ -162,5 +162,8 @@
                 debug += $"{Environment.NewLine}<span class=\"text-danger fw-bold\">[ERROR]<span> {request.Message}";
             }
         }
+
+        cargado = true;
+        StateHasChanged();
     }
 }
