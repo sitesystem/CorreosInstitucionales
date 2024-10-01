@@ -35,7 +35,7 @@
                             <ChildContent>
                                 <RadzenTextBox Name="@($@"names_{TipoPersonal}")" @bind-Value="@oUsuario.UsuNombre" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200" Placeholder="Escribe tu(s) nombre(s)"
                                                @oninput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
-                                               onkeypress="return /^[a-zA-ZñÑ. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                               onkeypress="return /^[a-zA-Z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                         </RadzenFormField>
@@ -48,7 +48,7 @@
                             <ChildContent>
                                 <RadzenTextBox Name="@($@"lastName1_{TipoPersonal}")" @bind-Value="@oUsuario.UsuPrimerApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150" Placeholder="Primer Apellido"
                                                @oninput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
-                                               onkeypress="return /^[a-zA-ZñÑ. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                               onkeypress="return /^[a-zA-Z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
@@ -61,7 +61,7 @@
                             <ChildContent>
                                 <RadzenTextBox Name="@($@"lastName2_{TipoPersonal}")" @bind-Value="@oUsuario.UsuSegundoApellido" MinLength="0" MaxLength="150" Placeholder="Segundo Apellido"
                                                @oninput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
-                                               onkeypress="return /^[a-zA-ZñÑ. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                               onkeypress="return /^[a-zA-Z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                         </RadzenFormField>

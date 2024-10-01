@@ -37,7 +37,7 @@ public class RequestDTO_Usuario
     [Column("usuNombre")]
     [StringLength(200)]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NOMBRE(S) requerido.")]
-    [RegularExpression("^[a-zA-ZñÑ. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
+    [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
     public string UsuNombre { get; set; } = null!;
 
     /// <summary>
@@ -46,7 +46,7 @@ public class RequestDTO_Usuario
     [Column("usuPrimerApellido")]
     [StringLength(150)]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo PRIMER APELLIDO requerido.")]
-    [RegularExpression("^[a-zA-ZñÑ. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
+    [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
     public string UsuPrimerApellido { get; set; } = null!;
 
     /// <summary>
@@ -54,7 +54,7 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuSegundoApellido")]
     [StringLength(150)]
-    [RegularExpression("^[a-zA-ZñÑ. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
+    [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
     public string? UsuSegundoApellido { get; set; }
 
     /// <summary>
