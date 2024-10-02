@@ -458,7 +458,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     {
                         logs.Add("EL ARCHIVO NO CUENTA CON REGISTROS.");
                     }
-                    
+
+                    List<MtTbSolicitudesTicket> notificar = new();
+
                     List<MtTbSolicitudesTicket> solicitudes = await _db.MtTbSolicitudesTickets
                         .Where
                         (
@@ -470,16 +472,28 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         .ToListAsync();
 
                     logs.Add($"{Environment.NewLine}SE ACTUALIZARÁN {solicitudes.Count} PENDIENTE{(solicitudes.Count == 1 ? string.Empty : "S")} DE {registros.Count} REGISTRO{(registros.Count == 1 ? string.Empty : "S")} DEL ARCHIVO...");
+
+                    logs.Add(RegistroImportacion.GetHeaders());
+
                     
-                    //TODO: Cambio de asignaciones deacuerdo al tipo de solicitud
 
                     solicitudes.ForEach(solicitud =>
                     {
                         registro_actual = registros[solicitud.SolIdUsuarioNavigation.UsuCurp];
-                        logs.Add(registro_actual.ToString());
+                        registro_actual.Ticket = solicitud.IdSolicitudTicket.ToString();
 
                         datos_a_actualizar = ((TipoSolicitud)solicitud.SolIdTipoSolicitud).GetDatosActualizar();
-                        actualizar_todo = datos_a_actualizar.Contains(TipoDatoXLSX.TODO);
+                        
+                        List<string> columnas_actualizar = new();
+
+                        foreach(TipoDatoXLSX columna in datos_a_actualizar)
+                        {
+                            columnas_actualizar.Add(columna.GetNombre());
+                        }
+
+                        string s_columnas_actualizar = string.Join("|", columnas_actualizar);
+
+                        logs.Add($"{registro_actual} -> {s_columnas_actualizar}");
 
                         if (datos_a_actualizar.Contains(TipoDatoXLSX.NINGUNO))
                         {
@@ -487,26 +501,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             return;
                         }
                         
-                        if (string.IsNullOrEmpty(registro_actual.Accion))
-                        {
-                            logs.Add($"\t - ERROR: SE ESPERABA QUE LA COLUMNA DE ACCIÓN NO ESTÉ VACÍA.");
-                            return;
-                        }                        
-
-                        if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CORREO_PERSONAL))
-                        {
-                            if(string.IsNullOrEmpty(registro_actual.CorreoPersonal))
-                            {
-                                logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO PERSONAL NO ESTÉ VACÍA.");
-                                return;
-                            }
-                            solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaAnterior = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
-                            solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva = registro_actual.CorreoPersonal;
-
-                            logs.Add($"\t - SE ACTUALIZÓ EL CORREO PERSONAL");
-                        }
-
-                        if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CORREO_INSTITUCIONAL))
+                        if (datos_a_actualizar.Contains(TipoDatoXLSX.CORREO_INSTITUCIONAL))
                         {
                             if (string.IsNullOrEmpty(registro_actual.CorreoInstitucional))
                             {
@@ -517,7 +512,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             logs.Add($"\t - SE ACTUALIZÓ EL CORREO INSTITUCIONAL");
                         }
 
-                        if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CONTRA))
+                        if (datos_a_actualizar.Contains(TipoDatoXLSX.CONTRA))
                         {
                             if (string.IsNullOrEmpty(registro_actual.Clave))
                             {
@@ -528,44 +523,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             logs.Add($"\t - SE ACTUALIZÓ LA CONTRASEÑA");
                         }
 
-                        if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.CELULAR))
-                        {
-                            if (string.IsNullOrEmpty(registro_actual.Celular))
-                            {
-                                logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE NÚMERO DE CELULAR NO ESTÉ VACÍA.");
-                                return;
-                            }
-
-                            solicitud.SolIdUsuarioNavigation.UsuNoCelularAnterior = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo;
-                            solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo = registro_actual.Celular;
-
-                            logs.Add($"\t - SE ACTUALIZÓ EL NÚMERO DE CELULAR");
-                        }
-
-                        if (actualizar_todo || datos_a_actualizar.Contains(TipoDatoXLSX.EXTENSION))
-                        {
-                            if (string.IsNullOrEmpty(registro_actual.NoExtension    ))
-                            {
-                                logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE NÚMERO DE EXTENSIÓN NO ESTÉ VACÍA.");
-                                return;
-                            }
-
-                            solicitud.SolIdUsuarioNavigation.UsuNoExtensionAnterior = solicitud.SolIdUsuarioNavigation.UsuNoExtension;
-                            solicitud.SolIdUsuarioNavigation.UsuNoExtension = registro_actual.NoExtension;
-
-                            logs.Add($"\t - SE ACTUALIZÓ EL NÚMERO DE EXTENSIÓN");
-                        }
-
                         solicitud.SolRespuestaDcyC = registro_actual.Accion;
                         solicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.ATENDIDA;
-                        //solicitud.SolValidacionDatos = true;
+
+                        notificar.Add(solicitud);
                     });
 
                     int guardados = await _db.SaveChangesAsync();
 
                     if(guardados>0)
                     {
-                        await EnvioMasivoAtendidos(solicitudes);
+                        await EnvioMasivoAtendidos(notificar);
                     }
                     
                 }
