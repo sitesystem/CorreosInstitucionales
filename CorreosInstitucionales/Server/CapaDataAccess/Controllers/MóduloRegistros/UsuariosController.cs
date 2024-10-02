@@ -107,9 +107,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     UsuIdTipoPersonal = model.UsuIdTipoPersonal,
                     // UsuToken = Guid.NewGuid().ToString("D"),
                     // DATOS PERSONALES
-                    UsuNombre = model.UsuNombre.ToUpper(),
-                    UsuPrimerApellido = model.UsuPrimerApellido.ToUpper(),
-                    UsuSegundoApellido = model.UsuSegundoApellido == null ? null: model.UsuSegundoApellido.ToUpper(),
+                    UsuNombre = model.UsuNombre.ToUpper().Trim(),
+                    UsuPrimerApellido = model.UsuPrimerApellido.ToUpper().Trim(),
+                    UsuSegundoApellido = model.UsuSegundoApellido == null ? null: model.UsuSegundoApellido.ToUpper().Trim(),
                     UsuCurp = model.UsuCurp.ToUpper(),
                     UsuFileNameCurp = model.UsuFileNameCurp,
                     UsuNoCelularAnterior = null,
@@ -128,11 +128,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     UsuNoExtension = model.UsuNoExtension,
                     // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                     UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior,
-                    UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva,
+                    UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva.Trim(),
                     UsuContrasenia = Encrypt.GetSHA256(model.UsuContrasenia),
                     UsuRecuperarContrasenia = false,
                     // DATOS DEL CORREO INSTITUCIONAL
-                    UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta,
+                    UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta.Trim(),
                     UsuCorreoInstitucionalContrasenia = model.UsuCorreoInstitucionalContrasenia,
                     // OTROS DATOS
                     UsuFechaHoraAlta = DateTime.Now,
@@ -175,10 +175,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     oUsuario.UsuIdRol = model.UsuIdRol;
                     oUsuario.UsuIdTipoPersonal = model.UsuIdTipoPersonal;
                     // DATOS PERSONALES
-                    oUsuario.UsuNombre = model.UsuNombre.ToUpper();
-                    oUsuario.UsuPrimerApellido = model.UsuPrimerApellido.ToUpper();
-                    oUsuario.UsuSegundoApellido = model.UsuSegundoApellido?.ToUpper();
-                    oUsuario.UsuCurp = model.UsuCurp.ToUpper();
+                    oUsuario.UsuNombre = model.UsuNombre.ToUpper().Trim();
+                    oUsuario.UsuPrimerApellido = model.UsuPrimerApellido.ToUpper().Trim();
+                    oUsuario.UsuSegundoApellido = model.UsuSegundoApellido?.ToUpper().Trim();
+                    oUsuario.UsuCurp = model.UsuCurp.ToUpper().Trim();
                     oUsuario.UsuFileNameCurp = model.UsuFileNameCurp;
                     oUsuario.UsuNoCelularAnterior = model.UsuNoCelularAnterior;
                     oUsuario.UsuNoCelularNuevo = model.UsuNoCelularNuevo;
@@ -196,11 +196,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     oUsuario.UsuNoExtension = model.UsuNoExtension;
                     // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                     oUsuario.UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior;
-                    oUsuario.UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva;
+                    oUsuario.UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva.Trim();
                     oUsuario.UsuContrasenia = model.UsuContrasenia;
                     oUsuario.UsuRecuperarContrasenia = false;
                     // DATOS DEL CORREO INSTITUCIONAL
-                    oUsuario.UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta;
+                    oUsuario.UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta.Trim();
                     oUsuario.UsuCorreoInstitucionalContrasenia = model.UsuCorreoInstitucionalContrasenia;
                     // OTROS DATOS
                     // oUsuario.UsuFechaHoraAlta = DateTime.UtcNow;
@@ -327,25 +327,25 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
             string basedir = ServerFS.GetBaseDir(true);
 
-            RandomItemPicker<string> nombres_h = new RandomItemPicker<string>($"{basedir}/assets/nombres_h.txt");
-            RandomItemPicker<string> nombres_m = new RandomItemPicker<string>($"{basedir}/assets/nombres_m.txt");
-            RandomItemPicker<string> apellidos = new RandomItemPicker<string>($"{basedir}/assets/apellidos.txt");
+            RandomItemPicker<string> nombres_h = new ($"{basedir}/assets/nombres_h.txt");
+            RandomItemPicker<string> nombres_m = new ($"{basedir}/assets/nombres_m.txt");
+            RandomItemPicker<string> apellidos = new ($"{basedir}/assets/apellidos.txt");
 
             RandomItemPicker<TipoPersonal> rol = new RandomItemPicker<TipoPersonal>
             (
                 new RandomItem<TipoPersonal>[]
                 {
-                    new RandomItem<TipoPersonal>(50,    TipoPersonal.ALUMNO),
-                    new RandomItem<TipoPersonal>(10,    TipoPersonal.EGRESADO),
-                    new RandomItem<TipoPersonal>(10,    TipoPersonal.MAESTRIA),
-                    new RandomItem<TipoPersonal>(10,    TipoPersonal.DOCENTE),
-                    new RandomItem<TipoPersonal>(10,    TipoPersonal.HONORARIOS),
-                    new RandomItem<TipoPersonal>(5,     TipoPersonal.ADMINISTRATIVO),
-                    new RandomItem<TipoPersonal>(5,     TipoPersonal.PLATAFORMA_SACI),
+                    new (50,    TipoPersonal.ALUMNO),
+                    new (10,    TipoPersonal.EGRESADO),
+                    new (10,    TipoPersonal.MAESTRIA),
+                    new (10,    TipoPersonal.DOCENTE),
+                    new (10,    TipoPersonal.HONORARIOS),
+                    new (5,     TipoPersonal.ADMINISTRATIVO),
+                    new (5,     TipoPersonal.PLATAFORMA_SACI),
                 }
             );
 
-            RandomItemPicker<string> estados = new RandomItemPicker<string>
+            RandomItemPicker<string> estados = new
             (
                 [
                     "AS", "BC", "BS", "CC", "CL", "CM", "CS", "CH",
@@ -369,7 +369,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             int anios_estudio = 0;
             int anios_egreso = 0;
 
-            List<MpTbUsuario> registros = new();
+            List<MpTbUsuario> registros = [];
 
             try
             {

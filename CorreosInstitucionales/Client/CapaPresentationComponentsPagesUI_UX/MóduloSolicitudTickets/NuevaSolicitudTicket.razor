@@ -154,53 +154,85 @@
                                                                   Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
                                                                   Complete="@(args => OnCompleteFiles(args))" />
                                                 </ChildContent>
-                                                <Helper><RadzenText TextStyle="TextStyle.Caption" Text="(Tira de Materias) del Último Semestre Cursado / SIP-10" /></Helper>
+                                                <Helper><RadzenText TextStyle="TextStyle.Caption" Text="(Tira de Materias) del Periodo Escolar Actual / SIP-10" /></Helper>
                                             </RadzenFormField>
                                             <ValidationMessage For="@(() => oSolicitudTicket.SolFileNameComprobanteInscripcion)" />
                                             <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeComprobanteInscripcion)" />
                                         }
 
-                                        <!-- ******************************************************************* DATOS DE CAMBIO DE NO. CELULAR O CORREO PERSONAL ******************************************************************* -->
-                                        <RadzenFormField Text="@($@"Número de Celular Actual")" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleNoCelularNuevo">
-                                            <Start><RadzenIcon Icon="phone_iphone" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                        <!-- ******************************************************************* DATOS DE CAMBIO DE NO. CELULAR ******************************************************************* -->
+                                        <RadzenFieldset AllowCollapse="false" ExpandTitle="¿Recuerdas tu Número de Celular Anterior?" CollapseTitle="¿Recuerdas tu Número de Celular Anterior?"
+                                                        ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 w-100 mt-3" Visible="@isVisibleNoCelularAnteriorActual">
+                                            <HeaderTemplate>
+                                                <span class="d-inline-flex align-items-center align-middle">
+                                                    <RadzenIcon Icon="phone_iphone" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">¿Recuerdas tu Número de Celular Anterior?</b>
+                                                </span>
+                                            </HeaderTemplate>
                                             <ChildContent>
-                                                <RadzenMask Name="@($@"currentPhoneNumber")" @bind-Value="@oResponseUsuario.Data.UsuNoCelularNuevo" MinLength="0" MaxLength="20"
-                                                            Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" Disabled="true" ReadOnly="true" />
+                                                <RadzenCheckBox TValue="bool" @bind-Value="isCheckedPhoneNumber" Name="@($@"forgotPhoneNumber")"
+                                                                Change="@(args => oSolicitudTicket.SolNoCelularAnterior = args ? "" : "No lo recuerdo")" Disabled="false" ReadOnly="false" />
+                                                <RadzenLabel Text="@rememberPhoneNumber" Component="forgotPhoneNumber" class="rz-ms-2" Visible="@isVisibleNoCelularAnteriorActual" />
                                             </ChildContent>
-                                            <Helper></Helper>
-                                        </RadzenFormField>
+                                        </RadzenFieldset>
 
-                                        <RadzenFormField Text="@($@"Número de Celular Nuevo")" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleNoCelularNuevo">
-                                            <Start><RadzenIcon Icon="phone_iphone" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                        <RadzenFormField Text="@($@"Número de Celular Anterior")" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleNoCelularAnteriorActual">
+                                            <Start><RadzenIcon Icon="mobile_off" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent>
-                                                <RadzenMask Name="@($@"newPhoneNumber")" @bind-Value="@oSolicitudTicket.SolNoCelularNuevo" MinLength="0" MaxLength="20" style="border-bottom: 3px solid red;"
+                                                <RadzenMask Name="@($@"oldPhoneNumber")" @bind-Value="@oSolicitudTicket.SolNoCelularAnterior" MinLength="0" MaxLength="20" style="border-bottom: 3px solid red;"
+                                                            Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" Disabled="@(!isCheckedPhoneNumber)" ReadOnly="@(!isCheckedPhoneNumber)" />
+                                            </ChildContent>
+                                            <End><RadzenIcon Icon="dialpad" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></End>
+                                            <Helper><RadzenText Text="No. de Celular con 10 dígitos que fué olvidado/perdido." TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" /></Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolNoCelularAnterior)" hidden="@(!isVisibleNoCelularAnteriorActual)" />
+
+                                        <RadzenFormField Text="@($@"Número de Celular Actual")" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleNoCelularAnteriorActual">
+                                            <Start><RadzenIcon Icon="security_update_good" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                <RadzenMask Name="@($@"currentPhoneNumber")" @bind-Value="@oSolicitudTicket.SolNoCelularActual" MinLength="0" MaxLength="20" style="border-bottom: 3px solid red;"
                                                             Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" Disabled="false" ReadOnly="false" />
                                             </ChildContent>
-                                            <Helper>
-                                                <RadzenText Text="Sólo No. de Celular con 10 dígitos." TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" />
-                                            </Helper>
+                                            <End><RadzenIcon Icon="dialpad" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></End>
+                                            <Helper><RadzenText Text="No. de Celular en uso (10 dígitos)." TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" /></Helper>
                                         </RadzenFormField>
-                                        <ValidationMessage For="@(() => oSolicitudTicket.SolNoCelularNuevo)" hidden="@(!isVisibleNoCelularNuevo)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolNoCelularActual)" hidden="@(!isVisibleNoCelularAnteriorActual)" />
 
-                                        <RadzenFormField Text="Correo Electrónico Personal Actual" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCuentaCorreoPersonalNuevo">
-                                            <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                        <!-- ******************************************************************* DATOS DE CAMBIO DE CORREO PERSONAL ******************************************************************* -->
+                                        <RadzenFieldset AllowCollapse="false" ExpandTitle="¿Recuerdas tu Correo Electrónico Personal Anterior?" CollapseTitle="¿Recuerdas tu Correo Electrónico Personal Anterior?"
+                                                        ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 w-100 mt-3" Visible="@isVisibleCuentaCorreoPersonalAnteriorActual">
+                                            <HeaderTemplate>
+                                                <span class="d-inline-flex align-items-center align-middle">
+                                                    <RadzenIcon Icon="mail" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">¿Recuerdas tu Correo Electrónico Personal Anterior?</b>
+                                                </span>
+                                            </HeaderTemplate>
                                             <ChildContent>
-                                                <RadzenTextBox Name="currentEmailPersonal" @bind-Value="@oResponseUsuario.Data.UsuCorreoPersonalCuentaNueva" MinLength="0" MaxLength="100" Disabled="true" ReadOnly="true" />
+                                                <RadzenCheckBox TValue="bool" @bind-Value="isCheckedEmail" Name="@($@"forgotEmail")"
+                                                                Change="@(args => oSolicitudTicket.SolCorreoPersonalCuentaAnterior = args ? "" : "No lo recuerdo")" Disabled="false" ReadOnly="false" />
+                                                <RadzenLabel Text="@rememberEmail" Component="forgotEmail" class="rz-ms-2" Visible="@isVisibleCuentaCorreoPersonalAnteriorActual" />
                                             </ChildContent>
-                                            <Helper></Helper>
-                                        </RadzenFormField>
-
-                                        <RadzenFormField Text="Correo Electrónico Personal Nuevo" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCuentaCorreoPersonalNuevo">
+                                        </RadzenFieldset>
+                                        
+                                        <RadzenFormField Text="Correo Electrónico Personal Anterior" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCuentaCorreoPersonalAnteriorActual">
                                             <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                             <ChildContent>
-                                                <RadzenTextBox Name="newEmailPersonal" @bind-Value="@oSolicitudTicket.SolCorreoPersonalCuentaNueva" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="100"
+                                                <RadzenTextBox Name="currentEmailPersonal" @bind-Value="@oSolicitudTicket.SolCorreoPersonalCuentaAnterior" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="100"
+                                                               Disabled="@(!isCheckedEmail)" ReadOnly="@(!isCheckedEmail)" />
+                                            </ChildContent>
+                                            <End><RadzenIcon Icon="unsubscribe" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></End>
+                                            <Helper><RadzenText Text="Dominios válidos (gmail, outlook, hotmail, yahoo, msn, live, etc.)" TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" /></Helper>
+                                        </RadzenFormField>
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCorreoPersonalCuentaAnterior)" hidden="@(!isVisibleCuentaCorreoPersonalAnteriorActual)" />
+
+                                        <RadzenFormField Text="Correo Electrónico Personal Actual" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCuentaCorreoPersonalAnteriorActual">
+                                            <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
+                                            <ChildContent>
+                                                <RadzenTextBox Name="newEmailPersonal" @bind-Value="@oSolicitudTicket.SolCorreoPersonalCuentaActual" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="100"
                                                                Disabled="false" ReadOnly="false" />
                                             </ChildContent>
-                                            <Helper>
-                                                <RadzenText Text="Dominios válidos (gmail, outlook, hotmail, yahoo, msn, live, etc.)" TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" />
-                                            </Helper>
+                                            <End><RadzenIcon Icon="mark_email_read" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></End>
+                                            <Helper><RadzenText Text="Dominios válidos (gmail, outlook, hotmail, yahoo, msn, live, etc.)" TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" /></Helper>
                                         </RadzenFormField>
-                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCorreoPersonalCuentaNueva)" hidden="@(!isVisibleCuentaCorreoPersonalNuevo)" />
+                                        <ValidationMessage For="@(() => oSolicitudTicket.SolCorreoPersonalCuentaActual)" hidden="@(!isVisibleCuentaCorreoPersonalAnteriorActual)" />
 
                                         <!-- ******************************************************************* ARCHIVOS PDF CAPTURAS ******************************************************************* -->
                                         <RadzenFormField Text="Archivo de la Captura de la Cuenta Bloqueada" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Visible="@isVisibleCapturaCuentaBloqueada">
@@ -293,6 +325,10 @@ else
     private Response<RequestViewModel_Link>? oLinkReducirTamañoArchivo = new();
     private Response<RequestViewModel_Escuela>? oEscuela = new();
     private int idTipoPersonal;
+    bool isCheckedPhoneNumber = true;
+    bool isCheckedEmail = true;
+    string rememberPhoneNumber => isCheckedPhoneNumber ? "Si lo recuerdo" : "No lo recuerdo";
+    string rememberEmail => isCheckedEmail ? "Si lo recuerdo" : "No lo recuerdo";
 
     // public List<RequestViewModel_EstadoSolicitud> cat_SolIdEstadoSolicitud { get; private set; } = new();
     // public List<RequestViewModel_TipoSolicitud> cat_SolIdTipoSolicitud { get; private set; } = new();
@@ -336,9 +372,12 @@ else
                 oSolicitudTicket.SolFileNameComprobanteInscripcion = "-";
                 oSolicitudTicket.SolFileSizeComprobanteInscripcion = 1L;
             }
-            @* DATOS DE CAMBIO DE NO. DE CELULAR O CORREO PERSONAL *@
-            oSolicitudTicket.SolNoCelularNuevo = "00 00 00 00 00";
-            oSolicitudTicket.SolCorreoPersonalCuentaNueva = "ejemplo@test.com";
+            @* DATOS DE CAMBIO DE NO. DE CELULAR *@
+            oSolicitudTicket.SolNoCelularAnterior = "00 00 00 00 00";
+            oSolicitudTicket.SolNoCelularActual = "00 00 00 00 00";
+            @* DATOS DE CAMBIO DE CORREO PERSONAL *@
+            oSolicitudTicket.SolCorreoPersonalCuentaAnterior = "ejemplo@test.com";
+            oSolicitudTicket.SolCorreoPersonalCuentaActual = "ejemplo@test.com";
             @* DATOS DE ARCHIVOS PDF CAPTURAS *@
             oSolicitudTicket.SolCapturaEscaneoAntivirus = "";
             oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 0L;
@@ -381,8 +420,8 @@ else
     }
 
     @*///////////////////////////////////////////////  LISTA MOTIVOS / INCIDENCIAS DE SOLICITUD DE TICKET  ///////////////////////////////////////////////*@
-    private bool isVisibleNoCelularNuevo = false;
-    private bool isVisibleCuentaCorreoPersonalNuevo = false;
+    private bool isVisibleNoCelularAnteriorActual = false;
+    private bool isVisibleCuentaCorreoPersonalAnteriorActual = false;
     private bool isVisibleCapturaCuentaBloqueada = false;
     private bool isVisibleCapturaEscaneoAntivirus = false;
     private bool isVisibleCapturaError = false;
@@ -405,8 +444,12 @@ else
             oSolicitudTicket.SolFileSizeComprobanteInscripcion = 1L;
         }
         @* DATOS DE CAMBIO DE NO. DE CELULAR O CORREO PERSONAL *@
-        oSolicitudTicket.SolNoCelularNuevo = "00 00 00 00 00";
-        oSolicitudTicket.SolCorreoPersonalCuentaNueva = "a@test.com";
+        oSolicitudTicket.SolNoCelularAnterior = oResponseUsuario.Data.UsuNoCelularAnterior;
+        oSolicitudTicket.SolNoCelularActual = oResponseUsuario.Data.UsuNoCelularNuevo;
+        isCheckedPhoneNumber = true;
+        isCheckedEmail = true;
+        oSolicitudTicket.SolCorreoPersonalCuentaAnterior = oResponseUsuario.Data.UsuCorreoPersonalCuentaAnterior;
+        oSolicitudTicket.SolCorreoPersonalCuentaActual = oResponseUsuario.Data.UsuCorreoPersonalCuentaNueva;
         
         await oUploadFile_SolFileNameCurp.ClearFiles();
         await oUploadFile_SolFileNameComprobanteInscripcion.ClearFiles();
@@ -430,15 +473,16 @@ else
             oSolicitudTicket.SolCapturaError = "-";
             oSolicitudTicket.SolFileSizeCapturaError = 1L;
 
-            isVisibleNoCelularNuevo = false;
-            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleNoCelularAnteriorActual = false;
+            isVisibleCuentaCorreoPersonalAnteriorActual = false;
             isVisibleCapturaCuentaBloqueada = true;
             isVisibleCapturaEscaneoAntivirus = true;
             isVisibleCapturaError = false;
         }
         else if (oSolicitudTicket.SolIdTipoSolicitud == 2)              // 2. Cambio de Correo Electrónico Personal
         {
-            oSolicitudTicket.SolCorreoPersonalCuentaNueva = "";
+            oSolicitudTicket.SolCorreoPersonalCuentaAnterior = "";
+            oSolicitudTicket.SolCorreoPersonalCuentaActual = "";
             @* DATOS DE ARCHIVOS PDF CAPTURAS *@
             oSolicitudTicket.SolCapturaEscaneoAntivirus = "-";
             oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 1L;
@@ -447,15 +491,16 @@ else
             oSolicitudTicket.SolCapturaError = "-";
             oSolicitudTicket.SolFileSizeCapturaError = 1L;
 
-            isVisibleNoCelularNuevo = false;
-            isVisibleCuentaCorreoPersonalNuevo = true;
+            isVisibleNoCelularAnteriorActual = false;
+            isVisibleCuentaCorreoPersonalAnteriorActual = true;
             isVisibleCapturaCuentaBloqueada = false;
             isVisibleCapturaEscaneoAntivirus = false;
             isVisibleCapturaError = false;
         }
         else if (oSolicitudTicket.SolIdTipoSolicitud == 3)              // 3. Cambio de Número de Celular
         {
-            oSolicitudTicket.SolNoCelularNuevo = "";
+            oSolicitudTicket.SolNoCelularAnterior = "";
+            oSolicitudTicket.SolNoCelularActual = "";
             @* DATOS DE ARCHIVOS PDF CAPTURAS *@
             oSolicitudTicket.SolCapturaEscaneoAntivirus = "-";
             oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus = 1L;
@@ -464,8 +509,8 @@ else
             oSolicitudTicket.SolCapturaError = "-";
             oSolicitudTicket.SolFileSizeCapturaError = 1L;
 
-            isVisibleNoCelularNuevo = true;
-            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleNoCelularAnteriorActual = true;
+            isVisibleCuentaCorreoPersonalAnteriorActual = false;
             isVisibleCapturaCuentaBloqueada = false;
             isVisibleCapturaEscaneoAntivirus = false;
             isVisibleCapturaError = false;
@@ -480,8 +525,8 @@ else
             oSolicitudTicket.SolCapturaError = "-";
             oSolicitudTicket.SolFileSizeCapturaError = 1L;
 
-            isVisibleNoCelularNuevo = false;
-            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleNoCelularAnteriorActual = false;
+            isVisibleCuentaCorreoPersonalAnteriorActual = false;
             isVisibleCapturaCuentaBloqueada = false;
             isVisibleCapturaEscaneoAntivirus = false;
             isVisibleCapturaError = false;
@@ -496,8 +541,8 @@ else
             oSolicitudTicket.SolCapturaError = "-";
             oSolicitudTicket.SolFileSizeCapturaError = 1L;
 
-            isVisibleNoCelularNuevo = false;
-            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleNoCelularAnteriorActual = false;
+            isVisibleCuentaCorreoPersonalAnteriorActual = false;
             isVisibleCapturaCuentaBloqueada = false;
             isVisibleCapturaEscaneoAntivirus = false;
             isVisibleCapturaError = false;
@@ -512,8 +557,8 @@ else
             oSolicitudTicket.SolCapturaError = "-";
             oSolicitudTicket.SolFileSizeCapturaError = 1L;
 
-            isVisibleNoCelularNuevo = false;
-            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleNoCelularAnteriorActual = false;
+            isVisibleCuentaCorreoPersonalAnteriorActual = false;
             isVisibleCapturaCuentaBloqueada = false;
             isVisibleCapturaEscaneoAntivirus = false;
             isVisibleCapturaError = false;
@@ -528,8 +573,8 @@ else
             oSolicitudTicket.SolCapturaError = "";
             oSolicitudTicket.SolFileSizeCapturaError = 0L;
 
-            isVisibleNoCelularNuevo = false;
-            isVisibleCuentaCorreoPersonalNuevo = false;
+            isVisibleNoCelularAnteriorActual = false;
+            isVisibleCuentaCorreoPersonalAnteriorActual = false;
             isVisibleCapturaCuentaBloqueada = false;
             isVisibleCapturaEscaneoAntivirus = false;
             isVisibleCapturaError = true;
@@ -659,9 +704,9 @@ else
 			                        <article style='background-color: rgb(255, 255, 255); border-radius:10px; padding:5px;'>
 				                        <p style='text-align:justify; color:black;'>
                                             ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
-                                            Estimad@: <br><b>{oResponseUsuario.Data.UsuNombre} {oResponseUsuario.Data.UsuPrimerApellido} {oResponseUsuario.Data.UsuSegundoApellido}</b><br><br>
+                                            Estimad@: <br><b>{oResponseUsuario.Data.UsuNombre.Trim()} {oResponseUsuario.Data.UsuPrimerApellido.Trim()} {oResponseUsuario.Data.UsuSegundoApellido.Trim()}</b><br><br>
 				                            Se aperturó con éxito el Ticket <b>#{idResponse}</b> de la Solicitud <b>{oTipoSolicitud.Data.TiposolDescripcion}</b>
-                                            con la observación <b>{oSolicitudTicket.SolObservacionesSolicitud}</b>.
+                                            con la observación <b>{oSolicitudTicket.SolObservacionesSolicitud.Trim()}</b>.
 				                        </p>
 			                        </article>
 
@@ -686,11 +731,11 @@ else
 								                        </tr>
 								                        <tr style='background-color: #dddddd;'>
 									                        <td width='200px' style='border: 1px solid black;'><b>✅ Nombre</b></td>
-									                        <td width='300px' style='border: 1px solid black;'>{oResponseUsuario.Data.UsuNombre} {oResponseUsuario.Data.UsuPrimerApellido} {oResponseUsuario.Data.UsuSegundoApellido}</td>
+									                        <td width='300px' style='border: 1px solid black;'>{oResponseUsuario.Data.UsuNombre.Trim()} {oResponseUsuario.Data.UsuPrimerApellido.Trim()} {oResponseUsuario.Data.UsuSegundoApellido.Trim()}</td>
 								                        </tr>
 								                        <tr>
 									                        <td width='200px' style='border: 1px solid black;'><b>✅ Observaciones</b></td>
-									                        <td width='300px' style='border: 1px solid black;'>{oSolicitudTicket.SolObservacionesSolicitud}</td>
+									                        <td width='300px' style='border: 1px solid black;'>{oSolicitudTicket.SolObservacionesSolicitud.Trim()}</td>
 								                        </tr>
 								                        <tr style='background-color: #dddddd;'>
 									                        <td width='200px' style='border: 1px solid black;'><b>✅ Estado</b></td>
@@ -737,17 +782,17 @@ else
 	                        </footer>
                         </body>";
 
-                    oSendWhatsApp.Number = oResponseUsuario.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
+                    oSendWhatsApp.Number = oSolicitudTicket.SolNoCelularActual.Replace(" ", string.Empty);
                     string aviso_alumnos = oResponseUsuario.Data.UsuIdTipoPersonal == 1 ? " 💡 *Para alumnos de nuevo ingreso* te informamos que las solicitudes tendrán una respuesta de un *máximo de 2 meses.*\n\n" : "";
                     oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                            "Estimad@:\n*" + oResponseUsuario.Data.UsuNombre + " " + oResponseUsuario.Data.UsuPrimerApellido + " " + oResponseUsuario.Data.UsuSegundoApellido + ".*\n\n" +
+                                            "Estimad@:\n*" + oResponseUsuario.Data.UsuNombre.Trim() + " " + oResponseUsuario.Data.UsuPrimerApellido.Trim() + " " + oResponseUsuario.Data.UsuSegundoApellido.Trim() + ".*\n\n" +
                                             "Se le informa que se aperturó con éxito el Ticket *#" + idResponse + "* " +
                                             "de la Solicitud *" + oTipoSolicitud.Data.TiposolDescripcion + "*.\n\n" +
                                             "Por este medio se le dan los _Datos de la Solicitud_:\n" +
                                             "✅ Ticket: *#" + idResponse + "*\n" +
                                             "✅ Motivo/Incidencia de la Solicitud: *" + oTipoSolicitud.Data.TiposolDescripcion + "*\n" +
-                                            "✅ Observaciones: *" + oSolicitudTicket.SolObservacionesSolicitud + "*\n" +
+                                            "✅ Observaciones: *" + oSolicitudTicket.SolObservacionesSolicitud.Trim() + "*\n" +
                                             "✅ Estado: *Pendiente* (Se aperturó la Solicitud-Ticket y se ha colocado en la Bandeja de Espera para su pronta atención).\n" +
                                             "✅ Fecha / Hora de Creación: *" + fecha_hora_creación + "*\n\n" +
                                             "*ATENCIÓN:*\n\n" +
@@ -800,7 +845,7 @@ else
                     servicioSendEmail.SendEmailAsync(
                         new RequestDTO_SendEmail()
                         {
-                            EmailTo = oResponseUsuario.Data.UsuCorreoPersonalCuentaNueva,
+                            EmailTo = oSolicitudTicket.SolCorreoPersonalCuentaActual.Trim(),
                             Subject = $@"SACI | SOLICITUD-TICKET #{idResponse}",
                             Body = msgEmail
                         });
@@ -839,11 +884,11 @@ else
                                 </RadzenStack>
                                 <RadzenStack Gap="0px">
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oResponseUsuario.Data.UsuNombre @oResponseUsuario.Data.UsuPrimerApellido @oResponseUsuario.Data.UsuSegundoApellido</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oResponseUsuario.Data.UsuNombre.Trim() @oResponseUsuario.Data.UsuPrimerApellido.Trim() @oResponseUsuario.Data.UsuSegundoApellido.Trim()</b></RadzenText>
                                 </RadzenStack>
                                 <RadzenStack Gap="0px">
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Observaciones:</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oSolicitudTicket.SolObservacionesSolicitud</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1"><b>@oSolicitudTicket.SolObservacionesSolicitud.Trim()</b></RadzenText>
                                 </RadzenStack>
                                 <RadzenStack Gap="0px">
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Estado:</RadzenText>
@@ -892,9 +937,9 @@ else
                     await servicioSendEmail.SendEmailAsync(
                         new RequestDTO_SendEmail()
                         {
-                            EmailTo = oResponseUsuario.Data.UsuCorreoPersonalCuentaNueva,
+                            EmailTo = oSolicitudTicket.SolCorreoPersonalCuentaActual.Trim(),
                             Subject = "SACI | ERROR DE SOLICITUD-TICKET",
-                            Body = $@"Estimad@: {oResponseUsuario.Data.UsuNombre} {oResponseUsuario.Data.UsuPrimerApellido} {oResponseUsuario.Data.UsuSegundoApellido} <br><br>" +
+                            Body = $@"Estimad@: {oResponseUsuario.Data.UsuNombre.Trim()} {oResponseUsuario.Data.UsuPrimerApellido.Trim()} {oResponseUsuario.Data.UsuSegundoApellido.Trim()} <br><br>" +
                                    "Solicitud-Ticket NO exitosa en el <b>Sistema de Atención para Correos Institucionales IPN (SACI)</b><br>" +
                                    "Por favor no responder a este correo, acuda a la unidad de informática de tu escuela<br>"
                         });

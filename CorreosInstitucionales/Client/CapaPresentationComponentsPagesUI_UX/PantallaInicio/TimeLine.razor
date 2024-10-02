@@ -154,7 +154,14 @@
                                         <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
                                             <div>Se ha levantado y aperturado una Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket).</b></div>
                                         </RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Justify" class="rz-m-0"><b>@(oSolicitudLastTicket?.Data?.SolFechaHoraCreacion.ToString("dd/MM/yyyy '-' HH:mm:ss 'hrs.'"))</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Justify" class="rz-m-0">
+                                            <RadzenIcon Icon="calendar_month" IconColor="@Colors.Base900" Style="font-size:20px;" />
+                                            <b>&ensp;@(oSolicitudLastTicket?.Data?.SolFechaHoraCreacion.ToString("dd/MM/yyyy"))</b>
+                                        </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Justify" class="rz-m-0">
+                                            <RadzenIcon Icon="schedule" IconColor="@Colors.Base900" Style="font-size:20px;" />
+                                            <b>&ensp;@(oSolicitudLastTicket?.Data?.SolFechaHoraCreacion.ToString("hh:mm:ss tt"))</b>
+                                        </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
                             </RadzenTimelineItem>

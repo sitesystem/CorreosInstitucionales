@@ -145,7 +145,7 @@ public class RequestDTO_Usuario
     /// </summary>
     [Column("usuFileNameComprobanteInscripcion")]
     [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO adjuntado debe ser máximo de 200 caracteres.")]
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO (Tira de Materias) del Último Semestre Cursado requerido.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO (Tira de Materias) del Periodo Escolar Actual requerido.")]
     public string? UsuFileNameComprobanteInscripcion { get; set; }
 
     /// <summary>

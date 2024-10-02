@@ -318,7 +318,28 @@
     private Response<RequestViewModel_Escuela>? oEscuela = new();
     private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true };
 
-    protected override async Task OnInitializedAsync() => oEscuela = await servicioEscuela.GetDataByIdAsync(1);
+    protected override async Task OnInitializedAsync()
+    {
+        oEscuela = await servicioEscuela.GetDataByIdAsync(1);
+
+        @*//  NOTIFICATION TOAST ACTUALIZACIÓN PLATAFORMA SACI  //*@
+        NotificationService.Notify(
+            new NotificationMessage
+            {
+                Severity = NotificationSeverity.Warning,
+                Duration = 10000,
+                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">Actualización de la Plataforma SACI: <br /> 01/10/2024</RadzenText>,
+                DetailContent = ns => @<RadzenButton Text="Cerrar" Click="@(args => ns.Messages.Clear())" />
+                // Summary = "¡Title!",
+                // Detail = "Content"
+            });
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await JSRuntime.InvokeVoidAsync("initCarousel");
+    }
 
     @*///////////////////////////////////////////////  INICIAR SESIÓN  ////////////////////////////////////////////////////////////////////////*@
     private async Task IniciarSesion()
@@ -559,11 +580,5 @@
                 isSpinningHidden = true;
             }
         }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-            await JSRuntime.InvokeVoidAsync("initCarousel");
     }
 }

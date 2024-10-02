@@ -3,17 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
-using CorreosInstitucionales.Shared.CapaEntities.Request;
-using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Shared.Constantes;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
-using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Server.Correos;
 using CorreosInstitucionales.Server.MensajesWA;
-using DocumentFormat.OpenXml.Wordprocessing;
-using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Debug;
+
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.CapaTools;
+using CorreosInstitucionales.Shared.Constantes;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
 {
@@ -239,9 +237,15 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     oUsuario.UsuFileNameComprobanteInscripcion = model.SolFileNameComprobanteInscripcion;
 
                     if (model.SolIdTipoSolicitud == 2)
-                        oUsuario.UsuCorreoPersonalCuentaAnterior = model.SolCorreoPersonalCuentaNueva;
+                    {
+                        oUsuario.UsuCorreoPersonalCuentaAnterior = model.SolCorreoPersonalCuentaAnterior.Trim();
+                        oUsuario.UsuCorreoPersonalCuentaNueva = model.SolCorreoPersonalCuentaActual.Trim();
+                    }
                     else if (model.SolIdTipoSolicitud == 3)
-                        oUsuario.UsuNoCelularAnterior = model.SolNoCelularNuevo;
+                    {
+                        oUsuario.UsuNoCelularAnterior = model.SolNoCelularAnterior;
+                        oUsuario.UsuNoCelularNuevo = model.SolNoCelularActual;
+                    }
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
@@ -256,7 +260,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     SolCapturaEscaneoAntivirus = model.SolCapturaEscaneoAntivirus,
                     SolCapturaCuentaBloqueada = model.SolCapturaCuentaBloqueada,
                     SolCapturaError = model.SolCapturaError,
-                    SolObservacionesSolicitud = model.SolObservacionesSolicitud,
+                    SolObservacionesSolicitud = model.SolObservacionesSolicitud.Trim(),
                     SolIdEstadoSolicitud = model.SolIdEstadoSolicitud,
                     SolValidacionDatos = model.SolValidacionDatos,
                     SolEncuestaCalidadCalificacion = model.SolEncuestaCalidadCalificacion,
@@ -369,7 +373,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 {
                     oSolicitud.SolIdEstadoSolicitud = 5;
                     oSolicitud.SolEncuestaCalidadCalificacion = model.Calificacion;
-                    oSolicitud.SolEncuestaCalidadComentarios = model.Comentarios;
+                    oSolicitud.SolEncuestaCalidadComentarios = model.Comentarios.Trim();
                     oSolicitud.SolFechaHoraEncuesta = DateTime.Now;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;

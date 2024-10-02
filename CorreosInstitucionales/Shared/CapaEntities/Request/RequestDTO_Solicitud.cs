@@ -56,8 +56,8 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP-10
         /// </summary>
         [Column("solFileNameComprobanteInscripcion")]
-        [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO (TIRA DE MATERIAS) del Último Semestre Cursado adjuntado debe ser máximo de 200 caracteres.")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO (TIRA DE MATERIAS) del Último Semestre Cursado requerido.")]
+        [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO (TIRA DE MATERIAS) del Periodo Escolar Actual adjuntado debe ser máximo de 200 caracteres.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del COMPROBANTE DE INSCRIPCIÓN / HORARIO (TIRA DE MATERIAS) del Periodo Escolar Actual requerido.")]
         public string? SolFileNameComprobanteInscripcion { get; set; }
 
         /// <summary>
@@ -67,18 +67,29 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         public long? SolFileSizeComprobanteInscripcion { get; set; }
 
         /*******************************  DATOS DE CAMBIO DE NO. CELULAR O CORREO PERSONAL  *******************************/
-        /// <summary>
-        /// Número Celular Anterior del Usuario
-        /// </summary>
+        // Número de Celular Anterior del Usuario
         [StringLength(20)]
-        [MinLength(14, ErrorMessage = "Verifique el No. DE CELULAR NUEVO que tenga al menos 10 dígitos.")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR NUEVO requerido.")]
-        public string? SolNoCelularNuevo { get; set; }
+        [MinLength(14, ErrorMessage = "Verifique el No. DE CELULAR ANTERIOR que tenga al menos 10 dígitos.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR ANTERIOR requerido.")]
+        public string? SolNoCelularAnterior { get; set; }
 
+        // Número de Celular Actual del Usuario
+        [StringLength(20)]
+        [MinLength(14, ErrorMessage = "Verifique el No. DE CELULAR ACTUAL que tenga al menos 10 dígitos.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR ACTUAL requerido.")]
+        public string SolNoCelularActual { get; set; } = null!;
+
+        // Correo Electrónico Personal Anterior del Usuario
         [StringLength(100)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO PERSONAL NUEVO requerido.")]
-        [RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO PERSONAL inválido. (Formato: xxxxxx@xxx.xx)")]
-        public string? SolCorreoPersonalCuentaNueva { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO PERSONAL ANTERIOR requerido.")]
+        //[RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO PERSONAL ANTERIOR inválido. (Formato: xxxxxx@xxx.xx)")]
+        public string? SolCorreoPersonalCuentaAnterior { get; set; }
+
+        // Correo Electrónico Personal Actual del Usuario
+        [StringLength(100)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO PERSONAL ACTUAL requerido.")]
+        [RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO PERSONAL ACTUAL inválido. (Formato: xxxxxx@xxx.xx)")]
+        public string SolCorreoPersonalCuentaActual { get; set; } = null!;
 
         /*******************************  DATOS DE ARCHIVOS PDF CAPTURAS  *******************************/
         /// <summary>

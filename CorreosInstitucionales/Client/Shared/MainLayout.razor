@@ -1,9 +1,10 @@
 ﻿@inherits LayoutComponentBase
+@inject ThemeService ThemeService
 
 <RadzenComponents />
+<RadzenTheme Theme="default" Wcag="@wcag" />
 
-<style type="text/css">
-</style>
+<style type="text/css"></style>
 
 <AuthorizeView>
     <Authorized>
@@ -55,12 +56,16 @@
                                 </RadzenStack>
                             </Template>
                             <ChildContent>
+                                <RadzenAppearanceToggle />
+                                <RadzenDropDown Name="ThemeDropDown" TValue="string" Value="@ThemeService.Theme" ValueChanged="@ChangeTheme" Data="@Themes.All" TextProperty="@nameof(Theme.Text)" ValueProperty="@nameof(Theme.Value)" />
+                                <RadzenSwitch @bind-Value="@wcag" Name="WCAG" Change="@(args => ThemeService.SetWcag(args))" />
                                 <RadzenButton Variant="Variant.Text" Click="@(() => navigationManager.NavigateTo("/Perfil"))" Text="Perfil" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="account_circle" class="d-block text-start" style="width: 100%" />
                                 <RadzenButton Variant="Variant.Text" Click="@LogOut" Text="Cerrar Sesión" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="logout" class="d-block text-start" style="width: 100%" />
                             </ChildContent>
                         </RadzenProfileMenu>
                     </RadzenCard>
 
+                    <!-- ... Contenido para pantallas pequeñas móviles -->
                     <RadzenCard Variant="Variant.Filled" class="rz-p-0 d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none rz-border-radius-0">
                         <RadzenProfileMenu class="">
                             <Template>
@@ -77,6 +82,9 @@
                                 </RadzenStack>
                             </Template>
                             <ChildContent>
+                                <RadzenAppearanceToggle />
+                                <RadzenDropDown Name="ThemeDropDown" TValue="string" Value="@ThemeService.Theme" ValueChanged="@ChangeTheme" Data="@Themes.All" TextProperty="@nameof(Theme.Text)" ValueProperty="@nameof(Theme.Value)" />
+                                <RadzenSwitch @bind-Value="@wcag" Name="WCAG" Change="@(args => ThemeService.SetWcag(args))" />
                                 <RadzenButton Variant="Variant.Text" Click="@(() => navigationManager.NavigateTo("/Perfil"))" Text="Perfil" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="account_circle" class="d-block text-start" style="width: 100%" />
                                 <RadzenButton Variant="Variant.Text" Click="@LogOut" Text="Cerrar Sesión" Shade="Shade.Darker" ButtonStyle="ButtonStyle.Dark" Icon="logout" class="d-block text-start" style="width: 100%" />
                             </ChildContent>
@@ -221,7 +229,7 @@
 
             var tipoPersonal = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "TipoPersonal")?.Value);
             oResponseTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(tipoPersonal);
-            
+
             int id = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
             oResponseUsuario = await servicioUsuario.GetDataByIdAsync(id);
         }
@@ -234,4 +242,7 @@
         await loginService.Logout();
         navigationManager.NavigateTo("/");
     }
+
+    void ChangeTheme(string value) => ThemeService.SetTheme(value);
+    bool wcag = true;
 }

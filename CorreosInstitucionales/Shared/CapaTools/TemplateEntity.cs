@@ -41,8 +41,10 @@ namespace CorreosInstitucionales.Shared.CapaTools
             {
                 SolFileNameCurp = "-",
                 SolFileNameComprobanteInscripcion = "-",
-                SolNoCelularNuevo = "-",
-                SolCorreoPersonalCuentaNueva = "-",
+                SolNoCelularAnterior = "-",
+                SolNoCelularActual = "-",
+                SolCorreoPersonalCuentaAnterior = "-",
+                SolCorreoPersonalCuentaActual = "-",
                 SolCapturaEscaneoAntivirus = "-",
                 SolCapturaCuentaBloqueada = "-",
                 SolCapturaError = "-",

@@ -84,7 +84,7 @@
                             </ChildContent>
                             <Helper>
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="alert alert-info my-1 p-2"
-                                            Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de No. de Celular, levanta una Solicitud (Ticket)." : "Sólo No. de Celular con 10 dígitos." )}")" />
+                                            Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de No. de Celular, levanta una Solicitud (Ticket)." : "No. de Celular en uso (10 dígitos)." )}")" />
                             </Helper>
                         </RadzenFormField>
                         <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
@@ -724,7 +724,7 @@ else
 			                                <article style='background-color: rgb(255, 255, 255); border-radius:10px; padding:5px;'>
 				                                <p style='text-align:justify; color:black;'>
                                                     ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
-                                                    Estimad@: <br><b>{oUsuario.UsuNombre} {oUsuario.UsuPrimerApellido} {oUsuario.UsuSegundoApellido}</b><br><br>
+                                                    Estimad@: <br><b>{oUsuario.UsuNombre.Trim()} {oUsuario.UsuPrimerApellido.Trim()} {oUsuario.UsuSegundoApellido.Trim()}</b><br><br>
 				                                    Se le informa que su {agregar_actualizar} fué exitoso en la <b>Plataforma SACI</b>
 				                                    de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
                                                     {entrega_credenciales_acceso}
@@ -808,7 +808,7 @@ else
             
             string credenciales_acceso_WA = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
                                             "Por este medio se le hace entrega de sus _Credenciales de Acceso_:\n" +
-                                            "   ✉ Usuario:\n               *" + oUsuario.UsuCorreoPersonalCuentaNueva + "*\n" +
+                                            "   ✉ Usuario:\n               *" + oUsuario.UsuCorreoPersonalCuentaNueva.Trim() + "*\n" +
                                             "   🔑 Contraseña:\n               *" + password + "*\n\n" : "";
 
             oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
@@ -819,7 +819,7 @@ else
                                     credenciales_acceso_WA +
                                     "✅ Rol: *Usuario*\n" +
                                     "✅ Tipo de Personal: *" + oTipoPersonal.Data.TipoperNombre + "*\n" +
-                                    "✅ Nombre: *" + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + ".*\n" +
+                                    "✅ Nombre: *" + oUsuario.UsuNombre.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido.Trim() + "*\n" +
                                     "✅ CURP: *" + oUsuario.UsuCurp + "*\n" +
                                     "✅ No. de Celular: *" + oUsuario.UsuNoCelularNuevo + "*\n" +
                                     "✅ No. de Empleado/Contrato: *" + oUsuario.UsuNumeroEmpleado + "*\n" +
@@ -854,7 +854,7 @@ else
                         servicioSendEmail.SendEmailAsync(
                             new RequestDTO_SendEmail()
                             {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva.Trim(),
                                 Subject = "SACI | REGISTRO DE USUARI@",
                                 Body = msgEmail
                             });
@@ -889,7 +889,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuNombre @oUsuario.UsuPrimerApellido @oUsuario.UsuSegundoApellido</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuNombre.Trim() @oUsuario.UsuPrimerApellido.Trim() @oUsuario.UsuSegundoApellido.Trim()</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">CURP:</RadzenText>
@@ -909,7 +909,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Correo Electrónico Personal:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuCorreoPersonalCuentaNueva</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuCorreoPersonalCuentaNueva.Trim()</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenButton Text="Cerrar"
                                                   BusyText=""
@@ -942,9 +942,9 @@ else
                     {
                         await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
                             {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                                EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva.Trim(),
                                 Subject = "SACI | ERROR DE REGISTRO",
-                                Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
+                                Body = "Estimad@: " + oUsuario.UsuNombre.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido.Trim() + "<br><br>" +
                                        "Registro NO exitoso en el <b>Sistema de Atención para Correos Institucionales (SACI)</b><br>" +
                                        "Por favor no responder a este correo, acuda a la unidad de informática de tu escuela<br>"
                             });
@@ -1025,7 +1025,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuNombre @oUsuario.UsuPrimerApellido @oUsuario.UsuSegundoApellido</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuNombre.Trim() @oUsuario.UsuPrimerApellido.Trim() @oUsuario.UsuSegundoApellido.Trim()</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">CURP:</RadzenText>
@@ -1045,7 +1045,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Correo Electrónico Personal:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuCorreoPersonalCuentaNueva</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuCorreoPersonalCuentaNueva.Trim()</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenAlert Title="Atención:" Text=""
                                                  AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light"
@@ -1123,7 +1123,7 @@ else
                             servicioSendEmail.SendEmailAsync(
                                 new RequestDTO_SendEmail()
                                 {
-                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva.Trim(),
                                     Subject = "SACI | Actualización de Datos",
                                     Body = msgEmail
                                 });
@@ -1137,9 +1137,9 @@ else
                     {
                         await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
                             {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva,
+                                EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva.Trim(),
                                 Subject = "SACI | ERROR EN ACTUALIZACIÓN DE DATOS",
-                                Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
+                                Body = "Estimad@: " + oUsuario.UsuNombre.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido.Trim() + "<br><br>" +
                                        "Actualización de datos NO exitosa en el <b>Sistema de Atención de Correos Institucionales IPN (SACI)</b><br>"
                             });
                     }
