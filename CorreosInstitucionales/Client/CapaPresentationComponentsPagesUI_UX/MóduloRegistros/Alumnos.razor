@@ -1351,12 +1351,12 @@ else
 
                             @*//  ENVÍO DE EMAIL PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
                             servicioSendEmail.SendEmailAsync(
-                            new RequestDTO_SendEmail()
-                                    {
-                                        EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva.Trim(),
-                                        Subject = "SACI | Actualización de Datos",
-                                        Body = msgEmail
-                                    });
+                                new RequestDTO_SendEmail()
+                                {
+                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva.Trim(),
+                                    Subject = "SACI | Actualización de Datos",
+                                    Body = msgEmail
+                                });
 
                             await loginService.Logout();
                         }

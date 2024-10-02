@@ -70,7 +70,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         // Número de Celular Anterior del Usuario
         [StringLength(20)]
         [MinLength(14, ErrorMessage = "Verifique el No. DE CELULAR ANTERIOR que tenga al menos 10 dígitos.")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR ANTERIOR requerido.")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR ANTERIOR requerido.")]
         public string? SolNoCelularAnterior { get; set; }
 
         // Número de Celular Actual del Usuario

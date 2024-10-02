@@ -322,17 +322,18 @@
     {
         oEscuela = await servicioEscuela.GetDataByIdAsync(1);
 
-        @*//  NOTIFICATION TOAST ACTUALIZACIÓN PLATAFORMA SACI  //*@
-        NotificationService.Notify(
-            new NotificationMessage
-            {
-                Severity = NotificationSeverity.Warning,
-                Duration = 10000,
-                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">Actualización de la Plataforma SACI: <br /> 01/10/2024</RadzenText>,
-                DetailContent = ns => @<RadzenButton Text="Cerrar" Click="@(args => ns.Messages.Clear())" />
-                // Summary = "¡Title!",
-                // Detail = "Content"
-            });
+        if (DateTime.Today < new DateTime(2024, 10, 3))
+            @*//  NOTIFICATION TOAST ACTUALIZACIÓN PLATAFORMA SACI  //*@
+            NotificationService.Notify(
+                new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Warning,
+                    Duration = 10000,
+                    SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">Actualización de la Plataforma SACI: <br /> 01/10/2024</RadzenText>,
+                    DetailContent = ns => @<RadzenButton Text="Cerrar" Click="@(args => ns.Messages.Clear())" />
+                    // Summary = "¡Title!",
+                    // Detail = "Content"
+                });
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
