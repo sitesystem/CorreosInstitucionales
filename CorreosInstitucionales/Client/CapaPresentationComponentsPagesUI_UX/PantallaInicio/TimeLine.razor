@@ -558,7 +558,7 @@ else
                     oSendWhatsApp.Number = oUsuario.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
                     oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                            "Estimad@:\n*" + oUsuario.Data.UsuNombre + " " + oUsuario.Data.UsuPrimerApellido + "* " + oUsuario.Data.UsuSegundoApellido + "\n\n" +
+                                            "Estimad@:\n*" + oUsuario.Data.UsuNombre.Trim() + " " + oUsuario.Data.UsuPrimerApellido.Trim() + " " + oUsuario.Data.UsuSegundoApellido.Trim() + "\n\n" +
                                             "Se le informa que su respuesta de la Encuesta de Calidad fué exitosa en la *Plataforma SACI* " +
                                             "de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
                                             "Por este medio se le hace entrega de sus _Credenciales de Acceso_ a la Cuenta de *Correo Electrónico Institucional*:\n\n" +
@@ -587,7 +587,7 @@ else
 			                            <article style='background-color: rgb(255, 255, 255); border-radius:10px; padding:5px;'>
 				                            <p style='text-align:justify; color:black;'>
                                                 ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
-                                                Estimad@: <br><b>{oUsuario.Data.UsuNombre} {oUsuario.Data.UsuPrimerApellido} {oUsuario.Data.UsuSegundoApellido}</b><br><br>
+                                                Estimad@: <br><b>{oUsuario.Data.UsuNombre.Trim()} {oUsuario.Data.UsuPrimerApellido.Trim()} {oUsuario.Data.UsuSegundoApellido.Trim()}</b><br><br>
 				                                Se le informa que su respuesta de la Encuesta de Calidad fué exitosa en la <b>Plataforma SACI</b>
 				                                de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
                                                 <br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>

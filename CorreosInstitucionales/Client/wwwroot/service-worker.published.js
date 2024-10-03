@@ -19,7 +19,7 @@ const manifestUrlList = self.assetsManifest.assets.map(asset => new URL(asset.ur
 async function onInstall(event) {
     console.info('Service worker: Install');
 
-    self.skipWaiting(); // Activate the new service worker as soon as the old one is retired.
+    // self.skipWaiting(); // Activate the new service worker as soon as the old one is retired.
 
     // Fetch and cache all matching items from the assets manifest
     const assetsRequests = self.assetsManifest.assets
