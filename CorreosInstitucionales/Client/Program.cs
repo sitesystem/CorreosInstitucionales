@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 using Radzen;
+using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 using CorreosInstitucionales.Client;
 using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Login;
@@ -69,6 +70,8 @@ builder.Services.AddRadzenComponents();
 // builder.Services.AddScoped<DialogService>();
 // builder.Services.AddScoped<NotificationService>();
 // builder.Services.AddScoped<TooltipService>();
+
+builder.Services.AddPWAUpdater();
 
 builder.Services.AddLogging();
 

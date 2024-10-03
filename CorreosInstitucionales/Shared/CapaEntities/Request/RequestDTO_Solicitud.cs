@@ -70,7 +70,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         // Número de Celular Anterior del Usuario
         [StringLength(20)]
         [MinLength(14, ErrorMessage = "Verifique el No. DE CELULAR ANTERIOR que tenga al menos 10 dígitos.")]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR ANTERIOR requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR ANTERIOR requerido.")]
         public string? SolNoCelularAnterior { get; set; }
 
         // Número de Celular Actual del Usuario
@@ -82,7 +82,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         // Correo Electrónico Personal Anterior del Usuario
         [StringLength(100)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO PERSONAL ANTERIOR requerido.")]
-        //[RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO PERSONAL ANTERIOR inválido. (Formato: xxxxxx@xxx.xx)")]
+        [RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO PERSONAL ANTERIOR inválido. (Formato: xxxxxx@xxx.xx)")]
         public string? SolCorreoPersonalCuentaAnterior { get; set; }
 
         // Correo Electrónico Personal Actual del Usuario

@@ -8,6 +8,8 @@
 
 @layout LoginLayout
 
+<PWAUpdater Text="Nueva versión de SACI" ButtonCaption="Actualizar ahora" Align="PWAUpdater.Aligns.Top" />
+
 <AuthorizeView>
     <Authorized>
         @{
@@ -21,8 +23,7 @@
 
 <RadzenComponents />
 
-<style type="text/css">
-</style>
+<style type="text/css"></style>
 
 <!-- Encabezado de Página (Header Fixed-Top) -->
 <header>
@@ -322,24 +323,26 @@
     {
         oEscuela = await servicioEscuela.GetDataByIdAsync(1);
 
-        if (DateTime.Today < new DateTime(2024, 10, 3))
-            @*//  NOTIFICATION TOAST ACTUALIZACIÓN PLATAFORMA SACI  //*@
-            NotificationService.Notify(
-                new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Warning,
-                    Duration = 10000,
-                    SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">Actualización de la Plataforma SACI: <br /> 01/10/2024</RadzenText>,
-                    DetailContent = ns => @<RadzenButton Text="Cerrar" Click="@(args => ns.Messages.Clear())" />
-                    // Summary = "¡Title!",
-                    // Detail = "Content"
-                });
+        // if (DateTime.Today < new DateTime(2024, 10, 3))
+        //     @*//  NOTIFICATION TOAST ACTUALIZACIÓN PLATAFORMA SACI  //*@
+        //     NotificationService.Notify(
+        //         new NotificationMessage
+        //         {
+        //             Severity = NotificationSeverity.Warning,
+        //             Duration = 10000,
+        //             SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">Actualización de la Plataforma SACI: <br /> 01/10/2024</RadzenText>,
+        //             DetailContent = ns => @<RadzenButton Text="Cerrar" Click="@(args => ns.Messages.Clear())" />
+        //             // Summary = "¡Title!",
+        //             // Detail = "Content"
+        //         });
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
+        {
             await JSRuntime.InvokeVoidAsync("initCarousel");
+        }
     }
 
     @*///////////////////////////////////////////////  INICIAR SESIÓN  ////////////////////////////////////////////////////////////////////////*@

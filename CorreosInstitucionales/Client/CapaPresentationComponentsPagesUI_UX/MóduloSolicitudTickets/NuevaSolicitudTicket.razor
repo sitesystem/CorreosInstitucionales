@@ -444,11 +444,11 @@ else
             oSolicitudTicket.SolFileSizeComprobanteInscripcion = 1L;
         }
         @* DATOS DE CAMBIO DE NO. DE CELULAR O CORREO PERSONAL *@
-        oSolicitudTicket.SolNoCelularAnterior = oResponseUsuario.Data.UsuNoCelularAnterior;
+        oSolicitudTicket.SolNoCelularAnterior = "00 00 00 00 00";
         oSolicitudTicket.SolNoCelularActual = oResponseUsuario.Data.UsuNoCelularNuevo;
         isCheckedPhoneNumber = true;
         isCheckedEmail = true;
-        oSolicitudTicket.SolCorreoPersonalCuentaAnterior = oResponseUsuario.Data.UsuCorreoPersonalCuentaAnterior;
+        oSolicitudTicket.SolCorreoPersonalCuentaAnterior = "ejemplo@test.com";
         oSolicitudTicket.SolCorreoPersonalCuentaActual = oResponseUsuario.Data.UsuCorreoPersonalCuentaNueva;
         
         await oUploadFile_SolFileNameCurp.ClearFiles();

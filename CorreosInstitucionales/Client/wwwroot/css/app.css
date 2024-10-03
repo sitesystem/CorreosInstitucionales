@@ -5,6 +5,15 @@ html, body {
     background: url("../fondo.jpg") repeat center center fixed;
 }
 
+    body .pwa-updater[b-pwa-updater] {
+        --pwa-updater-bar-backcolor: #e67e00;
+        --pwa-updater-font-size: 15px;
+        --pwa-updater-font-family: sans-serif;
+        --pwa-updater-bar-height: 50px;
+        --pwa-updater-bar-color: white;
+        --pwa-updater-bar-z-index: 10;
+    }
+
 h1:focus {
     outline: none;
 }
