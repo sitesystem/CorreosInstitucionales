@@ -127,7 +127,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             RequestDTO_SendEmail correo = new()
             {
-                Subject = "Su solcicitud ha sido atendida por la mesa de control",
+                Subject = "Su solicitud ha sido atendida por la mesa de control",
                 EmailTo = "agmartinezc@ipn.mx",
                 Body = "NO DEFINIDO"
             };
@@ -143,10 +143,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 { "solicitud", null}
             };
 
-            MtTbSolicitudesTicket[] solicitudes = lista.Where(s => s.SolValidacionDatos).ToArray();
-            string dominio = string.Empty;
-
-            foreach (MtTbSolicitudesTicket solicitud in solicitudes)
+            foreach (MtTbSolicitudesTicket solicitud in lista)
             {
                 variables_correo["solicitud"] = solicitud;
 
@@ -177,7 +174,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     mensaje.Message = await renderer.GetHTML<AtendidoWA>(variables_correo);
 
                     Response<string> response = await WA.SendMessage(mensaje);
-                    if (response.Success != 1)
+                    if (response != null && response.Success != 1)
                     {
                         errors.Add($"{mensaje.Number} :  {response.Message}");
                     }
@@ -257,7 +254,61 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         private async Task<List<string>> EnvioMasivoPendientes(List<MtTbSolicitudesTicket> lista, bool debug = false)
         {
-            return await EnvioMasivo<EnProceso, EnProcesoWA>(lista, "Su solicitud ha sido canalizada hacia la mesa de control");
+            string id = Guid.NewGuid().ToString();
+            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/{id}.txt";
+
+            List<string> errors = new();
+
+            WhatsApp WA = new WhatsApp(client);
+
+            RequestDTO_SendEmail correo = new()
+            {
+                Subject = "Su solicitud ha sido canalizada hacia la mesa de control",
+                EmailTo = "agmartinezc@ipn.mx",
+                Body = "NO DEFINIDO"
+            };
+
+            RequestDTO_SendWhatsApp mensaje = new()
+            {
+                Message = "PRUEBA",
+                Number = "5500000000"
+            };
+
+            Dictionary<string, object?> variables_correo = new Dictionary<string, object?>
+            {
+                { "solicitud", null}
+            };
+
+            foreach (MtTbSolicitudesTicket solicitud in lista)
+            {
+                variables_correo["solicitud"] = solicitud;
+
+                correo.EmailTo = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+                mensaje.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty);
+
+                // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
+                if (!Dominios.EsCorreoDePrueba(correo.EmailTo))
+                {
+                    correo.Body = await renderer.GetHTML<EnProceso>(variables_correo);
+                    _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
+                }
+
+
+                if (mensaje.Number != "5500000000")
+                {
+                    mensaje.Message = await renderer.GetHTML<EnProcesoWA>(variables_correo);
+
+                    Response<string> response = await WA.SendMessage(mensaje);
+                    if (response != null && response.Success != 1)
+                    {
+                        errors.Add($"{mensaje.Number} :  {response.Message}");
+                    }
+                }
+
+            }//FOREACH solicitud
+
+            System.IO.File.WriteAllText(archivo, errors.ToString());
+            return errors;
         }// ENVIO  MASIVO (EN PROCESO)
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -369,7 +420,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             string CURP = string.Empty;
 
             TipoDatoXLSX[] datos_a_actualizar = [];
-            bool actualizar_todo = false;
+            //bool actualizar_todo = false;
 
             Dictionary<TipoDatoXLSX, int> columna = new()
             {
