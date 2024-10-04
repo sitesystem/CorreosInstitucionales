@@ -543,7 +543,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 switch(estado)
                 {
                     case TipoEstadoSolicitud.ATENDIDA:
-                        correo.Subject = "Su solcicitud ha sido atendida por la mesa de control";
+                        correo.Subject = "Su solicitud ha sido atendida por la mesa de control";
 
                         switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
                         {
@@ -562,20 +562,26 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                         break;
 
                     case TipoEstadoSolicitud.CANCELADA:
-                        correo.Subject = "Su solcicitud ha sido cancelada";
+                        correo.Subject = "Su solicitud ha sido cancelada";
                         correo.Body = await renderer.GetHTML<Cancelada>(variables_correo);
 
                         mensaje.Message = await renderer.GetHTML<CanceladoWA>(variables_correo);
                         break;
                 }
 
-                // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
-                _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
-                _ = Task.Run(() => _servicioWA.SendWhatsAppAsync(mensaje));
+                await _servicioCorreo.SendEmail(correo);
+
+                HttpResponseMessage oResponse =  await _servicioWA.SendWhatsAppAsync(mensaje);
+                if(!oResponse.IsSuccessStatusCode)
+                {
+                    oRespuesta.Success = 0;
+                    oRespuesta.Data = await oResponse.Content.ReadAsStringAsync();
+                }
             }
             catch (Exception ex)
             {
-                oRespuesta.Message = ex.Message;
+                oRespuesta.Success = 0;
+                oRespuesta.Data = ex.Message;
             }
 
             return Ok(oRespuesta);
