@@ -43,34 +43,46 @@
                     <br />
                     <ul>
                         <li>
+                            <strong>CURP:</strong>
                             @item.SolIdUsuarioNavigation.UsuCurp
                         </li>
                         <li>
-                            @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
-                        </li>
-                        @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
-                        {
-                            <li>
+                            @if (alumno_o_egresado.Contains(item.SolIdUsuarioNavigation.UsuIdTipoPersonal))
+                            {
+                                <strong>Número de Boleta:</strong>
+                                @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
+                            }
+                            else
+                            {
+                                <strong>Número de Empleado:</strong>
+                                @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
+                            }
+                            @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
+                            {
+                                <strong>Número de Boleta de Maestría</strong>
                                 @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
-                            </li>
-                        }
-                        <li style="white-space: pre-wrap">
-                            @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva
+                            }
                         </li>
 
-                        @if (!string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta))
-                        {
-                            <li style="white-space: pre-wrap">
-                                @item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta
-                            </li>
-                        }
-                        
                         <li>
-                            @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
-                            <br />
-                            @item.SolIdUsuarioNavigation!.UsuNoCelularAnterior
+                            <strong>Correo Personal</strong>
+
+                            <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva</div>
+
                         </li>
 
+                        <li style="white-space: pre-wrap">
+                            <strong>Correo Institucional</strong>
+
+                            <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta</div>
+
+                        </li>
+
+                        <li>
+                            <strong>Número de Celular</strong>
+                            <br />
+                            @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
+                        </li>
                     </ul>
                 </Template>
             </RadzenDataGridColumn>
@@ -111,6 +123,12 @@
                 </Template>
             </RadzenDataGridColumn>
 
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Seleccionar" Filterable="false" TextAlign="TextAlign.Center" Frozen="true" Width="120px">
+                <Template Context="item">
+                    <RadzenSwitch @bind-Value=@item.SolValidacionDatos Change="StateHasChanged" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})" />
+                </Template>
+            </RadzenDataGridColumn>
+
         </Columns>
     </RadzenDataGrid>
 </div>
@@ -131,6 +149,12 @@
         (int)TipoEstadoSolicitud.ATENDIDA, 
         (int)TipoEstadoSolicitud.ENCUESTA_CALIDAD, 
         (int)TipoEstadoSolicitud.CANCELADA 
+    };
+    private readonly int[] alumno_o_egresado =
+    {
+        (int)TipoPersonal.ALUMNO,
+        (int)TipoPersonal.EGRESADO,
+        (int)TipoPersonal.MAESTRIA,
     };
 
     private string debug = string.Empty;

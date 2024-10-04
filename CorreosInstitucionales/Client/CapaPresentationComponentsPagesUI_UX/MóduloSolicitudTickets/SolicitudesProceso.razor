@@ -95,25 +95,46 @@
                     <br />
                     <ul>
                         <li>
+                            <strong>CURP:</strong>
                             @item.SolIdUsuarioNavigation.UsuCurp
                         </li>
                         <li>
-                            @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
-                        </li>
-                        @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
-                        {
-                            <li>
+                            @if (alumno_o_egresado.Contains(item.SolIdUsuarioNavigation.UsuIdTipoPersonal))
+                            {
+                                <strong>Número de Boleta:</strong>
+                                @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
+                            }
+                            else
+                            {
+                                <strong>Número de Empleado:</strong>
+                                @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
+                            }
+                            @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
+                            {
+                                <strong>Número de Boleta de Maestría</strong>
                                 @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
-                            </li>
-                        }
-                        <li style="white-space: pre-wrap">
-                            @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva
+                            }
+                        </li>
+
+                        <li>
+                            <strong>Correo Personal</strong>
+
+                            <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva</div>
+
                         </li>
 
                         <li style="white-space: pre-wrap">
-                            @item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta
+                            <strong>Correo Institucional</strong>
+
+                            <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta</div>
+
                         </li>
 
+                        <li>
+                            <strong>Número de Celular</strong>
+                            <br />
+                            @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
+                        </li>
                     </ul>
                 </Template>
             </RadzenDataGridColumn>
@@ -283,6 +304,12 @@
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
     private readonly int[] estados = { (int)TipoEstadoSolicitud.EN_PROCESO };
+    private readonly int[] alumno_o_egresado =
+    {
+        (int)TipoPersonal.ALUMNO,
+        (int)TipoPersonal.EGRESADO,
+        (int)TipoPersonal.MAESTRIA,
+    };
 
     private IBrowserFile? fuImportar = null;
 
@@ -474,6 +501,9 @@
             }
 
             // new KeyValuePair<int, string>(item.IdSolicitudTicket, mensaje));
+
+            debug += Environment.NewLine + "[SERVIDOR]" + Environment.NewLine;
+            debug += await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode)
             {
