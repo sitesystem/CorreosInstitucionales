@@ -45,7 +45,7 @@ namespace CorreosInstitucionales.Shared.Constantes
                 case TipoDatoXLSX.TODO: return "TODO";
                 case TipoDatoXLSX.NINGUNO: return "NINGUNO";
 
-                case TipoDatoXLSX.CORREO_PERSONAL: return "CORREO PERSONAL";
+                case TipoDatoXLSX.CORREO_PERSONAL: return "CORREO PERSONAL ANTERIOR";
                 case TipoDatoXLSX.CORREO_INSTITUCIONAL: return "CORREO INSTITUCIONAL";
                 case TipoDatoXLSX.CONTRA: return "CONTRASEÑA";
                 case TipoDatoXLSX.CELULAR: return "NÚMERO DE CELULAR ANTERIOR";
@@ -118,7 +118,7 @@ namespace CorreosInstitucionales.Shared.Constantes
                 case TipoSolicitud.CAMBIO_CELULAR: return [TipoDatoXLSX.CURP, TipoDatoXLSX.CORREO_INSTITUCIONAL, TipoDatoXLSX.CELULAR, TipoDatoXLSX.CELULAR_NUEVO];
             }
 
-            return [TipoDatoXLSX.CURP,TipoDatoXLSX.ID_EXTERNO, TipoDatoXLSX.EXTENSION, TipoDatoXLSX.CORREO_PERSONAL];
+            return [TipoDatoXLSX.CURP,TipoDatoXLSX.ID_EXTERNO, TipoDatoXLSX.EXTENSION, TipoDatoXLSX.CORREO_PERSONAL_NUEVO];
         }
     }
 }
