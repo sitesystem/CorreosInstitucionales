@@ -43,9 +43,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 if (filterByStatus)
                     list = await _db.MtTbSolicitudesTickets
                                     .Where(st => st.SolIdEstadoSolicitud != 6)
-                                    .Include(u=>u.SolIdUsuarioNavigation)
-                                    .Include(st=>st.SolIdEstadoSolicitudNavigation)
-                                    .Include(st=>st.SolIdTipoSolicitud)
+                                    .Include(u => u.SolIdUsuarioNavigation)
+                                    .Include(st => st.SolIdEstadoSolicitudNavigation)
+                                    .Include(st => st.SolIdTipoSolicitud)
                                     .ToListAsync();
                 else
                     list = await _db.MtTbSolicitudesTickets

@@ -30,13 +30,18 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 var list = new List<MpTbUsuario>();
 
                 if (filterByStatus)
-                    list = await _db.MpTbUsuarios.Where(u => u.UsuStatus.Equals(filterByStatus)).ToListAsync();
+                    list = await _db.MpTbUsuarios.Where(u => u.UsuStatus.Equals(filterByStatus))
+                                                 .Include(r => r.UsuIdRolNavigation)
+                                                 .Include(tp => tp.UsuIdTipoPersonalNavigation)
+                                                 .ToListAsync();
                                     //   .OrderByDescending(x => x.Id)
                                     //   .Skip((actualPage - 1) * Utilities.REGISTERSPERPAGE)
                                     //   .Take(Utilities.REGISTERSPERPAGE)
                                     //   .ToList();
                 else
-                    list = await _db.MpTbUsuarios.ToListAsync();
+                    list = await _db.MpTbUsuarios.Include(r => r.UsuIdRolNavigation)
+                                                 .Include(tp => tp.UsuIdTipoPersonalNavigation)
+                                                 .ToListAsync();
 
                 oResponse.Success = 1;
                 oResponse.Data = list;

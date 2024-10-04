@@ -1,81 +1,124 @@
 ﻿@page "/catalogo/usuarios"
 
-@using CorreosInstitucionales.Shared
-@using CorreosInstitucionales.Shared.CapaTools
-
 @attribute [Authorize(Policy = "[Rol] Ambos")]
-
-@inject DialogService DialogService
 
 <PageTitle>@Title</PageTitle>
 
-    <div class="p-4 rounded-1 bg-white shadow">
+<div class="p-4 rounded-1 bg-white shadow">
         
-        <div class="row mb-4">
-            <div class="col-10">
-                <h1>@Title</h1>
-            </div>
-
-        @if (cargado)
-        {
-            <div class="col-2">
-                <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
-                    Agregar...
-                </button>
-            </div>
-        }
+    <div class="row mb-4">
+        <div class="col-10">
+            <h1>@Title</h1>
         </div>
+
+    @if (cargado)
+    {
+        <div class="col-2">
+            <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
+                Agregar...
+            </button>
+        </div>
+    }
+    </div>
 
     @if(!cargado)
     {
         <Carga/>
     }
 
-    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
-                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
-                    PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@items" TItem="RequestDTO_Usuario" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
-                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems
-                    ExpandMode="DataGridExpandMode.Single"
-                    Visible=@cargado>
+    <RadzenDataGrid @ref="oUsuariosRef" Data="@items" @bind-Value="@selectedItems" TItem="RequestDTO_Usuario" Density="@Density"
+                    AllowFiltering="true" AllowColumnResize="true" AllowColumnReorder="true" AllowAlternatingRows="true" AllowSorting="true"
+                    AllowColumnPicking="true" ColumnsPickerAllowFiltering="true"
+                    AllowPaging="true" PageSize="10" PagerPosition="PagerPosition.TopAndBottom" PagerHorizontalAlign="HorizontalAlign.Center" PagerAlwaysVisible="true"
+                    PageSizeOptions="@(new int[] { 10, 25, 50, 100 })" PageSizeText="registros por página" ShowPagingSummary="true" PagingSummaryFormat="Mostrando página {0} de {1} <b>(Total {2} registros)</b>" Page="@OnPage"
+                    AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowVirtualization="true" GridLines="DataGridGridLines.Both"
+                    FilterMode="FilterMode.Advanced" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    FilterText="Filtrar" EqualsText="Igual a..." NotEqualsText="Distinto de..." ContainsText="Contiene..." StartsWithText="Comienza con..." EndsWithText="Termina con..." DoesNotContainText="No contiene..."
+                    IsNullText="Es nulo" IsEmptyText="Es vacío" IsNotNullText="No es nulo" IsNotEmptyText="No es vacío" AndOperatorText="Y" OrOperatorText="O"
+                    GreaterThanText="Mayor que" GreaterThanOrEqualsText="Mayor o igual que" LessThanText="Menor que" LessThanOrEqualsText="Menor o igual que"
+                    ClearFilterText="Limpiar Filtro" ApplyFilterText="Aplicar"
+                    ColumnsShowingText="columnas visibles" AllColumnsText="Todas las columnas" ColumnsText="Mostrar columnas"
+                    ColumnWidth="500px" SelectionMode="DataGridSelectionMode.Single"
+                    ExpandMode="DataGridExpandMode.Single" Visible=@cargado>
+        <HeaderTemplate>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
+                <RadzenSelectBar @bind-Value="@Density" TextProperty="Text" ValueProperty="Value" Visible="false"
+                                 Data="@(Enum.GetValues(typeof(Density)).Cast<Density>().Select(t => new { Text = $"{t}", Value = t }))" Size="ButtonSize.Small">
+                    @* <Items>
+                    <RadzenSelectBarItem Value="true" Text="Sí" Icon="check_circle" IconColor="@Colors.SuccessDarker" />
+                    <RadzenSelectBarItem Value="false" Text="No" Icon="cancel" IconColor="@Colors.DangerDarker" />
+                    </Items> *@
+                </RadzenSelectBar>
+            </RadzenStack>
+        </HeaderTemplate>
         <Columns>
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="IdUsuario" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="ID" Property="IdUsuario"
+                                  Filterable="true" Frozen="true" Reorderable="true" Resizable="false" Sortable="true" TextAlign="TextAlign.Center" Width="80px">
+                <Template Context="item">
+                    <div class="text-wrap">
+                        <h5>@item.IdUsuario</h5>
+                    </div>
+                </Template>
+            </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Frozen="false" Title="Nombre" Filterable="true" Sortable="true" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Nombre Completo" Property="UsuNombre"
+                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Start" Width="200px">
                 <Template Context="item">
                     @if (item.UsuStatus)
                     {
-                        <text>
-                            <strong>
-                                @item.UsuNombre
-                                @item.UsuPrimerApellido
-                                @item.UsuSegundoApellido
-                            </strong>
+                        <div class="text-wrap">
+                            <text>
+                                <strong>@item.UsuNombre @item.UsuPrimerApellido @item.UsuSegundoApellido</strong>
+                            </text>
                             <br />
-                            @item.UsuCurp
-                        </text>
+                            <small>
+                                @item.UsuIdTipoPersonalNavigation?.TipoperNombre&ensp;(@item.UsuFechaHoraAlta?.ToString("dd/MMM/yyyy HH:mm 'hrs.'"))
+                            </small>
+                        </div>
                     }
                     else
                     {
-                        <del>
-                            <strong>
-                                @item.UsuNombre
-                                @item.UsuPrimerApellido
-                                @item.UsuSegundoApellido
-                            </strong>
+                        <div class="text-wrap">
+                            <del>
+                                <strong>@item.UsuNombre @item.UsuPrimerApellido @item.UsuSegundoApellido</strong>
+                            </del>
                             <br />
-                            @item.UsuCurp
-                        </del>
+                            <small>
+                                @item.UsuIdTipoPersonalNavigation?.TipoperNombre&ensp;(@item.UsuFechaHoraAlta?.ToString("dd/MMM/yyyy HH:mm 'hrs.'"))
+                            </small>
+                        </div>
                     }
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="UsuCorreoPersonalCuentaNueva" Filterable="false" Title="Correo Personal" TextAlign="TextAlign.End" />
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="CURP" Property="UsuCurp"
+                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="120px" />
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="UsuCorreoInstitucionalCuenta" Filterable="false" Title="Correo Institucional" TextAlign="TextAlign.End" />
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="BOLETA" Property="UsuBoletaAlumno"
+                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="100px" />
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Context="item"
-                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Frozen="true" Width="80px"
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="No. DE CELULAR" Property="UsuNoCelularNuevo"
+                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Visible="true" Width="110px" />
+
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Correo Personal" Property="UsuCorreoPersonalCuentaNueva"
+                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.End" Width="150px" />
+
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Correo Institucional" Property="UsuCorreoInstitucionalCuenta"
+                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.End" Width="150px">
+                <Template Context="item">
+                    @if (!string.IsNullOrEmpty(item.UsuCorreoInstitucionalCuenta))
+                    {
+                        <text>
+                            <strong>@item.UsuCorreoInstitucionalCuenta</strong>
+                            <br />
+                            @item.UsuCorreoInstitucionalContrasenia
+                        </text>
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Acciones" Context="item"
+                                  Filterable="false" Frozen="true" Reorderable="false" Resizable="false" Sortable="false" TextAlign="TextAlign.Center" Width="80px"
                                   Visible=@puede_editar>
                 <Template Context="item">
                     <RadzenButton title="Editar..."
@@ -103,10 +146,12 @@
                                   Visible="item.UsuStatus.Equals(false)"
                                   Click="@(async ()=> await CambiarStatus(item, true))" @onclick:stopPropagation="true">
                     </RadzenButton>
-
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
+        <EmptyTemplate>
+            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No hay registros encontrados para mostrar.</p>
+        </EmptyTemplate>
     </RadzenDataGrid>
 </div>
 
@@ -115,7 +160,8 @@
     private string Title = "Usuarios";
     private bool cargado { get; set; } = false;
 
-    private List<RequestDTO_Usuario> items = new List<RequestDTO_Usuario>();
+    private List<RequestDTO_Usuario> items = new();
+    private RadzenDataGrid<RequestDTO_Usuario>? oUsuariosRef = new();
     private IList<RequestDTO_Usuario> selectedItems = new List<RequestDTO_Usuario>();
 
     private bool puede_editar { get; set; } = true;
@@ -127,6 +173,7 @@
     public List<RequestViewModel_TipoPersonal> cat_UsuIdTipoPersonal { get; private set; } = new List<RequestViewModel_TipoPersonal>();
 
     string debug = string.Empty;
+    Density Density = Density.Default;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -155,32 +202,33 @@
 
     private async Task<DocumentoAdjunto<RequestDTO_Usuario>?> MostrarFormulario(RequestDTO_Usuario registro, string titulo_ventana)
     {
-        return await DialogService.OpenAsync<UsuarioEditor>
+        return await DialogModalService.OpenAsync<UsuarioEditor>
                 (
                     titulo_ventana,
                     new Dictionary<string, object>()
                     {
                         {"registro", registro},
-                        {"cat_UsuIdAreaDepto",cat_UsuIdAreaDepto},
-                        {"cat_UsuIdCarrera",cat_UsuIdCarrera},
-                        {"cat_UsuIdRol",cat_UsuIdRol},
-                        {"cat_UsuIdTipoPersonal",cat_UsuIdTipoPersonal}
+                        {"cat_UsuIdAreaDepto", cat_UsuIdAreaDepto},
+                        {"cat_UsuIdCarrera", cat_UsuIdCarrera},
+                        {"cat_UsuIdRol", cat_UsuIdRol},
+                        {"cat_UsuIdTipoPersonal", cat_UsuIdTipoPersonal}
                     },
                     new DialogOptions()
-                        {
-                            ShowClose = false,
-                            Width = "75%"
-                        }
+                    {
+                        ShowClose = false,
+                        Width = "75%"
+                    }
                 );
     }
 
     private void MensajeCarga()
     {
-        DialogService.OpenAsync<Carga>(
-                "Cargando...",
-                new Dictionary<string, object>(),
-                new DialogOptions() { ShowClose = false, Width = "64px" }
-            );
+        DialogModalService.OpenAsync<Carga>
+        (
+            "Cargando...",
+            new Dictionary<string, object>(),
+            new DialogOptions() { ShowClose = false, Width = "64px" }
+        );
     }
 
     private async Task Agregar()
@@ -206,9 +254,9 @@
                 await CargarLista(result.Value.IdUsuario);
             }
 
-            DialogService.Close();
+            DialogModalService.Close();
         }
-    }// AGREGAR
+    } // AGREGAR
 
     private async Task Editar(RequestDTO_Usuario item)
     {
@@ -245,13 +293,13 @@
                 }
             }
         }
-    }//EDITAR
+    } //EDITAR
 
     private async Task CambiarStatus(RequestDTO_Usuario item, bool status)
     {
         string des = status ? "" : "des";
 
-        bool result = await DialogService.OpenAsync<ConfirmarDlg>
+        bool result = await DialogModalService.OpenAsync<ConfirmarDlg>
             (
                 "Confirmar",
                 new Dictionary<string, object>()
@@ -269,5 +317,10 @@
                 await CargarLista(item.IdUsuario);
             }
         }
-    }//CAMBIAR STATUS
+    } //CAMBIAR STATUS
+
+    async Task OnPage(PagerEventArgs args)
+    {
+        //
+    }
 }
