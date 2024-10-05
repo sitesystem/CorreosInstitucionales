@@ -61,6 +61,12 @@
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Nombre Completo" Property="UsuNombre"
                                   Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Start" Width="200px">
+                <HeaderTemplate>
+                    <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
+                          title="<b>Datos del Usuario</b>" data-bs-content="Filtro y búsqueda sólo por el Nombre de pila.">
+                        Nombre Completo (filtro y búsqueda por el Nombre)
+                    </span>
+                </HeaderTemplate>
                 <Template Context="item">
                     @if (item.UsuStatus)
                     {
@@ -175,6 +181,9 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
+        await JSRuntime.InvokeVoidAsync("blazorInit");
+
         if (firstRender)
         {
             items = await WebUtils.ListByStatusAsync(servicioUsuario, false);

@@ -2,10 +2,8 @@
 
 @attribute [Authorize(Policy = "[Rol] Administrador")]
 
-@inject IJSRuntime JsRuntime
-@inject DialogService dialogService
-
 <PageTitle>@Title</PageTitle>
+
 <script src="js/descargar.js?v=1.0.0.9"></script>
 
 <div class="p-4 rounded-1 bg-white shadow">
@@ -13,10 +11,6 @@
         <div class="col-6">
             <h1>@Title</h1>
             <hr />
-
-            <button class="btn btn-secondary" @onclick="CargarLista">
-                Recargar Listado
-            </button>
         </div>
 
         <div class="col-3">
@@ -77,173 +71,234 @@
         </div>
     }
 
-    <RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false"
-                    AllowSorting="true" PageSize="10" AllowPaging="true"
-                    PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@items" TItem="RequestDTO_Solicitud" ColumnWidth="300px"
-                    Visible=@(!trabajando)>
+    <RadzenDataGrid @ref="oSolicitudesRef" Data="@items" @bind-Value="@selectedItems" TItem="RequestDTO_Solicitud" Density="@Density"
+                    AllowFiltering="true" AllowColumnResize="true" AllowColumnReorder="true" AllowAlternatingRows="true" AllowSorting="true"
+                    AllowColumnPicking="true" ColumnsPickerAllowFiltering="true"
+                    AllowPaging="true" PageSize="10" PagerPosition="PagerPosition.TopAndBottom" PagerHorizontalAlign="HorizontalAlign.Center" PagerAlwaysVisible="true"
+                    PageSizeOptions="@(new int[] { 10, 25, 50, 100 })" PageSizeText="registros por página" ShowPagingSummary="true" PagingSummaryFormat="Mostrando página {0} de {1} <b>(Total {2} registros)</b>" Page="@OnPage"
+                    AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowVirtualization="true" GridLines="DataGridGridLines.Both"
+                    FilterMode="FilterMode.Advanced" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    FilterText="Filtrar" EqualsText="Igual a..." NotEqualsText="Distinto de..." ContainsText="Contiene..." StartsWithText="Comienza con..." EndsWithText="Termina con..." DoesNotContainText="No contiene..."
+                    IsNullText="Es nulo" IsEmptyText="Es vacío" IsNotNullText="No es nulo" IsNotEmptyText="No es vacío" AndOperatorText="Y" OrOperatorText="O"
+                    GreaterThanText="Mayor que" GreaterThanOrEqualsText="Mayor o igual que" LessThanText="Menor que" LessThanOrEqualsText="Menor o igual que"
+                    ClearFilterText="Limpiar Filtro" ApplyFilterText="Aplicar"
+                    ColumnsShowingText="columnas visibles" AllColumnsText="Todas las columnas" ColumnsText="Mostrar columnas"
+                    ColumnWidth="300px" SelectionMode="DataGridSelectionMode.Single"
+                    ExpandMode="DataGridExpandMode.Single" Visible=@(!trabajando)>
+        <HeaderTemplate>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
+                <button class="btn btn-secondary" @onclick="CargarLista">
+                    @* <RadzenIcon Icon="refresh" IconColor="@Colors.White" IconStyle="IconStyle.Warning" Style="font-size:20px;" /> *@
+                    Recargar Listado
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
+                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
+                    </svg>
+                </button>
+                <RadzenSelectBar @bind-Value="@Density" TextProperty="Text" ValueProperty="Value" Visible="false"
+                                 Data="@(Enum.GetValues(typeof(Density)).Cast<Density>().Select(t => new { Text = $"{t}", Value = t }))" Size="ButtonSize.Small">
+                    @* <Items>
+                    <RadzenSelectBarItem Value="true" Text="Sí" Icon="check_circle" IconColor="@Colors.SuccessDarker" />
+                    <RadzenSelectBarItem Value="false" Text="No" Icon="cancel" IconColor="@Colors.DangerDarker" />
+                    </Items> *@
+                </RadzenSelectBar>
+            </RadzenStack>
+        </HeaderTemplate>
         <Columns>
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
-
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
-                <Template Context="item">
-                    <strong>
-                        @item.SolIdUsuarioNavigation!.UsuPrimerApellido
-                        @item.SolIdUsuarioNavigation!.UsuSegundoApellido
-                        @item.SolIdUsuarioNavigation!.UsuNombre
-                    </strong>
-                    <br />
-                    <ul>
-                        <li>
-                            <strong>CURP:</strong>
-                            @item.SolIdUsuarioNavigation.UsuCurp
-                        </li>
-                        <li>
-                            @if (alumno_o_egresado.Contains(item.SolIdUsuarioNavigation.UsuIdTipoPersonal))
-                            {
-                                <strong>Número de Boleta:</strong>
-                                @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
-                            }
-                            else
-                            {
-                                <strong>Número de Empleado:</strong>
-                                @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
-                            }
-                            @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
-                            {
-                                <strong>Número de Boleta de Maestría</strong>
-                                @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
-                            }
-                        </li>
-
-                        <li>
-                            <strong>Correo Personal</strong>
-
-                            <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva</div>
-
-                        </li>
-
-                        <li style="white-space: pre-wrap">
-                            <strong>Correo Institucional</strong>
-
-                            <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta</div>
-
-                        </li>
-
-                        <li>
-                            <strong>Número de Celular</strong>
-                            <br />
-                            @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
-                        </li>
-                    </ul>
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="# Ticket" Property="IdSolicitudTicket"
+                                  Filterable="true" Frozen="true" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="150px">
+                <Template Context="data">
+                    <h4 class="text-wrap">@data.IdSolicitudTicket</h4>
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Filterable="true" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Property="SolIdUsuarioNavigation.UsuCurp"
+                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="300px">
+                <HeaderTemplate>
+                    <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
+                          title="<b>Datos del Solicitante</b>" data-bs-content="Filtro y búsqueda por el CURP.">
+                        Solicitante (filtro y búsqueda por el CURP)
+                    </span>
+                </HeaderTemplate>
                 <Template Context="item">
-                    <strong>
-                        @item.SolIdTipoSolicitudNavigation!.TiposolDescripcion
-                    </strong>
-                    <br />
-                    <p style="white-space: pre-wrap">@item.SolObservacionesSolicitud</p>
-                    
+                    <div class="text-start text-wrap">
+                        <strong>
+                            @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                            @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                            @item.SolIdUsuarioNavigation!.UsuNombre
+                        </strong>
+                        <br />
+                        <small>
+                            @item.SolIdUsuarioNavigation?.UsuIdTipoPersonalNavigation?.TipoperNombre
+                        </small>
+                        <br /><br />
+                        <ul>
+                            <li>
+                                <strong>CURP: </strong>
+                                @item.SolIdUsuarioNavigation?.UsuCurp
+                            </li>
+
+                            <li>
+                                @if (alumno_o_egresado.Contains(item.SolIdUsuarioNavigation!.UsuIdTipoPersonal))
+                                {
+                                    <strong>Número de Boleta: </strong>
+                                    @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
+                                }
+                                else
+                                {
+                                    <strong>Número de Empleado: </strong>
+                                    @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
+                                }
+                                @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
+                                {
+                                    <strong>Número de Boleta de Maestría: </strong>
+                                    @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
+                                }
+                            </li>
+
+                            <li>
+                                <strong>Correo Personal actual: </strong>
+                                <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva</div>
+                            </li>
+
+                            <li>
+                                <strong>Correo Institucional: </strong>
+                                @{
+                                    var correo_institucional = !string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta : "no asignado";
+                                }
+                                <div style="white-space: pre-wrap">@correo_institucional</div>
+                            </li>
+
+                            <li>
+                                <strong>Número de Celular actual: </strong>
+                                @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
+                            </li>
+                        </ul>
+                    </div>
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Adjuntos" Filterable="false" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion"
+                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="300px">
+                <HeaderTemplate>
+                    <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
+                          title="<b>Datos de la Solicitud</b>" data-bs-content="Filtro y búsqueda por el tipo o motivo de Solicitud.">
+                        Solicitud (filtro y búsqueda por el tipo o motivo de Solicitud)
+                    </span>
+                </HeaderTemplate>
                 <Template Context="item">
-                    <ul>
-                        <li>
-                            <strong>CURP</strong>
-                            <br />
-                            <a href="@WebUtils.GenerarURLArchivoUsuario(item, TipoDocumento.CURP)"
-                               download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CURP)">
-                                Descargar
-                            </a>
-                            <br />
-                            <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerDocumento(item, TipoDocumento.CURP))">Ver</button>
-                        </li>
+                    <div class="text-start text-wrap">
+                        <strong>@item.SolIdTipoSolicitudNavigation!.TiposolDescripcion</strong>
+                        <p style="white-space: pre-wrap; text-align: justify;" class="my-3">@item.SolObservacionesSolicitud</p>
+                        <div class="text-end">@item.SolFechaHoraCreacion.ToString("dddd',' dd/MMMM/yyyy HH:mm:ss 'hrs.'")</div>
+                    </div>
+                </Template>
+            </RadzenDataGridColumn>
 
-                        @if (item.SolIdUsuarioNavigation!.UsuFileNameComprobanteInscripcion != "-")
-                        {
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Adjuntos"
+                                  Filterable="false" Frozen="false" Reorderable="true" Resizable="true" Sortable="false" TextAlign="TextAlign.Center" Width="250px">
+                <HeaderTemplate>
+                    <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
+                          title="<b>Archivos Adjuntos</b>" data-bs-content="Archivos en PDF requeridos para la revisión y validación de los datos del usuario solicitante.">
+                        Archivos Adjuntos
+                    </span>
+                </HeaderTemplate>
+                <Template Context="item">
+                    <div class="text-start text-wrap">
+                        <ul>
                             <li>
-                                <strong>Comprobante de Inscripción</strong>
+                                <strong>CURP</strong>
                                 <br />
-                                <a href="@WebUtils.GenerarURLArchivoUsuario(item, TipoDocumento.COM_INSCRIPCION)"
-                                   download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.COM_INSCRIPCION)">
+                                <a href="@WebUtils.GenerarURLArchivoUsuario(item, TipoDocumento.CURP)"
+                                   download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CURP)">
                                     Descargar
                                 </a>
                                 <br />
-                                <button class="btn btn-primary form-control"
-                                        @onclick="@(async () => await VerDocumento(item, TipoDocumento.COM_INSCRIPCION))">
-                                    Ver
-                                </button>
+                                <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerDocumento(item, TipoDocumento.CURP))">Ver</button>
                             </li>
-                        }
 
-                        @if ((item.SolCapturaCuentaBloqueada ?? "-") != "-")
-                        {
-                            <li>
-                                <strong>Captura de Bloqueo</strong>
-                                <br />
-                                <a href="@WebUtils.GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_BLOQUEO)"
-                                   download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CAP_BLOQUEO)">
-                                    Descargar
-                                </a>
-                                <br />
-                                <button class="btn btn-primary form-control"
-                                        @onclick="@(async () => await VerDocumento(item, TipoDocumento.CAP_BLOQUEO))">
-                                    Ver
-                                </button>
-                            </li>
-                        }
+                            @if (item.SolIdUsuarioNavigation!.UsuFileNameComprobanteInscripcion != "-")
+                            {
+                                <li>
+                                    <strong>Comprobante de Inscripción</strong>
+                                    <br />
+                                    <a href="@WebUtils.GenerarURLArchivoUsuario(item, TipoDocumento.COM_INSCRIPCION)"
+                                       download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.COM_INSCRIPCION)">
+                                        Descargar
+                                    </a>
+                                    <br />
+                                    <button class="btn btn-primary form-control"
+                                            @onclick="@(async () => await VerDocumento(item, TipoDocumento.COM_INSCRIPCION))">
+                                        Ver
+                                    </button>
+                                </li>
+                            }
 
-                        @if ((item.SolCapturaEscaneoAntivirus ?? "-") != "-")
-                        {
-                            <li>
-                                <strong>Captura de Escaneo de Antivirus</strong>
-                                <br />
-                                <a href="@WebUtils.GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ANTIVIRUS)"
-                                   download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CAP_ANTIVIRUS)">
-                                    Descargar
-                                </a>
-                                <br />
-                                <button class="btn btn-primary form-control"
-                                        @onclick="@(async () => await VerDocumento(item, TipoDocumento.CAP_ANTIVIRUS))">
-                                    Ver
-                                </button>
-                            </li>
-                        }
+                            @if ((item.SolCapturaCuentaBloqueada ?? "-") != "-")
+                            {
+                                <li>
+                                    <strong>Captura de Bloqueo</strong>
+                                    <br />
+                                    <a href="@WebUtils.GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_BLOQUEO)"
+                                       download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CAP_BLOQUEO)">
+                                        Descargar
+                                    </a>
+                                    <br />
+                                    <button class="btn btn-primary form-control"
+                                            @onclick="@(async () => await VerDocumento(item, TipoDocumento.CAP_BLOQUEO))">
+                                        Ver
+                                    </button>
+                                </li>
+                            }
 
-                        @if ((item.SolCapturaError ?? "-") != "-")
-                        {
-                            <li>
-                                <strong>Captura de Error</strong>
-                                <br />
-                                <a href="@WebUtils.GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ERROR)"
-                                   download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CAP_ERROR)">
-                                    Descargar
-                                </a>
-                                <br />
-                                <button class="btn btn-primary form-control"
-                                        @onclick="@(async () => await VerDocumento(item, TipoDocumento.CAP_ERROR))">
-                                    Ver
-                                </button>
-                            </li>
-                        }
-                    </ul>
+                            @if ((item.SolCapturaEscaneoAntivirus ?? "-") != "-")
+                            {
+                                <li>
+                                    <strong>Captura de Escaneo de Antivirus</strong>
+                                    <br />
+                                    <a href="@WebUtils.GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ANTIVIRUS)"
+                                       download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CAP_ANTIVIRUS)">
+                                        Descargar
+                                    </a>
+                                    <br />
+                                    <button class="btn btn-primary form-control"
+                                            @onclick="@(async () => await VerDocumento(item, TipoDocumento.CAP_ANTIVIRUS))">
+                                        Ver
+                                    </button>
+                                </li>
+                            }
 
+                            @if ((item.SolCapturaError ?? "-") != "-")
+                            {
+                                <li>
+                                    <strong>Captura de Error</strong>
+                                    <br />
+                                    <a href="@WebUtils.GenerarURLArchivoRepositorio(item, TipoDocumento.CAP_ERROR)"
+                                       download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.CAP_ERROR)">
+                                        Descargar
+                                    </a>
+                                    <br />
+                                    <button class="btn btn-primary form-control"
+                                            @onclick="@(async () => await VerDocumento(item, TipoDocumento.CAP_ERROR))">
+                                        Ver
+                                    </button>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </Template>
             </RadzenDataGridColumn><!--ARCHIVOS-->
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Seleccionar" Filterable="false" TextAlign="TextAlign.Center" Frozen="true" Width="120px">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Seleccionar"
+                                  Filterable="false" Frozen="true" Reorderable="false" Resizable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
                 <Template Context="item">
-                    <RadzenSwitch @bind-Value=@item.SolValidacionDatos Change="StateHasChanged" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})" />
+                    <RadzenSwitch @bind-Value="@item.SolValidacionDatos" Change="StateHasChanged" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})"
+                                  style="--rz-border-width: 2px;" class="rz-border rz-border-base-400 rz-background-color-base-400" />
                 </Template>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Cancelar" Context="item"
-                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Frozen="true" Width="120px">
+                                  Filterable="false" Frozen="true" Reorderable="false" Resizable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
                 <Template Context="item">
                     <RadzenButton title="Cancelar"
                                   Icon="delete"
@@ -256,8 +311,7 @@
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Finalizar" Context="item"
-                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Frozen="true" Width="120px" 
-            >
+                                  Filterable="false" Frozen="true" Reorderable="false" Resizable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
                 <Template Context="item">
                     <RadzenButton title="Finalizar"
                                   Icon="check"
@@ -300,8 +354,10 @@
 {
     private string Title = "Solicitudes en Proceso";
     private bool trabajando { get; set; } = true;
+    Density Density = Density.Default;
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
+    private RadzenDataGrid<RequestDTO_Solicitud>? oSolicitudesRef = new();
     private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
     private readonly int[] estados = { (int)TipoEstadoSolicitud.EN_PROCESO };
     private readonly int[] alumno_o_egresado =
@@ -319,6 +375,9 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
+        await JSRuntime.InvokeVoidAsync("blazorInit");
+
         if (firstRender)
         {
             await CargarLista();
@@ -397,24 +456,24 @@
 
     private async Task VerPDF(string archivo, string titulo = "Ver")
     {
-        await dialogService.OpenAsync<PDFViewer>
-                (
-                    titulo,
-                    new Dictionary<string, object>()
-                        {
-                        {"file", archivo}
-                        },
-                    new DialogOptions()
-                        {
-                            Width = "calc( 100vw - 8em )",
-                            Height = "calc( 100vh - 8em )",
-                            CssClass = "dialog_simple p-0",
-                            CloseDialogOnEsc = true,
-                            CloseDialogOnOverlayClick = true,
-                            Resizable = true,
-                            Draggable = true
-                        }
-                );
+        await DialogModalService.OpenAsync<PDFViewer>
+        (
+            titulo,
+            new Dictionary<string, object>()
+            {
+                {"file", archivo}
+            },
+            new DialogOptions()
+            {
+                Width = "calc( 100vw - 8em )",
+                Height = "calc( 100vh - 8em )",
+                CssClass = "dialog_simple p-0",
+                CloseDialogOnEsc = true,
+                CloseDialogOnOverlayClick = true,
+                Resizable = true,
+                Draggable = true
+            }
+        );
     }
 
     private async Task VerDocumento(RequestDTO_Solicitud solicitud, TipoDocumento documento)
@@ -464,26 +523,26 @@
 
     private async Task Actualizar(RequestDTO_Solicitud item, TipoEstadoSolicitud estado, string mensaje_confirmar)
     {
-        string? mensaje = await dialogService.OpenAsync<MensajeRespuesta>
+        string? mensaje = await DialogModalService.OpenAsync<MensajeRespuesta>
         (
             $"{mensaje_confirmar} {item.IdSolicitudTicket} de {item.SolIdUsuarioNavigation!.UsuNombre} {item.SolIdUsuarioNavigation!.UsuPrimerApellido} {item.SolIdUsuarioNavigation!.UsuSegundoApellido}",
             null,
             new DialogOptions()
-                {
-                    ShowClose = false,
-                    Width = "75%",
-                    CssClass = "dialog_simple"
-                }
+            {
+                ShowClose = false,
+                Width = "75%",
+                CssClass = "dialog_simple"
+            }
         );
 
         if (!string.IsNullOrEmpty(mensaje))
         {
             RequestDTO_FinalizarSolicitud oSolicitud = new()
-                {
-                    IdSolicitud = item.IdSolicitudTicket,
-                    Mensaje = mensaje,
-                    Estado = (int)estado
-                };
+            {
+                IdSolicitud = item.IdSolicitudTicket,
+                Mensaje = mensaje,
+                Estado = (int)estado
+            };
 
             item.SolRespuestaDcyC = mensaje;
 
@@ -558,4 +617,9 @@
             }
         }
     }// DESCARGAR
+
+    async Task OnPage(PagerEventArgs args)
+    {
+        //
+    }
 }
