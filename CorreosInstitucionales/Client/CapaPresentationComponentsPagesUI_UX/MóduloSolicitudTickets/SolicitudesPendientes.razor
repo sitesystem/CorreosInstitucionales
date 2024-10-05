@@ -3,9 +3,9 @@
 @attribute [Authorize(Policy = "[Rol] Administrador")]
 
 @inject IJSRuntime JsRuntime
-@inject DialogService dialogService
 
 <PageTitle>@Title</PageTitle>
+
 <script src="js/descargar.js?v=1.0.0.9"></script>
 
 <div class="p-4 rounded-1 bg-white shadow">
@@ -59,77 +59,107 @@
         </div>
     }
 
-    <RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false"
-                    FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true"
-                    PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@items" TItem="RequestDTO_Solicitud"
-                    Visible=@(!trabajando)>
+    <RadzenDataGrid @ref="oSolicitudesRef" Data="@items" @bind-Value="@selectedItems" TItem="RequestDTO_Solicitud" Density="@Density"
+                    AllowFiltering="true" AllowColumnResize="true" AllowColumnReorder="true" AllowAlternatingRows="true" AllowSorting="true"
+                    AllowColumnPicking="true" ColumnsPickerAllowFiltering="true"
+                    AllowPaging="true" PageSize="10" PagerPosition="PagerPosition.TopAndBottom" PagerHorizontalAlign="HorizontalAlign.Center" PagerAlwaysVisible="true"
+                    PageSizeOptions="@(new int[] { 10, 25, 50, 100 })" PageSizeText="registros por página" ShowPagingSummary="true" PagingSummaryFormat="Mostrando página {0} de {1} <b>(Total {2} registros)</b>" Page="@OnPage"
+                    AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowVirtualization="true" GridLines="DataGridGridLines.Both"
+                    FilterMode="FilterMode.Advanced" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    FilterText="Filtrar" EqualsText="Igual a..." NotEqualsText="Distinto de..." ContainsText="Contiene..." StartsWithText="Comienza con..." EndsWithText="Termina con..." DoesNotContainText="No contiene..."
+                    IsNullText="Es nulo" IsEmptyText="Es vacío" IsNotNullText="No es nulo" IsNotEmptyText="No es vacío" AndOperatorText="Y" OrOperatorText="O"
+                    GreaterThanText="Mayor que" GreaterThanOrEqualsText="Mayor o igual que" LessThanText="Menor que" LessThanOrEqualsText="Menor o igual que"
+                    ClearFilterText="Limpiar Filtro" ApplyFilterText="Aplicar"
+                    ColumnsShowingText="columnas visibles" AllColumnsText="Todas las columnas" ColumnsText="Mostrar columnas"
+                    ColumnWidth="500px" SelectionMode="DataGridSelectionMode.Single"
+                    ExpandMode="DataGridExpandMode.Single" Visible=@(!trabajando)>
+        <HeaderTemplate>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
+                <RadzenSelectBar @bind-Value="@Density" TextProperty="Text" ValueProperty="Value" Visible="false"
+                                 Data="@(Enum.GetValues(typeof(Density)).Cast<Density>().Select(t => new { Text = $"{t}", Value = t }))" Size="ButtonSize.Small">
+                    @* <Items>
+                    <RadzenSelectBarItem Value="true" Text="Sí" Icon="check_circle" IconColor="@Colors.SuccessDarker" />
+                    <RadzenSelectBarItem Value="false" Text="No" Icon="cancel" IconColor="@Colors.DangerDarker" />
+                    </Items> *@
+                </RadzenSelectBar>
+            </RadzenStack>
+        </HeaderTemplate>
         <Columns>
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Property="IdSolicitudTicket" Filterable="true" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
-
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
-                <Template Context="item">
-                    <strong>
-                        @item.SolIdUsuarioNavigation!.UsuPrimerApellido
-                        @item.SolIdUsuarioNavigation!.UsuSegundoApellido
-                        @item.SolIdUsuarioNavigation!.UsuNombre
-                    </strong>
-                    <br />
-                    <ul>
-                        <li>
-                            <strong>CURP:</strong> 
-                            @item.SolIdUsuarioNavigation.UsuCurp
-                        </li>
-                        <li>
-                            @if (alumno_o_egresado.Contains(item.SolIdUsuarioNavigation.UsuIdTipoPersonal))
-                            {
-                                <strong>Número de Boleta:</strong>
-                                @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
-                            }
-                            else
-                            {
-                                <strong>Número de Empleado:</strong>
-                                @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
-                            }
-                            @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
-                            {
-                                <strong>Número de Boleta de Maestría</strong>
-                                @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
-                            }
-                        </li>
-                        
-                        <li>
-                            <strong>Correo Personal</strong>
-                            
-                            <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva</div>
-                            
-                        </li>
-
-                        <li style="white-space: pre-wrap">
-                            <strong>Correo Institucional</strong>
-
-                            <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta</div>
-                            
-                        </li>
-
-                        <li>
-                            <strong>Número de Celular</strong>
-                            <br />
-                            @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
-                        </li>
-                    </ul>
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="# Ticket" Property="IdSolicitudTicket"
+                                  Filterable="true" Frozen="true" Reorderable="true" Resizable="false" Sortable="true" TextAlign="TextAlign.Center" Width="150px">
+                <Template Context="data">
+                    <h5 class="text-wrap">@data.IdSolicitudTicket</h5>
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Filterable="true" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Property="SolIdUsuarioNavigation.UsuCurp"
+                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Start" Width="350px">
+                <Template Context="item">
+                    <div class="text-wrap">
+                        <strong>
+                            @item.SolIdUsuarioNavigation!.UsuPrimerApellido
+                            @item.SolIdUsuarioNavigation!.UsuSegundoApellido
+                            @item.SolIdUsuarioNavigation!.UsuNombre
+                        </strong>
+                        <br />
+                        <small>
+                            @item.SolIdUsuarioNavigation?.UsuIdTipoPersonalNavigation?.TipoperNombre
+                        </small>
+                        <br /><br />
+                        <ul>
+                            <li>
+                                <strong>CURP: </strong>
+                                @item.SolIdUsuarioNavigation?.UsuCurp
+                            </li>
+
+                            <li>
+                                @if (alumno_o_egresado.Contains(item.SolIdUsuarioNavigation!.UsuIdTipoPersonal))
+                                {
+                                    <strong>Número de Boleta: </strong>
+                                    @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
+                                }
+                                else
+                                {
+                                    <strong>Número de Empleado: </strong>
+                                    @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
+                                }
+                                @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
+                                {
+                                    <strong>Número de Boleta de Maestría: </strong>
+                                    @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
+                                }
+                            </li>
+
+                            <li>
+                                <strong>Correo Personal: </strong>
+                                @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva
+                            </li>
+
+                            <li>
+                                <strong>Correo Institucional: </strong>
+                                @item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta
+                            </li>
+
+                            <li>
+                                <strong>Número de Celular Actual: </strong>
+                                @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
+                            </li>
+                        </ul>
+                    </div>
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion"
+                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Start" Width="300px">
                 <Template Context="item">
                     <strong>@item.SolIdTipoSolicitudNavigation!.TiposolDescripcion</strong>
                     <p style="white-space: pre-wrap" class="my-2">@item.SolObservacionesSolicitud</p>
-                    <div class="text-end">@item.SolFechaHoraCreacion</div>
+                    <div class="text-end">@item.SolFechaHoraCreacion.ToString("dddd dd/MMMM/yyyy HH:mm:ss 'hrs.'")</div>
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Adjuntos" Filterable="false" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Adjuntos"
+                                  Filterable="false" Frozen="false" Reorderable="true" Resizable="false" Sortable="false" TextAlign="TextAlign.Start" Width="250px">
                 <Template Context="item">
                     <ul class="mb-4">
                         <li>
@@ -217,19 +247,18 @@
                             </li>
                         }
                     </ul>
-                    
                 </Template>
             </RadzenDataGridColumn><!--ARCHIVOS-->
 
-
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Seleccionar" Filterable="false" TextAlign="TextAlign.Center" Frozen="true" Width="120px">
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Seleccionar"
+                                  Filterable="false" Frozen="true" Reorderable="false" Resizable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
                 <Template Context="item">
                     <RadzenSwitch @bind-Value=@item.SolValidacionDatos Change="StateHasChanged" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})" />
                 </Template>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Cancelar" Context="item"
-                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Frozen="true" Width="120px">
+                                  Filterable="false" Frozen="true" Reorderable="false" Resizable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
                 <Template Context="item">
                     <RadzenButton title="Cancelar"
                                   Icon="delete"
@@ -280,8 +309,11 @@
     private string links = string.Empty;
 
     private int anio = DateTime.Now.Year;
+    Density Density = Density.Default;
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
+    private RadzenDataGrid<RequestDTO_Solicitud>? oSolicitudesRef = new();
+    private IList<RequestDTO_Solicitud> selectedItems = new List<RequestDTO_Solicitud>();
 
     private readonly int[] estados = { (int)TipoEstadoSolicitud.ALTA, (int)TipoEstadoSolicitud.PENDIENTE };
     private readonly int[] alumno_o_egresado =
@@ -300,10 +332,6 @@
     }
 
     private string debug = string.Empty;
-
-    
-
-    
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -372,7 +400,7 @@
 
     private async Task VerPDF(string archivo, string titulo = "Ver")
     {
-        await dialogService.OpenAsync<PDFViewer>
+        await DialogModalService.OpenAsync<PDFViewer>
                 (
                     titulo,
                     new Dictionary<string, object>()
@@ -439,7 +467,7 @@
 
     private async Task Actualizar(RequestDTO_Solicitud item, TipoEstadoSolicitud estado, string mensaje_confirmar)
     {
-        string? mensaje = await dialogService.OpenAsync<MensajeRespuesta>
+        string? mensaje = await DialogModalService.OpenAsync<MensajeRespuesta>
         (
             $"{mensaje_confirmar} {item.IdSolicitudTicket} de {item.SolIdUsuarioNavigation!.UsuNombre} {item.SolIdUsuarioNavigation!.UsuPrimerApellido} {item.SolIdUsuarioNavigation!.UsuSegundoApellido}",
             null,
@@ -489,7 +517,8 @@
         }
     }//ACTUALIZAR
 
-    
-
-    
+    async Task OnPage(PagerEventArgs args)
+    {
+        //
+    }
 }

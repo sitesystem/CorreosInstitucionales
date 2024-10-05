@@ -44,12 +44,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     list = await _db.MtTbSolicitudesTickets
                                     .Where(st => st.SolIdEstadoSolicitud != 6)
                                     .Include(u => u.SolIdUsuarioNavigation)
+                                        .ThenInclude(tp => tp.UsuIdTipoPersonalNavigation)
                                     .Include(st => st.SolIdEstadoSolicitudNavigation)
                                     .Include(st => st.SolIdTipoSolicitud)
                                     .ToListAsync();
                 else
                     list = await _db.MtTbSolicitudesTickets
                                     .Include(u => u.SolIdUsuarioNavigation)
+                                        .ThenInclude(tp => tp.UsuIdTipoPersonalNavigation)
                                     .Include(st => st.SolIdEstadoSolicitudNavigation)
                                     .Include(st => st.SolIdTipoSolicitudNavigation)
                                     .ToListAsync();
@@ -77,6 +79,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                                 st => progress.Contains(st.SolIdEstadoSolicitud)
                             )
                             .Include(st => st.SolIdUsuarioNavigation)
+                                .ThenInclude(tp => tp.UsuIdTipoPersonalNavigation)
                             .Include(st => st.SolIdEstadoSolicitudNavigation)
                             .Include(st => st.SolIdTipoSolicitudNavigation)
                             .ToListAsync();

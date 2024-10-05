@@ -55,9 +55,7 @@
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="ID" Property="IdUsuario"
                                   Filterable="true" Frozen="true" Reorderable="true" Resizable="false" Sortable="true" TextAlign="TextAlign.Center" Width="80px">
                 <Template Context="item">
-                    <div class="text-wrap">
-                        <h5>@item.IdUsuario</h5>
-                    </div>
+                    <h5 class="text-wrap">@item.IdUsuario</h5>
                 </Template>
             </RadzenDataGridColumn>
 
