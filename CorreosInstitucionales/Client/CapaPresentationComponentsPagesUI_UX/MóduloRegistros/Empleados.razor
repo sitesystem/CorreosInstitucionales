@@ -28,7 +28,7 @@
         </RadzenAlert>
 
         <!-- ******************************************************************* DATOS PERSONALES ******************************************************************* -->
-        <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos Personales" CollapseTitle="Datos Personales" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3">
+        <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos Personales" CollapseTitle="Datos Personales" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
                     <RadzenIcon Icon="account_box" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Datos Personales</b>
@@ -37,10 +37,10 @@
             <ChildContent>
                 <div class="row">
                     <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Nombre(s)" AllowFloatingLabel="false" Placeholder="Nombre(s)" AllowClear="true" Variant="Variant.Flat" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="Nombre(s)" AllowFloatingLabel="false" Variant="Variant.Flat" class="w-100 mt-3">
                             @* <Start><RadzenIcon Icon="person" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start> *@
                             <ChildContent>
-                                <RadzenTextBox id="@($@"names_{TipoPersonal}")" @bind-Value="@oUsuario.UsuNombre" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"
+                                <RadzenTextBox id="@($@"names_{TipoPersonal}")" @bind-Value="@oUsuario.UsuNombre" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200" Placeholder="Escribe tu(s) nombre(s)"
                                                @oninput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[a-zA-Z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
@@ -50,10 +50,10 @@
                     </div>
 
                     <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Primer Apellido" AllowFloatingLabel="false" Placeholder="Primer Apellido" AllowClear="true" Variant="Variant.Flat" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="Primer Apellido" AllowFloatingLabel="false" Variant="Variant.Flat" class="w-100 mt-3">
                             @* <Start><RadzenIcon Icon="person" IconColor="@Colors.Base400" /></Start> *@
                             <ChildContent>
-                                <RadzenTextBox Name="@($@"lastName1_{TipoPersonal}")" @bind-Value="@oUsuario.UsuPrimerApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
+                                <RadzenTextBox Name="@($@"lastName1_{TipoPersonal}")" @bind-Value="@oUsuario.UsuPrimerApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150" Placeholder="Primer Apellido"
                                                @oninput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[a-zA-Z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>

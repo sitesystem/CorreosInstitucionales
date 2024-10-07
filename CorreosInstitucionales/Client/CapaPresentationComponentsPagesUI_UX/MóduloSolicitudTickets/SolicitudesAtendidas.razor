@@ -147,12 +147,64 @@
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Property="SolIdEstadoSolicitudNavigation.EdosolNombreEstado"
                                   Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="300px">
+                <HeaderTemplate>
+                    @{
+                        string content = $@"- Solicitudes Finalizadas: <b>{items.Where(st => st.SolIdEstadoSolicitud == 4).Count()}</b><br />
+                                            - Solicitudes con Encuestas Contestadas: <b>{items.Where(st => st.SolIdEstadoSolicitud == 5).Count()}</b><br />
+                                            - Solicitudes Canceladas: <b>{items.Where(st => st.SolIdEstadoSolicitud == 6).Count()}</b>";
+                    }
+
+                    <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
+                          title="@($@"<b>{items.Count()}</b> Solicitudes <strong>Atendidas</strong>")" data-bs-content="@(content)">
+                        Estado
+                    </span>
+                </HeaderTemplate>
                 <Template Context="item">
                     <div class="text-start text-wrap">
-                        <strong>@item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado</strong>
+                        @{
+                            BadgeStyle style = new();
+                            Shade shade = new();
+                            string icon = "";
+
+                            if (item.SolIdEstadoSolicitud == 4)
+                            {
+                                style = BadgeStyle.Success;
+                                shade = Shade.Light;
+                                icon = "check";
+                            }
+                            else if (item.SolIdEstadoSolicitud == 5)
+                            {
+                                style = BadgeStyle.Warning;
+                                shade = Shade.Light;
+                                icon = "star_rate";
+                            }
+                            else if (item.SolIdEstadoSolicitud == 6)
+                            {
+                                style = BadgeStyle.Danger;
+                                shade = Shade.Light;
+                                icon = "close";
+                            }
+                        }
+                        <div class="text-center">
+                            <RadzenBadge Variant="Variant.Flat" Shade="@(shade)" BadgeStyle="@(style)" Text="" IsPill="true" class="rz-display-block rz-ms-2">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.NoWrap" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                    <RadzenIcon Icon="@(icon)" />
+                                    @item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
+                                </RadzenStack>
+                            </RadzenBadge>
+                        </div>
+                        @* <strong>@item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado</strong> *@
                         <p style="white-space: pre-wrap; text-align: justify;" class="mt-3">@item.SolRespuestaDcyC</p>
                     </div>
                 </Template>
+                <FooterTemplate>
+                    <div class="text-start">
+                        <small>- Solicitudes Finalizadas: <b>@items.Where(st => st.SolIdEstadoSolicitud == 4).Count()</b></small><br />
+                        <small>- Solicitudes con Encuestas Contestadas: <b>@items.Where(st => st.SolIdEstadoSolicitud == 5).Count()</b></small><br />
+                        <small>- Solicitudes Canceladas: <b>@items.Where(st => st.SolIdEstadoSolicitud == 6).Count()</b></small><br />
+                        <small>de <b>@items.Count()</b> Solicitudes <strong>Atendidas.</strong></small>
+                    </div>
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Property="SolEncuestaCalidadComentarios"
@@ -181,6 +233,9 @@
             </RadzenDataGridColumn>
 
         </Columns>
+        <EmptyTemplate>
+            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No hay registros encontrados para mostrar.</p>
+        </EmptyTemplate>
     </RadzenDataGrid>
 </div>
 
