@@ -26,6 +26,8 @@ using CorreosInstitucionales.Shared;
 using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos;
 using System.ComponentModel;
 using Serilog;
+using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Debug;
+using Azure.Identity;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
@@ -116,135 +118,37 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task<List<string>> EnvioMasivoAtendidos(List<MtTbSolicitudesTicket> lista)
-        {
-            string id = Guid.NewGuid().ToString();
-            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/{id}.txt";
-
-            List<string> errors = new();
-
-            WhatsApp WA = new WhatsApp(client);
-
-            RequestDTO_SendEmail correo = new()
-            {
-                Subject = "Su solicitud ha sido atendida por la mesa de control",
-                EmailTo = "agmartinezc@ipn.mx",
-                Body = "NO DEFINIDO"
-            };
-
-            RequestDTO_SendWhatsApp mensaje = new()
-            {
-                Message = "PRUEBA",
-                Number = "5500000000"
-            };
-
-            Dictionary<string, object?> variables_correo = new Dictionary<string, object?>
-            {
-                { "solicitud", null}
-            };
-
-            foreach (MtTbSolicitudesTicket solicitud in lista)
-            {
-                variables_correo["solicitud"] = solicitud;
-
-                correo.EmailTo = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
-                mensaje.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty);
-
-                // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
-                if (!Dominios.EsCorreoDePrueba(correo.EmailTo))
-                {
-                    switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
-                    {
-                        case TipoPersonal.ALUMNO:
-                        case TipoPersonal.EGRESADO:
-                        case TipoPersonal.MAESTRIA:
-                            correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_correo);
-                            break;
-                        default:
-                            correo.Body = await renderer.GetHTML<AtendidoPersonal>(variables_correo);
-                            break;
-                    }
-
-                    _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
-                }
-
-
-                if(mensaje.Number != "5500000000")
-                {
-                    mensaje.Message = await renderer.GetHTML<AtendidoWA>(variables_correo);
-
-                    Response<string> response = await WA.SendMessage(mensaje);
-                    if (response != null && response.Success != 1)
-                    {
-                        errors.Add($"{mensaje.Number} :  {response.Message}");
-                    }
-                }
-                
-            }//FOREACH solicitud
-
-            System.IO.File.WriteAllText(archivo, errors.ToString());
-            return errors;
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task<List<string>> EnvioMasivo<TCorreo,TWA>
-            (
-                List<MtTbSolicitudesTicket> lista,
-                string asunto
-            )
-                where TCorreo : Microsoft.AspNetCore.Components.IComponent
-                where TWA : Microsoft.AspNetCore.Components.IComponent
+        private async Task<List<string>> EnvioMasivo(IEnumerable<Notificacion> notificaciones)
         {
             List<string> log = new();
 
             string id = Guid.NewGuid().ToString();
-            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/{id}.txt";
+            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/notificacion_{id}.txt";
 
             WhatsApp WA = new WhatsApp(client);
 
-            RequestDTO_SendEmail correo = new()
+            foreach (Notificacion notificacion in notificaciones)
             {
-                Subject = asunto,
-                EmailTo = "postmaster@localhost",
-                Body = "NO DEFINIDO"
-            };
-
-            RequestDTO_SendWhatsApp mensaje = new()
-            {
-                Message = "PRUEBA",
-                Number = "5500000000"
-            };
-
-            Dictionary<string, object?> variables_correo = new Dictionary<string, object?>
-            {
-                { "solicitud", null}
-            };
-
-            foreach (MtTbSolicitudesTicket solicitud in lista)
-            {
-                variables_correo["solicitud"] = solicitud;
-
-                correo.EmailTo = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
-                mensaje.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty);
-
-                // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
-                if (!Dominios.EsCorreoDePrueba(correo.EmailTo))
+                if (notificacion.EsCorreoPrueba())
                 {
-                    correo.Body = await renderer.GetHTML<TCorreo>(variables_correo);
-                    _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
+                    log.Add($"[CORREO DE PRUEBA] {notificacion.correo.EmailTo}");
+                }
+                else
+                {
+                    _ = Task.Run(() => _servicioCorreo.SendEmail(notificacion.correo));
+                    log.Add($"[CORREO ENVIADO:] {notificacion.correo.EmailTo}");
                 }
 
-                if (mensaje.Number != "5500000000")
+                if (notificacion.EsWAPrueba())
                 {
-                    mensaje.Message = await renderer.GetHTML<TWA>(variables_correo);
-
-                    Response<string> response = await WA.SendMessage(mensaje);
-                    if (response.Success != 1)
-                    {
-                        log.Add($"{mensaje.Number} :  {response.Message}");
-                    }
+                    log.Add($"[WA DE PRUEBA] {notificacion.wa.Message}");
                 }
-
+                else
+                {
+                    log.Add($"[ENVIO DE WA] {notificacion.correo.EmailTo}");
+                    Response<string> response = await WA.SendMessage(notificacion.wa);
+                    log.Add(response.Success == 1 ? "[OK]" : "[ERROR]");
+                }
             }//FOREACH solicitud
 
             System.IO.File.WriteAllText(archivo, string.Join(Environment.NewLine, log));
@@ -252,63 +156,119 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task<List<string>> EnvioMasivoPendientes(List<MtTbSolicitudesTicket> lista, bool debug = false)
+        private async Task<List<string>> EnvioMasivoAtendidos(List<MtTbSolicitudesTicket> lista)
         {
             string id = Guid.NewGuid().ToString();
             string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/{id}.txt";
 
-            List<string> errors = new();
+            List<string> log = new();
 
-            WhatsApp WA = new WhatsApp(client);
+            Notificacion notificacion = new();
+            notificacion.correo.Subject = "Su solicitud ha sido canalizada hacia la mesa de control";
 
-            RequestDTO_SendEmail correo = new()
-            {
-                Subject = "Su solicitud ha sido canalizada hacia la mesa de control",
-                EmailTo = "agmartinezc@ipn.mx",
-                Body = "NO DEFINIDO"
-            };
-
-            RequestDTO_SendWhatsApp mensaje = new()
-            {
-                Message = "PRUEBA",
-                Number = "5500000000"
-            };
-
-            Dictionary<string, object?> variables_correo = new Dictionary<string, object?>
+            Dictionary<string, object?> variables_solicitud = new Dictionary<string, object?>
             {
                 { "solicitud", null}
             };
 
             foreach (MtTbSolicitudesTicket solicitud in lista)
             {
-                variables_correo["solicitud"] = solicitud;
+                variables_solicitud["solicitud"] = solicitud;
 
-                correo.EmailTo = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
-                mensaje.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty);
-
-                // HACER ENVÍOS SIN ESPERARSE A SU RESULTADO
-                if (!Dominios.EsCorreoDePrueba(correo.EmailTo))
+                notificacion.correo.EmailTo = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+                switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
                 {
-                    correo.Body = await renderer.GetHTML<EnProceso>(variables_correo);
-                    _ = Task.Run(() => _servicioCorreo.SendEmail(correo));
+                    case TipoPersonal.ALUMNO:
+                    case TipoPersonal.EGRESADO:
+                    case TipoPersonal.MAESTRIA:
+                        notificacion.correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_solicitud);
+                        break;
+                    default:
+                        notificacion.correo.Body = await renderer.GetHTML<AtendidoPersonal>(variables_solicitud);
+                        break;
                 }
 
+                notificacion.wa.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty);
+                notificacion.wa.Message = await renderer.GetHTML<AtendidoWA>(variables_solicitud);
 
-                if (mensaje.Number != "5500000000")
+                if (notificacion.EsCorreoPrueba())
                 {
-                    mensaje.Message = await renderer.GetHTML<EnProcesoWA>(variables_correo);
-
-                    Response<string> response = await WA.SendMessage(mensaje);
-                    if (response != null && response.Success != 1)
-                    {
-                        errors.Add($"{mensaje.Number} :  {response.Message}");
-                    }
+                    log.Add($"[CORREO DE PRUEBA] {notificacion.correo.EmailTo}");
+                }
+                else
+                {
+                    _ = Task.Run(() => _servicioCorreo.SendEmail(notificacion.correo));
+                    log.Add($"[CORREO ENVIADO:] {notificacion.correo.EmailTo}");
                 }
 
+                if (notificacion.EsWAPrueba())
+                {
+                    log.Add($"[WA DE PRUEBA] {notificacion.wa.Message}");
+                }
+                else
+                {
+                    log.Add($"[ENVIO DE WA] {notificacion.correo.EmailTo}");
+                    Response<string> response = await WA.SendMessage(notificacion.wa);
+                    log.Add(response.Success == 1 ? "[OK]" : "[ERROR]");
+                }
             }//FOREACH solicitud
 
-            System.IO.File.WriteAllText(archivo, errors.ToString());
-            return errors;
+            System.IO.File.WriteAllText(archivo, string.Join(Environment.NewLine, log));
+
+            return log;
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        private async Task<List<string>> EnvioMasivoPendientes(List<MtTbSolicitudesTicket> lista)
+        {
+            string id = Guid.NewGuid().ToString();
+            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/{id}.txt";
+
+            List<string> log = new();
+
+            Notificacion notificacion = new();
+            notificacion.correo.Subject = "Su solicitud ha sido canalizada hacia la mesa de control";
+
+            Dictionary<string, object?> variables_solicitud = new Dictionary<string, object?>
+            {
+                { "solicitud", null}
+            };
+
+            foreach (MtTbSolicitudesTicket solicitud in lista)
+            {
+                variables_solicitud["solicitud"] = solicitud;
+
+                notificacion.correo.EmailTo = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+                notificacion.correo.Body = await renderer.GetHTML<EnProceso>(variables_solicitud);
+
+                notificacion.wa.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty);
+                notificacion.wa.Message = await renderer.GetHTML<EnProcesoWA>(variables_solicitud);
+
+                if (notificacion.EsCorreoPrueba())
+                {
+                    log.Add($"[CORREO DE PRUEBA] {notificacion.correo.EmailTo}");
+                }
+                else
+                {
+                    _ = Task.Run(() => _servicioCorreo.SendEmail(notificacion.correo));
+                    log.Add($"[CORREO ENVIADO:] {notificacion.correo.EmailTo}");
+                }
+
+                if (notificacion.EsWAPrueba())
+                {
+                    log.Add($"[WA DE PRUEBA] {notificacion.wa.Message}");
+                }
+                else
+                {
+                    log.Add($"[ENVIO DE WA] {notificacion.correo.EmailTo}");
+                    Response<string> response = await WA.SendMessage(notificacion.wa);
+                    log.Add(response.Success == 1 ? "[OK]" : "[ERROR]");
+                }
+            }//FOREACH solicitud
+
+            System.IO.File.WriteAllText(archivo, string.Join(Environment.NewLine, log));
+
+            return log;
         }// ENVIO  MASIVO (EN PROCESO)
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -396,6 +356,35 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }
 
             return TipoDatoXLSX.NINGUNO;
+        }
+
+        [HttpPost("notificar_debug")]
+        public async Task<IActionResult> DEBUG_Notificar()
+        {
+            Response<string> oResponse = new();
+
+            List<Notificacion> notificaciones = new List<Notificacion>()
+            {
+                new Notificacion()
+                {
+                    correo = new RequestDTO_SendEmail()
+                    {
+                        Subject ="Prueba",
+                        EmailTo= "gabrielmtzcarrillo@live.com.mx",
+                        Body="Mensaje de Prueba"
+                    },
+                    wa = new RequestDTO_SendWhatsApp()
+                    {
+                        Number="5512011876",
+                        Message="> Prueba"
+                    }
+                }
+            };
+
+            await EnvioMasivo(notificaciones);
+            //EnvioMasivo
+
+            return Ok(oResponse);
         }
 
         [HttpPost("xlsx/procesados")]
@@ -794,6 +783,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             List<WebUtils.Link> archivos = new();
             List<WebUtils.Link> exportados = new();
+
+            List<Notificacion> notificaciones = new();
 
             string? error = null;
 
