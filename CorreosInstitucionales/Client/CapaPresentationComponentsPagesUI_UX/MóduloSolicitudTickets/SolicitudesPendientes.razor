@@ -111,6 +111,7 @@
                         <br />
                         <small>
                             @item.SolIdUsuarioNavigation?.UsuIdTipoPersonalNavigation?.TipoperNombre
+                            @(item.SolIdUsuarioNavigation?.UsuIdTipoPersonal == 2 ? $" en {item.SolIdUsuarioNavigation?.UsuAnioEgreso}" : "")
                         </small>
                         <br /><br />
                         <ul>
@@ -142,6 +143,14 @@
                                 @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva
                             </li>
 
+                            @if(!string.IsNullOrEmpty(item.SolIdUsuarioNavigation?.UsuCorreoPersonalCuentaAnterior))
+                            {
+                                <li>
+                                    <strong>Correo Personal anterior: </strong>
+                                    @item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaAnterior
+                                </li>
+                            }
+
                             <li>
                                 <strong>Correo Institucional: </strong>
                                 @{
@@ -154,6 +163,14 @@
                                 <strong>Número de Celular actual: </strong>
                                 @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
                             </li>
+
+                            @if(!string.IsNullOrEmpty(item.SolIdUsuarioNavigation?.UsuNoCelularAnterior))
+                            {
+                                <li>
+                                    <strong>Número de Celular anterior: </strong>
+                                    @item.SolIdUsuarioNavigation!.UsuNoCelularAnterior
+                                </li>
+                            }
                         </ul>
                     </div>
                 </Template>
