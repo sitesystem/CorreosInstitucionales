@@ -116,6 +116,7 @@ namespace CorreosInstitucionales.Shared.Constantes
             {
                 case TipoSolicitud.CAMBIO_CORREO_PERSONAL: return [TipoDatoXLSX.CURP, TipoDatoXLSX.CORREO_INSTITUCIONAL, TipoDatoXLSX.CORREO_PERSONAL, TipoDatoXLSX.CORREO_PERSONAL_NUEVO];
                 case TipoSolicitud.CAMBIO_CELULAR: return [TipoDatoXLSX.CURP, TipoDatoXLSX.CORREO_INSTITUCIONAL, TipoDatoXLSX.CELULAR, TipoDatoXLSX.CELULAR_NUEVO];
+                case TipoSolicitud.DESBLOQUEO_CUENTA: return [TipoDatoXLSX.CURP, TipoDatoXLSX.ID_EXTERNO, TipoDatoXLSX.EXTENSION, TipoDatoXLSX.CORREO_PERSONAL_NUEVO, TipoDatoXLSX.CORREO_INSTITUCIONAL];
             }
 
             return [TipoDatoXLSX.CURP,TipoDatoXLSX.ID_EXTERNO, TipoDatoXLSX.EXTENSION, TipoDatoXLSX.CORREO_PERSONAL_NUEVO];
