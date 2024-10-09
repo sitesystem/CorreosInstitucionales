@@ -778,6 +778,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             List<MtTbSolicitudesTicket> pendientes = new();
             List<MtTbSolicitudesTicket> pendientes_celular = new();
             List<MtTbSolicitudesTicket> pendientes_correo_personal = new();
+            List<MtTbSolicitudesTicket> pendientes_desbloqueo = new();
 
             StringBuilder mensajes = new();
 
@@ -813,6 +814,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 mensajes.AppendLine($"PENDIENTES DE CAMBIO DE CORREO PERSONAL: {pendientes_correo_personal.Count}");
 
+                pendientes_desbloqueo = pendientes.Where(p => p.SolIdTipoSolicitud == (int)TipoSolicitud.DESBLOQUEO_CUENTA).ToList();
+                pendientes = pendientes.Except(pendientes_desbloqueo).ToList();
+
+                mensajes.AppendLine($"PENDIENTES DE DESBLOQUEO: {pendientes_desbloqueo.Count}");
+
                 if (pendientes.Count>0)
                 {
                     exportados = GenerarXLSX(pendientes, archivo);
@@ -832,6 +838,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     exportados = GenerarXLSX(pendientes_correo_personal, archivo, TipoSolicitud.CAMBIO_CORREO_PERSONAL);
                     archivos.AddRange(exportados);
                     pendientes_correo_personal.ForEach(p => p.SolIdEstadoSolicitud = data.Status);
+                }
+
+                if (pendientes_desbloqueo.Count > 0)
+                {
+                    exportados = GenerarXLSX(pendientes_desbloqueo, archivo, TipoSolicitud.CAMBIO_CORREO_PERSONAL);
+                    archivos.AddRange(exportados);
+                    pendientes_desbloqueo.ForEach(p => p.SolIdEstadoSolicitud = data.Status);
                 }
 
                 error = ServerFS.WriteZip($"{archivo}.zip", archivos);
@@ -877,6 +890,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         error = await EstablecerEstado(pendientes, data.Status);
                         error += await EstablecerEstado(pendientes_celular, data.Status);
                         error += await EstablecerEstado(pendientes_correo_personal, data.Status);
+                        error += await EstablecerEstado(pendientes_desbloqueo, data.Status);
 
                         await _db.SaveChangesAsync();
                     }
@@ -887,6 +901,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         await EnvioMasivoPendientes(pendientes);
                         await EnvioMasivoPendientes(pendientes_celular);
                         await EnvioMasivoPendientes(pendientes_correo_personal);
+                        await EnvioMasivoPendientes(pendientes_desbloqueo);
                     }
                     else
                     {
