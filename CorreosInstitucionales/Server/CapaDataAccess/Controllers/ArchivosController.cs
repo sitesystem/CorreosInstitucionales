@@ -648,7 +648,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             // DATOS SOLICITUD
             string? id_externo_usuario = null;
             
-            List<TipoDatoXLSX> datos_exportar = formato_solicitud.GetDatosExportar().ToList();
+            List<TipoDatoXLSX> datos_exportar = formato_solicitud.GetDatosExportar();
             TipoDocumento[] documentos_adjuntar;
             TipoSolicitud tipo_solicitud;
 

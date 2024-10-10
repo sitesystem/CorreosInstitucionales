@@ -80,9 +80,10 @@ namespace CorreosInstitucionales.Shared.Constantes
             {
                 case TipoSolicitud.CAMBIO_CELULAR: return "sol_cambios_celular.xlsx";
                 case TipoSolicitud.CAMBIO_CORREO_PERSONAL: return "sol_cambios_correo_personal.xlsx";
+                case TipoSolicitud.DESBLOQUEO_CUENTA: return "sol_desbloqueo.xlsx";
             }
 
-            return "sol_altas_y_desbloqueos.xlsx";
+            return "sol_altas.xlsx";
         }
         public static TipoDocumento[] GetDocumentos(this TipoSolicitud solicitud)
         {
@@ -109,17 +110,61 @@ namespace CorreosInstitucionales.Shared.Constantes
 
             return [TipoDatoXLSX.TODO];
         }
-
-        public static TipoDatoXLSX[] GetDatosExportar(this TipoSolicitud solicitud)
+        public static List<TipoDatoXLSX> GetDatosExportar(this TipoSolicitud solicitud)
         {
+            List<TipoDatoXLSX> datos = 
+            [
+                TipoDatoXLSX.CURP,
+                TipoDatoXLSX.ID_EXTERNO,
+            ];
+
             switch (solicitud)
             {
-                case TipoSolicitud.CAMBIO_CORREO_PERSONAL: return [TipoDatoXLSX.CURP, TipoDatoXLSX.CORREO_INSTITUCIONAL, TipoDatoXLSX.CORREO_PERSONAL, TipoDatoXLSX.CORREO_PERSONAL_NUEVO];
-                case TipoSolicitud.CAMBIO_CELULAR: return [TipoDatoXLSX.CURP, TipoDatoXLSX.CORREO_INSTITUCIONAL, TipoDatoXLSX.CELULAR, TipoDatoXLSX.CELULAR_NUEVO];
-                case TipoSolicitud.DESBLOQUEO_CUENTA: return [TipoDatoXLSX.CURP, TipoDatoXLSX.ID_EXTERNO, TipoDatoXLSX.EXTENSION, TipoDatoXLSX.CORREO_PERSONAL_NUEVO, TipoDatoXLSX.CORREO_INSTITUCIONAL];
+                case TipoSolicitud.CREACION_ACTIVACION_CORREO_INST:
+                case TipoSolicitud.RECUPERACION_CONTRA:
+                case TipoSolicitud.CORREO_EGRESADO:
+                    datos.AddRange
+                    (
+                        [
+                            TipoDatoXLSX.EXTENSION, 
+                            TipoDatoXLSX.CORREO_PERSONAL_NUEVO
+                        ]
+                    );
+                    break;
+
+                case TipoSolicitud.DESBLOQUEO_CUENTA:
+                case TipoSolicitud.OTRO:
+                    datos.AddRange(
+                        [
+                            TipoDatoXLSX.EXTENSION,
+                            TipoDatoXLSX.CORREO_PERSONAL_NUEVO,
+                            TipoDatoXLSX.CORREO_INSTITUCIONAL
+                        ]
+                    );
+                    break;
+
+                case TipoSolicitud.CAMBIO_CELULAR:
+                    datos.AddRange(
+                        [
+                            TipoDatoXLSX.CORREO_INSTITUCIONAL,
+                            TipoDatoXLSX.CELULAR,
+                            TipoDatoXLSX.CELULAR_NUEVO
+                        ]
+                    );
+                    break;
+
+                case TipoSolicitud.CAMBIO_CORREO_PERSONAL:
+                    datos.AddRange(
+                        [
+                            TipoDatoXLSX.CORREO_INSTITUCIONAL,
+                            TipoDatoXLSX.CORREO_PERSONAL,
+                            TipoDatoXLSX.CORREO_PERSONAL_NUEVO
+                        ]
+                    );
+                    break;
             }
 
-            return [TipoDatoXLSX.CURP,TipoDatoXLSX.ID_EXTERNO, TipoDatoXLSX.EXTENSION, TipoDatoXLSX.CORREO_PERSONAL_NUEVO];
+            return datos;
         }
     }
 }
