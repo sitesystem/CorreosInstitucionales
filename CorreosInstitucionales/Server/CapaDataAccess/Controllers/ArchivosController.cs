@@ -45,7 +45,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         private readonly ComponentRenderer renderer = new ComponentRenderer(serviceProvider);
 
         private readonly ISendEmailService _servicioCorreo = servicioEmail;
-        private readonly WhatsApp WA = new WhatsApp(client);
+        private readonly WhatsApp WA = new(client);
 
         [ApiExplorerSettings(IgnoreApi = true)]
         protected string? FormatoTexto(string? texto)
@@ -161,12 +161,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             string id = Guid.NewGuid().ToString();
             string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/{id}.txt";
 
-            List<string> log = new();
+            List<string> log = [];
 
             Notificacion notificacion = new();
-            notificacion.correo.Subject = "Su solicitud ha sido canalizada hacia la mesa de control";
+            notificacion.correo.Subject = "Su solicitud ha sido atendida por mesa de control";
 
-            Dictionary<string, object?> variables_solicitud = new Dictionary<string, object?>
+            Dictionary<string, object?> variables_solicitud = new()
             {
                 { "solicitud", null}
             };
@@ -842,7 +842,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 if (pendientes_desbloqueo.Count > 0)
                 {
-                    exportados = GenerarXLSX(pendientes_desbloqueo, archivo, TipoSolicitud.CAMBIO_CORREO_PERSONAL);
+                    exportados = GenerarXLSX(pendientes_desbloqueo, archivo, TipoSolicitud.DESBLOQUEO_CUENTA);
                     archivos.AddRange(exportados);
                     pendientes_desbloqueo.ForEach(p => p.SolIdEstadoSolicitud = data.Status);
                 }

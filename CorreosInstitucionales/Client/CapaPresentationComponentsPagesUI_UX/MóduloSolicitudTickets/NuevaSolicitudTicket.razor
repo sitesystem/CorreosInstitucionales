@@ -692,6 +692,10 @@ else
                 {
                     idResponse = int.Parse(oRespuesta.Message);
 
+                    string nuevo_correo_personal = oSolicitudTicket.SolIdTipoSolicitud == 2 ?
+                                                   $@"<br><div align='center'>ℹ️ Tu nuevo usuario para ingresar a SACI es:
+                                                      <strong>{oSolicitudTicket.SolCorreoPersonalCuentaActual.Trim()}<strong></div><br><br>" : "";
+
                     string msgEmail = $@"
                         <body>
 	                        <header>
@@ -706,7 +710,7 @@ else
                                             ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
                                             Estimad@: <br><b>{oResponseUsuario.Data.UsuNombre.Trim()} {oResponseUsuario.Data.UsuPrimerApellido.Trim()} {oResponseUsuario.Data.UsuSegundoApellido.Trim()}</b><br><br>
 				                            Se aperturó con éxito el Ticket <b>#{idResponse}</b> de la Solicitud <b>{oTipoSolicitud.Data.TiposolDescripcion}</b>
-                                            con la observación <b>{oSolicitudTicket.SolObservacionesSolicitud.Trim()}</b>.
+                                            con la observación <b>{oSolicitudTicket.SolObservacionesSolicitud?.Trim()}</b>.
 				                        </p>
 			                        </article>
 
@@ -735,7 +739,7 @@ else
 								                        </tr>
 								                        <tr>
 									                        <td width='200px' style='border: 1px solid black;'><b>✅ Observaciones</b></td>
-									                        <td width='300px' style='border: 1px solid black;'>{oSolicitudTicket.SolObservacionesSolicitud.Trim()}</td>
+									                        <td width='300px' style='border: 1px solid black;'>{oSolicitudTicket.SolObservacionesSolicitud?.Trim()}</td>
 								                        </tr>
 								                        <tr style='background-color: #dddddd;'>
 									                        <td width='200px' style='border: 1px solid black;'><b>✅ Estado</b></td>
@@ -752,7 +756,7 @@ else
 					                        </p>
 				                        </article>
 			                        </div><br>
-
+                                    {nuevo_correo_personal}
                                     <div align='center'>
                                         <strong>ATENCIÓN:</strong><br><br>
                                         <article style='background-color: rgb(244,244,244); width:700px; border-radius:10px; padding:5px; text-align:justify;'>
@@ -792,9 +796,10 @@ else
                                             "Por este medio se le dan los _Datos de la Solicitud_:\n" +
                                             "✅ Ticket: *#" + idResponse + "*\n" +
                                             "✅ Motivo/Incidencia de la Solicitud: *" + oTipoSolicitud.Data.TiposolDescripcion + "*\n" +
-                                            "✅ Observaciones: *" + oSolicitudTicket.SolObservacionesSolicitud.Trim() + "*\n" +
+                                            "✅ Observaciones: *" + oSolicitudTicket.SolObservacionesSolicitud?.Trim() + "*\n" +
                                             "✅ Estado: *Pendiente* (Se aperturó la Solicitud-Ticket y se ha colocado en la Bandeja de Espera para su pronta atención).\n" +
                                             "✅ Fecha / Hora de Creación: *" + fecha_hora_creación + "*\n\n" +
+                                            (oSolicitudTicket.SolIdTipoSolicitud == 2 ? $"ℹ️ Tu nuevo usuario para ingresar a SACI es: *{oSolicitudTicket.SolCorreoPersonalCuentaActual.Trim()}*\n\n" : "") +
                                             "*ATENCIÓN:*\n\n" +
                                             " 👀 Te informamos que las solicitudes tendrán una *respuesta entre 3 y 5 días hábiles*, se te notificará por los medios / vías de comunicación los avances del estado de tu solicitud.\n\n" +
                                             aviso_alumnos +

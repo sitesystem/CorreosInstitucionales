@@ -75,9 +75,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
             {
                 Issuer = null,
                 Audience = null,
-                Subject = new ClaimsIdentity(new Claim[] 
-                        {
-                        
+                Subject = new ClaimsIdentity(
+                        [
+
                             new(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
                             new(ClaimTypes.Name, usuario.UsuNombre.ToString()),
                             new(ClaimTypes.Role, usuario.UsuIdRol.ToString()),
@@ -87,7 +87,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
                             new("Rol", usuario.UsuIdRol.ToString()),
                             new("TipoPersonal", usuario.UsuIdTipoPersonal.ToString()),
                             new("RecuperarContrasenia", usuario.UsuRecuperarContrasenia.ToString().ToLower())
-                         }
+                         ]
                     ),
                 Expires = DateTime.UtcNow.AddMonths(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)

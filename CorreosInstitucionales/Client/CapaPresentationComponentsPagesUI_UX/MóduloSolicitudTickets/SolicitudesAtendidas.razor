@@ -123,9 +123,14 @@
                             <li>
                                 <strong>Correo Institucional: </strong>
                                 @{
-                                    var correo_institucional = !string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta : "no asignado";
+                                    var correo_institucional = (!string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta : "no asignado");
                                 }
                                 <div style="white-space: pre-wrap">@correo_institucional</div>
+                            </li>
+
+                            <li>
+                                <strong>Contraseña Correo Inst.: </strong>
+                                @(!string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalContrasenia) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalContrasenia : "no asignado")
                             </li>
 
                             <li>
