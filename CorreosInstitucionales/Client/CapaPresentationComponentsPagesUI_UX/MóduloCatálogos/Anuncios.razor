@@ -46,7 +46,7 @@
                 <Template Context="item">
                     @if(item.AnuArchivo != "-")
                     {
-                        <img src="../banners/@item.AnuArchivo" />
+                        <img src="../banners/@item.AnuArchivo" class="img-fluid" />
                     }
                     else
                     {
@@ -57,19 +57,21 @@
 
             <RadzenDataGridColumn TItem="RequestViewModel_Anuncio" Frozen="false" Title="Información" Filterable="false" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    <pre>@item.AnuDescripcion</pre>
+                    
                     @if(item.AnuVisibleDesde is not null)
                     {
-                        <strong>Visible desde: </strong><br />@item.AnuVisibleDesde
+                        <strong>Visible desde: </strong>
+                        <br />@item.AnuVisibleDesde
+                        <br />
                     }
                     @if(item.AnuVisibleHasta is not null)
                     {
                         <strong>Visible hasta: </strong>
-
+                        <br />@item.AnuVisibleHasta
                         <br />
-
-                        @item.AnuVisibleHasta
                     }
+
+                    <pre class="my-2 p-3">@item.AnuDescripcion</pre>
                     </Template>
             </RadzenDataGridColumn>
 
@@ -178,38 +180,39 @@
         if (result is not null)
         {
             MensajeCarga();
-            Response<string>? oResponse = await servicioArchivos.SubirAnuncio(result.Attachments[0]);
 
-            mensajes.AppendLine("[SERVIDOR]");
-
-            if (oResponse is not null)
+            if (result.Attachments.Count > 0)
             {
-                mensajes.AppendLine(oResponse.Message);
-                mensajes.AppendLine(oResponse.Data);
+                Response<string>? oResponse = await servicioArchivos.SubirAnuncio(result.Attachments[0]);
+                mensajes.AppendLine("[SUBIENDO ARCHIVO]");
 
-                if (oResponse.Success == 1)
+                if (oResponse is not null)
                 {
-                    mensajes.AppendLine("ANUNCIO PUBLICADO");
+                    mensajes.AppendLine(oResponse.Message);
+                    mensajes.AppendLine(oResponse.Data);
 
-                    result.Value.AnuArchivo = oResponse.Data ?? "ERROR";
-
-                    HttpResponseMessage response = await servicioAnuncio.AddDataAsync(result.Value);
-                    if (response.IsSuccessStatusCode)
+                    if (oResponse.Success == 1)
                     {
                         mensajes.AppendLine("ANUNCIO PUBLICADO");
+                        result.Value.AnuArchivo = oResponse.Data ?? "-";
                     }
-                    else
-                    {
-                        string tmp = await response.Content.ReadAsStringAsync();
-                        mensajes.AppendLine(tmp);
-                    }
+                }
 
+                else
+                {
+                    mensajes.AppendLine("[ERROR] NO HAY ARCHIVOS PARA SUBIR");
                 }
             }
 
+            HttpResponseMessage response = await servicioAnuncio.AddDataAsync(result.Value);
+            if (response.IsSuccessStatusCode)
+            {
+                mensajes.AppendLine("ANUNCIO PUBLICADO");
+            }
             else
             {
-                mensajes.AppendLine("[ERROR] NO HAY ARCHIVOS PARA SUBIR");
+                string tmp = await response.Content.ReadAsStringAsync();
+                mensajes.AppendLine(tmp);
             }
 
             debug += Environment.NewLine + mensajes.ToString();
@@ -224,18 +227,55 @@
         string json = JsonSerializer.Serialize(item);
         RequestViewModel_Anuncio? registro = JsonSerializer.Deserialize<RequestViewModel_Anuncio>(json);
 
+        StringBuilder mensajes = new ();
+
         if (registro is not null)
         {
             FileAttachment<RequestViewModel_Anuncio>? result = await MostrarFormulario(registro, "Editar Anuncio");
 
             if (result is not null)
             {
+                MensajeCarga();
+
+                if (result.Attachments.Count > 0)
+                {
+                    Response<string>? oResponse = await servicioArchivos.SubirAnuncio(result.Attachments[0]);
+                    mensajes.AppendLine("[SUBIENDO ARCHIVO]");
+
+                    if (oResponse is not null)
+                    {
+                        mensajes.AppendLine(oResponse.Message);
+                        mensajes.AppendLine(oResponse.Data);
+
+                        if (oResponse.Success == 1)
+                        {
+                            mensajes.AppendLine("ANUNCIO PUBLICADO");
+                            result.Value.AnuArchivo = oResponse.Data ?? "-";
+                        }
+                    }
+
+                    else
+                    {
+                        mensajes.AppendLine("[ERROR] NO HAY ARCHIVOS PARA SUBIR");
+                    }
+                }
+
                 HttpResponseMessage response = await servicioAnuncio.EditDataAsync(registro);
+
+                DialogService.Close();
+
                 if (response.IsSuccessStatusCode)
                 {
                     await CargarLista();
                 }
+                else
+                {
+                    string tmp = await response.Content.ReadAsStringAsync();
+                    mensajes.AppendLine(tmp);
+                }
             }
+
+            debug += Environment.NewLine + mensajes.ToString();
         }
     }//EDITAR
 

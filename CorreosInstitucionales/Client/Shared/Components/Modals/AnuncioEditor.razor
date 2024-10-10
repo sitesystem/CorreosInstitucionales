@@ -9,34 +9,31 @@
     <div class="row">
         <!--ROW-->
 
-        <div class="col-12 mb-2">
+        <div class="col-12 my-2">
             <span class="fw-bold">Descripcion<strong class="red" title="requerido">*</strong></span>
             <InputTextArea @bind-Value="@registro.AnuDescripcion" class=" required form-control" />
             <ValidationMessage For="()=>registro.AnuDescripcion"></ValidationMessage>
         </div>
 
-        <div class="col-6 mb-2">
+        <div class="col-6 my-2">
             <span class="fw-bold">Visible desde</span>
             <InputDate @bind-Value="@registro.AnuVisibleDesde" class="form-control"></InputDate>
         </div>
 
-        <div class="col-6 mb-2">
+        <div class="col-6 my-2">
             <span class="fw-bold">Visible hasta</span>
             <InputDate @bind-Value="@registro.AnuVisibleHasta" class="form-control"></InputDate>
         </div>
 
-        <div class="col-12 mb-2">
-            <span class="fw-bold">Archivo</span>
-            <br />
-
+        <div class="col-6 my-2">
             @if(registro.AnuArchivo != "-")
             {
-                <text>@registro.AnuArchivo</text>
-                <img src="~/banners/@registro.AnuArchivo" />
+                <img src="../banners/@registro.AnuArchivo" class="img-fluid" />
             }
+        </div>
 
-            <text>AGREGAR</text>
-            <InputFile OnChange="fuAnuncio_OnChange" class="form-control mb-3" required="required"></InputFile>
+        <div class="col-6 my-2">
+            <InputFile OnChange="fuAnuncio_OnChange" class="form-control mb-3"></InputFile>
         </div>
 
         <div class="col-6 mb-2">
@@ -72,13 +69,19 @@
     [Parameter] public RequestViewModel_Anuncio registro { get; set; } = new RequestViewModel_Anuncio();
     ContentData data = new();
 
+    bool has_attachment = false;
+
     //private IBrowserFile? archivo = null;
 
     private void OnValidForm()
     {
         FileAttachment<RequestViewModel_Anuncio> result = new(registro);
-        result.Attachments.Add(data);
 
+        if(has_attachment)
+        {
+            result.Attachments.Add(data);
+        }
+        
         //await result.AttachFile(archivo);
         dialogService.Close(result);
     }
@@ -98,8 +101,9 @@
             }
             data.Bytes = ms.ToArray();
         }
-         
+
         //archivo = e.File;
         registro.AnuArchivo = "-";
+        has_attachment = true;
     }
 }
