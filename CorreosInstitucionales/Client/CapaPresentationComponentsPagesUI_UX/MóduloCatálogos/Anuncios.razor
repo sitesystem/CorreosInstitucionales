@@ -1,4 +1,5 @@
 ﻿@page "/catalogo/anuncios"
+@using System.Text
 
 @attribute [Authorize(Policy = "[Rol] Ambos")]
 
@@ -10,17 +11,7 @@
 <div class="p-4 rounded-1 bg-white shadow">
     <h1>@Title</h1>
 
-    @if (cargado)
-    {
-        <div class="row my-3">
-            <div class="offset-10 col-2">
-                <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
-                    Agregar...
-                </button>
-            </div>
-        </div>
-    }
-    else
+    @if (trabajando)
     {
         <div class="row my-4">
             <div class="col text-center">
@@ -30,39 +21,60 @@
             </div>
         </div>
     }
+    else
+    {
+
+        <div class="row my-3">
+            <div class="offset-10 col-2">
+                <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
+                    Agregar...
+                </button>
+            </div>
+        </div>
+    }
 
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
                     FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@items" TItem="RequestViewModel_Anuncio" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
-                    Visible=@cargado
+                    Visible=@(!trabajando)
                     SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedItems>
         <Columns>
-            <RadzenDataGridColumn TItem="RequestViewModel_Anuncio" Property="IdTipoPersonal" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="RequestViewModel_Anuncio" Property="IdAnuncio" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
 
-            <RadzenDataGridColumn TItem="RequestViewModel_Anuncio" Frozen="false" Title="Solicitante" Filterable="false" TextAlign="TextAlign.Start">
+            <RadzenDataGridColumn TItem="RequestViewModel_Anuncio" Frozen="false" Title="Anuncio" Filterable="false" TextAlign="TextAlign.Start">
                 <Template Context="item">
-                    @if (item.AnuStatus)
+                    @if(item.AnuArchivo != "-")
                     {
-                        <text>
-                            @item.AnuArchivo
-                            @item.AnuDescripcion
-                        </text>
+                        <img src="../banners/@item.AnuArchivo" />
                     }
                     else
                     {
-                        <del>
-                            @item.AnuArchivo
-                            @item.AnuDescripcion
-                        </del>
+                        <strong>SIN ARCHIVO</strong>
                     }
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestViewModel_Anuncio" Property="TipoperDescripcion" Filterable="false" Title="ID" TextAlign="TextAlign.Start" />
+            <RadzenDataGridColumn TItem="RequestViewModel_Anuncio" Frozen="false" Title="Información" Filterable="false" TextAlign="TextAlign.Start">
+                <Template Context="item">
+                    <pre>@item.AnuDescripcion</pre>
+                    @if(item.AnuVisibleDesde is not null)
+                    {
+                        <strong>Visible desde: </strong><br />@item.AnuVisibleDesde
+                    }
+                    @if(item.AnuVisibleHasta is not null)
+                    {
+                        <strong>Visible hasta: </strong>
 
-            <RadzenDataGridColumn TItem="RequestViewModel_Anuncio" Context="item"
-                                  Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false"
+                        <br />
+
+                        @item.AnuVisibleHasta
+                    }
+                    </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestViewModel_Anuncio" Title="Acciones" Context="item"
+                                  Filterable="false" Frozen="true" Reorderable="false" Resizable="false" Sortable="false" TextAlign="TextAlign.Center" Width="80px"
                                   Visible=@puede_editar>
                 <Template Context="item">
                     <RadzenButton title="Editar..."
@@ -90,7 +102,6 @@
                                   Visible="item.AnuStatus.Equals(false)"
                                   Click="@(async ()=> await CambiarStatus(item, true))" @onclick:stopPropagation="true">
                     </RadzenButton>
-
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -100,7 +111,8 @@
 @code
 {
     private string Title = "Anuncios";
-    private bool cargado { get; set; } = false;
+    private bool trabajando { get; set; } = false;
+
     string debug = string.Empty;
 
     private bool puede_editar { get; set; } = true;
@@ -113,25 +125,23 @@
     {
         if (firstRender)
         {
-            items = await WebUtils.ListByStatusAsync(servicioAnuncio, false);
-            cargado = true;
-            StateHasChanged();
+            await CargarLista();
         }
     }
 
-    private async Task CargarLista(int? selecccionar_id = null)
+    private async Task CargarLista()
     {
+        trabajando = true;
+        StateHasChanged();
+
         items = await WebUtils.ListByStatusAsync(servicioAnuncio, false);
 
-        if (selecccionar_id is not null)
-        {
-            selectedItems = items.Where(i => (i.IdAnuncio == selecccionar_id)).ToList();
-        }
+        trabajando = false;
+        StateHasChanged();
     }
 
-    private async Task<DocumentoAdjunto<RequestViewModel_Anuncio>?> MostrarFormulario(RequestViewModel_Anuncio registro, string titulo_ventana)
+    private async Task<FileAttachment<RequestViewModel_Anuncio>?> MostrarFormulario(RequestViewModel_Anuncio registro, string titulo_ventana)
     {
-
         return await DialogService.OpenAsync<AnuncioEditor>
                 (
                     titulo_ventana,
@@ -161,38 +171,51 @@
     {
         RequestViewModel_Anuncio registro = TemplateEntity.CreateAnuncio();
 
-        DocumentoAdjunto<RequestViewModel_Anuncio>? result = await MostrarFormulario(registro, "Agregar Anuncio");
+        FileAttachment<RequestViewModel_Anuncio>? result = await MostrarFormulario(registro, "Agregar Anuncio");
 
-        List<string> mensajes = new List<string>();
-        string? error = null;
+        StringBuilder mensajes = new ();
 
         if (result is not null)
         {
             MensajeCarga();
+            Response<string>? oResponse = await servicioArchivos.SubirAnuncio(result.Attachments[0]);
 
-            HttpResponseMessage response = await servicioAnuncio.AddDataAsync(registro);
-            if (response.IsSuccessStatusCode)
+            mensajes.AppendLine("[SERVIDOR]");
+
+            if (oResponse is not null)
             {
-                await CargarLista(result.Value.IdAnuncio);
-                
-                foreach (KeyValuePair<TipoDocumento, IBrowserFile?> documento in result.Files)
+                mensajes.AppendLine(oResponse.Message);
+                mensajes.AppendLine(oResponse.Data);
+
+                if (oResponse.Success == 1)
                 {
-                    if (documento.Value is null) continue;
+                    mensajes.AppendLine("ANUNCIO PUBLICADO");
 
-                    error = await servicioArchivos.SubirDocumento(documento.Key, documento.Value);
+                    result.Value.AnuArchivo = oResponse.Data ?? "ERROR";
 
-                    if (error is not null)
+                    HttpResponseMessage response = await servicioAnuncio.AddDataAsync(result.Value);
+                    if (response.IsSuccessStatusCode)
                     {
-                        mensajes.Add(error);
+                        mensajes.AppendLine("ANUNCIO PUBLICADO");
                     }
+                    else
+                    {
+                        string tmp = await response.Content.ReadAsStringAsync();
+                        mensajes.AppendLine(tmp);
+                    }
+
                 }
-
-                await CargarLista(result.Value.IdAnuncio);
-
-                debug += Environment.NewLine + string.Join(Environment.NewLine, mensajes);
             }
 
+            else
+            {
+                mensajes.AppendLine("[ERROR] NO HAY ARCHIVOS PARA SUBIR");
+            }
+
+            debug += Environment.NewLine + mensajes.ToString();
+
             DialogService.Close();
+            await CargarLista();
         }
     }// AGREGAR
 
@@ -203,14 +226,14 @@
 
         if (registro is not null)
         {
-            DocumentoAdjunto<RequestViewModel_Anuncio>? result = await MostrarFormulario(registro, "Editar Anuncio");
+            FileAttachment<RequestViewModel_Anuncio>? result = await MostrarFormulario(registro, "Editar Anuncio");
 
             if (result is not null)
             {
                 HttpResponseMessage response = await servicioAnuncio.EditDataAsync(registro);
                 if (response.IsSuccessStatusCode)
                 {
-                    await CargarLista(item.IdAnuncio);
+                    await CargarLista();
                 }
             }
         }
@@ -235,7 +258,7 @@
             HttpResponseMessage response = await servicioAnuncio.EnableDisableDataByIdAsync(item.IdAnuncio, status);
             if (response.IsSuccessStatusCode)
             {
-                await CargarLista(item.IdAnuncio);
+                await CargarLista();
             }
         }
     }//CAMBIAR STATUS

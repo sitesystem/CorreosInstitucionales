@@ -3,12 +3,37 @@
 <PageTitle>@Title</PageTitle>
 <h3>@Title</h3>
 
+<h4>Arreglar Enlaces Rotos</h4>
+<p>Genera archivos de prueba en caso de que haya archivos faltantes.</p>
 <button type="button" class="btn btn-primary" @onclick="Arreglar_Click">Arreglar Enlaces Rotos</button>
-<pre>@debug</pre>
 
+
+<h4>Subir </h4>
+<p></p>
+<text>SUBIR BANNER (ARCHIVO)</text>
+<div class="row">
+    <div class="col-8">
+        <InputFile OnChange="fuAnuncio_OnChange" class="form-control mb-3"></InputFile>
+    </div>
+    <div class="col-4">
+        @if (archivos[0] is not null)
+        {
+            <button type="button" class="btn btn-primary" @onclick=@OnSubir>Subir</button>
+        }
+        else
+        {
+            <div class="alert alert-info">Seleccione un archivo para comenzar...</div>
+        }
+    </div>
+</div>
+
+<hr />
+<pre class="pre">@debug</pre>
 @code{
     readonly string Title = "Archivos";
     string debug = string.Empty;
+
+    private List<IBrowserFile?> archivos = new() { null };
 
     public async Task Arreglar_Click()
     {
@@ -30,6 +55,46 @@
                     debug += Environment.NewLine + enlace;
                 }
             }
+        }
+    }//ARREGLAR
+
+    private void fuAnuncio_OnChange(InputFileChangeEventArgs e)
+    {
+        archivos[0] = e.File;
+    }
+
+    private async Task OnSubir()
+    {
+        if (archivos.Count > 0 && archivos[0] is not null)
+        {
+            using (MultipartFormDataContent content = new MultipartFormDataContent())
+            {
+                using (StreamContent fileContent = new StreamContent(archivos[0].OpenReadStream()))
+                {
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(archivos[0].ContentType);
+
+                    content.Add(fileContent, name: "\"file\"", archivos[0].Name);
+
+                    Response<string>? oResponse = await servicioArchivos.PostFile("subir", "anuncio", content);
+
+                    if (oResponse is not null)
+                    {
+                        debug += Environment.NewLine +
+                        "[SERVIDOR] " + oResponse.Message + Environment.NewLine +
+                        Environment.NewLine +
+                        oResponse.Data;
+
+                        if (oResponse.Success == 1)
+                        {
+                            debug += Environment.NewLine + "ANUNCIO PUBLICADO";
+                        }
+                    }
+                }//STREAMCONTENT
+            }//CONTENT
+        }
+        else
+        {
+            debug += Environment.NewLine + "[ERROR] NO HAY ARCHIVOS PARA SUBIR";
         }
 
     }

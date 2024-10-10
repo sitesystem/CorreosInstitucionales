@@ -57,6 +57,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
         {
             return new RequestViewModel_Anuncio()
             {
+                AnuArchivo = "-",
                 AnuStatus = true
             };
         }

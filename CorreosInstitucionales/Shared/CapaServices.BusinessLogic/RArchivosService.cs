@@ -25,6 +25,25 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true };
         const string url = "/api/archivos";
 
+        public async Task<Response<string>?> SubirAnuncio(ContentData data)
+        {
+            HttpResponseMessage response;
+
+            using (MultipartFormDataContent fdContent = new MultipartFormDataContent())
+            {
+                using (StreamContent fileContent = new StreamContent(new MemoryStream(data.Bytes)))
+                {
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(data.ContentType);
+                    fdContent.Add(fileContent, name: "\"file\"", data.FileName);
+                    response = await _httpClient.PostAsync($"{url}/subir/anuncio", fdContent);
+                }
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<Response<string>>(content, options: _options);
+            return result;
+        }
+
         public async Task<string?> SubirDocumento(TipoDocumento documento, IBrowserFile file)
         {
             string? result = null;

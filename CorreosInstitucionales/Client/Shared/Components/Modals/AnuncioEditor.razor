@@ -29,16 +29,14 @@
             <span class="fw-bold">Archivo</span>
             <br />
 
-            @if(string.IsNullOrEmpty(registro.AnuArchivo))
-            {
-                <text>AGREGAR</text>
-                <InputFile OnChange="fuAnuncio_OnChange" class="form-control mb-3"></InputFile>
-            }
-            else
+            @if(registro.AnuArchivo != "-")
             {
                 <text>@registro.AnuArchivo</text>
                 <img src="~/banners/@registro.AnuArchivo" />
             }
+
+            <text>AGREGAR</text>
+            <InputFile OnChange="fuAnuncio_OnChange" class="form-control mb-3" required="required"></InputFile>
         </div>
 
         <div class="col-6 mb-2">
@@ -57,9 +55,12 @@
             </div>
 
             <div class="col-2">
-                <button type="submit" class="btn btn-primary form-control">
-                    Guardar
-                </button>
+                @if (!string.IsNullOrEmpty(data.FileName))
+                {
+                    <button type="submit" class="btn btn-primary form-control">
+                        Guardar
+                    </button>
+                }
             </div>
         </div>
     </div>
@@ -69,19 +70,36 @@
 @code
 {
     [Parameter] public RequestViewModel_Anuncio registro { get; set; } = new RequestViewModel_Anuncio();
+    ContentData data = new();
 
-    private Dictionary<TipoDocumento, IBrowserFile?> archivos = new();
+    //private IBrowserFile? archivo = null;
 
     private void OnValidForm()
     {
-        dialogService.Close(new DocumentoAdjunto<RequestViewModel_Anuncio>(registro, archivos));
+        FileAttachment<RequestViewModel_Anuncio> result = new(registro);
+        result.Attachments.Add(data);
+
+        //await result.AttachFile(archivo);
+        dialogService.Close(result);
     }
 
     private void OnCloseForm() => dialogService.Close(null);
 
-    private void fuAnuncio_OnChange(InputFileChangeEventArgs e)
+    private async void fuAnuncio_OnChange(InputFileChangeEventArgs e)
     {
-        archivos[TipoDocumento.ANUNCIO] = e.File;
+        data.ContentType = e.File.ContentType;
+        data.FileName = e.File.Name;
+
+        using (MemoryStream ms = new MemoryStream())
+        {
+            using(Stream stream = e.File.OpenReadStream())
+            {
+                await stream.CopyToAsync(ms);
+            }
+            data.Bytes = ms.ToArray();
+        }
+         
+        //archivo = e.File;
         registro.AnuArchivo = "-";
     }
 }

@@ -387,7 +387,36 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             return Ok(oResponse);
         }
 
-        [HttpPost("xlsx/procesados")]
+        [HttpPost("subir/anuncio")]
+        public async Task<IActionResult> SubirAnuncio(
+            IFormFile file)
+        {
+            Response<string> oResponse = new();
+
+            string basedir = ServerFS.GetBaseDir(true) + "/banners/";
+            string fname = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+
+            try
+            {
+                using (FileStream fs = new FileStream(basedir + fname, FileMode.CreateNew))
+                {
+                    await file.CopyToAsync(fs);
+                }
+
+                oResponse.Success = 1;
+                oResponse.Data = fname;
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+                oResponse.Data = ex.StackTrace;
+            }
+
+            return Ok(oResponse);
+        }
+
+
+            [HttpPost("xlsx/procesados")]
         public async Task<IActionResult> ImportarProcesados_XLSX(
             IFormFile file)
         {
