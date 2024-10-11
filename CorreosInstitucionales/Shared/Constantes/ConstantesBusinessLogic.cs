@@ -55,8 +55,8 @@ namespace CorreosInstitucionales.Shared.Constantes
                 case TipoDatoXLSX.ACCION: return "ACCIÓN / RESPUESTA AC";
                 case TipoDatoXLSX.CURP: return "CURP";
 
-                case TipoDatoXLSX.CORREO_PERSONAL_NUEVO: return "CORREO PERSONAL NUEVO";
-                case TipoDatoXLSX.CELULAR_NUEVO: return "NÚMERO DE CELULAR NUEVO";
+                case TipoDatoXLSX.CORREO_PERSONAL_NUEVO: return "CORREO PERSONAL ACTUAL";
+                case TipoDatoXLSX.CELULAR_NUEVO: return "NÚMERO DE CELULAR ACTUAL";
                 case TipoDatoXLSX.EXTENSION_NUEVO: return "NÚMERO DE EXTENSIÓN NUEVO ";
             }
 
@@ -134,7 +134,8 @@ namespace CorreosInstitucionales.Shared.Constantes
 
                 case TipoSolicitud.DESBLOQUEO_CUENTA:
                 case TipoSolicitud.OTRO:
-                    datos.AddRange(
+                    datos.AddRange
+                    (
                         [
                             TipoDatoXLSX.EXTENSION,
                             TipoDatoXLSX.CORREO_PERSONAL_NUEVO,
@@ -144,7 +145,8 @@ namespace CorreosInstitucionales.Shared.Constantes
                     break;
 
                 case TipoSolicitud.CAMBIO_CELULAR:
-                    datos.AddRange(
+                    datos.AddRange
+                    (
                         [
                             TipoDatoXLSX.CORREO_INSTITUCIONAL,
                             TipoDatoXLSX.CELULAR,
@@ -154,7 +156,8 @@ namespace CorreosInstitucionales.Shared.Constantes
                     break;
 
                 case TipoSolicitud.CAMBIO_CORREO_PERSONAL:
-                    datos.AddRange(
+                    datos.AddRange
+                    (
                         [
                             TipoDatoXLSX.CORREO_INSTITUCIONAL,
                             TipoDatoXLSX.CORREO_PERSONAL,
