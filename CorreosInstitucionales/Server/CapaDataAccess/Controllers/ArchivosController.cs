@@ -647,8 +647,24 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             // DATOS SOLICITUD
             string? id_externo_usuario = null;
-            
-            List<TipoDatoXLSX> datos_exportar = formato_solicitud.GetDatosExportar();
+
+            List<TipoDatoXLSX> datos_exportar = new();// formato_solicitud.GetDatosExportar();
+
+            // OBTENEMOS TODOS LOS DISTINTOS TIPOS DE SOLIICTUD
+            TipoSolicitud[] tipos_solicitud = lista.
+                GroupBy(s => s.SolIdTipoSolicitud).
+                Select(g => g.First()).
+                Select(s=>s.SolIdTipoSolicitud).
+                Cast<TipoSolicitud>().
+                ToArray();
+
+            foreach(TipoSolicitud tipo in tipos_solicitud)
+            {
+                datos_exportar.AddRange(tipo.GetDatosExportar());
+            }
+
+            datos_exportar = datos_exportar.Distinct().ToList();
+
             TipoDocumento[] documentos_adjuntar;
             TipoSolicitud tipo_solicitud;
 
@@ -721,7 +737,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             break;
 
                         case TipoDatoXLSX.EXTENSION:
-                            ws.Cell(fila, columna).Value = (usuario.UsuNoExtensionAnterior ?? string.Empty) == "0" ? string.Empty : usuario.UsuNoExtensionAnterior;
+                            ws.Cell(fila, columna).Value = usuario.UsuNoExtensionAnterior ?? string.Empty;
                             break;
                         case TipoDatoXLSX.EXTENSION_NUEVO:
                             ws.Cell(fila, columna).Value = usuario.UsuNoExtension;
