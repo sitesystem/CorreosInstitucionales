@@ -263,9 +263,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     SolCapturaEscaneoAntivirus = model.SolCapturaEscaneoAntivirus,
                     SolCapturaCuentaBloqueada = model.SolCapturaCuentaBloqueada,
                     SolCapturaError = model.SolCapturaError,
-                    SolObservacionesSolicitud = model.SolObservacionesSolicitud.Trim(),
+                    SolObservacionesSolicitud = model.SolObservacionesSolicitud?.Trim(),
                     SolIdEstadoSolicitud = model.SolIdEstadoSolicitud,
+                    SolFechaHoraActualizacion = model.SolFechaHoraActualizacion,
                     SolValidacionDatos = model.SolValidacionDatos,
+                    SolEnvioEncuesta = model.SolEnvioEncuesta,
                     SolEncuestaCalidadCalificacion = model.SolEncuestaCalidadCalificacion,
                     SolEncuestaCalidadComentarios = model.SolEncuestaCalidadComentarios,
                     SolFechaHoraEncuesta = model.SolFechaHoraEncuesta,
@@ -311,7 +313,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     oSolicitud.SolCapturaError = model.SolCapturaError;
                     oSolicitud.SolObservacionesSolicitud = model.SolObservacionesSolicitud;
                     oSolicitud.SolIdEstadoSolicitud = model.SolIdEstadoSolicitud;
+                    oSolicitud.SolFechaHoraActualizacion = model.SolFechaHoraActualizacion;
                     oSolicitud.SolValidacionDatos = model.SolValidacionDatos;
+                    oSolicitud.SolEnvioEncuesta = model.SolEnvioEncuesta;
                     oSolicitud.SolEncuestaCalidadCalificacion = model.SolEncuestaCalidadCalificacion;
                     oSolicitud.SolEncuestaCalidadComentarios = model.SolEncuestaCalidadComentarios;
                     oSolicitud.SolFechaHoraEncuesta = model.SolFechaHoraEncuesta;

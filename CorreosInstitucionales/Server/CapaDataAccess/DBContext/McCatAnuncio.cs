@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
@@ -19,6 +19,10 @@ public partial class McCatAnuncio
     [Column("anuArchivo")]
     [StringLength(255)]
     public string AnuArchivo { get; set; } = null!;
+
+    [Column("anuEnlace")]
+    [StringLength(300)]
+    public string? AnuEnlace { get; set; }
 
     [Column("anuVisibleDesde", TypeName = "datetime")]
     public DateTime? AnuVisibleDesde { get; set; }

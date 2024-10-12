@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
 
@@ -73,10 +73,22 @@ public partial class MtTbSolicitudesTicket
     public int SolIdEstadoSolicitud { get; set; }
 
     /// <summary>
+    /// Fecha/Hora en cada cambio de Estado o Etapa de la Solicitud a PENDIENTE y a ATENDIDO/FINALIZADO o CANCELADO
+    /// </summary>
+    [Column("solFechaHoraActualizacion", TypeName = "datetime")]
+    public DateTime? SolFechaHoraActualizacion { get; set; }
+
+    /// <summary>
     /// Validación de Datos por el Administrador { 0 - No Validados, 1 - Validados }
     /// </summary>
     [Column("solValidacionDatos")]
     public bool SolValidacionDatos { get; set; }
+
+    /// <summary>
+    /// Número de intentos del envío de encuesta de satisfacción en la calidad del servicio: por regla inicial 1 envío y si no contesta, SACI se califica con 5 estrellas
+    /// </summary>
+    [Column("solEnvioEncuesta")]
+    public byte? SolEnvioEncuesta { get; set; }
 
     /// <summary>
     /// Calificación de la Encuesta de Calidad con emojis caritas o estrellas.
@@ -97,9 +109,7 @@ public partial class MtTbSolicitudesTicket
     [Column("solFechaHoraEncuesta", TypeName = "datetime")]
     public DateTime? SolFechaHoraEncuesta { get; set; }
 
-    [Column("solRespuestaDCyC")]
-    [StringLength(300)]
-    [Unicode(false)]
+    [Column("solRespuestaDCyC", TypeName = "text")]
     public string? SolRespuestaDcyC { get; set; }
 
     /// <summary>

@@ -22,6 +22,10 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         [StringLength(255)]
         public string AnuArchivo { get; set; } = null!;
 
+        [Column("anuEnlace")]
+        [StringLength(300)]
+        public string? AnuEnlace { get; set; }
+
         [Column("anuVisibleDesde", TypeName = "datetime")]
         public DateTime? AnuVisibleDesde { get; set; }
 

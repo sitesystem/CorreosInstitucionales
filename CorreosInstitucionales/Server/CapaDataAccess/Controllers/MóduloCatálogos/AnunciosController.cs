@@ -70,6 +70,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                     IdAnuncio = model.IdAnuncio,
                     AnuDescripcion = model.AnuDescripcion,
                     AnuArchivo = model.AnuArchivo,
+                    AnuEnlace = model.AnuEnlace,
                     AnuVisibleDesde = model.AnuVisibleDesde,
                     AnuVisibleHasta = model.AnuVisibleHasta,
                     AnuStatus = true
@@ -101,6 +102,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                 {
                     oAnuncio.AnuDescripcion = model.AnuDescripcion;
                     oAnuncio.AnuArchivo = model.AnuArchivo;
+                    oAnuncio.AnuEnlace = model.AnuEnlace;
                     oAnuncio.AnuVisibleDesde = model.AnuVisibleDesde;
                     oAnuncio.AnuVisibleHasta = model.AnuVisibleHasta;
                     oAnuncio.AnuStatus = model.AnuStatus;
