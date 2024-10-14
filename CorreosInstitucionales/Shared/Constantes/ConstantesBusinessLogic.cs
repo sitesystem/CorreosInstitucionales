@@ -78,12 +78,12 @@ namespace CorreosInstitucionales.Shared.Constantes
         {
             switch (solicitud)
             {
-                case TipoSolicitud.CAMBIO_CELULAR: return "sol_cambios_celular.xlsx";
-                case TipoSolicitud.CAMBIO_CORREO_PERSONAL: return "sol_cambios_correo_personal.xlsx";
-                case TipoSolicitud.DESBLOQUEO_CUENTA: return "sol_desbloqueo.xlsx";
+                case TipoSolicitud.CAMBIO_CELULAR: return "SOLICITUD DE CAMBIO DE CELULAR ";
+                case TipoSolicitud.CAMBIO_CORREO_PERSONAL: return "SOLICITUD DE CAMBIO CORREO PERSONAL ";
+                case TipoSolicitud.DESBLOQUEO_CUENTA: return "SOLICITUD DE DESBLOQUEO DE CUENTA ";
             }
 
-            return "sol_altas.xlsx";
+            return "SOLICITUD DE CUENTAS INSTITUCIONALES ";
         }
         public static TipoDocumento[] GetDocumentos(this TipoSolicitud solicitud)
         {

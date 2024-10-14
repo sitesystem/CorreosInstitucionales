@@ -272,7 +272,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }// ENVIO  MASIVO (EN PROCESO)
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private WebUtils.Link GenerarLink(MtTbSolicitudesTicket solicitud, TipoDocumento tipo_documento, string directorio)
+        private WebUtils.Link GenerarLink(
+            MtTbSolicitudesTicket solicitud, 
+            TipoDocumento tipo_documento, 
+            string directorio, 
+            bool optional = true)
         {
             string archivo = string.Empty;
             string tipo = tipo_documento.GetNombre();
@@ -303,7 +307,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             string ext = Path.GetExtension(archivo);
             string nombre_usuario = $"{usuario.UsuNombre} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}";
-            return new WebUtils.Link($"{directorio}{archivo}",$"{nombre_usuario}-{tipo}{ext}");
+            return new WebUtils.Link($"{directorio}{archivo}",$"{nombre_usuario}-{tipo}{ext}", optional);
         }
 
         [HttpPost("xlsx/pendientes")]
@@ -625,14 +629,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public List<WebUtils.Link> GenerarXLSX(IEnumerable<MtTbSolicitudesTicket> lista, string archivo, TipoSolicitud formato_solicitud = TipoSolicitud.NO_ESPECIFICADA)
+        public List<WebUtils.Link> GenerarXLSX(IEnumerable<MtTbSolicitudesTicket> lista, string ruta, TipoSolicitud formato_solicitud = TipoSolicitud.NO_ESPECIFICADA)
         {
             List<WebUtils.Link> links = new();
 
             // ARCHIVOS
             string plantilla = $"{ServerFS.GetBaseDir(true)}/assets/{formato_solicitud.GetPlantilla()}";
-            string archivo_exportacion = $"{archivo}_{formato_solicitud.GetNombreExportacion()}";
+
+            string archivo_exportacion = ruta.Replace("%ruta%",formato_solicitud.GetNombreExportacion())+".xlsx";
             string nombre_archivo = Path.GetFileName(archivo_exportacion);
+            
             string ruta_usuario = string.Empty;
             string ruta_repositorio = string.Empty;
 
@@ -813,13 +819,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 bool return_zip
             )
         {
-            Guid id = Guid.NewGuid();
-            string id_fecha = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            Guid guid = Guid.NewGuid();
+            string id_fecha = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 
             Response<List<WebUtils.Link>> oResponse = new() { Data = new() } ;
 
-            string archivo = $"repositorio/pendientes/{id_fecha}_{id}";
-
+            string ruta = $"repositorio/pendientes/%ruta%{id_fecha}_{guid}";
+            string ruta_exportacion = ruta.Replace("%ruta%", "EXPORTACION_");
+            
             List<MtTbSolicitudesTicket> pendientes = new();
             List<MtTbSolicitudesTicket> pendientes_celular = new();
             List<MtTbSolicitudesTicket> pendientes_correo_personal = new();
@@ -866,33 +873,33 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 if (pendientes.Count>0)
                 {
-                    exportados = GenerarXLSX(pendientes, archivo);
+                    exportados = GenerarXLSX(pendientes, ruta);
                     archivos.AddRange(exportados);
                     pendientes.ForEach(p => p.SolIdEstadoSolicitud = data.Status);
                 }
                 
                 if(pendientes_celular.Count>0)
                 {
-                    exportados = GenerarXLSX(pendientes_celular, archivo, TipoSolicitud.CAMBIO_CELULAR);
+                    exportados = GenerarXLSX(pendientes_celular, ruta, TipoSolicitud.CAMBIO_CELULAR);
                     archivos.AddRange(exportados);
                     pendientes_celular.ForEach(p => p.SolIdEstadoSolicitud = data.Status);
                 }
 
                 if(pendientes_correo_personal.Count>0)
                 {
-                    exportados = GenerarXLSX(pendientes_correo_personal, archivo, TipoSolicitud.CAMBIO_CORREO_PERSONAL);
+                    exportados = GenerarXLSX(pendientes_correo_personal, ruta, TipoSolicitud.CAMBIO_CORREO_PERSONAL);
                     archivos.AddRange(exportados);
                     pendientes_correo_personal.ForEach(p => p.SolIdEstadoSolicitud = data.Status);
                 }
 
                 if (pendientes_desbloqueo.Count > 0)
                 {
-                    exportados = GenerarXLSX(pendientes_desbloqueo, archivo, TipoSolicitud.DESBLOQUEO_CUENTA);
+                    exportados = GenerarXLSX(pendientes_desbloqueo, ruta, TipoSolicitud.DESBLOQUEO_CUENTA);
                     archivos.AddRange(exportados);
                     pendientes_desbloqueo.ForEach(p => p.SolIdEstadoSolicitud = data.Status);
                 }
 
-                error = ServerFS.WriteZip($"{archivo}.zip", archivos);
+                error = ServerFS.WriteZip($"{ruta_exportacion}.zip", archivos);
 
                 if(error is not null)
                 {
@@ -901,7 +908,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 
                 if (return_zip)
                 {
-                    oResponse.Data = new List<WebUtils.Link>() {  new WebUtils.Link($"{archivo}.zip") };
+                    WebUtils.Link link = new WebUtils.Link($"{ruta_exportacion}.zip");
+                    link.Name = Path.GetFileName(link.Url);
+
+                    oResponse.Data = new List<WebUtils.Link>() { link };
                 }
                 else
                 {
@@ -962,7 +972,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
             if (mensajes.Length>0)
             {
-                System.IO.File.WriteAllText($"{ServerFS.GetBaseDir(true)}/{archivo}.log", mensajes.ToString());
+                System.IO.File.WriteAllText($"{ServerFS.GetBaseDir(true)}/{ruta_exportacion}.log", mensajes.ToString());
                 oResponse.Message = mensajes.ToString();
             }
 

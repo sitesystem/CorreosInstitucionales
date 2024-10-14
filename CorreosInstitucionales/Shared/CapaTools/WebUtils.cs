@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
@@ -31,10 +32,11 @@ namespace CorreosInstitucionales.Shared.Utils
             return result;
         }
 
-        public class Link(string url = "#", string name = "#")
+        public class Link(string url = "#", string name = "#", bool optional = false)
         {
             public string Url { get; set; } = url;
             public string Name { get; set; } = name;
+            public bool Optional { get; set; } = optional;
         }
 
         public static string ArchivoSolicitud(RequestDTO_Solicitud solicitud, TipoDocumento tipo_documento)
