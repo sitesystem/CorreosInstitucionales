@@ -33,6 +33,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     list = await _db.MpTbUsuarios.Where(u => u.UsuStatus.Equals(filterByStatus))
                                                  .Include(r => r.UsuIdRolNavigation)
                                                  .Include(tp => tp.UsuIdTipoPersonalNavigation)
+                                                 .Include(ce => ce.UsuIdCarreraNavigation)
+                                                 .Include(ad => ad.UsuIdAreaDeptoNavigation)
                                                  .ToListAsync();
                                     //   .OrderByDescending(x => x.Id)
                                     //   .Skip((actualPage - 1) * Utilities.REGISTERSPERPAGE)
@@ -41,6 +43,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 else
                     list = await _db.MpTbUsuarios.Include(r => r.UsuIdRolNavigation)
                                                  .Include(tp => tp.UsuIdTipoPersonalNavigation)
+                                                 .Include(ce => ce.UsuIdCarreraNavigation)
+                                                 .Include(ad => ad.UsuIdAreaDeptoNavigation)
                                                  .ToListAsync();
 
                 oResponse.Success = 1;

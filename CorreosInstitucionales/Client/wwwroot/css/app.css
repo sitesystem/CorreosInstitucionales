@@ -217,3 +217,7 @@ a, .btn-link {
     border: 5px solid rgb(215,215,215);
     border-radius: 50%;
 }
+
+.popover-dark {
+    --bs-popover-max-width: 500px;
+}

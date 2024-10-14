@@ -72,10 +72,11 @@
     }
 
     <RadzenDataGrid @ref="oSolicitudesRef" Data="@items" @bind-Value="@selectedItems" TItem="RequestDTO_Solicitud" Density="@Density"
+                    IsLoading="@isLoading" Page="@OnPage" Sort="@ShowLoading" Group="@ShowLoading" Filter="@ShowLoading"
                     AllowFiltering="true" AllowColumnResize="true" AllowColumnReorder="true" AllowAlternatingRows="true" AllowSorting="true"
-                    AllowColumnPicking="true" ColumnsPickerAllowFiltering="true"
+                    AllowColumnPicking="true" ColumnsPickerAllowFiltering="true" AllowPickAllColumns="true"
                     AllowPaging="true" PageSize="10" PagerPosition="PagerPosition.TopAndBottom" PagerHorizontalAlign="HorizontalAlign.Center" PagerAlwaysVisible="true"
-                    PageSizeOptions="@(new int[] { 10, 25, 50, 100 })" PageSizeText="registros por página" ShowPagingSummary="true" PagingSummaryFormat="Mostrando página {0} de {1} <b>(Total {2} registros)</b>" Page="@OnPage"
+                    PageSizeOptions="@(new int[] { 10, 25, 50, 100 })" PageSizeText="registros por página" ShowPagingSummary="true" PagingSummaryFormat="Mostrando página {0} de {1} <b>(Total {2} registros)</b>"
                     AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowVirtualization="true" GridLines="DataGridGridLines.Both"
                     FilterMode="FilterMode.Advanced" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="LogicalFilterOperator.Or"
                     FilterText="Filtrar" EqualsText="Igual a..." NotEqualsText="Distinto de..." ContainsText="Contiene..." StartsWithText="Comienza con..." EndsWithText="Termina con..." DoesNotContainText="No contiene..."
@@ -84,7 +85,10 @@
                     ClearFilterText="Limpiar Filtro" ApplyFilterText="Aplicar"
                     ColumnsShowingText="columnas visibles" AllColumnsText="Todas las columnas" ColumnsText="Mostrar columnas"
                     ColumnWidth="300px" SelectionMode="DataGridSelectionMode.Single"
-                    ExpandMode="DataGridExpandMode.Single" Visible=@(!trabajando)>
+                    ExpandMode="DataGridExpandMode.Single"
+                    AllowGrouping="true" Render="@OnRender" HideGroupedColumn="true" ShowGroupExpandColumn="true"
+                    GroupPanelText="Arrastra y suelta aquí un encabezado de una columna para agrupar sus datos."
+                    Visible="@(!trabajando)">
         <HeaderTemplate>
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
                 <button class="btn btn-secondary" @onclick="CargarLista">
@@ -97,28 +101,31 @@
                 </button>
                 <RadzenSelectBar @bind-Value="@Density" TextProperty="Text" ValueProperty="Value" Visible="false"
                                  Data="@(Enum.GetValues(typeof(Density)).Cast<Density>().Select(t => new { Text = $"{t}", Value = t }))" Size="ButtonSize.Small">
-                    @* <Items>
-                    <RadzenSelectBarItem Value="true" Text="Sí" Icon="check_circle" IconColor="@Colors.SuccessDarker" />
-                    <RadzenSelectBarItem Value="false" Text="No" Icon="cancel" IconColor="@Colors.DangerDarker" />
-                    </Items> *@
                 </RadzenSelectBar>
             </RadzenStack>
         </HeaderTemplate>
         <Columns>
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="# Ticket" Property="IdSolicitudTicket"
-                                  Filterable="true" Frozen="true" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="150px">
+            <RadzenDataGridColumn Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="50px" Pickable="false">
+                <Template Context="item">
+                    <RadzenBadge Variant="Variant.Flat" Text="@($"{items.IndexOf(item) + 1}")" BadgeStyle="@(BadgeStyle.Dark)" Shade="@(Shade.Darker)" IsPill="true" class="" />
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="# Ticket" Property="IdSolicitudTicket" Pickable="false"
+                                  Filterable="true" FilterMode="FilterMode.CheckBoxList" Frozen="true" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="150px">
                 <Template Context="data">
                     <h4 class="text-wrap">@data.IdSolicitudTicket</h4>
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Property="SolIdUsuarioNavigation.UsuCurp"
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Property="SolIdUsuarioNavigation.UsuCurp" Pickable="false"
                                   Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="300px">
                 <HeaderTemplate>
-                    <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
-                          title="<b>Datos del Solicitante</b>" data-bs-content="Filtro y búsqueda por el CURP.">
-                        Solicitante (filtro y búsqueda por el CURP)
-                    </span>
+                    <RadzenButton Text="SOLICITANTE (Filtro y búsqueda por el CURP)" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>SOLICITANTE</b><br>Filtro y búsqueda por el CURP.",
+                                                Position = TooltipPosition.Top, Delay = 0, Duration = 10000 }))" />
                 </HeaderTemplate>
                 <Template Context="item">
                     <div class="text-start text-wrap">
@@ -195,13 +202,14 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion"
+            <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion" Pickable="false"
                                   Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="300px">
                 <HeaderTemplate>
-                    <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
-                          title="<b>Datos de la Solicitud</b>" data-bs-content="Filtro y búsqueda por el tipo o motivo de Solicitud.">
-                        Solicitud (filtro y búsqueda por el tipo o motivo de Solicitud)
-                    </span>
+                    <RadzenButton Text="SOLICITUD (Filtro y búsqueda por el tipo o motivo de Solicitud)" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>SOLICITUD</b><br>Filtro y búsqueda por el tipo o motivo de Solicitud.",
+                                                Position = TooltipPosition.Top, Delay = 0, Duration = 10000 }))" />
                 </HeaderTemplate>
                 <Template Context="item">
                     <div class="text-start text-wrap">
@@ -215,10 +223,11 @@
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Adjuntos"
                                   Filterable="false" Frozen="false" Reorderable="true" Resizable="true" Sortable="false" TextAlign="TextAlign.Center" Width="250px">
                 <HeaderTemplate>
-                    <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
-                          title="<b>Archivos Adjuntos</b>" data-bs-content="Archivos en PDF requeridos para la revisión y validación de los datos del usuario solicitante.">
-                        Archivos Adjuntos
-                    </span>
+                    <RadzenButton Text="ARCHIVOS ADJUNTOS" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>ARCHIVOS ADJUNTOS</b><br>Archivos en PDF requeridos para la revisión y<br>validación de los datos del usuario solicitante.",
+                                                Position = TooltipPosition.Top, Delay = 0, Duration = 10000 }))" />
                 </HeaderTemplate>
                 <Template Context="item">
                     <div class="text-start text-wrap">
@@ -374,6 +383,7 @@
 {
     private string Title = "Solicitudes en Proceso";
     private bool trabajando { get; set; } = true;
+    private bool isLoading = false;
     Density Density = Density.Default;
 
     private List<RequestDTO_Solicitud> items = new List<RequestDTO_Solicitud>();
@@ -640,6 +650,26 @@
 
     async Task OnPage(PagerEventArgs args)
     {
-        //
+        isLoading = true;
+        await Task.Yield();
+        isLoading = false;
     }
+
+    async Task ShowLoading()
+    {
+        isLoading = true;
+        await Task.Yield();
+        isLoading = false;
+    }
+
+    void OnRender(DataGridRenderEventArgs<RequestDTO_Solicitud> args)
+    {
+        if (args.FirstRender)
+        {
+            // args.Grid.Groups.Add(new GroupDescriptor() { Title = "Customer", Property = "Customer.CompanyName", SortOrder = SortOrder.Descending });
+            StateHasChanged();
+        }
+    }
+
+    void ShowTooltipWithHtml(ElementReference elementReference, TooltipOptions options = null!) => TooltipService.Open(elementReference, ds => null!, options);
 }

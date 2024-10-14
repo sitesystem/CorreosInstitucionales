@@ -49,7 +49,7 @@
                 </HeaderTemplate>
                 <Columns>
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="# TICKET" Property="IdSolicitudTicket"
-                                          Filterable="true" Frozen="true" Reorderable="true" Resizable="false" Sortable="true" TextAlign="TextAlign.Center" Width="140px">
+                                          Filterable="true" FilterMode="FilterMode.CheckBoxList" Frozen="true" Reorderable="true" Resizable="false" Sortable="true" TextAlign="TextAlign.Center" Width="140px">
                         <Template Context="data">
                             <h3 class="text-wrap">@data.IdSolicitudTicket</h3>
                             @if (!string.IsNullOrEmpty(data.SolRespuestaDcyC))
