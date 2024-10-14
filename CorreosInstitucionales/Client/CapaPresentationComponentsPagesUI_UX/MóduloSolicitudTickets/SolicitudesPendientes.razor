@@ -2,6 +2,8 @@
 
 @attribute [Authorize(Policy = "[Rol] Administrador")]
 
+@inject DialogService DialogService
+
 <PageTitle>@Title</PageTitle>
 
 <script src="js/descargar.js?v=1.0.0.9"></script>
@@ -12,6 +14,7 @@
         <div class="col-6">
             <h1>@Title</h1>
             <hr />
+            @((MarkupString)links)
         </div>
         
         <div class="col-3"></div>
@@ -27,6 +30,8 @@
                     <div class="card-body">
                         <div class="my-2">
                             <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Descargar como archivo Zip
+                            <br />
+                            <InputCheckbox @bind-Value="descargar_ajuntos"></InputCheckbox> Descargar adjuntos
                         </div>
 
                         <button class="btn btn-primary form-control" @onclick="Descargar">
@@ -38,8 +43,6 @@
             }
         </div>
     </div>
-
-    <div>@((MarkupString)links)</div>
 
     @if (trabajando)
     {
@@ -363,6 +366,8 @@
     private bool isLoading = false;
     private bool generando = false;
     private bool exportar_zip = false;
+    private bool descargar_ajuntos = true;
+
     private string links = string.Empty;
 
     private int anio = DateTime.Now.Year;
@@ -401,6 +406,15 @@
         }
     }
 
+    private void MensajeCarga()
+    {
+        DialogService.OpenAsync<Carga>(
+                String.Empty,
+                new Dictionary<string, object>(),
+                new DialogOptions() { ShowClose = false, Width = "64px" }
+            );
+    }
+
     private async Task CargarLista()
     {
         trabajando = true;
@@ -426,9 +440,13 @@
 
     private async void Descargar()
     {
+        MensajeCarga();
+        bool recargar_lista = false;
+
+        /*
         trabajando = true;
         StateHasChanged();
-
+        */
         int[] tickets = items.Where(i => i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToArray();
 
         TExport<int[]> selected_ids = new(tickets, (int)TipoEstadoSolicitud.PENDIENTE, true, true);
@@ -442,19 +460,31 @@
                 links = "<ul>";
                 foreach (WebUtils.Link url in oResponse.Data)
                 {
-                    await JSRuntime.InvokeVoidAsync("Descargar", url);
-
+                    if(!url.Optional || descargar_ajuntos)
+                    {
+                        await JSRuntime.InvokeVoidAsync("Descargar", url);
+                    }
+                    
                     links += $"<li><a href=\"{url.Url}\" download=\"{url.Url}\">{url.Name}</a></li>";
                 }
                 links += "</ul>";
 
-                StateHasChanged();
-                await CargarLista();
+                //StateHasChanged();
+                //await CargarLista();
+                
             }
             else
             {
                 debug += Environment.NewLine + oResponse.Message;
             }
+        }
+
+        StateHasChanged();
+        DialogService.Close();
+
+        if (recargar_lista)
+        {
+            await CargarLista();
         }
     }// DESCARGAR (EXPORTAR)
 
@@ -529,7 +559,7 @@
     {
         string? mensaje = await DialogModalService.OpenAsync<MensajeRespuesta>
         (
-            $"{mensaje_confirmar} {item.IdSolicitudTicket} de {item.SolIdUsuarioNavigation!.UsuNombre} {item.SolIdUsuarioNavigation!.UsuPrimerApellido} {item.SolIdUsuarioNavigation!.UsuSegundoApellido}",
+            $"{mensaje_confirmar} TICKET #{item.IdSolicitudTicket} de {item.SolIdUsuarioNavigation!.UsuNombre} {item.SolIdUsuarioNavigation!.UsuPrimerApellido} {item.SolIdUsuarioNavigation!.UsuSegundoApellido}",
             null,
             new DialogOptions()
                 {
@@ -567,7 +597,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                debug += Environment.NewLine + $"ACTIALUZADO: SOLICITUD {item.IdSolicitudTicket} ({mensaje_confirmar}).";
+                debug += Environment.NewLine + $"ACTUALIZADO: SOLICITUD {item.IdSolicitudTicket} ({mensaje_confirmar}).";
                 await CargarLista();
             }
             else

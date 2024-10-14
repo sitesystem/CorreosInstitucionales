@@ -1,13 +1,10 @@
-﻿<div class="p-3">
-    <div class="row">
-        <div class="col">
-            <strong>Motivo de Cancelación / Finalización:</strong>
-            <InputTextArea class="form-control" style="height:200px" @bind-Value="mensaje" />
-        </div>
+﻿<div class="row">
+    <div class="col">
+        <InputTextArea class="form-control" style="height:200px" @bind-Value="mensaje" />
     </div>
 </div>
 
-<div class="row mb-3">
+<div class="row my-3">
     <div class="offset-3 col-3">
         <button type="button" class="btn btn-secondary form-control" @onclick=@(() => DialogModalService.Close(null))>Cancelar</button>
     </div>
