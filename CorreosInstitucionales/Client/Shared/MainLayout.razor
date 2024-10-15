@@ -113,7 +113,7 @@
                         <RadzenSidebarToggle Click="@(() => sidebarExpanded = false)" class="rz-m-0 rz-background-color-info-light rz-border-color-info-lighter" />
                     </RadzenStack>
                     <RadzenPanelMenu Multiple="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" ShowArrow="true">
-                        <NavMenu isExpanded="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" />
+                        <NavMenu isExpanded="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" isDisplayed="@(sidebarExpanded)" />
                     </RadzenPanelMenu>
                 </RadzenSidebar>
             </div>
@@ -123,7 +123,7 @@
                 <RadzenSidebar Responsive="false" Style="width:max-content; font-family:var(--rz-text-font-family); border-top:0;" class="rz-background-color-base-900 rz-border-base-900">
                     <RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)"
                                      Multiple="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" ShowArrow="true">
-                        <NavMenu isExpanded="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" />
+                        <NavMenu isExpanded="@(context.User.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value == "2" ? true : false)" isDisplayed="@(sidebarExpanded)" />
                     </RadzenPanelMenu>
                 </RadzenSidebar>
             </div>

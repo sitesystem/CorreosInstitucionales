@@ -22,13 +22,13 @@
     }
 
     <RadzenDataGrid @ref="oSolicitudesRef" Data="@items" @bind-Value="@selectedItems" TItem="RequestDTO_Solicitud" Density="@Density"
-                    IsLoading="@isLoading" Page="@OnPage" Sort="@ShowLoading" Group="@ShowLoading" Filter="@ShowLoading"
+                    IsLoading="@isLoading" Filter="@ShowLoading" Group="@ShowLoading" Page="@OnPage" Sort="@ShowLoading"
                     AllowFiltering="true" AllowColumnResize="true" AllowColumnReorder="true" AllowAlternatingRows="true" AllowSorting="true"
                     AllowColumnPicking="true" ColumnsPickerAllowFiltering="true" AllowPickAllColumns="true"
                     AllowPaging="true" PageSize="10" PagerPosition="PagerPosition.TopAndBottom" PagerHorizontalAlign="HorizontalAlign.Center" PagerAlwaysVisible="true"
                     PageSizeOptions="@(new int[] { 10, 25, 50, 100, 500 })" PageSizeText="registros por página" ShowPagingSummary="true" PagingSummaryFormat="Mostrando página {0} de {1} <b>(Total {2} registros)</b>"
                     AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowVirtualization="true" GridLines="DataGridGridLines.Both"
-                    FilterMode="FilterMode.Advanced" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="LogicalFilterOperator.Or"
+                    FilterMode="FilterMode.Advanced" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="LogicalFilterOperator.And"
                     FilterText="Filtrar" EqualsText="Igual a..." NotEqualsText="Distinto de..." ContainsText="Contiene..." StartsWithText="Comienza con..." EndsWithText="Termina con..." DoesNotContainText="No contiene..."
                     IsNullText="Es nulo" IsEmptyText="Es vacío" IsNotNullText="No es nulo" IsNotEmptyText="No es vacío" AndOperatorText="Y" OrOperatorText="O"
                     GreaterThanText="Mayor que" GreaterThanOrEqualsText="Mayor o igual que" LessThanText="Menor que" LessThanOrEqualsText="Menor o igual que"
@@ -57,6 +57,13 @@
         <Columns>
             <RadzenDataGridColumn Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="50px" Pickable="false">
                 <Template Context="item">
+                    @* @{ var pageSize = Math.Min(oSolicitudesRef!.PageSize, oSolicitudesRef.View.Count()); }
+                    <RenderOnceComponent CanRender="@(!(index >= pageSize))">
+                        @{
+                            ResetIndex(index >= pageSize);
+                        }
+                        <RadzenBadge Variant="Variant.Flat" Text="@($"{(oSolicitudesRef.CurrentPage * pageSize) + index++ + 1}")" BadgeStyle="@(BadgeStyle.Dark)" Shade="@(Shade.Darker)" IsPill="false" class="" />
+                    </RenderOnceComponent> *@
                     <RadzenBadge Variant="Variant.Flat" Text="@($"{items.IndexOf(item) + 1}")" BadgeStyle="@(BadgeStyle.Dark)" Shade="@(Shade.Darker)" IsPill="false" class="" />
                 </Template>
             </RadzenDataGridColumn>
@@ -158,9 +165,9 @@
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion" Pickable="false"
-                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="300px">
+                                  Filterable="true" FilterMode="@(FilterMode.CheckBoxList)" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="300px">
                 <HeaderTemplate>
-                    <RadzenButton Text="SOLICITUD (Filtro y búsqueda por el tipo o motivo de Solicitud)" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                    <RadzenButton Text="SOLICITUD" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
                                   MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
                                                 Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
                                                 Text = "<b>SOLICITUD</b><br>Filtro y búsqueda por el tipo o motivo de Solicitud.",
@@ -176,7 +183,7 @@
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Property="SolIdEstadoSolicitudNavigation.EdosolNombreEstado" Pickable="false"
-                                  Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="300px">
+                                  Filterable="true" FilterMode="@(FilterMode.CheckBoxList)" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="300px">
                 <HeaderTemplate>
                     @{
                         string content = $@"- Solicitudes Finalizadas: <b>{items.Where(st => st.SolIdEstadoSolicitud == 4).Count()}</b><br />
@@ -361,4 +368,11 @@
     }
 
     void ShowTooltipWithHtml(ElementReference elementReference, TooltipOptions options = null!) => TooltipService.Open(elementReference, ds => null!, options);
+
+    int index;
+    void ResetIndex(bool shouldReset)
+    {
+        if (shouldReset)
+            index = 0;
+    }
 }

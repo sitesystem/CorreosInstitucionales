@@ -133,13 +133,24 @@ namespace CorreosInstitucionales.Shared.Constantes
                     break;
 
                 case TipoSolicitud.DESBLOQUEO_CUENTA:
-                case TipoSolicitud.OTRO:
                     datos.AddRange
                     (
                         [
                             TipoDatoXLSX.EXTENSION,
                             TipoDatoXLSX.CORREO_PERSONAL_NUEVO,
                             TipoDatoXLSX.CORREO_INSTITUCIONAL
+                        ]
+                    );
+                    break;
+
+                case TipoSolicitud.OTRO:
+                    datos.AddRange
+                    (
+                        [
+                            TipoDatoXLSX.EXTENSION,
+                            TipoDatoXLSX.CORREO_PERSONAL_NUEVO,
+                            TipoDatoXLSX.CORREO_INSTITUCIONAL,
+                            TipoDatoXLSX.CELULAR_NUEVO
                         ]
                     );
                     break;

@@ -66,10 +66,10 @@
                     </RadzenDataGridColumn>
 
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Motivo de la Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion" Pickable="false"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="205px">
+                                          Filterable="true" FilterMode="FilterMode.CheckBoxList" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="205px">
                         <HeaderTemplate>
                             <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
-                                  title="<b>Motivo de la Solicitud-Ticket</b>" data-bs-content="Problema o incidencia requerido por usuario para atención.">
+                                  title="<b>Motivo de la Solicitud de Ticket</b>" data-bs-content="Problema o incidencia requerido por usuario para atención.">
                                   MOTIVO DE LA SOLICITUD
                             </span>
                         </HeaderTemplate>
@@ -92,7 +92,7 @@
                     </RadzenDataGridColumn>
 
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Archivos PDF" Property="" Pickable="false"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="205px">
+                                          Filterable="false" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="205px">
                         <Template Context="data">
                             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
                                 <RadzenButton Text="Captura Cuenta Bloqueada"
@@ -145,7 +145,7 @@
                     </RadzenDataGridColumn> *@
 
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Property="SolIdEstadoSolicitudNavigation.EdosolNombreEstado" Pickable="false"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="280px">
+                                          Filterable="true" FilterMode="FilterMode.CheckBoxList" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="280px">
                         <Template Context="data">
                             @{
                                 if(data.SolIdEstadoSolicitud == 2)
@@ -203,6 +203,16 @@
                                 @(!string.IsNullOrEmpty(data.SolFechaHoraActualizacion.ToString()) && data.SolIdEstadoSolicitud != 5 ? data.SolFechaHoraActualizacion?.ToString("dddd',' dd/MMMM/yyyy HH:mm:ss 'hrs.'") : "")
                             </small>
                         </Template>
+                        <FooterTemplate>
+                            <div class="text-start">
+                                <small>- Solicitudes Pendientes: <b>@oSolicitudesTickets?.Data?.Where(st => st.SolIdEstadoSolicitud == 2).Count()</b></small><br />
+                                <small>- Solicitudes en Proceso: <b>@oSolicitudesTickets?.Data?.Where(st => st.SolIdEstadoSolicitud == 3).Count()</b></small><br />
+                                <small>- Solicitudes Finalizadas: <b>@oSolicitudesTickets?.Data?.Where(st => st.SolIdEstadoSolicitud == 4).Count()</b></small><br />
+                                <small>- Solicitudes con Encuestas Contestadas: <b>@oSolicitudesTickets?.Data?.Where(st => st.SolIdEstadoSolicitud == 5).Count()</b></small><br />
+                                <small>- Solicitudes Canceladas: <b>@oSolicitudesTickets?.Data?.Where(st => st.SolIdEstadoSolicitud == 6).Count()</b></small><br />
+                                <small>de <b>@oSolicitudesTickets?.Data?.Count()</b> Solicitudes <strong>Totales.</strong></small>
+                            </div>
+                        </FooterTemplate>
                     </RadzenDataGridColumn>
 
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Fecha / Hora de Creación" Property="SolFechaHoraCreacion" HeaderTooltip="Fecha y Hora" Pickable="false"

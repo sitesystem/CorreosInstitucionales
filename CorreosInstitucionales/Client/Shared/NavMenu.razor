@@ -8,7 +8,14 @@
             @*************************** Levantamiento del Nuevo Ticket ***************************@
             <RadzenPanelMenuItem Text="Nueva Solicitud de Ticket" Icon="local_offer" IconColor="@Colors.Warning" Path="NuevaSolicitudTicket" class="nav-menu-hover rz-border-base-800" />
             @*************************** Solicitudes (Ticket's) Pendientes y Atendidas ***************************@
-            <RadzenPanelMenuItem Text="@($@"Historial de Solicitudes [ {oSolicitudes?.Message} Tickets ]")" Icon="hourglass_bottom" IconColor="@Colors.SuccessLight" Path="HistorialSolicitudesTickets" class="nav-menu-hover rz-border-base-800" />
+            <RadzenPanelMenuItem Text="@($@"Historial de Solicitudes [ {oSolicitudesByIdUsuario?.Message} Tickets ]")" Icon="hourglass_bottom" IconColor="@Colors.SuccessLight" Path="HistorialSolicitudesTickets" class="nav-menu-hover rz-border-base-800">
+                <Template>
+                    <div hidden="@(!isDisplayed)">
+                        Historial de Solicitudes &ensp;
+                        <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesByIdUsuario?.Data?.Count()} Tickets")" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                    </div>
+                </Template>
+            </RadzenPanelMenuItem>
         </RadzenPanelMenuItem>
     </Authorized>
     <Authorizing>
@@ -25,11 +32,32 @@
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
         <RadzenPanelMenuItem Text="Solicitudes de Tickets" Icon="bookmarks" IconColor="@Colors.PrimaryLight" Style="font-size:16px;" Expanded="true" class="nav-menu-hover">
             @*************************** Solicitudes (Ticket's) Pendientes ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" IconColor="@Colors.PrimaryLight" Path="SolicitudesPendientes" class="nav-menu-hover rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" IconColor="@Colors.PrimaryLight" Path="SolicitudesPendientes" class="nav-menu-hover rz-border-base-800">
+                <Template>
+                    <div hidden="@(!isDisplayed)">
+                        Solicitudes Pendientes &ensp;
+                        <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsPendientes?.Data?.Count()}")" BadgeStyle="@(BadgeStyle.Warning)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                    </div>
+                </Template>
+            </RadzenPanelMenuItem>
             @*************************** Solicitudes (Ticket's) en Proceso ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes en Proceso" Icon="hourglass_empty" IconColor="@Colors.Warning" Path="SolicitudesProceso" class="nav-menu-hover rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Solicitudes en Proceso" Icon="hourglass_empty" IconColor="@Colors.Warning" Path="SolicitudesProceso" class="nav-menu-hover rz-border-base-800">
+                <Template>
+                    <div hidden="@(!isDisplayed)">
+                        Solicitudes en Proceso &ensp;
+                        <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsEnProceso?.Data?.Count()}")" BadgeStyle="@(BadgeStyle.Secondary)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                    </div>
+                </Template>
+            </RadzenPanelMenuItem>
             @*************************** Solicitudes (Ticket's) Atendidas ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" IconColor="@Colors.SuccessLight" Path="SolicitudesAtendidas" class="nav-menu-hover rz-border-base-800" />
+            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" IconColor="@Colors.SuccessLight" Path="SolicitudesAtendidas" class="nav-menu-hover rz-border-base-800">
+                <Template>
+                    <div hidden="@(!isDisplayed)">
+                        Solicitudes Atendidas &ensp;
+                        <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsAtendidos?.Data?.Count()}")" BadgeStyle="@(BadgeStyle.Success)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                    </div>
+                </Template>
+            </RadzenPanelMenuItem>
         </RadzenPanelMenuItem>
         @*************************** Módulo de Catálogos ***************************@
         <RadzenPanelMenuItem Text="Catálogos" Icon="settings" IconColor="@Colors.Base400" Style="font-size:16px;" Expanded="@isExpanded" class="nav-menu-hover">
@@ -86,21 +114,27 @@
 
 @code
 {
-    [Parameter]
-    public bool isExpanded { get; set; }
+    [Parameter] public bool isExpanded { get; set; }
+    [Parameter] public bool isDisplayed { get; set; }
 
-    private Response<List<RequestDTO_Solicitud>>? oSolicitudes = new();
+    private Response<List<RequestDTO_Solicitud>>? oSolicitudesByIdUsuario = new();
+    private Response<List<RequestDTO_Solicitud>>? oSolicitudesTicketsPendientes = new();
+    private Response<List<RequestDTO_Solicitud>>? oSolicitudesTicketsEnProceso = new();
+    private Response<List<RequestDTO_Solicitud>>? oSolicitudesTicketsAtendidos = new();
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         var authState = await servicioAuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
             int id = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
-            oSolicitudes = await servicioSolicitud.GetAllDataByIdUsuarioAsync(id);
+            oSolicitudesByIdUsuario = await servicioSolicitud.GetAllDataByIdUsuarioAsync(id);
+            oSolicitudesTicketsPendientes = await servicioSolicitud.GetAllDataByProgressAsync(new int[] { 2 });
+            oSolicitudesTicketsEnProceso = await servicioSolicitud.GetAllDataByProgressAsync(new int[] { 3 });
+            oSolicitudesTicketsAtendidos = await servicioSolicitud.GetAllDataByProgressAsync(new int[] { 4, 5, 6 });
         }
     }
 
