@@ -91,7 +91,7 @@
         <Columns>
             <RadzenDataGridColumn Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="50px" Pickable="false">
                 <Template Context="item">
-                    <RadzenBadge Variant="Variant.Flat" Text="@($"{items.IndexOf(item) + 1}")" BadgeStyle="@(BadgeStyle.Dark)" Shade="@(Shade.Darker)" IsPill="true" class="" />
+                    <RadzenBadge Variant="Variant.Flat" Text="@($"{items.IndexOf(item) + 1}")" BadgeStyle="@(BadgeStyle.Dark)" Shade="@(Shade.Darker)" IsPill="false" class="" />
                 </Template>
             </RadzenDataGridColumn>
 

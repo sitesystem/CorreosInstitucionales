@@ -95,7 +95,7 @@
                                 <Columns>
                                     <RadzenDataGridColumn Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="50px" Pickable="false">
                                         <Template Context="dataSolicitud">
-                                            <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitud?.Data?.IndexOf(dataSolicitud) + 1}")" BadgeStyle="@(BadgeStyle.Dark)" Shade="@(Shade.Darker)" IsPill="true" class="" />
+                                            <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitud?.Data?.IndexOf(dataSolicitud) + 1}")" BadgeStyle="@(BadgeStyle.Dark)" Shade="@(Shade.Darker)" IsPill="false" class="" />
                                         </Template>
                                     </RadzenDataGridColumn>
 
@@ -193,7 +193,9 @@
                                                 </div>
                                                 @* <strong>@item.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado</strong> *@
                                                 <p style="white-space: pre-wrap; text-align: justify;" class="mt-3">@dataSolicitud.SolRespuestaDcyC</p>
-                                                <div class="text-end">@dataSolicitud.SolFechaHoraActualizacion?.ToString("dddd',' dd/MMMM/yyyy HH:mm:ss 'hrs.'")</div>
+                                                <div class="text-end">
+                                                    @(!string.IsNullOrEmpty(dataSolicitud.SolFechaHoraActualizacion.ToString()) && dataSolicitud.SolIdEstadoSolicitud != 5 ? dataSolicitud.SolFechaHoraActualizacion?.ToString("dddd',' dd/MMMM/yyyy HH:mm:ss 'hrs.'") : "")
+                                                </div>
                                             </div>
                                         </Template>
                                         <FooterTemplate>

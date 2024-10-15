@@ -48,7 +48,13 @@
                     </RadzenStack>
                 </HeaderTemplate>
                 <Columns>
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="# TICKET" Property="IdSolicitudTicket"
+                    <RadzenDataGridColumn Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="50px" Pickable="false">
+                        <Template Context="item">
+                            <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTickets.Data.IndexOf(item) + 1}")" BadgeStyle="@(BadgeStyle.Dark)" Shade="@(Shade.Darker)" IsPill="false" class="" />
+                        </Template>
+                    </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="# TICKET" Property="IdSolicitudTicket" Pickable="false"
                                           Filterable="true" FilterMode="FilterMode.CheckBoxList" Frozen="true" Reorderable="true" Resizable="false" Sortable="true" TextAlign="TextAlign.Center" Width="140px">
                         <Template Context="data">
                             <h3 class="text-wrap">@data.IdSolicitudTicket</h3>
@@ -58,7 +64,8 @@
                             }
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Motivo de la Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion"
+
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Motivo de la Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion" Pickable="false"
                                           Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="205px">
                         <HeaderTemplate>
                             <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
@@ -70,7 +77,8 @@
                             <div class="text-wrap">@data.SolIdTipoSolicitudNavigation?.TiposolDescripcion</div>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Observaciones" Property="SolObservacionesSolicitud"
+
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Observaciones" Property="SolObservacionesSolicitud" Pickable="false"
                                           Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Left" Width="160px">
                         <HeaderTemplate>
                             <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
@@ -82,7 +90,8 @@
                             <div class="text-wrap">@data.SolObservacionesSolicitud</div>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Archivos PDF" Property=""
+
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Archivos PDF" Property="" Pickable="false"
                                           Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="205px">
                         <Template Context="data">
                             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="">
@@ -119,6 +128,7 @@
                             </RadzenStack>
                         </Template>
                     </RadzenDataGridColumn>
+
                     @* <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Validación de Datos" Property="SolValidacionDatos"
                                           Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="115px">
                         <HeaderTemplate>
@@ -133,7 +143,8 @@
                             <RadzenLabel Text="@($@"{(data.SolValidacionDatos ? "Válidos" : "Sin Validar")}")" Component="" Style="margin-left: 5px; vertical-align: middle;" />
                         </Template>
                     </RadzenDataGridColumn> *@
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Property="SolIdEstadoSolicitudNavigation.EdosolNombreEstado"
+
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Estado" Property="SolIdEstadoSolicitudNavigation.EdosolNombreEstado" Pickable="false"
                                           Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="280px">
                         <Template Context="data">
                             @{
@@ -187,15 +198,21 @@
                                 }
                             }
                             <br><small class="text-wrap">@data.SolIdEstadoSolicitudNavigation?.EdosolDescripcion</small>
+                            <br>
+                            <small class="text-end text-wrap">
+                                @(!string.IsNullOrEmpty(data.SolFechaHoraActualizacion.ToString()) && data.SolIdEstadoSolicitud != 5 ? data.SolFechaHoraActualizacion?.ToString("dddd',' dd/MMMM/yyyy HH:mm:ss 'hrs.'") : "")
+                            </small>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Fecha / Hora de Creación" Property="SolFechaHoraCreacion" HeaderTooltip="Fecha y Hora"
+
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Fecha / Hora de Creación" Property="SolFechaHoraCreacion" HeaderTooltip="Fecha y Hora" Pickable="false"
                                           Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" FormatString="{0:dddd, dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt}" Width="230px">
                         <Template Context="data">
                             <div class="text-wrap">@data.SolFechaHoraCreacion.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt")</div>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Property="SolEncuestaCalidadCalificacion"
+
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Property="SolEncuestaCalidadCalificacion" Pickable="false"
                                           Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="210px">
                         <Template Context="data">
                             @{
