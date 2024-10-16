@@ -28,6 +28,7 @@ using System.ComponentModel;
 using Serilog;
 using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Debug;
 using Azure.Identity;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {

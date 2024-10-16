@@ -5,30 +5,24 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_Carrera
+    public class RequestViewModel_Carrera : McCatCarrera
     {
-        [Key]
-        public int IdCarrera { get; set; }
-
-        [Column("carrClave")]
-        [StringLength(20)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string? CarrClave { get; set; }
+        public new string? CarrClave
+        {
+            get { return base.CarrClave; }
+            set { base.CarrClave = value; }
+        }
 
-        [Column("carrNombre")]
-        [StringLength(300)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string CarrNombre { get; set; } = null!;
-
-        [Required]
-        [Column("carrStatus")]
-        public bool CarrStatus { get; set; }
-
-        //[JsonIgnore]
-        //[InverseProperty("UsuIdCarreraNavigation")]
-        //public virtual ICollection<MceTbUsuario> MceTbUsuarios { get; set; } = new List<MceTbUsuario>();
+        public new string CarrNombre
+        {
+            get { return base.CarrNombre; }
+            set { base.CarrNombre = value; }
+        }
     }
 }

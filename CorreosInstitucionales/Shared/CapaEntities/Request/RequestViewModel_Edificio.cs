@@ -5,27 +5,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_Edificio
+    public class RequestViewModel_Edificio : McCatEdificio
     {
-        [Key]
-        public int IdEdificio { get; set; }
-
-        [Column("ediNombreOficial")]
-        [StringLength(200)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string EdiNombreOficial { get; set; } = null!;
-
-        [Column("ediNombreAlias")]
-        [StringLength(200)]
-        public string? EdiNombreAlias { get; set; }
-
-        [Column("ediStatus")]
-        public bool EdiStatus { get; set; }
-
-        //[InverseProperty("AreIdEdificioNavigation")]
-        //public virtual ICollection<MceCatAreasDepto> MceCatAreasDeptos { get; set; } = new List<MceCatAreasDepto>();
+        public new string EdiNombreOficial
+        {
+            get { return base.EdiNombreOficial; }
+            set { base.EdiNombreOficial = value; }
+        }
     }
 }

@@ -5,25 +5,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_Link
+    public class RequestViewModel_Link :McCatLink
     {
-        [Key]
-        public int IdLink { get; set; }
-
-        [Column("linkNombre")]
-        [StringLength(50)]
-        public string LinkNombre { get; set; } = null!;
-
-        [Column("linkEnlace")]
-        [StringLength(200)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string LinkEnlace { get; set; } = null!;
-
-        [Required]
-        [Column("linkStatus")]
-        public bool LinkStatus { get; set; }
+        public new string LinkEnlace
+        {
+            get { return base.LinkEnlace; }
+            set { base.LinkEnlace = value; }
+        }
     }
 }

@@ -5,26 +5,33 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_TipoPersonal
+    public class RequestViewModel_TipoPersonal:McCatTiposPersonal
     {
-        [Key]
-        public int IdTipoPersonal { get; set; }
 
-        [Column("tipoperNombre")]
-        [StringLength(100)]
-        public string TipoperNombre { get; set; } = null!;
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public new string TipoperNombre
+        {
+            get { return base.TipoperNombre; }
+            set { base.TipoperNombre = value; }
+        }
 
-        [Column("tipoperDescripcion", TypeName = "text")]
-        public string? TipoperDescripcion { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public new string? TipoperDescripcion
+        {
+            get { return base.TipoperDescripcion; }
+            set { base.TipoperDescripcion = value; }
+        }
 
         [Required]
-        [Column("tipoperStatus")]
-        public bool TipoperStatus { get; set; }
-
-        //[InverseProperty("UsuIdTipoPersonalNavigation")]
-        //public virtual ICollection<MceTbUsuario> MceTbUsuarios { get; set; } = new List<MceTbUsuario>();
+        public new bool TipoperStatus
+        {
+            get { return base.TipoperStatus; }
+            set { base.TipoperStatus = value; }
+        }
     }
 }

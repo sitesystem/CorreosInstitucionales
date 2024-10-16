@@ -5,43 +5,27 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestDTO_Solicitud
+    public class RequestDTO_Solicitud:MtTbSolicitudesTicket
     {
         /*******************************  DATOS ID LA SOLICITUD  *******************************/
         /// <summary>
-        /// PK ID Único de la Solicitud
-        /// </summary>
-        [Key]
-        public int IdSolicitudTicket { get; set; }
-
-        /// <summary>
-        /// Magic Link con Token para Encuestra de Calidad
-        /// </summary>
-        [Column("solToken")]
-        [StringLength(300)]
-        public string SolToken { get; set; } = null!;
-
-        /// <summary>
         /// FK ID del Tipo de Solicitud (1 - A, 2 - B, 3 - C, 4 -D, 5 - E, 6 - F, 7 - G, 8 - OTRO)
         /// </summary>
-        [Column("solIdTipoSolicitud")]
         [Range(1, 10, ErrorMessage = "Selecciona un MOTIVO / INCIDENCIA de Solicitud-Ticket.")]
-        public int SolIdTipoSolicitud { get; set; }
-
-        /// <summary>
-        /// FK ID del Usuario Solicitante
-        /// </summary>
-        [Column("solIdUsuario")]
-        public int SolIdUsuario { get; set; }
+        public new int SolIdTipoSolicitud
+        {
+            get { return base.SolIdTipoSolicitud; }
+            set { base.SolIdTipoSolicitud = value; }
+        }
 
         /*******************************  DATOS DE ARCHIVOS PDF DEL USUARIO  *******************************/
         /// <summary>
         /// Nombre del Archivo PDF del CURP del Usuario
         /// </summary>
-        [Column("solFileNameCURP")]
         [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del CURP adjuntado debe ser máximo de 200 caracteres.")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del CURP requerido.")]
         public string? SolFileNameCurp { get; set; }
@@ -95,10 +79,12 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         /// <summary>
         /// Nombre del Archivo PDF de la Captura del Escaneo del Antivirus
         /// </summary>
-        [Column("solCapturaEscaneoAntivirus")]
-        [StringLength(300)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF CAPTURA ESCANEO ANTIVIRUS requerido.")]
-        public string? SolCapturaEscaneoAntivirus { get; set; }
+        public new string? SolCapturaEscaneoAntivirus
+        {
+            get { return base.SolCapturaEscaneoAntivirus; }
+            set { base.SolCapturaEscaneoAntivirus = value; }
+        }
 
         /// <summary>
         /// Tamaño del Archivo PDF del CURP del Usuario
@@ -109,10 +95,12 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         /// <summary>
         /// Nombre del Archivo PDF de la Captura de la Cuenta Bloqueada
         /// </summary>
-        [Column("solCapturaCuentaBloqueada")]
-        [StringLength(300)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF CAPTURA CUENTA BLOQUEADA requerido.")]
-        public string? SolCapturaCuentaBloqueada { get; set; }
+        public new string? SolCapturaCuentaBloqueada
+        {
+            get { return base.SolCapturaCuentaBloqueada; }
+            set { base.SolCapturaCuentaBloqueada = value; }
+        }
 
         /// <summary>
         /// Tamaño del Archivo PDF del CURP del Usuario
@@ -123,10 +111,12 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         /// <summary>
         /// Nombre del Archivo PDF de la Captura del Error
         /// </summary>
-        [Column("solCapturaError")]
-        [StringLength(150)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF CAPTURA OTRO MOTIVO, INCIDENCIA O PROBLEMA requerido.")]
-        public string? SolCapturaError { get; set; }
+        public new string? SolCapturaError
+        {
+            get { return base.SolCapturaError; }
+            set { base.SolCapturaError = value; }
+        }
 
         /// <summary>
         /// Tamaño del Archivo PDF del CURP del Usuario
@@ -134,78 +124,16 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF CAPTURA OTRO MOTIVO, INCIDENCIA O PROBLEMA adjuntado debe ser máximo de 2 MB.")]
         public long? SolFileSizeCapturaError { get; set; }
 
+
         /*******************************  OTROS DATOS  *******************************/
         /// <summary>
         /// Observación y/o comentario del problema de la Solicitud-Ticket.
         /// </summary>
-        [Column("solObservacionesSolicitud")]
-        [StringLength(300)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo OBSERVACIONES / COMENTARIOS / NOTAS / DETALLE DEL MOTIVO requerido.")]
-        public string? SolObservacionesSolicitud { get; set; }
-
-        /// <summary>
-        /// FK ID del Estado de la Solicitud (1 = Alta/Levantad@, 2 = Pendiente, 3 = En Proceso, 4 = Atendido)
-        /// </summary>
-        [Column("solIdEstadoSolicitud")]
-        public int SolIdEstadoSolicitud { get; set; }
-
-        /// <summary>
-        /// Fecha/Hora en cada cambio de Estado o Etapa de la Solicitud a PENDIENTE y a ATENDIDO/FINALIZADO o CANCELADO
-        /// </summary>
-        [Column("solFechaHoraActualizacion", TypeName = "datetime")]
-        public DateTime? SolFechaHoraActualizacion { get; set; }
-
-        /// <summary>
-        /// Validación de Datos por el Administrador { 0 - No Validados, 1 - Validados }
-        /// </summary>
-        [Column("solValidacionDatos")]
-        public bool SolValidacionDatos { get; set; }
-
-        /*******************************  ENCUESTA DE CALIDAD  *******************************/
-        /// <summary>
-        /// Número de intentos del envío de encuesta de satisfacción en la calidad del servicio: por regla inicial 1 envío y si no contesta, SACI se califica con 5 estrellas
-        /// </summary>
-        [Column("solEnvioEncuesta")]
-        public byte? SolEnvioEncuesta { get; set; }
-
-        /// <summary>
-        /// Calificación de la Encuesta de Calidad con emojis caritas o estrellas.
-        /// </summary>
-        [Column("solEncuestaCalidadCalificacion")]
-        public int? SolEncuestaCalidadCalificacion { get; set; }
-
-        /// <summary>
-        /// Comentarios, observaciones o notas por la atención de la Solicitud-Ticket.
-        /// </summary>
-        [Column("solEncuestaCalidadComentarios")]
-        [StringLength(300)]
-        public string? SolEncuestaCalidadComentarios { get; set; }
-
-        /// <summary>
-        /// Fecha Hora de la respuesta a la Encuesta de Calidad de la Solicitud-Ticket.
-        /// </summary>
-        [Column("solFechaHoraEncuesta", TypeName = "datetime")]
-        public DateTime? SolFechaHoraEncuesta { get; set; }
-
-        [Column("solRespuestaDCyC", TypeName = "text")]
-        public string? SolRespuestaDcyC { get; set; }
-
-        /// <summary>
-        /// Fecha Hora de la creación de la Solicitud-Ticket.
-        /// </summary>
-        [Column("solFechaHoraCreacion", TypeName = "datetime")]
-        public DateTime SolFechaHoraCreacion { get; set; }
-
-        [ForeignKey("SolIdEstadoSolicitud")]
-        [InverseProperty("MceTbSolicitudTickets")]
-        public virtual RequestViewModel_EstadoSolicitud? SolIdEstadoSolicitudNavigation { get; set; } = null!;
-
-        [ForeignKey("SolIdTipoSolicitud")]
-        [InverseProperty("MceTbSolicitudTickets")]
-        public virtual RequestViewModel_TipoSolicitud? SolIdTipoSolicitudNavigation { get; set; } = null!;
-
-        [ForeignKey("SolIdUsuario")]
-        [InverseProperty("MceTbSolicitudTickets")]
-        public virtual RequestDTO_Usuario? SolIdUsuarioNavigation { get; set; } = null!;
+        public new string? SolObservacionesSolicitud
+        {
+            get { return base.SolObservacionesSolicitud; }
+            set { base.SolObservacionesSolicitud = value; }
+        }
     }
 }

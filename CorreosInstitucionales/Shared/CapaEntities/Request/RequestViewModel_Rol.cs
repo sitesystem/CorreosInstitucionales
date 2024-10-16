@@ -5,22 +5,24 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_Rol
+    public class RequestViewModel_Rol:McCatRole
     {
-        [Key]
-        public int IdRol { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NOMBRE requerido.")]
+        public new string RolNombre
+        {
+            get { return base.RolNombre; }
+            set { base.RolNombre = value; }
+        }
 
-        [Column("rolNombre")]
-        [StringLength(100)]
-        public string RolNombre { get; set; } = null!;
-
-        [Column("rolDescripcion", TypeName = "text")]
-        public string? RolDescripcion { get; set; }
-
-        //[InverseProperty("UsuIdRolNavigation")]
-        //public virtual ICollection<MceTbUsuario> MceTbUsuarios { get; set; } = new List<MceTbUsuario>();
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo DESCRIPCIÓN requerido.")]
+        public new string? RolDescripcion
+        {
+            get { return base.RolDescripcion; }
+            set { base.RolDescripcion = value; }
+        }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
-namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+namespace CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 {

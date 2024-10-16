@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+namespace CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 [Table("MC_catPlantillas")]
 public partial class McCatPlantilla

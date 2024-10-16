@@ -5,28 +5,24 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_TipoSolicitud
+    public class RequestViewModel_TipoSolicitud :McCatTiposSolicitud
     {
-        /// <summary>
-        /// ID del tipo de solicitud
-        /// </summary>
-        [Key]
-        public int IdTipoSolicitud { get; set; }
-
-        /// <summary>
-        /// Descripcion del tipo de la solicitud
-        /// </summary>
-        [Column("tiposolDescripcion", TypeName = "text")]
-        public string TiposolDescripcion { get; set; } = null!;
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        public new string TiposolDescripcion
+        {
+            get { return base.TiposolDescripcion; }
+            set { base.TiposolDescripcion = value; }
+        }
 
         [Required]
-        [Column("tiposolStatus")]
-        public bool TiposolStatus { get; set; }
-
-        //[InverseProperty("SolIdTipoSolicitudNavigation")]
-        //public virtual ICollection<MceTbSolicitudTicket> MceTbSolicitudTickets { get; set; } = new List<MceTbSolicitudTicket>();
+        public new bool TiposolStatus
+        {
+            get { return base.TiposolStatus; }
+            set { base.TiposolStatus = value; }
+        }
     }
 }

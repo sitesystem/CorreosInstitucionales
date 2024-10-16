@@ -5,35 +5,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_Anuncio
+    public class RequestViewModel_Anuncio : McCatAnuncio
     {
-        [Key]
-        public int IdAnuncio { get; set; }
-
-        [Column("anuDescripcion")]
-        [StringLength(100)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo DESCRIPCIÓN requerido.")]
-        public string? AnuDescripcion { get; set; }
-
-        [Column("anuArchivo")]
-        [StringLength(255)]
-        public string AnuArchivo { get; set; } = null!;
-
-        [Column("anuEnlace")]
-        [StringLength(300)]
-        public string? AnuEnlace { get; set; }
-
-        [Column("anuVisibleDesde", TypeName = "datetime")]
-        public DateTime? AnuVisibleDesde { get; set; }
-
-        [Column("anuVisibleHasta", TypeName = "datetime")]
-        public DateTime? AnuVisibleHasta { get; set; }
-
-        [Column("anuStatus")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public bool AnuStatus { get; set; }
+        public new string? AnuDescripcion
+        {
+            get { return base.AnuDescripcion; }
+            set { base.AnuDescripcion = value; }
+        }
     }
 }

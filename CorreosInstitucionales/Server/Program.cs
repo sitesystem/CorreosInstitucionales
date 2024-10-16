@@ -1,4 +1,4 @@
-global using CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+global using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -16,15 +16,21 @@ using CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Shared.CapaEntities.Common;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+using CorreosInstitucionales.Shared.Constantes;
+using Microsoft.Data.SqlClient;
+using CorreosInstitucionales.Shared.Constantes.Plantillas;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 // Customize Encoding Settings
-builder.Services.AddSingleton(HtmlEncoder.Create(allowedRanges: [ UnicodeRanges.BasicLatin, UnicodeRanges.LatinExtendedA ]));
+builder.Services.AddSingleton<HtmlEncoder>(
+     HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.BasicLatin,
+                                               UnicodeRanges.LatinExtendedA }));
 builder.Services.Configure<WebEncoderOptions>(options => options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
 
 // Inyección de Dependencias
@@ -165,6 +171,7 @@ builder.Services.AddScoped
     )
 );
 
+
 builder.Services.AddMemoryCache();
 
 /******************************************************************************************************/
@@ -205,4 +212,30 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
+using (SqlConnection connection = new SqlConnection(builder.Configuration.GetConnectionString("SQLServer_Connection")))
+{
+    SqlCommand command = new SqlCommand
+    (
+        "SELECT IdPlantilla, plaContenido  FROM MC_catPlantillas WHERE plaTipo = 1 AND plaStatus = 1", 
+        connection
+    );
+
+    connection.Open();
+    SqlDataReader reader = command.ExecuteReader();
+
+    try
+    {
+        while (reader.Read())
+        {
+            //Correo.correos.Add((TipoSolicitud)reader[0],(string) reader[1]);
+        }
+    }
+    finally
+    {
+        // Always call Close when done reading.
+        reader.Close();
+    }
+}
+
 app.Run();
+

@@ -5,17 +5,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_Semestre
+    public class RequestViewModel_Semestre:McCatSemestre
     {
-        [Key]
-        public int IdSemestre { get; set; }
-
-        [Column("semNombre")]
-        [StringLength(100)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo SEMESTRE requerido.")]
-        public string SemNombre { get; set; } = null!;
+        public new string SemNombre
+        {
+            get { return base.SemNombre; }
+            set { base.SemNombre = value; }
+        }
     }
 }

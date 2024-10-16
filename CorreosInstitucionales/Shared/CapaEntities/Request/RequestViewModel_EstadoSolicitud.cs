@@ -5,22 +5,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_EstadoSolicitud
+    public class RequestViewModel_EstadoSolicitud : McCatEstadosSolicitud
     {
-        [Key]
-        public int IdEstadoSolicitud { get; set; }
-
-        [Column("edosolNombreEstado")]
-        [StringLength(50)]
-        public string EdosolNombreEstado { get; set; } = null!;
-
-        [Column("edosolDescripcion", TypeName = "text")]
-        public string? EdosolDescripcion { get; set; }
-
-        //[InverseProperty("SolIdEstadoSolicitudNavigation")]
-        //public virtual ICollection<MceTbSolicitudTicket> MceTbSolicitudTickets { get; set; } = new List<MceTbSolicitudTicket>();
+        
     }
 }

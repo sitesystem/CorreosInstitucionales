@@ -5,24 +5,24 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_Piso
+    public class RequestViewModel_Piso:McCatPiso
     {
-        [Key]
-        public int IdPiso { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo DESCRIPCIÓN requerido.")]
+        public new string PisoDescripcion
+        {
+            get { return base.PisoDescripcion; }
+            set { base.PisoDescripcion = value; }
+        }
 
-        [Column("pisoDescripcion")]
-        [StringLength(50)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public string PisoDescripcion { get; set; } = null!;
-
-        [Column("pisoStatus")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public bool PisoStatus { get; set; }
-
-        //[InverseProperty("AreIdPisoNavigation")]
-        //public virtual ICollection<MceCatAreasDepto> MceCatAreasDeptos { get; set; } = new List<MceCatAreasDepto>();
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo STATUS requerido.")]
+        public new bool PisoStatus
+        {
+            get { return base.PisoStatus; }
+            set { base.PisoStatus = value; }
+        }
     }
 }

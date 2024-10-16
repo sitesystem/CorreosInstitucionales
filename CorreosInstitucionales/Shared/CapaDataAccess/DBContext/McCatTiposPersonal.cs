@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
-namespace CorreosInstitucionales.Server.CapaDataAccess.DBContext;
+namespace CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 [Table("MC_catTiposPersonal")]
 public partial class McCatTiposPersonal

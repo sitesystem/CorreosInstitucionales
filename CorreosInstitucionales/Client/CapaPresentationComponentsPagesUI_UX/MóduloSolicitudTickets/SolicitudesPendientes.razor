@@ -1,4 +1,5 @@
 ﻿@page "/SolicitudesPendientes"
+@using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 @attribute [Authorize(Policy = "[Rol] Administrador")]
 
@@ -519,7 +520,7 @@
         string nombre = string.Empty;
 
         bool documento_repositorio = true;
-        RequestDTO_Usuario usuario = solicitud.SolIdUsuarioNavigation!;
+        MpTbUsuario usuario = solicitud.SolIdUsuarioNavigation!;
 
         switch (documento)
         {
