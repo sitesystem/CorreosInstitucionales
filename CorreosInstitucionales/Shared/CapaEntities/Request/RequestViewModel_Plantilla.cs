@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    internal class RequestViewModel_Plantilla : McCatPlantilla
+    public class RequestViewModel_Plantilla : McCatPlantilla
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NOMBRE requerido.")]
         public new string PlaNombre

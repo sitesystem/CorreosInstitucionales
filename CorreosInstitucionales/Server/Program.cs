@@ -18,7 +18,8 @@ using CorreosInstitucionales.Shared.CapaEntities.Common;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.Constantes;
 using Microsoft.Data.SqlClient;
-using CorreosInstitucionales.Shared.Constantes.Plantillas;
+using CorreosInstitucionales.Shared.CapaEntities.Request;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -174,6 +175,8 @@ builder.Services.AddScoped
 
 builder.Services.AddMemoryCache();
 
+builder.Services.AddTransient<DBCacheInitializer>();
+
 /******************************************************************************************************/
 
 var app = builder.Build();
@@ -212,29 +215,13 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
-using (SqlConnection connection = new SqlConnection(builder.Configuration.GetConnectionString("SQLServer_Connection")))
+//https://stackoverflow.com/questions/75816727/blazor-webassembly-dbcontext-use-on-startup
+//https://stackoverflow.com/questions/72447401/cannot-resolve-scoped-service-from-root-provider-in-asp-net-core-6
+
+using (var scope = app.Services.CreateScope())
 {
-    SqlCommand command = new SqlCommand
-    (
-        "SELECT IdPlantilla, plaContenido  FROM MC_catPlantillas WHERE plaTipo = 1 AND plaStatus = 1", 
-        connection
-    );
-
-    connection.Open();
-    SqlDataReader reader = command.ExecuteReader();
-
-    try
-    {
-        while (reader.Read())
-        {
-            //Correo.correos.Add((TipoSolicitud)reader[0],(string) reader[1]);
-        }
-    }
-    finally
-    {
-        // Always call Close when done reading.
-        reader.Close();
-    }
+    DBCacheInitializer dbcache = scope.ServiceProvider.GetRequiredService<DBCacheInitializer>();
+    dbcache.Init();
 }
 
 app.Run();
