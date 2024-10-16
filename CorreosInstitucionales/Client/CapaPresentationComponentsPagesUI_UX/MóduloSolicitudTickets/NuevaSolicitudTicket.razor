@@ -792,7 +792,7 @@ else
                     string aviso_alumnos = oResponseUsuario.Data.UsuIdTipoPersonal == 1 ? " 💡 *Para alumnos de nuevo ingreso* te informamos que las solicitudes tendrán una respuesta de un *máximo de 2 meses.*\n\n" : "";
                     oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                            "Estimad@:\n*" + oResponseUsuario.Data.UsuNombre.Trim() + " " + oResponseUsuario.Data.UsuPrimerApellido.Trim() + " " + oResponseUsuario.Data.UsuSegundoApellido.Trim() + ".*\n\n" +
+                                            "Estimad@:\n*" + oResponseUsuario.Data.UsuNombre.Trim() + " " + oResponseUsuario.Data.UsuPrimerApellido.Trim() + " " + oResponseUsuario.Data.UsuSegundoApellido.Trim() + "*\n\n" +
                                             "Se le informa que se aperturó con éxito el Ticket *#" + idResponse + "* " +
                                             "de la Solicitud *" + oTipoSolicitud.Data.TiposolDescripcion + "*.\n\n" +
                                             "Por este medio se le dan los _Datos de la Solicitud_:\n" +

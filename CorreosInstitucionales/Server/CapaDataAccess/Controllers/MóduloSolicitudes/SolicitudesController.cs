@@ -85,6 +85,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                             .ToListAsync();
 
                 oResponse.Data = list;
+                oResponse.Message = list.Count.ToString();
                 oResponse.Success = 1;
             }
             catch (Exception ex)

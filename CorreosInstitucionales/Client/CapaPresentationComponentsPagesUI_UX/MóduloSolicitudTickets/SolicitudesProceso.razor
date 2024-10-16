@@ -442,6 +442,8 @@
             if (request.Success == 1)
             {
                 items = request.Data;
+                oSolicitudesRef?.Reset(true);
+                await oSolicitudesRef!.FirstPage(true);
             }
             else
             {
