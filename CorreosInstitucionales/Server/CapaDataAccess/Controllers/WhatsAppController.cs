@@ -1,17 +1,17 @@
-﻿using CorreosInstitucionales.Shared.CapaEntities.Request;
-using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Shared.Utils;
+﻿using CorreosInstitucionales.Shared.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Runtime.ConstrainedExecution;
 using System.Text.Json;
 
+using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaEntities.Response;
+
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class WhatsAppController(HttpClient _client): Controller
     {
         const string url = "https://www.developers.upiicsa.ipn.mx:8081/api/SendWhatsApp";
