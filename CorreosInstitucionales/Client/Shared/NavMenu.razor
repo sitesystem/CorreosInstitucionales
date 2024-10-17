@@ -12,7 +12,16 @@
                 <Template>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Historial de Solicitudes&ensp;
-                        <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesByIdUsuario?.Message} Tickets")" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                        @{
+                            if (!string.IsNullOrEmpty(oSolicitudesByIdUsuario?.Message))
+                            {
+                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesByIdUsuario?.Message} Tickets")" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                            }
+                            else
+                            {
+                                <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Secondary" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
+                            }
+                        }
                     </RadzenStack>
                 </Template>
             </RadzenPanelMenuItem>
@@ -34,22 +43,55 @@
             @*************************** Solicitudes (Ticket's) Pendientes ***************************@
             <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" IconColor="@Colors.PrimaryLight" Path="SolicitudesPendientes" Click="@(CargarSolicitudes)" class="nav-menu-hover rz-border-base-800">
                 <Template>
-                    Solicitudes Pendientes&ensp;
-                    <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsPendientes?.Message}")" BadgeStyle="@(BadgeStyle.Warning)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
+                        Solicitudes Pendientes&ensp;
+                        @{
+                            if (oSolicitudesTicketsPendientes?.Message is not null)
+                            {
+                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsPendientes?.Message}")" BadgeStyle="@(BadgeStyle.Warning)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                            }
+                            else
+                            {
+                                <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Secondary" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
+                            }
+                        }
+                    </RadzenStack>
                 </Template>
             </RadzenPanelMenuItem>
             @*************************** Solicitudes (Ticket's) en Proceso ***************************@
             <RadzenPanelMenuItem Text="Solicitudes en Proceso" Icon="hourglass_empty" IconColor="@Colors.Warning" Path="SolicitudesProceso" Click="@(CargarSolicitudes)" class="nav-menu-hover rz-border-base-800">
                 <Template>
-                    Solicitudes en Proceso&ensp;
-                    <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsEnProceso?.Message}")" BadgeStyle="@(BadgeStyle.Secondary)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
+                        Solicitudes en Proceso&ensp;
+                        @{
+                            if (oSolicitudesTicketsEnProceso?.Message is not null)
+                            {
+                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsEnProceso?.Message}")" BadgeStyle="@(BadgeStyle.Secondary)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                            }
+                            else
+                            {
+                                <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Secondary" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
+                            }
+                        }
+                    </RadzenStack>
                 </Template>
             </RadzenPanelMenuItem>
             @*************************** Solicitudes (Ticket's) Atendidas ***************************@
             <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" IconColor="@Colors.SuccessLight" Path="SolicitudesAtendidas" Click="@(CargarSolicitudes)" class="nav-menu-hover rz-border-base-800">
                 <Template>
-                    Solicitudes Atendidas&ensp;
-                    <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsAtendidos?.Message}")" BadgeStyle="@(BadgeStyle.Success)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
+                        Solicitudes Atendidas&ensp;
+                        @{
+                            if (oSolicitudesTicketsAtendidos?.Message is not null)
+                            {
+                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsAtendidos?.Message}")" BadgeStyle="@(BadgeStyle.Success)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                            }
+                            else
+                            {
+                                <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Secondary" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
+                            }
+                        }
+                    </RadzenStack>
                 </Template>
             </RadzenPanelMenuItem>
         </RadzenPanelMenuItem>
