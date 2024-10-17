@@ -19,7 +19,7 @@
                             }
                             else
                             {
-                                <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Secondary" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
+                                <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
                             }
                         }
                     </RadzenStack>
@@ -46,13 +46,13 @@
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Solicitudes Pendientes&ensp;
                         @{
-                            if (oSolicitudesTicketsPendientes?.Message is not null)
+                            if (!string.IsNullOrEmpty(oSolicitudesTicketsPendientes?.Message))
                             {
                                 <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsPendientes?.Message}")" BadgeStyle="@(BadgeStyle.Warning)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
                             else
                             {
-                                <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Secondary" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
+                                <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Warning" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
                             }
                         }
                     </RadzenStack>
@@ -64,7 +64,7 @@
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Solicitudes en Proceso&ensp;
                         @{
-                            if (oSolicitudesTicketsEnProceso?.Message is not null)
+                            if (!string.IsNullOrEmpty(oSolicitudesTicketsEnProceso?.Message))
                             {
                                 <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsEnProceso?.Message}")" BadgeStyle="@(BadgeStyle.Secondary)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
@@ -82,13 +82,13 @@
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Solicitudes Atendidas&ensp;
                         @{
-                            if (oSolicitudesTicketsAtendidos?.Message is not null)
+                            if (!string.IsNullOrEmpty(oSolicitudesTicketsAtendidos?.Message))
                             {
                                 <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsAtendidos?.Message}")" BadgeStyle="@(BadgeStyle.Success)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
                             else
                             {
-                                <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Secondary" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
+                                <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Success" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
                             }
                         }
                     </RadzenStack>
@@ -168,7 +168,6 @@
             int id = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
             oSolicitudesByIdUsuario = await servicioSolicitud.GetAllDataByIdUsuarioAsync(id);
             await CargarSolicitudes();
-            StateHasChanged();
         }
     }
 
