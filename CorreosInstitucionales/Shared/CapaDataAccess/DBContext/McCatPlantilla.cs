@@ -16,6 +16,10 @@ public partial class McCatPlantilla
     [StringLength(100)]
     public string PlaNombre { get; set; } = null!;
 
+    [Column("plaAsunto")]
+    [StringLength(100)]
+    public string PlaAsunto { get; set; } = null!;
+
     [Column("plaContenido")]
     [StringLength(2048)]
     public string PlaContenido { get; set; } = null!;
