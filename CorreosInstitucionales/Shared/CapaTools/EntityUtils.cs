@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace CorreosInstitucionales.Shared.CapaTools
 {
-    public static class Entitites
+    public static class EntityUtils
     {
         /*******************************  CONVERSIÓN  *******************************/
-        public static T FromParent<T,V>(V v)
-            where T : new() 
+        public static T FromNavigation<T,V>(V v)
+            where T : new()
         {
-            T result = new T();
+            T result = new();
 
-            if (v != null)
+            if(v != null)
             {
                 Type t = result.GetType();
 
