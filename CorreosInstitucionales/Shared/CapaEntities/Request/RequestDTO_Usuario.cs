@@ -7,11 +7,65 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
+using CorreosInstitucionales.Shared.CapaTools;
+using CorreosInstitucionales.Shared.Constantes;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request;
 
 public class RequestDTO_Usuario: MpTbUsuario
 {
+    private static TipoPersonal[] perfiles_alumno_egresado = 
+    [ 
+        Constantes.TipoPersonal.ALUMNO,
+        Constantes.TipoPersonal.EGRESADO,
+        Constantes.TipoPersonal.MAESTRIA
+    ];
+
+    public bool EsAlumnoOEgresado()
+    {
+        return perfiles_alumno_egresado.Contains((TipoPersonal)UsuIdTipoPersonal);
+    }
+
+    [JsonIgnore]
+    public RequestViewModel_AreaDepto? AreaDepto
+    {
+        get
+        {
+            return base.UsuIdAreaDeptoNavigation == null ? null :
+                EntityUtils.FromNavigation<RequestViewModel_AreaDepto, McCatAreasDepto>(base.UsuIdAreaDeptoNavigation);
+        }
+    }
+
+    [JsonIgnore]
+    public RequestViewModel_Carrera? Carrera
+    {
+        get
+        {
+            return base.UsuIdCarreraNavigation == null ? null :
+                EntityUtils.FromNavigation<RequestViewModel_Carrera, McCatCarrera>(base.UsuIdCarreraNavigation);
+        }
+    }
+
+    [JsonIgnore]
+    public RequestViewModel_Rol? Rol
+    {
+        get
+        {
+            return base.UsuIdRolNavigation == null ? null :
+                EntityUtils.FromNavigation<RequestViewModel_Rol, McCatRole>(base.UsuIdRolNavigation);
+        }
+    }
+
+    [JsonIgnore]
+    public RequestViewModel_TipoPersonal? TipoPersonal
+    {
+        get
+        {
+            return base.UsuIdTipoPersonalNavigation == null ? null :
+                EntityUtils.FromNavigation<RequestViewModel_TipoPersonal, McCatTiposPersonal>(base.UsuIdTipoPersonalNavigation);
+        }
+    }
+
     /*******************************  DATOS PERSONALES  *******************************/
     /// <summary>
     /// Nombre del Usuario Solicitante o Administrador
