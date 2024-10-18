@@ -580,8 +580,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         {
                             if (string.IsNullOrEmpty(registro_actual.CorreoInstitucional))
                             {
-                                logs.Add($"\t - ADVERTENCIA: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO INSTITUCIONAL NO ESTÉ VACÍA.");
-                                //return;
+                                logs.Add($"\t - [ADVERTENCIA] {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO INSTITUCIONAL NO ESTÉ VACÍA.");
+
+                                if ((TipoSolicitud)solicitud.SolIdTipoSolicitud != TipoSolicitud.OTRO)
+                                {
+                                    logs.Add("\t - [ERROR] ÚNICAMENTE SE ADMITEN VALORES VACIOS EN SOLICIUDES DEL TIPO 'OTRO'. IGNORANDO CAMBIOS");
+                                    return;
+                                }
                             }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
                             logs.Add($"\t - SE ACTUALIZÓ EL CORREO INSTITUCIONAL");
@@ -591,8 +596,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         {
                             if (string.IsNullOrEmpty(registro_actual.Clave))
                             {
-                                logs.Add($"\t - ADVERTENCIA: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CONTRASEÑA NO ESTÉ VACÍA.");
-                                //return;
+                                logs.Add($"\t - [ADVERTENCIA] {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CONTRASEÑA NO ESTÉ VACÍA.");
+
+                                if ((TipoSolicitud)solicitud.SolIdTipoSolicitud != TipoSolicitud.OTRO)
+                                {
+                                    logs.Add("\t - [ERROR] ÚNICAMENTE SE ADMITEN VALORES VACIOS EN SOLICIUDES DEL TIPO 'OTRO'. IGNORANDO CAMBIOS");
+                                    return;
+                                }
                             }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContrasenia = registro_actual.Clave;
                             logs.Add($"\t - SE ACTUALIZÓ LA CONTRASEÑA");
