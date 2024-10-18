@@ -167,7 +167,7 @@
 
     private async Task Agregar()
     {
-        RequestDTO_Solicitud registro = TemplateEntity.CreateSolicitud();
+        RequestDTO_Solicitud registro = EntityUtils.DefaultSolicitud();
 
         RequestDTO_Solicitud? result = await MostrarFormulario(registro);
 

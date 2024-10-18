@@ -614,7 +614,7 @@
 
     private async Task Agregar()
     {
-        RequestDTO_Usuario registro = TemplateEntity.CreateUsuario();
+        RequestDTO_Usuario registro = EntityUtils.DefaultUsuario();
 
         DocumentoAdjunto<RequestDTO_Usuario>? result = await MostrarFormulario(registro, "Agregar Usuario");
 
