@@ -610,6 +610,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                         solicitud.SolRespuestaDcyC = registro_actual.Accion;
                         solicitud.SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.ATENDIDA;
+                        solicitud.SolFechaHoraActualizacion = DateTime.Now;
 
                         notificar.Add(solicitud);
                     });

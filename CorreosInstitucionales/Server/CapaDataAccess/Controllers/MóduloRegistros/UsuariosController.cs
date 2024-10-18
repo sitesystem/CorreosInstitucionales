@@ -220,6 +220,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     oUsuario.UsuIdRolNavigation = null;
                     oUsuario.UsuIdTipoPersonalNavigation = null;
 
+                    oUsuario.UsuFechaHoraActualizacion = DateTime.Now;
+
                     _db.Entry(oUsuario).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
                 }
@@ -250,6 +252,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                     oUsuario.UsuContrasenia = Encrypt.GetSHA256(tmpPassword);
                     oUsuario.UsuRecuperarContrasenia = true;
+                    oUsuario.UsuFechaHoraActualizacion = DateTime.Now;
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
@@ -282,6 +285,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 {
                     oUsuario.UsuContrasenia = Encrypt.GetSHA256(newPassword);
                     oUsuario.UsuRecuperarContrasenia = false;
+                    oUsuario.UsuFechaHoraActualizacion = DateTime.Now;
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
@@ -311,6 +315,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 if (oUsuario != null)
                 {
                     oUsuario.UsuStatus = isActivate;
+                    oUsuario.UsuFechaHoraActualizacion = DateTime.Now;
+
                     _db.Entry(oUsuario).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
                 }

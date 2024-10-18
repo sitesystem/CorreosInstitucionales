@@ -326,6 +326,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     oSolicitud.SolIdTipoSolicitudNavigation = null;
                     oSolicitud.SolIdUsuarioNavigation = null;
 
+                    oSolicitud.SolFechaHoraActualizacion = DateTime.Now;
+
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
                 }
@@ -353,6 +355,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 if (oSolicitud != null)
                 {
                     oSolicitud.SolIdEstadoSolicitud = status;
+                    oSolicitud.SolFechaHoraActualizacion = DateTime.Now;
+
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
                 }
@@ -383,6 +387,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     oSolicitud.SolEncuestaCalidadCalificacion = model.Calificacion;
                     oSolicitud.SolEncuestaCalidadComentarios = model.Comentarios.Trim();
                     oSolicitud.SolFechaHoraEncuesta = DateTime.Now;
+                    oSolicitud.SolFechaHoraActualizacion = DateTime.Now;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
@@ -498,6 +503,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 {
                     oSolicitud.SolIdEstadoSolicitud = oFinalizarSolicitud.Estado;
                     oSolicitud.SolRespuestaDcyC = oFinalizarSolicitud.Mensaje; // datos.Value;
+                    oSolicitud.SolFechaHoraActualizacion = DateTime.Now;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     guardados = await _db.SaveChangesAsync();
