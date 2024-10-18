@@ -475,14 +475,14 @@
                     {
                         await JSRuntime.InvokeVoidAsync("Descargar", url);
                     }
-                    
+
                     links += $"<li><a href=\"{url.Url}\" download=\"{url.Url}\">{url.Name}</a></li>";
                 }
                 links += "</ul>";
 
                 //StateHasChanged();
                 //await CargarLista();
-                
+
             }
             else
             {
@@ -528,7 +528,7 @@
         string nombre = string.Empty;
 
         bool documento_repositorio = true;
-        MpTbUsuario usuario = solicitud.SolIdUsuarioNavigation!;
+        RequestDTO_Usuario usuario = solicitud.Usuario!;
 
         switch (documento)
         {

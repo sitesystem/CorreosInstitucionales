@@ -6,11 +6,43 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
+using CorreosInstitucionales.Shared.CapaTools;
+using System.Text.Json.Serialization;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
     public class RequestDTO_Solicitud:MtTbSolicitudesTicket
     {
+        [JsonIgnore]
+        public RequestDTO_Usuario? Usuario 
+        { 
+            get
+            {
+                return base.SolIdUsuarioNavigation == null ? null : 
+                    EntityUtils.FromNavigation<RequestDTO_Usuario, MpTbUsuario>(base.SolIdUsuarioNavigation);
+            }
+        }
+
+        [JsonIgnore]
+        public RequestViewModel_EstadoSolicitud? EstadoSolicitud
+        {
+            get
+            {
+                return base.SolIdEstadoSolicitudNavigation == null ? null :
+                    EntityUtils.FromNavigation<RequestViewModel_EstadoSolicitud, McCatEstadosSolicitud>(base.SolIdEstadoSolicitudNavigation);
+            }
+        }
+
+        [JsonIgnore]
+        public RequestViewModel_TipoSolicitud? TipoSolicitud
+        {
+            get
+            {
+                return base.SolIdTipoSolicitudNavigation == null ? null :
+                    EntityUtils.FromNavigation<RequestViewModel_TipoSolicitud, McCatTiposSolicitud>(base.SolIdTipoSolicitudNavigation);
+            }
+        }
+
         /*******************************  DATOS ID LA SOLICITUD  *******************************/
         /// <summary>
         /// FK ID del Tipo de Solicitud (1 - A, 2 - B, 3 - C, 4 -D, 5 - E, 6 - F, 7 - G, 8 - OTRO)
@@ -135,5 +167,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
             get { return base.SolObservacionesSolicitud; }
             set { base.SolObservacionesSolicitud = value; }
         }
+
+
     }
 }
