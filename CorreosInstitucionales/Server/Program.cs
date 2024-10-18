@@ -16,10 +16,6 @@ using CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Shared.CapaEntities.Common;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
-using CorreosInstitucionales.Shared.Constantes;
-using Microsoft.Data.SqlClient;
-using CorreosInstitucionales.Shared.CapaEntities.Request;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -173,9 +169,10 @@ builder.Services.AddScoped
 );
 
 
+//builder.Services.AddSingleton<Plantillas>();
 builder.Services.AddMemoryCache();
 
-builder.Services.AddTransient<DBCacheInitializer>();
+//builder.Services.AddTransient<DBCacheInitializer>();
 
 /******************************************************************************************************/
 
@@ -215,6 +212,7 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
+/*
 //https://stackoverflow.com/questions/75816727/blazor-webassembly-dbcontext-use-on-startup
 //https://stackoverflow.com/questions/72447401/cannot-resolve-scoped-service-from-root-provider-in-asp-net-core-6
 
@@ -223,6 +221,6 @@ using (var scope = app.Services.CreateScope())
     DBCacheInitializer dbcache = scope.ServiceProvider.GetRequiredService<DBCacheInitializer>();
     dbcache.Init();
 }
-
+*/
 app.Run();
 
