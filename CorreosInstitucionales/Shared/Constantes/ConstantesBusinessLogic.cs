@@ -100,12 +100,8 @@ namespace CorreosInstitucionales.Shared.Constantes
         {
             switch (solicitud)
             {
-                case TipoSolicitud.DESBLOQUEO_CUENTA: return [TipoDatoXLSX.CONTRA];
                 case TipoSolicitud.CAMBIO_CORREO_PERSONAL: return [];
                 case TipoSolicitud.CAMBIO_CELULAR: return [];
-                case TipoSolicitud.CORREO_EGRESADO: return [TipoDatoXLSX.CORREO_INSTITUCIONAL, TipoDatoXLSX.CONTRA];
-                case TipoSolicitud.CREACION_ACTIVACION_CORREO_INST: return [TipoDatoXLSX.CORREO_INSTITUCIONAL, TipoDatoXLSX.CONTRA];
-                case TipoSolicitud.RECUPERACION_CONTRA: return [TipoDatoXLSX.CONTRA];
             }
 
             return [TipoDatoXLSX.TODO];

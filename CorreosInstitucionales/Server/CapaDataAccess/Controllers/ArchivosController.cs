@@ -549,7 +549,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                     logs.Add(RegistroImportacion.GetHeaders());
 
-                    
+                    bool actualizar_todo = false;
 
                     solicitudes.ForEach(solicitud =>
                     {
@@ -557,6 +557,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         registro_actual.Ticket = solicitud.IdSolicitudTicket.ToString();
 
                         datos_a_actualizar = ((TipoSolicitud)solicitud.SolIdTipoSolicitud).GetDatosActualizar();
+                        actualizar_todo = datos_a_actualizar.Contains(TipoDatoXLSX.TODO);
                         
                         List<string> columnas_actualizar = new();
 
@@ -575,23 +576,23 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             return;
                         }
                         
-                        if (datos_a_actualizar.Contains(TipoDatoXLSX.CORREO_INSTITUCIONAL))
+                        if (datos_a_actualizar.Contains(TipoDatoXLSX.CORREO_INSTITUCIONAL) || actualizar_todo)
                         {
                             if (string.IsNullOrEmpty(registro_actual.CorreoInstitucional))
                             {
-                                logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO INSTITUCIONAL NO ESTÉ VACÍA.");
-                                return;
+                                logs.Add($"\t - ADVERTENCIA: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CORREO INSTITUCIONAL NO ESTÉ VACÍA.");
+                                //return;
                             }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
                             logs.Add($"\t - SE ACTUALIZÓ EL CORREO INSTITUCIONAL");
                         }
 
-                        if (datos_a_actualizar.Contains(TipoDatoXLSX.CONTRA))
+                        if (datos_a_actualizar.Contains(TipoDatoXLSX.CONTRA) || actualizar_todo)
                         {
                             if (string.IsNullOrEmpty(registro_actual.Clave))
                             {
-                                logs.Add($"\t - ERROR: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CONTRASEÑA NO ESTÉ VACÍA.");
-                                return;
+                                logs.Add($"\t - ADVERTENCIA: {registro_actual.CURP} SE ESPERABA QUE LA COLUMNA DE CONTRASEÑA NO ESTÉ VACÍA.");
+                                //return;
                             }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContrasenia = registro_actual.Clave;
                             logs.Add($"\t - SE ACTUALIZÓ LA CONTRASEÑA");
@@ -609,7 +610,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     {
                         await EnvioMasivoAtendidos(notificar);
                     }
-                    
                 }
 
                 oResponse.Success = 1;
