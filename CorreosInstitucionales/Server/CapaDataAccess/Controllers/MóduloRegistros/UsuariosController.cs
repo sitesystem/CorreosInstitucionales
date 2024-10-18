@@ -141,7 +141,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     UsuContrasenia = Encrypt.GetSHA256(model.UsuContrasenia),
                     UsuRecuperarContrasenia = false,
                     // DATOS DEL CORREO INSTITUCIONAL
-                    UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta.Trim(),
+                    UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta?.Trim(),
                     UsuCorreoInstitucionalContrasenia = model.UsuCorreoInstitucionalContrasenia,
                     // OTROS DATOS
                     UsuFechaHoraAlta = DateTime.Now,

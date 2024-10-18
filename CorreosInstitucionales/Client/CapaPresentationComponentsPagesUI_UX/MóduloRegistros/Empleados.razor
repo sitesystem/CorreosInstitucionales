@@ -686,6 +686,7 @@ else
             string password = ActionAddEdit == "agregar" ? oUsuario.UsuContrasenia : UsuContraseña;
             string número = (IdTipoPersonal == 4 || IdTipoPersonal == 5 ? "Número de Empleado" : "Número de Contrato");
             string agregar_actualizar = ActionAddEdit == "agregar" ? "registro" : "actualización de datos";
+            string correo_institucional = string.IsNullOrEmpty(oUsuario.UsuCorreoInstitucionalCuenta) ? oUsuario.UsuCorreoInstitucionalCuenta?.Trim() : "sin asignar";
             string entrega_credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) ? "<br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>" : "";
             string credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
                                         $@"
@@ -724,7 +725,7 @@ else
 			                                <article style='background-color: rgb(255, 255, 255); border-radius:10px; padding:5px;'>
 				                                <p style='text-align:justify; color:black;'>
                                                     ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
-                                                    Estimad@: <br><b>{oUsuario.UsuNombre.Trim()} {oUsuario.UsuPrimerApellido.Trim()} {oUsuario.UsuSegundoApellido.Trim()}</b><br><br>
+                                                    Estimad@: <br><b>{oUsuario.UsuNombre.Trim()} {oUsuario.UsuPrimerApellido.Trim()} {oUsuario.UsuSegundoApellido?.Trim()}</b><br><br>
 				                                    Se le informa que su {agregar_actualizar} fué exitoso en la <b>Plataforma SACI</b>
 				                                    de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
                                                     {entrega_credenciales_acceso}
@@ -774,9 +775,13 @@ else
 									                                <td width='200px' style='border: 1px solid black;'><b>✅ {número}</b></td>
 									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNumeroEmpleado}</td>
 								                                </tr>
+                                                                <tr style='background-color: #dddddd;'>
+									                                <td width='200px' style='border: 1px solid black;'><b>✅ Correo Institucional</b></td>
+									                                <td width='300px' style='border: 1px solid black;'>{correo_institucional}</td>
+								                                </tr>
 								                                <tr style='background-color: #dddddd;'>
 									                                <td width='200px' style='border: 1px solid black;'><b>✅ Área / Departamento</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{oAreaDepto.Data.AreNombreAreaDepto}</td>
+									                                <td width='300px' style='border: 1px solid black;'>{oAreaDepto?.Data?.AreNombreAreaDepto}</td>
 								                                </tr>
 								                                <tr>
 									                                <td width='200px' style='border: 1px solid black;'><b>✅ No. de Extensión</b></td>
@@ -823,7 +828,8 @@ else
                                     "✅ CURP: *" + oUsuario.UsuCurp + "*\n" +
                                     "✅ No. de Celular: *" + oUsuario.UsuNoCelularNuevo + "*\n" +
                                     "✅ No. de Empleado/Contrato: *" + oUsuario.UsuNumeroEmpleado + "*\n" +
-                                    "✅ Área/Depto: *" + oAreaDepto.Data.AreNombreAreaDepto + "*\n" +
+                                    "✅ Correo Institucional: *" + correo_institucional + "*\n" +
+                                    "✅ Área/Depto: *" + oAreaDepto?.Data?.AreNombreAreaDepto + "*\n" +
                                     "✅ No. de Extensión: *" + oUsuario.UsuNoExtension + "*\n" +
                                     "✅ Fecha / Hora de Alta: *" + fecha_hora_alta + "*\n\n" +
                                     "Que tenga un excelente día.\n" +

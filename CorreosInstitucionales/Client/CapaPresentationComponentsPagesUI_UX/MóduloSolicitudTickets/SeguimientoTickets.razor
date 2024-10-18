@@ -79,6 +79,13 @@
                         </Template>
                     </RadzenDataGridColumn>
 
+                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Fecha / Hora de Creación" Property="SolFechaHoraCreacion" HeaderTooltip="Fecha y Hora" Pickable="false"
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" FormatString="{0:dddd, dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt}" Width="200px">
+                        <Template Context="data">
+                            <div class="text-wrap">@data.SolFechaHoraCreacion.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt")</div>
+                        </Template>
+                    </RadzenDataGridColumn>
+
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Archivos PDF" Property="" Pickable="false"
                                           Filterable="false" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="205px">
                         <Template Context="data">
@@ -201,13 +208,6 @@
                                 <small>de <b>@oSolicitudesTickets?.Data?.Count()</b> Solicitudes <strong>Totales.</strong></small>
                             </div>
                         </FooterTemplate>
-                    </RadzenDataGridColumn>
-
-                    <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Fecha / Hora de Creación" Property="SolFechaHoraCreacion" HeaderTooltip="Fecha y Hora" Pickable="false"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" FormatString="{0:dddd, dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt}" Width="200px">
-                        <Template Context="data">
-                            <div class="text-wrap">@data.SolFechaHoraCreacion.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt")</div>
-                        </Template>
                     </RadzenDataGridColumn>
 
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Encuesta de Calidad" Property="SolEncuestaCalidadCalificacion" Pickable="false"
