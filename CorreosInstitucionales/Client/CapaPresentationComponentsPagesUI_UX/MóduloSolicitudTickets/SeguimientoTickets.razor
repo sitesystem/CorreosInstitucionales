@@ -66,7 +66,7 @@
                     </RadzenDataGridColumn>
 
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion" Pickable="false"
-                                          Filterable="true" FilterMode="FilterMode.CheckBoxList" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="205px">
+                                          Filterable="true" FilterMode="FilterMode.CheckBoxList" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="250px">
                         <HeaderTemplate>
                             <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
                                   title="<b>Solicitud de Ticket</b>" data-bs-content="Problema o incidencia requerido por usuario para atención.">
@@ -204,7 +204,7 @@
                     </RadzenDataGridColumn>
 
                     <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Fecha / Hora de Creación" Property="SolFechaHoraCreacion" HeaderTooltip="Fecha y Hora" Pickable="false"
-                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" FormatString="{0:dddd, dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt}" Width="230px">
+                                          Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" FormatString="{0:dddd, dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt}" Width="200px">
                         <Template Context="data">
                             <div class="text-wrap">@data.SolFechaHoraCreacion.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' hh:mm:ss tt")</div>
                         </Template>

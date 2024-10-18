@@ -109,15 +109,20 @@
                                     <strong>Número de Boleta: </strong>
                                     @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
                                 }
-                                else
+                                else if (item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == 3)
+                                {
+                                    <strong>Número de Boleta de Maestría: </strong>
+                                    @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
+                                }
+                                else if (empleado_base.Contains(item.SolIdUsuarioNavigation!.UsuIdTipoPersonal))
                                 {
                                     <strong>Número de Empleado: </strong>
                                     @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
                                 }
-                                @if (item.SolIdUsuarioNavigation!.UsuBoletaMaestria != "B000000")
+                                else if (item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == 6)
                                 {
-                                    <strong>Número de Boleta de Maestría: </strong>
-                                    @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
+                                    <strong>Número de Contrato: </strong>
+                                    @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
                                 }
                             </li>
 
@@ -304,8 +309,12 @@
     private readonly int[] alumno_o_egresado =
     {
         (int)TipoPersonal.ALUMNO,
-        (int)TipoPersonal.EGRESADO,
-        (int)TipoPersonal.MAESTRIA,
+        (int)TipoPersonal.EGRESADO
+    };
+    private readonly int[] empleado_base =
+    {
+        (int)TipoPersonal.ADMINISTRATIVO,
+        (int)TipoPersonal.DOCENTE
     };
 
     private string debug = string.Empty;
