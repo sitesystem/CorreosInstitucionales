@@ -23,5 +23,10 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
             get { return base.PlaContenido; }
             set { base.PlaContenido = value; }
         }
+
+        public override string ToString()
+        {
+            return $"{IdPlantilla}\t{PlaNombre}";
+        }
     }
 }

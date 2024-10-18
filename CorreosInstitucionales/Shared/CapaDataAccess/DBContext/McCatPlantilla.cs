@@ -20,6 +20,15 @@ public partial class McCatPlantilla
     [StringLength(2048)]
     public string PlaContenido { get; set; } = null!;
 
+    [Column("plaTipo")]
+    public int PlaTipo { get; set; }
+
+    [Column("plaIdEstadoSolicitud")]
+    public int? PlaIdEstadoSolicitud { get; set; }
+
+    [Column("plaFiltro")]
+    public int PlaFiltro { get; set; }
+
     [Column("plaStatus")]
     public bool PlaStatus { get; set; }
 }
