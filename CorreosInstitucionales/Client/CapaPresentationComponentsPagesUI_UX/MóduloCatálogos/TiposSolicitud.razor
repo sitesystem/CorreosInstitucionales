@@ -6,13 +6,12 @@
 
 <PageTitle>@Title</PageTitle>
 
-    <div class="p-4 rounded-1 bg-white shadow">
-        <h1>@Title</h1>
+<div class="p-4 rounded-1 bg-white shadow">
+    <h1>@Title</h1>
 
     <div class="row my-3">
         @if (cargado && puede_agregar)
         {
-
             <div class="offset-10 col-2">
                 <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
                     Agregar...
@@ -131,15 +130,15 @@
                 (
                     "Actualizar Datos",
                     new Dictionary<string, object>()
-                                            {
+                    {
                         {"registro", registro}
-                                            },
+                    },
                     new DialogOptions()
-                        {
-                            ShowClose = false,
-                            Width = "50%",
-                            CssClass = "dialog_simple"
-                        }
+                    {
+                        ShowClose = false,
+                        Width = "50%",
+                        CssClass = "dialog_simple"
+                    }
                 );
     }
 

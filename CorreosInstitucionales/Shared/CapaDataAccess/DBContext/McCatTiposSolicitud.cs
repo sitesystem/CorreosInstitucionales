@@ -30,5 +30,5 @@ public partial class McCatTiposSolicitud
 
     [JsonIgnore]
     [InverseProperty("SolIdTipoSolicitudNavigation")]
-    public virtual ICollection<MtTbSolicitudesTicket> MtTbSolicitudesTickets { get; set; } = new List<MtTbSolicitudesTicket>();
+    public virtual ICollection<MtTbSolicitudesTicket> MtTbSolicitudesTickets { get; set; } = [];
 }

@@ -60,7 +60,6 @@
             <RadzenDataGridColumn TItem="RequestViewModel_NoExtension" Context="item"
                                   Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false"
                                   Visible=@puede_editar>
-
                 <Template Context="item">
                     <RadzenButton title="Editar..."
                                   Icon="edit"
@@ -87,7 +86,6 @@
                                   Visible="item.ExtStatus.Equals(false)"
                                   Click="@(async ()=> await CambiarStatus(item, true))" @onclick:stopPropagation="true">
                     </RadzenButton>
-
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -107,7 +105,6 @@
     private IList<RequestViewModel_NoExtension> selectedItems = new List<RequestViewModel_NoExtension>();
 
     public List<RequestViewModel_AreaDepto> cat_ExtIdAreaDepto { get; private set; } = new List<RequestViewModel_AreaDepto>();
-
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -144,8 +141,8 @@
                     },
                     new DialogOptions()
                     {
-                            ShowClose = false,
-                            CssClass = "dialog_simple"
+                        ShowClose = false,
+                        CssClass = "dialog_simple"
                     }
                 );
     }
@@ -207,9 +204,9 @@
             (
                 "Confirmar",
                 new Dictionary<string, object>()
-                                    {
-                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.ExtNoExtension} ({item.ExtIdAreaDeptoNavigation!.AreNombreAreaDepto})?" }
-                                    },
+                {
+                    { "mensaje" , $"¿Desea {des}habilitar el registro de {item.ExtNoExtension} ({item.ExtIdAreaDeptoNavigation!.AreNombreAreaDepto})?" }
+                },
                 new DialogOptions() { ShowClose = false }
             );
 

@@ -122,7 +122,7 @@ namespace CorreosInstitucionales.Shared.Constantes
                     datos.AddRange
                     (
                         [
-                            TipoDatoXLSX.EXTENSION, 
+                            TipoDatoXLSX.EXTENSION_NUEVO, 
                             TipoDatoXLSX.CORREO_PERSONAL_NUEVO
                         ]
                     );
@@ -132,7 +132,7 @@ namespace CorreosInstitucionales.Shared.Constantes
                     datos.AddRange
                     (
                         [
-                            TipoDatoXLSX.EXTENSION,
+                            TipoDatoXLSX.EXTENSION_NUEVO,
                             TipoDatoXLSX.CORREO_PERSONAL_NUEVO,
                             TipoDatoXLSX.CORREO_INSTITUCIONAL
                         ]
@@ -143,7 +143,7 @@ namespace CorreosInstitucionales.Shared.Constantes
                     datos.AddRange
                     (
                         [
-                            TipoDatoXLSX.EXTENSION,
+                            TipoDatoXLSX.EXTENSION_NUEVO,
                             TipoDatoXLSX.CORREO_PERSONAL_NUEVO,
                             TipoDatoXLSX.CORREO_INSTITUCIONAL,
                             TipoDatoXLSX.CELULAR_NUEVO

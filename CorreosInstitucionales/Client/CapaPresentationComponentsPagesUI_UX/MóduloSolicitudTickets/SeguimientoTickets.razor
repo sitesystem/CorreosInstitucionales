@@ -332,7 +332,7 @@ else
         //
     }
 
-    async Task ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "Datos validando", options);
+    async Task ShowTooltip(ElementReference elementReference, TooltipOptions options = null!) => TooltipService.Open(elementReference, "Datos validando", options);
 
     @*///////////////////////////////////////////////  SHOW DIALOG MODAL iFRAME  //////////////////////////////////////////////////////////////////////*@
     private async Task ShowDialogModal_iFrame(string srciFrame, string title)

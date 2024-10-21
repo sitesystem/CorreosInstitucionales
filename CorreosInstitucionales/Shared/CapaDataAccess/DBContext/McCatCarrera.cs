@@ -40,5 +40,5 @@ public partial class McCatCarrera
 
     [JsonIgnore]
     [InverseProperty("UsuIdCarreraNavigation")]
-    public virtual ICollection<MpTbUsuario> MpTbUsuarios { get; set; } = new List<MpTbUsuario>();
+    public virtual ICollection<MpTbUsuario> MpTbUsuarios { get; set; } = [];
 }

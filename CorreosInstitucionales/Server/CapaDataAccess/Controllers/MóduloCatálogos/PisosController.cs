@@ -121,7 +121,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
             try
             {
                 McCatPiso? oPiso = await _db.McCatPisos.FindAsync(id);
-                //db.Remove(oPiso);
+                // db.Remove(oPiso);
 
                 if (oPiso != null)
                 {

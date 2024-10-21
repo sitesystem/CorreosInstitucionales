@@ -23,7 +23,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
 
             string spassword = Encrypt.GetSHA256(model.UsuContrasenia);
             var usuario = await _db.MpTbUsuarios
-                                   .Where(l => l.UsuCorreoPersonalCuentaNueva == model.UsuCorreoPersonal && l.UsuContrasenia == spassword && l.UsuStatus.Equals(true))
+                                   .Where(l => l.UsuCorreoPersonalCuentaActual == model.UsuCorreoPersonal && l.UsuContrasenia == spassword && l.UsuStatus.Equals(true))
                                    .FirstOrDefaultAsync();
             if (usuario != null)
             {
@@ -32,25 +32,25 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
                 usuarioResponse.UsuIdRol = usuario.UsuIdRol;
                 usuarioResponse.UsuIdTipoPersonal = usuario.UsuIdTipoPersonal;
                 // DATOS PERSONALES
-                usuarioResponse.UsuNombre = usuario.UsuNombre;
+                usuarioResponse.UsuNombres = usuario.UsuNombres;
                 usuarioResponse.UsuPrimerApellido = usuario.UsuPrimerApellido;
                 usuarioResponse.UsuSegundoApellido = usuario.UsuSegundoApellido;
                 usuarioResponse.UsuCurp = usuario.UsuCurp;
                 usuarioResponse.UsuNoCelularAnterior = usuario.UsuNoCelularAnterior;
-                usuarioResponse.UsuNoCelularNuevo = usuario.UsuNoCelularNuevo;
+                usuarioResponse.UsuNoCelularActual = usuario.UsuNoCelularActual;
                 // DATOS ACADÉMICOS
-                usuarioResponse.UsuBoletaAlumno = usuario.UsuBoletaAlumno;
-                usuarioResponse.UsuBoletaMaestria = usuario.UsuBoletaMaestria;
+                usuarioResponse.UsuBoletaAlumnoEgresado = usuario.UsuBoletaAlumnoEgresado;
+                usuarioResponse.UsuBoletaPosgrado = usuario.UsuBoletaPosgrado;
                 usuarioResponse.UsuIdCarrera = usuario.UsuIdCarrera;
                 usuarioResponse.UsuSemestre = usuario.UsuSemestre;
                 usuarioResponse.UsuAnioEgreso = usuario.UsuAnioEgreso;
                 // DATOS LABORALES
-                usuarioResponse.UsuNumeroEmpleado = usuario.UsuNumeroEmpleado;
+                usuarioResponse.UsuNumeroEmpleadoContrato = usuario.UsuNumeroEmpleadoContrato;
                 usuarioResponse.UsuIdAreaDepto = usuario.UsuIdAreaDepto;
-                usuarioResponse.UsuNoExtension = usuario.UsuNoExtension;
+                usuarioResponse.UsuNoExtensionActual = usuario.UsuNoExtensionActual;
                 // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                 usuarioResponse.UsuCorreoPersonalCuentaAnterior = usuario.UsuCorreoPersonalCuentaAnterior;
-                usuarioResponse.UsuCorreoPersonalCuentaNueva = usuario.UsuCorreoPersonalCuentaNueva;
+                usuarioResponse.UsuCorreoPersonalCuentaActual = usuario.UsuCorreoPersonalCuentaActual;
                 usuarioResponse.UsuRecuperarContrasenia = usuario.UsuRecuperarContrasenia;
                 // DATOS DEL CORREO INSTITUCIONAL
                 usuarioResponse.UsuCorreoInstitucionalCuenta = usuario.UsuCorreoInstitucionalCuenta;
@@ -67,28 +67,26 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth
         private string GetToken(MpTbUsuario usuario)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-
-            //var key = Encoding.ASCII.GetBytes(_appSettings.Secreto);
-            var key = Encoding.UTF8.GetBytes(_appSettings.Secreto ?? string.Empty);
+            var key = Encoding.UTF8.GetBytes(_appSettings.Secreto ?? string.Empty); // var key = Encoding.ASCII.GetBytes(_appSettings.Secreto);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = null,
                 Audience = null,
-                Subject = new ClaimsIdentity(
-                        [
-
-                            new(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
-                            new(ClaimTypes.Name, usuario.UsuNombre.ToString()),
-                            new(ClaimTypes.Role, usuario.UsuIdRol.ToString()),
-                            new("ID", usuario.IdUsuario.ToString()),
-                            new("Name", usuario.UsuNombre.ToString() + " " + usuario.UsuPrimerApellido.ToString() + " " + usuario.UsuSegundoApellido?.ToString()),
-                            new("Email", usuario.UsuCorreoPersonalCuentaNueva.ToString()),
-                            new("Rol", usuario.UsuIdRol.ToString()),
-                            new("TipoPersonal", usuario.UsuIdTipoPersonal.ToString()),
-                            new("RecuperarContrasenia", usuario.UsuRecuperarContrasenia.ToString().ToLower())
-                         ]
-                    ),
+                Subject = new ClaimsIdentity
+                (
+                    [
+                        new(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
+                        new(ClaimTypes.Name, usuario.UsuNombres.ToString()),
+                        new(ClaimTypes.Role, usuario.UsuIdRol.ToString()),
+                        new("ID", usuario.IdUsuario.ToString()),
+                        new("Name", usuario.UsuNombres.ToString() + " " + usuario.UsuPrimerApellido.ToString() + " " + usuario.UsuSegundoApellido?.ToString()),
+                        new("Email", usuario.UsuCorreoPersonalCuentaActual.ToString()),
+                        new("Rol", usuario.UsuIdRol.ToString()),
+                        new("TipoPersonal", usuario.UsuIdTipoPersonal.ToString()),
+                        new("RecuperarContrasenia", usuario.UsuRecuperarContrasenia.ToString().ToLower())
+                    ]
+                ),
                 Expires = DateTime.UtcNow.AddMonths(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };

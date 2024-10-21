@@ -4,7 +4,7 @@
 <h1>Solicitud Cancelada</h1>
 
 Saludos:<br />
-<b>@usuario.UsuNombre @usuario.UsuPrimerApellido @usuario.UsuSegundoApellido</b><br /><br />
+<b>@usuario.UsuNombres.Trim() @usuario.UsuPrimerApellido.Trim() @usuario.UsuSegundoApellido?.Trim()</b><br /><br />
 
 Por medio del presente nos permitimos informarle que su<br />
 solicitud de No. de Ticket <b>#@solicitud.IdSolicitudTicket,</b><br />

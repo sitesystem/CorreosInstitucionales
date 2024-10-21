@@ -59,17 +59,17 @@ public partial class McCatAreasDepto
 
     [ForeignKey("AreIdEdificio")]
     [InverseProperty("McCatAreasDeptos")]
-    public virtual McCatEdificio AreIdEdificioNavigation { get; set; } = null!;
+    public virtual McCatEdificio? AreIdEdificioNavigation { get; set; } = null!;
 
     [ForeignKey("AreIdPiso")]
     [InverseProperty("McCatAreasDeptos")]
-    public virtual McCatPiso AreIdPisoNavigation { get; set; } = null!;
+    public virtual McCatPiso? AreIdPisoNavigation { get; set; } = null!;
 
     [JsonIgnore]
     [InverseProperty("ExtIdAreaDeptoNavigation")]
-    public virtual ICollection<McCatNoExtension> McCatNoExtensions { get; set; } = new List<McCatNoExtension>();
+    public virtual ICollection<McCatNoExtension> McCatNoExtensions { get; set; } = [];
 
     [JsonIgnore]
     [InverseProperty("UsuIdAreaDeptoNavigation")]
-    public virtual ICollection<MpTbUsuario> MpTbUsuarios { get; set; } = new List<MpTbUsuario>();
+    public virtual ICollection<MpTbUsuario> MpTbUsuarios { get; set; } = [];
 }

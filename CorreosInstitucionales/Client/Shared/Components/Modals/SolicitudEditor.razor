@@ -31,7 +31,6 @@
         </section>
     }
     
-
     <section class="my-2">
         <h1>Solicitud</h1>
         <div class="row mb-3">
@@ -50,7 +49,7 @@
                 <InputSelect @bind-Value="@registro.SolIdUsuario" class="  form-select">
                     @foreach (var item in cat_SolIdUsuario)
                     {
-                        <option value="@item.IdUsuario">@item.UsuNombre  @item.UsuPrimerApellido @item.UsuSegundoApellido</option>
+                        <option value="@item.IdUsuario">@item.UsuNombres  @item.UsuPrimerApellido @item.UsuSegundoApellido</option>
                     }
                 </InputSelect>
             </div>

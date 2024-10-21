@@ -62,8 +62,17 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
     {
         modelBuilder.Entity<McCatAnuncio>(entity =>
         {
-            entity.Property(e => e.AnuEnlace).HasDefaultValue("-");
-            entity.Property(e => e.AnuStatus).HasDefaultValue(true);
+            entity.Property(e => e.IdAnuncio).HasComment("PK ID Único del Anuncio");
+            entity.Property(e => e.AnuArchivo).HasComment("Nombre del Archivo en formato .jpg, .png");
+            entity.Property(e => e.AnuDescripcion).HasComment("Descripción i información del Anuncio");
+            entity.Property(e => e.AnuEnlace)
+                .HasDefaultValue("-")
+                .HasComment("Enlace del Anuncio ya sea del servidor o dirección URL");
+            entity.Property(e => e.AnuStatus)
+                .HasDefaultValue(true)
+                .HasComment("Estado (1 = Activo, 0 = Inactivo)");
+            entity.Property(e => e.AnuVisibleDesde).HasComment("Fecha de Inicio del periodo del Anuncio");
+            entity.Property(e => e.AnuVisibleHasta).HasComment("Fecha de Fin del periodo del Anuncio");
         });
 
         modelBuilder.Entity<McCatAreasDepto>(entity =>
@@ -124,10 +133,12 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
             entity.HasKey(e => e.IdEscuela).HasName("PK_MCE_catEscuelas");
 
             entity.Property(e => e.IdEscuela).HasComment("PK ID Único de la Escuela");
+            entity.Property(e => e.EscFechaFundacion).HasComment("Fecha en que se fundó la Escuela");
+            entity.Property(e => e.EscFileNameAvisoPrivacidad).HasComment("Nombre del Archivo PDF del Aviso de Privacidad");
             entity.Property(e => e.EscLogo).HasComment("Nombre de la Imágen del Logo");
             entity.Property(e => e.EscNoEscuela)
                 .HasDefaultValue("-")
-                .HasComment("Número de la Escuela");
+                .HasComment("Número o Clave de la Escuela");
             entity.Property(e => e.EscNombreCorto).HasComment("Nombre Corto de la Escuela");
             entity.Property(e => e.EscNombreLargo).HasComment("Nombre Largo de la Escuela");
             entity.Property(e => e.EscStatus)
@@ -143,7 +154,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
             entity.Property(e => e.EdosolDescripcion).HasComment("Detalle del Estado de la Solicitud");
             entity.Property(e => e.EdosolNombreEstado)
                 .HasDefaultValue("-")
-                .HasComment("Estado de la Solicitud (1 - Levantado, 2 - Pendiente, 3 - En Proceso, 4 - Atendido)");
+                .HasComment("Estado de la Solicitud (1 - Levantado, 2 - Pendiente, 3 - En Proceso, 4 - Atendido, 5 - Encuesta Contestada, 6 - Cancelada)");
         });
 
         modelBuilder.Entity<McCatLink>(entity =>
@@ -189,7 +200,9 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
         modelBuilder.Entity<McCatPlantilla>(entity =>
         {
+            entity.Property(e => e.PlaAsunto).HasDefaultValue("NO DEFINIDO");
             entity.Property(e => e.PlaStatus).HasDefaultValue(true);
+            entity.Property(e => e.PlaTipo).HasDefaultValue(1);
         });
 
         modelBuilder.Entity<McCatRole>(entity =>
@@ -199,6 +212,12 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
             entity.Property(e => e.IdRol).HasComment("PK ID Único del Rol");
             entity.Property(e => e.RolDescripcion).HasComment("Descripción detallada del Rol");
             entity.Property(e => e.RolNombre).HasComment("Nombre del Rol");
+        });
+
+        modelBuilder.Entity<McCatSemestre>(entity =>
+        {
+            entity.Property(e => e.IdSemestre).HasComment("PK ID Único del Semestre");
+            entity.Property(e => e.SemNombre).HasComment("Semestre que cursa");
         });
 
         modelBuilder.Entity<McCatTiposPersonal>(entity =>
@@ -233,24 +252,26 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
             entity.Property(e => e.IdUsuario).HasComment("PK ID Único del Usuario Solicitante o Administrador");
             entity.Property(e => e.UsuAnioEgreso)
                 .HasDefaultValue(1900)
-                .HasComment("Año de Egreso en caso de ser Alumno Egresado");
-            entity.Property(e => e.UsuBoletaAlumno).HasComment("Número de Boleta del Usuario Alumno/Egresado");
-            entity.Property(e => e.UsuBoletaMaestria).HasComment("Número de Boleta del Usuario Alumno de Maestría");
-            entity.Property(e => e.UsuContrasenia).HasComment("Contraseña Encriptada en la Plataforma SACI");
+                .HasComment("Año de Egreso en caso de ser Egresado");
+            entity.Property(e => e.UsuBoletaAlumnoEgresado).HasComment("Número de Boleta del Usuario Alumno/Egresado");
+            entity.Property(e => e.UsuBoletaPosgrado).HasComment("Número de Boleta del Usuario Alumno de Posgrado");
+            entity.Property(e => e.UsuContrasenia).HasComment("Contraseña Encriptada para ingresar a la Plataforma SACI");
             entity.Property(e => e.UsuCorreoInstitucionalContrasenia).HasComment("Contraseña del Correo Electrónico Institucional IPN");
             entity.Property(e => e.UsuCorreoInstitucionalCuenta).HasComment("Correo Electrónico Institucional IPN");
-            entity.Property(e => e.UsuCorreoPersonalCuentaAnterior).HasComment("Correo Personal Anterior");
-            entity.Property(e => e.UsuCorreoPersonalCuentaNueva).HasComment("Correo Personal Actual / Nuevo");
+            entity.Property(e => e.UsuCorreoPersonalCuentaActual).HasComment("Correo Electrónico Personal Actual");
+            entity.Property(e => e.UsuCorreoPersonalCuentaAnterior).HasComment("Correo Electrónico Personal Anterior");
             entity.Property(e => e.UsuCurp).HasComment("CURP del Usuario");
-            entity.Property(e => e.UsuFechaHoraActualizacion).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.UsuFechaHoraActualizacion)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("Fecha Hora en que se va actualizando el Correo Institucional y/o Contraseña de la Plataforma SACI");
             entity.Property(e => e.UsuFechaHoraAlta)
                 .HasDefaultValueSql("(getdate())")
-                .HasComment("Fecha Hora del Alta del Usuario");
-            entity.Property(e => e.UsuFileNameComprobanteInscripcion).HasComment("Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP");
+                .HasComment("Fecha Hora de Alta del Usuario");
+            entity.Property(e => e.UsuFileNameComprobanteEstudios).HasComment("Nombre del Archivo PDF de la Tira de Materias / Constancia o Certificado de Estudios / Boleta / SIP-10");
             entity.Property(e => e.UsuFileNameCurp).HasComment("Nombre del Archivo PDF del CURP del Usuario");
             entity.Property(e => e.UsuIdAreaDepto)
                 .HasDefaultValue(1)
-                .HasComment("FK ID del Área / Departamento domde labora el Empleado");
+                .HasComment("FK ID del Área / Departamento donde labora el Empleado");
             entity.Property(e => e.UsuIdCarrera)
                 .HasDefaultValue(1)
                 .HasComment("FK ID de la Carrera que pertenece o cursó");
@@ -260,13 +281,14 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
             entity.Property(e => e.UsuIdTipoPersonal)
                 .HasDefaultValue(1)
                 .HasComment("FK ID del Tipo de Personal del Usuario Solicitante ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])");
+            entity.Property(e => e.UsuNoCelularActual).HasComment("Número Celular Actual del Usuario");
             entity.Property(e => e.UsuNoCelularAnterior).HasComment("Número Celular Anterior del Usuario");
-            entity.Property(e => e.UsuNoCelularNuevo).HasComment("Número Celular Actual/Nuevo del Usuario");
-            entity.Property(e => e.UsuNoExtension).HasComment("Número de Extensión del Área / Departamento");
-            entity.Property(e => e.UsuNombre)
+            entity.Property(e => e.UsuNoExtensionActual).HasComment("Número de Extensión actual del Área / Departamento");
+            entity.Property(e => e.UsuNoExtensionAnterior).HasComment("Número de Extensión anterior del Área / Departamento");
+            entity.Property(e => e.UsuNombres)
                 .HasDefaultValue("-")
-                .HasComment("Nombre del Usuario Solicitante o Administrador");
-            entity.Property(e => e.UsuNumeroEmpleado).HasComment("Número de Empleado del Usuario { Administrativo, Docente }");
+                .HasComment("Nombre(s) del Usuario Solicitante o Administrador");
+            entity.Property(e => e.UsuNumeroEmpleadoContrato).HasComment("Número de Empleado del Usuario { Administrativo, Docente } / Número de Contrato del Usuario { Honorarios }");
             entity.Property(e => e.UsuPrimerApellido)
                 .HasDefaultValue("-")
                 .HasComment("Primer Apellido del Usuario");
@@ -274,7 +296,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
             entity.Property(e => e.UsuSegundoApellido).HasComment("Segundo Apellido del Usuario");
             entity.Property(e => e.UsuSemestre)
                 .HasDefaultValueSql("((1))")
-                .HasComment("Semestre que cursa");
+                .HasComment("Semestre que cursa o perteneció");
             entity.Property(e => e.UsuStatus)
                 .HasDefaultValue(true)
                 .HasComment("Estatus { 0 = Inactivo, 1 = Activo }");
@@ -312,7 +334,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
             entity.Property(e => e.SolFechaHoraEncuesta).HasComment("Fecha Hora de la respuesta a la Encuesta de Calidad de la Solicitud-Ticket.");
             entity.Property(e => e.SolIdEstadoSolicitud)
                 .HasDefaultValue(1)
-                .HasComment("FK ID del Estado de la Solicitud (1 = Alta/Levantad@, 2 = Pendiente, 3 = En Proceso, 4 = Atendido)");
+                .HasComment("FK ID del Estado de la Solicitud (1 = Alta/Levantad@, 2 = Pendiente, 3 = En Proceso, 4 = Atendido, 5 = Encuesta Contestada, 6 = Cancelad@)");
             entity.Property(e => e.SolIdTipoSolicitud)
                 .HasDefaultValue(1)
                 .HasComment("FK ID del Tipo de Solicitud (1 - A, 2 - B, 3 - C, 4 -D, 5 - E, 6 - F, 7 - G, 8 - OTRO)");
@@ -320,6 +342,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
                 .HasDefaultValue(1)
                 .HasComment("FK ID del Usuario Solicitante");
             entity.Property(e => e.SolObservacionesSolicitud).HasComment("Observación y/o comentario del problema de la Solicitud-Ticket.");
+            entity.Property(e => e.SolRespuestaDcyC).HasComment("Respuesta de la acción de DCyC / CRM ");
             entity.Property(e => e.SolToken).HasComment("Magic Link con Token para Encuestra de Calidad");
             entity.Property(e => e.SolValidacionDatos).HasComment("Validación de Datos por el Administrador { 0 - No Validados, 1 - Validados }");
 

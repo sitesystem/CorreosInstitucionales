@@ -38,5 +38,5 @@ public partial class McCatTiposPersonal
 
     [JsonIgnore]
     [InverseProperty("UsuIdTipoPersonalNavigation")]
-    public virtual ICollection<MpTbUsuario> MpTbUsuarios { get; set; } = new List<MpTbUsuario>();
+    public virtual ICollection<MpTbUsuario> MpTbUsuarios { get; set; } = [];
 }

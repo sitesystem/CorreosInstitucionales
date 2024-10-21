@@ -1,11 +1,11 @@
-﻿using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
-using CorreosInstitucionales.Shared.CapaEntities.Request;
-using CorreosInstitucionales.Shared.Constantes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.Constantes;
 
 namespace CorreosInstitucionales.Shared.CapaTools
 {
@@ -38,19 +38,25 @@ namespace CorreosInstitucionales.Shared.CapaTools
                 UsuIdRol = 2,
                 UsuIdTipoPersonal = 1,
                 UsuCurp = "XAXX010101HDFXXX00",
-                UsuBoletaAlumno = "0000600000",
-                UsuBoletaMaestria = "B000000",
-                UsuCorreoPersonalCuentaNueva = "noreply@example.com",
-                UsuContrasenia = Encrypt.GetSHA256(Guid.NewGuid().ToString()),
-                UsuNoCelularNuevo = "55 00 00 00 00",
+                UsuFileNameCurp = "-",
+                UsuNoCelularActual = "55 00 00 00 00",
+                UsuBoletaAlumnoEgresado = "0000600000",
+                UsuBoletaPosgrado = "B000000",
                 UsuIdCarrera = 1,
                 UsuSemestre = "1",
                 UsuAnioEgreso = 1950,
-                UsuFileNameComprobanteInscripcion = "-",
-                UsuNumeroEmpleado = "0",
+                UsuFileNameComprobanteEstudios = "-",
+                UsuNumeroEmpleadoContrato = "0",
                 UsuIdAreaDepto = 1,
-                UsuNoExtension = "0",
-                UsuStatus = true
+                UsuNoExtensionActual = "0",
+                UsuCorreoPersonalCuentaActual = "noreply@example.com",
+                UsuContrasenia = Encrypt.GetSHA256(Guid.NewGuid().ToString()),
+                UsuRecuperarContrasenia = false,
+                UsuStatus = true,
+                UsuIdRolNavigation = null,
+                UsuIdTipoPersonalNavigation = null,
+                UsuIdCarreraNavigation = null,
+                UsuIdAreaDeptoNavigation = null
             };
         }
 
@@ -58,17 +64,24 @@ namespace CorreosInstitucionales.Shared.CapaTools
         {
             return new RequestDTO_Solicitud()
             {
+                SolIdTipoSolicitud = 1,
+                SolIdUsuario = 1,
                 SolFileNameCurp = "-",
                 SolFileNameComprobanteInscripcion = "-",
-                SolNoCelularAnterior = "-",
-                SolNoCelularActual = "-",
-                SolCorreoPersonalCuentaAnterior = "-",
-                SolCorreoPersonalCuentaActual = "-",
+                SolNoCelularAnterior = "55 00 00 00 00",
+                SolNoCelularActual = "55 00 00 00 00",
+                SolCorreoPersonalCuentaAnterior = "noreply@example.com",
+                SolCorreoPersonalCuentaActual = "noreply@example.com",
                 SolCapturaEscaneoAntivirus = "-",
                 SolCapturaCuentaBloqueada = "-",
                 SolCapturaError = "-",
                 SolObservacionesSolicitud = "-",
-                SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.PENDIENTE
+                SolIdEstadoSolicitud = (int)TipoEstadoSolicitud.PENDIENTE,
+                SolValidacionDatos = false,
+                SolEnvioEncuesta = 0,
+                SolIdUsuarioNavigation = null,
+                SolIdTipoSolicitudNavigation = null,
+                SolIdEstadoSolicitudNavigation = null
             };
         }
 

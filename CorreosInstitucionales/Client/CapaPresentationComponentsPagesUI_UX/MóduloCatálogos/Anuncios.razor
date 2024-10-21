@@ -1,5 +1,4 @@
 ﻿@page "/catalogo/anuncios"
-@using System.Text
 
 @attribute [Authorize(Policy = "[Rol] Ambos")]
 
@@ -23,7 +22,6 @@
     }
     else
     {
-
         <div class="row my-3">
             <div class="offset-10 col-2">
                 <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
@@ -148,15 +146,15 @@
                 (
                     titulo_ventana,
                     new Dictionary<string, object>()
-                                            {
+                    {
                         {"registro", registro}
-                                            },
+                    },
                     new DialogOptions()
-                        {
-                            ShowClose = false,
-                            Width = "50%",
-                            CssClass = "dialog_simple"
-                        }
+                    {
+                        ShowClose = false,
+                        Width = "50%",
+                        CssClass = "dialog_simple"
+                    }
                 );
     }
 
@@ -287,9 +285,9 @@
             (
                 "Confirmar",
                 new Dictionary<string, object>()
-                                                {
-                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.AnuDescripcion}?" }
-                                                },
+                {
+                    { "mensaje" , $"¿Desea {des}habilitar el registro de {item.AnuDescripcion}?" }
+                },
                 new DialogOptions() { ShowClose = false }
             );
 

@@ -1,9 +1,5 @@
 ﻿@page "/debug/catalogos"
 
-@using System.Reflection
-@using System.ComponentModel.DataAnnotations
-@using System.ComponentModel.DataAnnotations.Schema
-
 @inject IClipboardService clipboard;
 
 <PageTitle>Generar UI</PageTitle>
@@ -36,7 +32,6 @@
     async Task CopyToClipboard()
     {
         await clipboard.CopyToClipboard(razor_code);
-
     }
 
     string razor_code = string.Empty;

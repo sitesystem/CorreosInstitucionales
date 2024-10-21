@@ -6,7 +6,6 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
@@ -35,7 +34,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
                 );
 
             var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Response<Dictionary<string,List<IntDataItem>>>>(content, options: _options);
+            var result = JsonSerializer.Deserialize<Response<Dictionary<string, List<IntDataItem>>>>(content, options: _options);
             return result;
         }
     }

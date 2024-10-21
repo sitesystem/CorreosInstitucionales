@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.HtmlRendering;
 
-namespace CorreosInstitucionales.Shared.CapaTools
+namespace CorreosInstitucionales.Server.Utils
 {
     public class ComponentRenderer
     {

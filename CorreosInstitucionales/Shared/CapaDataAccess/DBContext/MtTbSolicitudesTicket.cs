@@ -67,7 +67,7 @@ public partial class MtTbSolicitudesTicket
     public string? SolObservacionesSolicitud { get; set; }
 
     /// <summary>
-    /// FK ID del Estado de la Solicitud (1 = Alta/Levantad@, 2 = Pendiente, 3 = En Proceso, 4 = Atendido)
+    /// FK ID del Estado de la Solicitud (1 = Alta/Levantad@, 2 = Pendiente, 3 = En Proceso, 4 = Atendido, 5 = Encuesta Contestada, 6 = Cancelad@)
     /// </summary>
     [Column("solIdEstadoSolicitud")]
     public int SolIdEstadoSolicitud { get; set; }
@@ -109,6 +109,9 @@ public partial class MtTbSolicitudesTicket
     [Column("solFechaHoraEncuesta", TypeName = "datetime")]
     public DateTime? SolFechaHoraEncuesta { get; set; }
 
+    /// <summary>
+    /// Respuesta de la acción de DCyC / CRM 
+    /// </summary>
     [Column("solRespuestaDCyC", TypeName = "text")]
     public string? SolRespuestaDcyC { get; set; }
 
@@ -120,13 +123,13 @@ public partial class MtTbSolicitudesTicket
 
     [ForeignKey("SolIdEstadoSolicitud")]
     [InverseProperty("MtTbSolicitudesTickets")]
-    public virtual McCatEstadosSolicitud SolIdEstadoSolicitudNavigation { get; set; } = null!;
+    public virtual McCatEstadosSolicitud? SolIdEstadoSolicitudNavigation { get; set; } = null!;
 
     [ForeignKey("SolIdTipoSolicitud")]
     [InverseProperty("MtTbSolicitudesTickets")]
-    public virtual McCatTiposSolicitud SolIdTipoSolicitudNavigation { get; set; } = null!;
+    public virtual McCatTiposSolicitud? SolIdTipoSolicitudNavigation { get; set; } = null!;
 
     [ForeignKey("SolIdUsuario")]
     [InverseProperty("MtTbSolicitudesTickets")]
-    public virtual MpTbUsuario SolIdUsuarioNavigation { get; set; } = null!;
+    public virtual MpTbUsuario? SolIdUsuarioNavigation { get; set; } = null!;
 }

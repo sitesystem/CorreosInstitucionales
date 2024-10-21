@@ -14,27 +14,19 @@ using System.Text;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Server.Correos;
 using CorreosInstitucionales.Server.MensajesWA;
+using CorreosInstitucionales.Server.Utils;
 
+using CorreosInstitucionales.Shared;
 using CorreosInstitucionales.Shared.CapaEntities.Common;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
-using CorreosInstitucionales.Shared.Utils;
-using CorreosInstitucionales.Shared;
-using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos;
-using System.ComponentModel;
-using Serilog;
-using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Debug;
-using Azure.Identity;
-using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
-
     public class ArchivosController (
             DbCorreosInstitucionalesUpiicsaContext db, 
             ISendEmailService servicioEmail,
@@ -43,7 +35,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         ) : Controller
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
-        private readonly ComponentRenderer renderer = new ComponentRenderer(serviceProvider);
+        private readonly ComponentRenderer renderer = new(serviceProvider);
 
         private readonly ISendEmailService _servicioCorreo = servicioEmail;
         private readonly WhatsApp WA = new(client);
@@ -126,7 +118,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             string id = Guid.NewGuid().ToString();
             string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/notificacion_{id}.txt";
 
-            WhatsApp WA = new WhatsApp(client);
+            WhatsApp WA = new(client);
 
             foreach (Notificacion notificacion in notificaciones)
             {
@@ -176,7 +168,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 variables_solicitud["solicitud"] = solicitud;
 
-                notificacion.correo.EmailTo = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+                notificacion.correo.EmailTo = solicitud.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaActual;
                 switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
                 {
                     case TipoPersonal.ALUMNO:
@@ -189,7 +181,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         break;
                 }
 
-                notificacion.wa.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty);
+                notificacion.wa.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularActual!.Replace(" ", string.Empty);
                 notificacion.wa.Message = await renderer.GetHTML<AtendidoWA>(variables_solicitud);
 
                 if (notificacion.EsCorreoPrueba())
@@ -225,7 +217,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             string id = Guid.NewGuid().ToString();
             string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/{id}.txt";
 
-            List<string> log = new();
+            List<string> log = [];
 
             Notificacion notificacion = new();
             notificacion.correo.Subject = "Su solicitud ha sido canalizada hacia la mesa de control";
@@ -239,10 +231,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             {
                 variables_solicitud["solicitud"] = solicitud;
 
-                notificacion.correo.EmailTo = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+                notificacion.correo.EmailTo = solicitud.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaActual;
                 notificacion.correo.Body = await renderer.GetHTML<EnProceso>(variables_solicitud);
 
-                notificacion.wa.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty);
+                notificacion.wa.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularActual.Replace(" ", string.Empty);
                 notificacion.wa.Message = await renderer.GetHTML<EnProcesoWA>(variables_solicitud);
 
                 if (notificacion.EsCorreoPrueba())
@@ -282,7 +274,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             string archivo = string.Empty;
             string tipo = tipo_documento.GetNombre();
 
-            string curp = solicitud.SolIdUsuarioNavigation.UsuCurp;
+            string curp = solicitud.SolIdUsuarioNavigation!.UsuCurp;
             string id = string.Format("{0:00000}", solicitud.IdSolicitudTicket);
 
             MpTbUsuario usuario = solicitud.SolIdUsuarioNavigation;
@@ -293,7 +285,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     archivo = solicitud.SolIdUsuarioNavigation.UsuFileNameCurp!;
                     break;
                 case TipoDocumento.COM_INSCRIPCION:
-                    archivo = solicitud.SolIdUsuarioNavigation.UsuFileNameComprobanteInscripcion!;
+                    archivo = solicitud.SolIdUsuarioNavigation.UsuFileNameComprobanteEstudios!;
                     break;
                 case TipoDocumento.CAP_ANTIVIRUS:
                     archivo = solicitud.SolCapturaEscaneoAntivirus!;
@@ -307,7 +299,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }
 
             string ext = Path.GetExtension(archivo);
-            string nombre_usuario = $"{usuario.UsuNombre} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}";
+            string nombre_usuario = $"{usuario.UsuNombres} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}";
             return new WebUtils.Link($"{directorio}{archivo}",$"{nombre_usuario}-{tipo}{ext}", optional);
         }
 
@@ -368,9 +360,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         {
             Response<string> oResponse = new();
 
-            List<Notificacion> notificaciones = new List<Notificacion>()
-            {
-                new Notificacion()
+            List<Notificacion> notificaciones =
+            [
+                new()
                 {
                     correo = new RequestDTO_SendEmail()
                     {
@@ -384,10 +376,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         Message="> Prueba"
                     }
                 }
-            };
+            ];
 
-            await EnvioMasivo(notificaciones);
-            //EnvioMasivo
+            await EnvioMasivo(notificaciones); // Envío Masivo
 
             return Ok(oResponse);
         }
@@ -421,7 +412,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
 
-            [HttpPost("xlsx/procesados")]
+        [HttpPost("xlsx/procesados")]
         public async Task<IActionResult> ImportarProcesados_XLSX(
             IFormFile file)
         {
@@ -433,17 +424,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             string basedir = ServerFS.GetBaseDir(true);
             string filename = $"{basedir}/repositorio/procesados/{id_fecha}_solicitud_alta_desbloqueo_{id}";
             
-            List<string> logs = new();
+            List<string> logs = [];
             
-            Dictionary<string,RegistroImportacion> registros = new ();
+            Dictionary<string,RegistroImportacion> registros = [];
             RegistroImportacion registro_actual;
 
-            List<string> lista_curps = new();
+            List<string> lista_curps = [];
 
             string CURP = string.Empty;
 
             TipoDatoXLSX[] datos_a_actualizar = [];
-            //bool actualizar_todo = false;
+            // bool actualizar_todo = false;
 
             Dictionary<TipoDatoXLSX, int> columna = new()
             {
@@ -540,7 +531,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         (
                             st =>
                                 st.SolIdEstadoSolicitud == ((int)TipoEstadoSolicitud.EN_PROCESO) &&
-                                lista_curps.Contains(st.SolIdUsuarioNavigation.UsuCurp)
+                                lista_curps.Contains(st.SolIdUsuarioNavigation!.UsuCurp!)
                         )
                         .Include(st => st.SolIdUsuarioNavigation)
                         .ToListAsync();
@@ -559,7 +550,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         datos_a_actualizar = ((TipoSolicitud)solicitud.SolIdTipoSolicitud).GetDatosActualizar();
                         actualizar_todo = datos_a_actualizar.Contains(TipoDatoXLSX.TODO);
                         
-                        List<string> columnas_actualizar = new();
+                        List<string> columnas_actualizar = [];
 
                         foreach(TipoDatoXLSX columna in datos_a_actualizar)
                         {
@@ -643,7 +634,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public List<WebUtils.Link> GenerarXLSX(IEnumerable<MtTbSolicitudesTicket> lista, string ruta, TipoSolicitud formato_solicitud = TipoSolicitud.NO_ESPECIFICADA)
         {
-            List<WebUtils.Link> links = new();
+            List<WebUtils.Link> links = [];
 
             // ARCHIVOS
             string plantilla = $"{ServerFS.GetBaseDir(true)}/assets/{formato_solicitud.GetPlantilla()}";
@@ -704,23 +695,23 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                 usuario = solicitud.SolIdUsuarioNavigation!;
 
-                id_externo_usuario = usuario.UsuNumeroEmpleado;
+                id_externo_usuario = usuario.UsuNumeroEmpleadoContrato;
                 
-                tipo_personal = (TipoPersonal)usuario.UsuIdTipoPersonal;
-                tipo_solicitud = (TipoSolicitud)solicitud.SolIdTipoSolicitud;
+                tipo_personal = (TipoPersonal)usuario.UsuIdTipoPersonal!;
+                tipo_solicitud = (TipoSolicitud)solicitud.SolIdTipoSolicitud!;
 
                 switch (tipo_personal)
                 {
                     case TipoPersonal.ALUMNO:
                     case TipoPersonal.EGRESADO:
-                        id_externo_usuario = usuario.UsuBoletaAlumno;
+                        id_externo_usuario = usuario.UsuBoletaAlumnoEgresado;
                         break;
                     case TipoPersonal.MAESTRIA:
-                        id_externo_usuario = usuario.UsuBoletaMaestria;
+                        id_externo_usuario = usuario.UsuBoletaPosgrado;
                         break;
                 }
 
-                ws.Cell(fila, 1).Value = FormatoTexto(usuario.UsuNombre);
+                ws.Cell(fila, 1).Value = FormatoTexto(usuario.UsuNombres);
                 ws.Cell(fila, 2).Value = FormatoTexto(usuario.UsuPrimerApellido);
                 ws.Cell(fila, 3).Value = FormatoTexto(usuario.UsuSegundoApellido);
                 ws.Cell(fila, 4).Value = ((TipoPersonal)usuario.UsuIdTipoPersonal).GetNombre();
@@ -739,7 +730,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             ws.Cell(fila, columna).Value = usuario.UsuCorreoPersonalCuentaAnterior; 
                             break;
                         case TipoDatoXLSX.CORREO_PERSONAL_NUEVO:
-                            ws.Cell(fila, columna).Value = usuario.UsuCorreoPersonalCuentaNueva;
+                            ws.Cell(fila, columna).Value = usuario.UsuCorreoPersonalCuentaActual;
                             break;
 
                         case TipoDatoXLSX.CORREO_INSTITUCIONAL:
@@ -751,14 +742,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             break;
 
                         case TipoDatoXLSX.CELULAR_NUEVO:
-                            ws.Cell(fila, columna).Value = usuario.UsuNoCelularNuevo;
+                            ws.Cell(fila, columna).Value = usuario.UsuNoCelularActual;
                             break;
 
                         case TipoDatoXLSX.EXTENSION:
                             ws.Cell(fila, columna).Value = usuario.UsuNoExtensionAnterior ?? string.Empty;
                             break;
                         case TipoDatoXLSX.EXTENSION_NUEVO:
-                            ws.Cell(fila, columna).Value = usuario.UsuNoExtension;
+                            ws.Cell(fila, columna).Value = usuario.UsuNoExtensionActual;
                             break;
 
                         case TipoDatoXLSX.AREA:
@@ -817,7 +808,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             registros.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
             registros.Style.Alignment.SetVertical(XLAlignmentVerticalValues.Center);
 
-            
             wb.SaveAs($"{ServerFS.GetBaseDir(true)}/{archivo_exportacion}");
 
             links.Add(new WebUtils.Link(archivo_exportacion, nombre_archivo));
@@ -834,22 +824,22 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             Guid guid = Guid.NewGuid();
             string id_fecha = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 
-            Response<List<WebUtils.Link>> oResponse = new() { Data = new() } ;
+            Response<List<WebUtils.Link>> oResponse = new() { Data = [] } ;
 
             string ruta = $"repositorio/pendientes/%ruta%{id_fecha}_{guid}";
             string ruta_exportacion = ruta.Replace("%ruta%", "EXPORTACION_");
             
-            List<MtTbSolicitudesTicket> pendientes = new();
-            List<MtTbSolicitudesTicket> pendientes_celular = new();
-            List<MtTbSolicitudesTicket> pendientes_correo_personal = new();
-            List<MtTbSolicitudesTicket> pendientes_desbloqueo = new();
+            List<MtTbSolicitudesTicket> pendientes = [];
+            List<MtTbSolicitudesTicket> pendientes_celular = [];
+            List<MtTbSolicitudesTicket> pendientes_correo_personal = [];
+            List<MtTbSolicitudesTicket> pendientes_desbloqueo = [];
 
             StringBuilder mensajes = new();
 
-            List<WebUtils.Link> archivos = new();
-            List<WebUtils.Link> exportados = new();
+            List<WebUtils.Link> archivos = [];
+            List<WebUtils.Link> exportados = [];
 
-            List<Notificacion> notificaciones = new();
+            List<Notificacion> notificaciones = [];
 
             string? error = null;
 
@@ -920,7 +910,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 
                 if (return_zip)
                 {
-                    WebUtils.Link link = new WebUtils.Link($"{ruta_exportacion}.zip");
+                    WebUtils.Link link = new($"{ruta_exportacion}.zip");
                     link.Name = Path.GetFileName(link.Url);
 
                     oResponse.Data = new List<WebUtils.Link>() { link };
@@ -937,7 +927,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 mensajes.AppendLine(ex.Message);
                 mensajes.AppendLine(ex.StackTrace);
 
-                //Response.Clear();
+                // Response.Clear();
                 Response.StatusCode = 500;
             }
 
@@ -994,7 +984,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         [HttpGet("*/arreglar_rotos")]
         public async Task<IActionResult> ListarEnlacesRotos()
         {
-            Response<List<string>> oResponse = new() { Data = new() };
+            Response<List<string>> oResponse = new() { Data = [] };
             List<MtTbSolicitudesTicket> solicitudes;
             
             string? enlace;
@@ -1013,10 +1003,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     ruta_repositorio = $"repositorio/solicitudes-tickets/{solicitud.IdSolicitudTicket}/{solicitud.IdSolicitudTicket}_";
                     ruta_usuario = $"repositorio/usuarios/{solicitud.SolIdUsuario}/{solicitud.SolIdUsuario}_";
 
-                    enlace = EnlaceRoto(solicitud.SolIdUsuarioNavigation.UsuFileNameCurp, ruta_usuario);
+                    enlace = EnlaceRoto(solicitud.SolIdUsuarioNavigation?.UsuFileNameCurp, ruta_usuario);
                     if (enlace is not null) oResponse.Data.Add(enlace);
 
-                    enlace = EnlaceRoto(solicitud.SolIdUsuarioNavigation.UsuFileNameComprobanteInscripcion, ruta_usuario);
+                    enlace = EnlaceRoto(solicitud.SolIdUsuarioNavigation?.UsuFileNameComprobanteEstudios, ruta_usuario);
                     if (enlace is not null) oResponse.Data.Add(enlace);
 
                     enlace = EnlaceRoto(solicitud.SolCapturaCuentaBloqueada, ruta_repositorio);
@@ -1030,7 +1020,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 }
 
                 oResponse.Success = 1;
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 oResponse.Message = ex.Message;
             }

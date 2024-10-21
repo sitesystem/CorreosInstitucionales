@@ -4,7 +4,7 @@
 <h1>Solicitud enviada a Mesa de control</h1>
 
 Estimad@@:<br />
-<b>@usuario.UsuNombre @usuario.UsuPrimerApellido @usuario.UsuSegundoApellido</b><br /><br />
+<b>@usuario.UsuNombres.Trim() @usuario.UsuPrimerApellido.Trim() @usuario.UsuSegundoApellido?.Trim()</b><br /><br />
 
 Por medio del presente nos permitimos informarle que su<br />
 solicitud con No. de Ticket <b>#@solicitud.IdSolicitudTicket</b><br />
@@ -16,6 +16,6 @@ NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
 
 @code
 {
-    [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new() {SolIdUsuarioNavigation = new() };
-    MpTbUsuario usuario {get { return solicitud.SolIdUsuarioNavigation; }}
+    [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new() { SolIdUsuarioNavigation = new() };
+    MpTbUsuario usuario { get { return solicitud.SolIdUsuarioNavigation; }}
 }

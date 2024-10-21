@@ -1,10 +1,11 @@
-﻿using CorreosInstitucionales.Shared.CapaEntities.Request;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+
+using CorreosInstitucionales.Shared.CapaEntities.Request;
 
 namespace CorreosInstitucionales.Shared.CapaTools
 {
@@ -79,7 +80,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
                 }
 
                 notificacion.correo.Subject = plantilla_correo.PlaAsunto;
-                notificacion.correo.EmailTo = solicitud.Usuario.UsuCorreoPersonalCuentaNueva;
+                notificacion.correo.EmailTo = solicitud.Usuario.UsuCorreoPersonalCuentaActual!;
                 notificacion.correo.Body = sb.ToString();
             }
 
@@ -97,7 +98,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
                     sb.Replace($"{{usuario.{dato.Key}}}", dato.Value);
                 }
 
-                notificacion.wa.Number = solicitud.Usuario.UsuNoCelularNuevo;
+                notificacion.wa.Number = solicitud.Usuario.UsuNoCelularActual;
                 notificacion.wa.Message = sb.ToString();
             }
 

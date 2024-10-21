@@ -67,10 +67,10 @@
             if(response is not null && response.Data is not null && response.Success == 1)
             {
                 usuario = response.Data;
-                correo = usuario.UsuCorreoPersonalCuentaNueva;
-                numero = usuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
-                mensaje_correo = $"MENSAJE DE PRUEBA PARA {usuario.UsuNombre}";
-                mensaje_wa = $"MENSAJE DE PRUEBA PARA *{usuario.UsuNombre}*";
+                correo = usuario.UsuCorreoPersonalCuentaActual!;
+                numero = usuario.UsuNoCelularActual!.Replace(" ", string.Empty);
+                mensaje_correo = $"MENSAJE DE PRUEBA PARA {usuario.UsuNombres}";
+                mensaje_wa = $"MENSAJE DE PRUEBA PARA *{usuario.UsuNombres}*";
             }
 
             StateHasChanged();

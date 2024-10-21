@@ -24,7 +24,7 @@ public partial class McCatEscuela
     public string? EscLogo { get; set; }
 
     /// <summary>
-    /// Número de la Escuela
+    /// Número o Clave de la Escuela
     /// </summary>
     [Column("escNoEscuela")]
     [StringLength(10)]
@@ -47,11 +47,17 @@ public partial class McCatEscuela
     [Unicode(false)]
     public string? EscNombreCorto { get; set; }
 
+    /// <summary>
+    /// Nombre del Archivo PDF del Aviso de Privacidad
+    /// </summary>
     [Column("escFileNameAvisoPrivacidad")]
     [StringLength(300)]
     [Unicode(false)]
     public string? EscFileNameAvisoPrivacidad { get; set; }
 
+    /// <summary>
+    /// Fecha en que se fundó la Escuela
+    /// </summary>
     [Column("escFechaFundacion", TypeName = "datetime")]
     public DateTime? EscFechaFundacion { get; set; }
 

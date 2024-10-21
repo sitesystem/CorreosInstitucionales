@@ -27,7 +27,6 @@
                 <br />
                 Cargando...
             </div>
-
         }
     </div>
 
@@ -90,7 +89,6 @@
                                   Visible="item.EdiStatus.Equals(false)"
                                   Click="@(async ()=> await CambiarStatus(item, true))" @onclick:stopPropagation="true">
                     </RadzenButton>
-
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -136,15 +134,15 @@
                 (
                     "Actualizar Datos",
                     new Dictionary<string, object>()
-                        {
-                        {"registro", registro}
-                        },
+                    {
+                        { "registro", registro }
+                    },
                     new DialogOptions()
-                        {
-                            ShowClose = false,
-                            Width = "50%",
-                            CssClass = "dialog_simple"
-                        }
+                    {
+                        ShowClose = false,
+                        Width = "50%",
+                        CssClass = "dialog_simple"
+                    }
                 );
     }
 
@@ -205,9 +203,9 @@
             (
                 "Confirmar",
                 new Dictionary<string, object>()
-                            {
-                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.EdiNombreAlias} ({item.EdiNombreOficial})?" }
-                            },
+                {
+                    { "mensaje" , $"¿Desea {des}habilitar el registro de {item.EdiNombreAlias} ({item.EdiNombreOficial})?" }
+                },
                 new DialogOptions() { ShowClose = false }
             );
 

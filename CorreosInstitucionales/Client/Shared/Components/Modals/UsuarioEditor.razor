@@ -45,8 +45,8 @@
         <div class="row my-2">
             <div class="col-4 mb-2">
                 <span class="fw-bold">Nombre (s)<strong class="red" title="requerido">*</strong></span>
-                <InputText @bind-Value="@registro.UsuNombre" class="required form-control text-uppercase" />
-                <ValidationMessage For="()=>registro.UsuNombre"></ValidationMessage>
+                <InputText @bind-Value="@registro.UsuNombres" class="required form-control text-uppercase" />
+                <ValidationMessage For="()=>registro.UsuNombres"></ValidationMessage>
             </div>
 
             <div class="col-4 mb-2">
@@ -81,13 +81,13 @@
         <div class="row my-2">
             <div class="col-6">
                 <span class="fw-bold">Celular<strong class="red" title="requerido">*</strong></span>
-                <InputText @bind-Value="@registro.UsuNoCelularNuevo" class="required form-control" />
-                <ValidationMessage For="()=>registro.UsuNoCelularNuevo"></ValidationMessage>
+                <InputText @bind-Value="@registro.UsuNoCelularActual" class="required form-control" />
+                <ValidationMessage For="()=>registro.UsuNoCelularActual"></ValidationMessage>
             </div>
             <div class="col-6">
                 <span class="fw-bold">Correo (Personal)<strong class="red" title="requerido">*</strong></span>
-                <InputText @bind-Value="@registro.UsuCorreoPersonalCuentaNueva" class="required form-control text-lowercase" />
-                <ValidationMessage For="()=>registro.UsuCorreoPersonalCuentaNueva"></ValidationMessage>
+                <InputText @bind-Value="@registro.UsuCorreoPersonalCuentaActual" class="required form-control text-lowercase" />
+                <ValidationMessage For="()=>registro.UsuCorreoPersonalCuentaActual"></ValidationMessage>
             </div>
         </div>
 
@@ -115,8 +115,8 @@
                 {
                     <div class="col-2">
                         <span class="fw-bold">Boleta (Alumno)<strong class="red" title="requerido">*</strong></span>
-                        <InputText @bind-Value="@registro.UsuBoletaAlumno" class="required form-control" />
-                        <ValidationMessage For="()=>registro.UsuBoletaAlumno"></ValidationMessage>
+                        <InputText @bind-Value="@registro.UsuBoletaAlumnoEgresado" class="required form-control" />
+                        <ValidationMessage For="()=>registro.UsuBoletaAlumnoEgresado"></ValidationMessage>
                     </div>
 
                     <div class="col-3">
@@ -145,8 +145,8 @@
                 {
                     <div class="col-2">
                         <span class="fw-bold">Boleta (Maestria)<strong class="red" title="requerido">*</strong></span>
-                        <InputText @bind-Value="@registro.UsuBoletaMaestria" class="required form-control" />
-                        <ValidationMessage For="()=>registro.UsuBoletaMaestria"></ValidationMessage>
+                        <InputText @bind-Value="@registro.UsuBoletaPosgrado" class="required form-control" />
+                        <ValidationMessage For="()=>registro.UsuBoletaPosgrado"></ValidationMessage>
                     </div>
                 }
 
@@ -171,14 +171,14 @@
                 {
                     <div class="col-2">
                         <span class="fw-bold"> Numero de Empleado<strong class="red" title="requerido">*</strong></span>
-                        <InputText @bind-Value="@registro.UsuNumeroEmpleado" class="required form-control" />
-                        <ValidationMessage For="()=>registro.UsuNumeroEmpleado"></ValidationMessage>
+                        <InputText @bind-Value="@registro.UsuNumeroEmpleadoContrato" class="required form-control" />
+                        <ValidationMessage For="()=>registro.UsuNumeroEmpleadoContrato"></ValidationMessage>
                     </div>
 
                     <div class="col-2">
                         <span class="fw-bold">Extension<strong class="red" title="requerido">*</strong></span>
-                        <InputText @bind-Value="@registro.UsuNoExtension" class="required form-control" />
-                        <ValidationMessage For="()=>registro.UsuNoExtension"></ValidationMessage>
+                        <InputText @bind-Value="@registro.UsuNoExtensionActual" class="required form-control" />
+                        <ValidationMessage For="()=>registro.UsuNoExtensionActual"></ValidationMessage>
                     </div>
 
                     <div class="col-8">
@@ -264,21 +264,21 @@
     private void fuComprobanteInscripcion_OnChange(InputFileChangeEventArgs e)
     {
         archivos[TipoDocumento.COM_INSCRIPCION] = e.File;
-        registro.UsuFileNameComprobanteInscripcion = "-";
+        registro.UsuFileNameComprobanteEstudios = "-";
     }
 
     private void Area_OnChanged()
     {
-        registro.UsuNoExtensionAnterior = registro.UsuNoExtension;
-        registro.UsuNoExtension = cat_UsuIdAreaDepto.First(area => area.IdAreaDepto == registro.UsuIdAreaDepto).AreNoExtension;
+        registro.UsuNoExtensionAnterior = registro.UsuNoExtensionActual;
+        registro.UsuNoExtensionActual = cat_UsuIdAreaDepto.First(area => area.IdAreaDepto == registro.UsuIdAreaDepto).AreNoExtension;
     }
 
     private void OnValidForm()
     {
-        registro.UsuNombre = registro.UsuNombre.ToUpper();
+        registro.UsuNombres = registro.UsuNombres.ToUpper();
         registro.UsuPrimerApellido = registro.UsuPrimerApellido.ToUpper();
         registro.UsuSegundoApellido = (registro.UsuSegundoApellido ?? "").ToUpper();
-        registro.UsuCorreoPersonalCuentaNueva = registro.UsuCorreoPersonalCuentaNueva.ToLower();
+        registro.UsuCorreoPersonalCuentaActual = registro.UsuCorreoPersonalCuentaActual.ToLower();
 
         if (agregar_clave)
         {
@@ -286,5 +286,6 @@
         }
         dialogService.Close(new DocumentoAdjunto<RequestDTO_Usuario>(registro, archivos));
     }
+
     private void OnCloseForm() => dialogService.Close(null);
 }

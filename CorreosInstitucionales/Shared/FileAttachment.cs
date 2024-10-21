@@ -14,7 +14,7 @@ namespace CorreosInstitucionales.Shared
     public class FileAttachment<T>
     {
         public T Value { get; set; }
-        public List<ContentData> Attachments { get; set; } = new();
+        public List<ContentData> Attachments { get; set; } = [];
         public FileAttachment(T v)
         {
             Value = v;
@@ -22,7 +22,7 @@ namespace CorreosInstitucionales.Shared
 
         public async Task AttachFile(IBrowserFile file)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 using (var fs = file.OpenReadStream(file.Size))
                 {

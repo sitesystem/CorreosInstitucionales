@@ -2,18 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using CorreosInstitucionales.Shared;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
-using CorreosInstitucionales.Shared;
-using CorreosInstitucionales.Shared.Utils;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegistros
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    // [Authorize]
     public class UsuariosController(DbCorreosInstitucionalesUpiicsaContext db, IHostEnvironment hostEnvironment, IWebHostEnvironment webHostEnvironment) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
@@ -46,8 +45,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                                                  .Include(ce => ce.UsuIdCarreraNavigation)
                                                  .Include(ad => ad.UsuIdAreaDeptoNavigation)
                                                  .ToListAsync();
-
                 oResponse.Success = 1;
+                oResponse.Message = list.Count.ToString();
                 oResponse.Data = list;
             }
             catch (Exception ex)
@@ -76,6 +75,26 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             return Ok(oResponse);
         }
 
+        [HttpPost("countData")]
+        public async Task<IActionResult> GetCountData()
+        {
+            Response<object> oResponse = new();
+
+            try
+            {
+                var count = await _db.MpTbUsuarios.CountAsync();
+
+                oResponse.Message = count.ToString();
+                oResponse.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
         [HttpGet("filterByEmailCURP/{correo}/{curp}")]
         public async Task<IActionResult> ValidateByEmailCURP(string correo, string curp)
         {
@@ -84,7 +103,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             try
             {
                 var list = await _db.MpTbUsuarios
-                                    .Where(u => u.UsuCorreoPersonalCuentaNueva == correo || u.UsuCurp == curp)
+                                    .Where(u => u.UsuCorreoPersonalCuentaActual == correo || u.UsuCurp == curp)
                                     .Where(u => u.UsuStatus == true)
                                     .FirstOrDefaultAsync();
                 if (list is null)
@@ -116,28 +135,28 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     UsuIdTipoPersonal = model.UsuIdTipoPersonal,
                     // UsuToken = Guid.NewGuid().ToString("D"),
                     // DATOS PERSONALES
-                    UsuNombre = model.UsuNombre.ToUpper().Trim(),
+                    UsuNombres = model.UsuNombres.ToUpper().Trim(),
                     UsuPrimerApellido = model.UsuPrimerApellido.ToUpper().Trim(),
-                    UsuSegundoApellido = model.UsuSegundoApellido == null ? null: model.UsuSegundoApellido.ToUpper().Trim(),
+                    UsuSegundoApellido = model.UsuSegundoApellido?.ToUpper().Trim(),
                     UsuCurp = model.UsuCurp.ToUpper(),
                     UsuFileNameCurp = model.UsuFileNameCurp,
                     UsuNoCelularAnterior = null,
-                    UsuNoCelularNuevo = model.UsuNoCelularNuevo,
+                    UsuNoCelularActual = model.UsuNoCelularActual,
                     // DATOS ACADÉMICOS
-                    UsuBoletaAlumno = model.UsuBoletaAlumno,
-                    UsuBoletaMaestria = model.UsuBoletaMaestria,
+                    UsuBoletaAlumnoEgresado = model.UsuBoletaAlumnoEgresado,
+                    UsuBoletaPosgrado = model.UsuBoletaPosgrado,
                     UsuIdCarrera = model.UsuIdCarrera,
                     UsuSemestre = model.UsuSemestre,
                     UsuAnioEgreso = model.UsuAnioEgreso,
-                    UsuFileNameComprobanteInscripcion = model.UsuFileNameComprobanteInscripcion,
+                    UsuFileNameComprobanteEstudios = model.UsuFileNameComprobanteEstudios,
                     // DATOS LABORALES
-                    UsuNumeroEmpleado = model.UsuNumeroEmpleado,
+                    UsuNumeroEmpleadoContrato = model.UsuNumeroEmpleadoContrato,
                     UsuIdAreaDepto = model.UsuIdAreaDepto,
                     UsuNoExtensionAnterior = model.UsuNoExtensionAnterior,
-                    UsuNoExtension = model.UsuNoExtension,
+                    UsuNoExtensionActual = model.UsuNoExtensionActual,
                     // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                     UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior,
-                    UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva.Trim(),
+                    UsuCorreoPersonalCuentaActual = model.UsuCorreoPersonalCuentaActual.Trim(),
                     UsuContrasenia = Encrypt.GetSHA256(model.UsuContrasenia),
                     UsuRecuperarContrasenia = false,
                     // DATOS DEL CORREO INSTITUCIONAL
@@ -145,12 +164,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     UsuCorreoInstitucionalContrasenia = model.UsuCorreoInstitucionalContrasenia,
                     // OTROS DATOS
                     UsuFechaHoraAlta = DateTime.Now,
+                    UsuFechaHoraActualizacion = DateTime.Now,
                     UsuStatus = model.UsuStatus,
                     // DATOS FK NAVIGATION
                     UsuIdAreaDeptoNavigation = null,
                     UsuIdCarreraNavigation = null,
-                    UsuIdRolNavigation = null,
-                    UsuIdTipoPersonalNavigation = null
+                    UsuIdRolNavigation = null!,
+                    UsuIdTipoPersonalNavigation = null!
                 };
 
                 await _db.MpTbUsuarios.AddAsync(oUsuario);
@@ -184,43 +204,42 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     oUsuario.UsuIdRol = model.UsuIdRol;
                     oUsuario.UsuIdTipoPersonal = model.UsuIdTipoPersonal;
                     // DATOS PERSONALES
-                    oUsuario.UsuNombre = model.UsuNombre.ToUpper().Trim();
+                    oUsuario.UsuNombres = model.UsuNombres.ToUpper().Trim();
                     oUsuario.UsuPrimerApellido = model.UsuPrimerApellido.ToUpper().Trim();
                     oUsuario.UsuSegundoApellido = model.UsuSegundoApellido?.ToUpper().Trim();
                     oUsuario.UsuCurp = model.UsuCurp.ToUpper().Trim();
                     oUsuario.UsuFileNameCurp = model.UsuFileNameCurp;
                     oUsuario.UsuNoCelularAnterior = model.UsuNoCelularAnterior;
-                    oUsuario.UsuNoCelularNuevo = model.UsuNoCelularNuevo;
+                    oUsuario.UsuNoCelularActual = model.UsuNoCelularActual;
                     // DATOS ACADÉMICOS
-                    oUsuario.UsuBoletaAlumno = model.UsuBoletaAlumno;
-                    oUsuario.UsuBoletaMaestria = model.UsuBoletaMaestria;
+                    oUsuario.UsuBoletaAlumnoEgresado = model.UsuBoletaAlumnoEgresado;
+                    oUsuario.UsuBoletaPosgrado = model.UsuBoletaPosgrado;
                     oUsuario.UsuIdCarrera = model.UsuIdCarrera;
                     oUsuario.UsuSemestre = model.UsuSemestre;
                     oUsuario.UsuAnioEgreso = model.UsuAnioEgreso;
-                    oUsuario.UsuFileNameComprobanteInscripcion = model.UsuFileNameComprobanteInscripcion;
+                    oUsuario.UsuFileNameComprobanteEstudios = model.UsuFileNameComprobanteEstudios;
                     // DATOS LABORALES
-                    oUsuario.UsuNumeroEmpleado = model.UsuNumeroEmpleado;
+                    oUsuario.UsuNumeroEmpleadoContrato = model.UsuNumeroEmpleadoContrato;
                     oUsuario.UsuIdAreaDepto = model.UsuIdAreaDepto;
                     oUsuario.UsuNoExtensionAnterior = model.UsuNoExtensionAnterior;
-                    oUsuario.UsuNoExtension = model.UsuNoExtension;
+                    oUsuario.UsuNoExtensionActual = model.UsuNoExtensionActual;
                     // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                     oUsuario.UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior;
-                    oUsuario.UsuCorreoPersonalCuentaNueva = model.UsuCorreoPersonalCuentaNueva.Trim();
+                    oUsuario.UsuCorreoPersonalCuentaActual = model.UsuCorreoPersonalCuentaActual.Trim();
                     oUsuario.UsuContrasenia = model.UsuContrasenia;
                     oUsuario.UsuRecuperarContrasenia = false;
                     // DATOS DEL CORREO INSTITUCIONAL
-                    oUsuario.UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta.Trim();
+                    oUsuario.UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta?.Trim();
                     oUsuario.UsuCorreoInstitucionalContrasenia = model.UsuCorreoInstitucionalContrasenia;
                     // OTROS DATOS
                     // oUsuario.UsuFechaHoraAlta = DateTime.UtcNow;
+                    oUsuario.UsuFechaHoraActualizacion = DateTime.Now;
                     oUsuario.UsuStatus = true;
                     // DATOS FK NAVIGATION
                     oUsuario.UsuIdAreaDeptoNavigation = null;
                     oUsuario.UsuIdCarreraNavigation = null;
-                    oUsuario.UsuIdRolNavigation = null;
-                    oUsuario.UsuIdTipoPersonalNavigation = null;
-
-                    oUsuario.UsuFechaHoraActualizacion = DateTime.Now;
+                    oUsuario.UsuIdRolNavigation = null!;
+                    oUsuario.UsuIdTipoPersonalNavigation = null!;
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
@@ -242,7 +261,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             Response<MpTbUsuario> oRespuesta = new();
             try
             {
-                MpTbUsuario? oUsuario = await _db.MpTbUsuarios.Where(u => u.UsuCorreoPersonalCuentaNueva == correoPersonal && u.UsuCurp == curp && u.UsuStatus == true)
+                MpTbUsuario? oUsuario = await _db.MpTbUsuarios.Where(u => u.UsuCorreoPersonalCuentaActual == correoPersonal && u.UsuCurp == curp && u.UsuStatus == true)
                                                               .FirstOrDefaultAsync();
 
                 if (oUsuario != null)
@@ -310,7 +329,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             try
             {
                 MpTbUsuario? oUsuario = await _db.MpTbUsuarios.FindAsync(id);
-                //db.Remove(oPersona);
+                // db.Remove(oPersona);
 
                 if (oUsuario != null)
                 {
@@ -329,14 +348,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             }
 
             return Ok(oRespuesta);
-        }//editByIdStatus
+        } // editByIdStatus
 
         [HttpGet("generar_random/{cantidad}")]
         public async Task<IActionResult> GenerarUsuarios(int cantidad = 10)
         {
             Response<string> oResponse = new() { Data = string.Empty };
 
-            Random rnd = new Random();
+            Random rnd = new();
             string id;
             MpTbUsuario tmp;
 
@@ -404,20 +423,20 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                         UsuIdRol = 2,
                         UsuIdTipoPersonal= (int)tipo_personal,
                         UsuFileNameCurp = $"CURP_{id}.pdf",
-                        UsuFileNameComprobanteInscripcion = "-",
-                        UsuNoExtension = "0",
-                        UsuBoletaMaestria = "B000000",
-                        UsuNumeroEmpleado = "0",
+                        UsuFileNameComprobanteEstudios = "-",
+                        UsuNoExtensionActual = "0",
+                        UsuBoletaPosgrado = "B000000",
+                        UsuNumeroEmpleadoContrato = "0",
                         UsuIdAreaDepto = 1,
                         UsuIdCarrera = 8,
                         UsuStatus = true
                     };
 
-                    tmp.UsuNombre = es_hombre ? nombres_h.GetRandomItem() : nombres_m.GetRandomItem();
+                    tmp.UsuNombres = es_hombre ? nombres_h.GetRandomItem() : nombres_m.GetRandomItem();
 
                     if (tiene_varios_nombres)
                     {
-                        tmp.UsuNombre += " " + (es_hombre ? nombres_h.GetRandomItem() : nombres_m.GetRandomItem());
+                        tmp.UsuNombres += " " + (es_hombre ? nombres_h.GetRandomItem() : nombres_m.GetRandomItem());
                     }
 
                     tmp.UsuPrimerApellido = apellidos.GetRandomItem();
@@ -457,24 +476,23 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                     anio_nacimiento = DateTime.Now.Year - (18 + anios_egreso + anios_estudio);
 
-                    tmp.UsuBoletaAlumno = $"{DateTime.Now.Year - anios_estudio - anios_egreso}600{tmp.UsuNombre[0] % 10}{tmp.UsuPrimerApellido[0] % 10}{(tmp.UsuSegundoApellido ?? "X")[0] % 10}";
+                    tmp.UsuBoletaAlumnoEgresado = $"{DateTime.Now.Year - anios_estudio - anios_egreso}600{tmp.UsuNombres[0] % 10}{tmp.UsuPrimerApellido[0] % 10}{(tmp.UsuSegundoApellido ?? "X")[0] % 10}";
 
-                    
                     fecha_nacimiento = new DateOnly(anio_nacimiento, rnd.Next(1, 12), 1);
 
-                    tmp.UsuCurp = CURP.Generar(tmp.UsuNombre, tmp.UsuPrimerApellido, tmp.UsuSegundoApellido, fecha_nacimiento, es_hombre?'H':'M', estados.GetRandomItem());
+                    tmp.UsuCurp = CURP.Generar(tmp.UsuNombres, tmp.UsuPrimerApellido, tmp.UsuSegundoApellido, fecha_nacimiento, es_hombre?'H':'M', estados.GetRandomItem());
 
                     tmp.UsuFileNameCurp = $"CURP_{id}.pdf";
 
                     if (es_alumno)
                     {
                         tmp.UsuIdCarrera = rnd.Next(1, 7);
-                        tmp.UsuFileNameComprobanteInscripcion = $"COMPROBANTE_INSCRIPCION_{id}.pdf";
+                        tmp.UsuFileNameComprobanteEstudios = $"COMPROBANTE_INSCRIPCION_{id}.pdf";
                     }
 
                     tmp.UsuContrasenia = Encrypt.GetSHA256(tmp.UsuCurp);
-                    tmp.UsuCorreoPersonalCuentaNueva = "noreply@localhost";
-                    tmp.UsuNoCelularNuevo = "55 00 00 00 00";
+                    tmp.UsuCorreoPersonalCuentaActual = "noreply@localhost";
+                    tmp.UsuNoCelularActual = "55 00 00 00 00";
 
                     //await _db.MpTbUsuarios.AddAsync(tmp);
                     registros.Add(tmp);
@@ -486,7 +504,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                 oResponse.Success = 1;
             }
-            catch ( Exception ex )
+            catch (Exception ex)
             {
                 oResponse.Message = ex.Message;
                 oResponse.Data = ex.StackTrace;

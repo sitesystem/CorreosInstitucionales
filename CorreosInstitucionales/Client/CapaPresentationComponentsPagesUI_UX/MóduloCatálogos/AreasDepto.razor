@@ -27,7 +27,6 @@
             <br />
             Cargando...
         </div>
-        
     }
     </div>
 
@@ -111,7 +110,6 @@
     public List<RequestViewModel_Edificio> cat_AreIdEdificio { get; private set; } = new List<RequestViewModel_Edificio>();
     public List<RequestViewModel_Piso> cat_AreIdPiso { get; private set; } = new List<RequestViewModel_Piso>();
 
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -147,11 +145,11 @@
                         {"cat_AreIdPiso", cat_AreIdPiso},
                         {"cat_AreIdEdificio", cat_AreIdEdificio}
                     },
-                    new DialogOptions() 
-                    { 
-                        ShowClose = false, 
-                        Width = "50%", 
-                        CssClass = "dialog_simple" 
+                    new DialogOptions()
+                    {
+                        ShowClose = false,
+                        Width = "50%",
+                        CssClass = "dialog_simple"
                     }
                 );
     }
@@ -213,9 +211,9 @@
             (
                 "Confirmar",
                 new Dictionary<string, object>()
-                    {
-                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.AreNombreAreaDepto}?" }
-                    },
+                {
+                    { "mensaje" , $"¿Desea {des}habilitar el registro de {item.AreNombreAreaDepto}?" }
+                },
                 new DialogOptions() { ShowClose = false }
             );
 

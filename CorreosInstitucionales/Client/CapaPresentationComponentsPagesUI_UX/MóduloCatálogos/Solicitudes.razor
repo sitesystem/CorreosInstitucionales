@@ -2,7 +2,6 @@
 
 @attribute [Authorize(Policy = "[Rol] Ambos")]
 
-@using CorreosInstitucionales.Shared.CapaTools
 @inject DialogService DialogService
 
 <PageTitle>@Title</PageTitle>
@@ -12,13 +11,13 @@
 
     @if(cargado)
     {
-    <div class="row my-3">
-        <div class="offset-10 col-2">
-            <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
-                    Agregar...
-            </button>
+        <div class="row my-3">
+            <div class="offset-10 col-2">
+                <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
+                        Agregar...
+                </button>
+            </div>
         </div>
-    </div>
     }
     else
     {
@@ -61,7 +60,7 @@
                         <text>
                             @item.SolIdUsuarioNavigation!.UsuPrimerApellido
                             @item.SolIdUsuarioNavigation!.UsuSegundoApellido
-                            @item.SolIdUsuarioNavigation!.UsuNombre
+                            @item.SolIdUsuarioNavigation!.UsuNombres
                         </text>
                     }
                     else
@@ -69,7 +68,7 @@
                         <del>
                             @item.SolIdUsuarioNavigation!.UsuPrimerApellido
                             @item.SolIdUsuarioNavigation!.UsuSegundoApellido
-                            @item.SolIdUsuarioNavigation!.UsuNombre
+                            @item.SolIdUsuarioNavigation!.UsuNombres
                         </del>
                     }
                 </Template>
@@ -149,9 +148,9 @@
                     },
                     new DialogOptions()
                     {
-                            ShowClose = false,
-                            Width = "75%",
-                            CssClass = "dialog_simple"
+                        ShowClose = false,
+                        Width = "75%",
+                        CssClass = "dialog_simple"
                     }
                 );
     }
@@ -213,9 +212,9 @@
             (
                 "Confirmar",
                 new Dictionary<string, object>()
-                                            {
-                    {"mensaje" , $"¿Desea {des}habilitar el registro {item.IdSolicitudTicket}?" }
-                                            },
+                {
+                    { "mensaje" , $"¿Desea {des}habilitar el registro {item.IdSolicitudTicket}?" }
+                },
                 new DialogOptions() { ShowClose = false }
             );
 

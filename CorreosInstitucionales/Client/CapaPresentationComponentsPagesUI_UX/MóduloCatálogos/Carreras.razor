@@ -12,7 +12,6 @@
     <div class="row my-3">
         @if (cargado && puede_agregar)
         {
-
             <div class="offset-10 col-2">
                 <button type="button" class="btn btn-primary form-control" @onclick="Agregar">
                     Agregar...
@@ -27,7 +26,6 @@
                 <br />
                 Cargando...
             </div>
-
         }
     </div>
 
@@ -62,8 +60,7 @@
             <RadzenDataGridColumn 
                 TItem="RequestViewModel_Carrera" Context="item" 
                 Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false"
-                Visible=@puede_editar
-            >
+                Visible=@puede_editar>
                 <Template Context="item">
                     <RadzenButton title="Editar..."
                                   Icon="edit"
@@ -90,7 +87,6 @@
                                   Visible="item.CarrStatus.Equals(false)"
                                   Click="@(async ()=> await CambiarStatus(item, true))" @onclick:stopPropagation="true">
                     </RadzenButton>
-
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -134,15 +130,15 @@
         return await DialogService.OpenAsync<CarreraEditor>
                 (
                     nuevo ? "Agregar Registro" : "Actualizar Datos",
-                    new Dictionary<string, object>() 
+                    new Dictionary<string, object>()
                     {
-                        {"registro", registro}
+                        { "registro", registro }
                     },
-                    new DialogOptions() 
-                    { 
-                        ShowClose = false, 
-                        Width = "50%", 
-                        CssClass = "dialog_simple" 
+                    new DialogOptions()
+                    {
+                        ShowClose = false,
+                        Width = "50%",
+                        CssClass = "dialog_simple"
                     }
                 );
     }
@@ -204,9 +200,9 @@
             (
                 "Confirmar",
                 new Dictionary<string, object>()
-                        {
-                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.CarrNombre}?" }
-                        },
+                {
+                    { "mensaje" , $"¿Desea {des}habilitar el registro de {item.CarrNombre}?" }
+                },
                 new DialogOptions() { ShowClose = false }
             );
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
@@ -15,17 +16,17 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         /// <summary>
         /// Nombre del Área / Departamento
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
-        public new string AreNombreAreaDepto 
-        { 
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo ÁREA/DEPARTAMENTO requerido.")]
+        public new string AreNombreAreaDepto
+        {
             get { return base.AreNombreAreaDepto; }
-            set { base.AreNombreAreaDepto = value; } 
+            set { base.AreNombreAreaDepto = value; }
         }
 
         /// <summary>
         /// FK ID del Edificio
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo EDIFICIO requerido.")]
         public new int AreIdEdificio
         {
             get { return base.AreIdEdificio; }
@@ -35,12 +36,11 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
         /// <summary>
         /// FK ID del Piso
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo PISO requerido.")]
         public new int AreIdPiso
         {
             get { return base.AreIdPiso; }
             set { base.AreIdPiso = value; }
         }
-
     }
 }

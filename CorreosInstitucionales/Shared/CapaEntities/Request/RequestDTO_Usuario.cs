@@ -4,47 +4,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request;
 
-public class RequestDTO_Usuario: MpTbUsuario
+public class RequestDTO_Usuario : MpTbUsuario
 {
-    private static TipoPersonal[] perfiles_alumno_egresado = 
-    [ 
+    private static readonly TipoPersonal[] perfiles_alumno_egresado = 
+    [
         Constantes.TipoPersonal.ALUMNO,
         Constantes.TipoPersonal.EGRESADO,
         Constantes.TipoPersonal.MAESTRIA
     ];
 
-    public bool EsAlumnoOEgresado()
-    {
-        return perfiles_alumno_egresado.Contains((TipoPersonal)UsuIdTipoPersonal);
-    }
-
-    [JsonIgnore]
-    public RequestViewModel_AreaDepto? AreaDepto
-    {
-        get
-        {
-            return base.UsuIdAreaDeptoNavigation == null ? null :
-                EntityUtils.FromNavigation<RequestViewModel_AreaDepto, McCatAreasDepto>(base.UsuIdAreaDeptoNavigation);
-        }
-    }
-
-    [JsonIgnore]
-    public RequestViewModel_Carrera? Carrera
-    {
-        get
-        {
-            return base.UsuIdCarreraNavigation == null ? null :
-                EntityUtils.FromNavigation<RequestViewModel_Carrera, McCatCarrera>(base.UsuIdCarreraNavigation);
-        }
-    }
+    public bool EsAlumnoOEgresado() => perfiles_alumno_egresado.Contains((TipoPersonal)UsuIdTipoPersonal);
 
     [JsonIgnore]
     public RequestViewModel_Rol? Rol
@@ -66,24 +44,43 @@ public class RequestDTO_Usuario: MpTbUsuario
         }
     }
 
-    /*******************************  DATOS PERSONALES  *******************************/
-    /// <summary>
-    /// Nombre del Usuario Solicitante o Administrador
-    /// </summary>
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NOMBRE(S) requerido.")]
-    [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
-    public new string UsuNombre
+    [JsonIgnore]
+    public RequestViewModel_Carrera? Carrera
     {
-        get { return base.UsuNombre; }
-        set { base.UsuNombre = value; }
+        get
+        {
+            return base.UsuIdCarreraNavigation == null ? null :
+                EntityUtils.FromNavigation<RequestViewModel_Carrera, McCatCarrera>(base.UsuIdCarreraNavigation);
+        }
     }
 
+    [JsonIgnore]
+    public RequestViewModel_AreaDepto? AreaDepto
+    {
+        get
+        {
+            return base.UsuIdAreaDeptoNavigation == null ? null :
+                EntityUtils.FromNavigation<RequestViewModel_AreaDepto, McCatAreasDepto>(base.UsuIdAreaDeptoNavigation);
+        }
+    }
+
+    /*******************************  DATOS PERSONALES  *******************************/
+    /// <summary>
+    /// Nombre(s) del Usuario Solicitante o Administrador
+    /// </summary>
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NOMBRE(S) requerido.")]
+    [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")]
+    public new string UsuNombres
+    {
+        get { return base.UsuNombres; }
+        set { base.UsuNombres = value; }
+    }
 
     /// <summary>
     /// Primer Apellido del Usuario
     /// </summary>
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo PRIMER APELLIDO requerido.")]
-    [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
+    [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")]
     public new string UsuPrimerApellido
     {
         get { return base.UsuPrimerApellido; }
@@ -93,13 +90,12 @@ public class RequestDTO_Usuario: MpTbUsuario
     /// <summary>
     /// Segundo Apellido del Usuario
     /// </summary>
-    [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")] // NO ADMITE ACENTOS
+    [RegularExpression("^[a-zA-Z. ]*$", ErrorMessage = "Formato Incorrecto (No se permite acentos o caracteres especiales).")]
     public new string? UsuSegundoApellido
     {
         get { return base.UsuSegundoApellido; }
         set { base.UsuSegundoApellido = value; }
     }
-
 
     /// <summary>
     /// CURP del Usuario
@@ -112,7 +108,6 @@ public class RequestDTO_Usuario: MpTbUsuario
         get { return base.UsuCurp; }
         set { base.UsuCurp = value; }
     }
-
 
     /// <summary>
     /// Nombre del Archivo PDF del CURP del Usuario
@@ -142,14 +137,14 @@ public class RequestDTO_Usuario: MpTbUsuario
     }
 
     /// <summary>
-    /// Número Celular Actual/Nuevo del Usuario
+    /// Número Celular Actual del Usuario
     /// </summary>
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE CELULAR ACTUAL requerido.")]
     [MinLength(14, ErrorMessage = "El No. DE CELULAR ACTUAL debe ser mínimo de 10 dígitos.")]
-    public new string UsuNoCelularNuevo
+    public new string UsuNoCelularActual
     {
-        get { return base.UsuNoCelularNuevo; }
-        set { base.UsuNoCelularNuevo = value; }
+        get { return base.UsuNoCelularActual; }
+        set { base.UsuNoCelularActual = value; }
     }
 
     /*******************************  DATOS ACADÉMICOS  *******************************/
@@ -160,23 +155,23 @@ public class RequestDTO_Usuario: MpTbUsuario
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo BOLETA requerido.")]
     [MinLength(10, ErrorMessage = "La BOLETA introducida debe ser mínimo de 10 dígitos.")]
     // [RegularExpression("^\\d{4}60\\d{4}$", ErrorMessage = "BOLETA Inválida (Formato: xxxx60xxxx).")]
-    public new string? UsuBoletaAlumno
+    public new string? UsuBoletaAlumnoEgresado
     {
-        get { return base.UsuBoletaAlumno; }
-        set { base.UsuBoletaAlumno = value; }
+        get { return base.UsuBoletaAlumnoEgresado; }
+        set { base.UsuBoletaAlumnoEgresado = value; }
     }
 
     /// <summary>
-    /// Número de Boleta del Usuario Alumno de Maestría
+    /// Número de Boleta del Usuario Alumno de Posgrado
     /// </summary>
     [StringLength(7, ErrorMessage = "La BOLETA introducida debe ser máximo de 7 caracteres.")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo BOLETA requerido.")]
     [MinLength(7, ErrorMessage = "La BOLETA introducida debe ser mínimo de 7 caracteres.")]
     [RegularExpression("^B\\d{6}$", ErrorMessage = "BOLETA Inválida (Formato: Bxxxxxx).")]
-    public new string? UsuBoletaMaestria
+    public new string? UsuBoletaPosgrado
     {
-        get { return base.UsuBoletaMaestria; }
-        set { base.UsuBoletaMaestria = value; }
+        get { return base.UsuBoletaPosgrado; }
+        set { base.UsuBoletaPosgrado = value; }
     }
 
     /// <summary>
@@ -200,7 +195,7 @@ public class RequestDTO_Usuario: MpTbUsuario
     }
 
     /// <summary>
-    /// Año de Egreso en caso de ser Alumno Egresado
+    /// Año de Egreso en caso de ser Egresado
     /// </summary>
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo AÑO DE EGRESO requerido.")]
     public new int? UsuAnioEgreso
@@ -210,35 +205,35 @@ public class RequestDTO_Usuario: MpTbUsuario
     }
 
     /// <summary>
-    /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP-10
+    /// Nombre del Archivo PDF de la Tira de Materias / Constancia o Certificado de Estudios / Boleta / SIP-10
     /// </summary>
-    [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO adjuntado debe ser máximo de 200 caracteres.")]
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO (Tira de Materias) del Periodo Escolar Actual requerido.")]
-    public new string? UsuFileNameComprobanteInscripcion
+    [StringLength(200, ErrorMessage = "El Nombre del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO (TIRA DE MATERIAS), BOLETA o SIP-10 adjuntado debe ser máximo de 200 caracteres.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO (TIRA DE MATERIAS), BOLETA o SIP-10 del Periodo Escolar más actual requerido.")]
+    public new string? UsuFileNameComprobanteEstudios
     {
-        get { return base.UsuFileNameComprobanteInscripcion; }
-        set { base.UsuFileNameComprobanteInscripcion = value; }
+        get { return base.UsuFileNameComprobanteEstudios; }
+        set { base.UsuFileNameComprobanteEstudios = value; }
     }
 
     /// <summary>
-    /// Tamaño del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS del Usuario
+    /// Tamaño del Archivo PDF de la Tira de Materias / Constancia o Certificado de Estudios / Boleta / SIP-10
     /// </summary>
-    [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO adjuntado debe ser máximo de 2 MB.")]
-    public long? UsuFileSizeComprobanteInscripcion { get; set; }
+    [Range(1, 2000000, ErrorMessage = "El Tamaño del Archivo PDF del COMPROBANTE DE INSCRIPCIÓN/ESTUDIOS/HORARIO, BOLETA o SIP-10 adjuntado debe ser máximo de 2 MB.")]
+    public long? UsuFileSizeComprobanteEstudios { get; set; }
 
     /*******************************  DATOS LABORALES  *******************************/
     /// <summary>
-    /// Número de Empleado del Usuario { Administrativo, Docente }
+    /// Número de Empleado del Usuario { Administrativo, Docente } / Número de Contrato del Usuario { Honorarios }
     /// </summary>
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE EMPLEADO requerido.")]
-    public new string? UsuNumeroEmpleado
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE EMPLEADO / No. DE CONTRATO requerido.")]
+    public new string? UsuNumeroEmpleadoContrato
     {
-        get { return base.UsuNumeroEmpleado; }
-        set { base.UsuNumeroEmpleado = value; }
+        get { return base.UsuNumeroEmpleadoContrato; }
+        set { base.UsuNumeroEmpleadoContrato = value; }
     }
 
     /// <summary>
-    /// FK ID del Área / Departamento domde labora el Empleado
+    /// FK ID del Área / Departamento donde labora el Empleado
     /// </summary>
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo ÁREA / DEPARTAMENTO requerido.")]
     public new int? UsuIdAreaDepto
@@ -248,32 +243,30 @@ public class RequestDTO_Usuario: MpTbUsuario
     }
 
     /// <summary>
-    /// Número de Extensión del Área / Departamento
+    /// Número de Extensión actual del Área / Departamento
     /// </summary>
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo No. DE EXTENSIÓN requerido.")]
-    public new string? UsuNoExtension
+    public new string? UsuNoExtensionActual
     {
-        get { return base.UsuNoExtension; }
-        set { base.UsuNoExtension = value; }
+        get { return base.UsuNoExtensionActual; }
+        set { base.UsuNoExtensionActual = value; }
     }
 
-    /*******************************  DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP  *******************************/
-
+    /*******************************  DATOS DE LAS CREDENCIALES DE LA CUENTA EN SACI  *******************************/
     /// <summary>
-    /// Correo Personal Actual / Nuevo
+    /// Correo Electrónico Personal Actual
     /// </summary>
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CORREO ELECTRÓNICO PERSONAL requerido.")]
     //[RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "CORREO inválido. (Formato: xxxxxx@xxx.xx)")]
     [RegularExpression("^(?!.*@(?:ipn\\.mx|alumno\\.ipn\\.mx|egresado\\.ipn\\.mx)$)[\\w\\.-]+@([\\w-]+\\.)+[\\w-]{2,}$", ErrorMessage = "CORREO PERSONAL inválido. (Formato correcto: xxxxxx@xxx.xx)")]
-    public new string UsuCorreoPersonalCuentaNueva
+    public new string UsuCorreoPersonalCuentaActual
     {
-        get { return base.UsuCorreoPersonalCuentaNueva; }
-        set { base.UsuCorreoPersonalCuentaNueva = value; }
+        get { return base.UsuCorreoPersonalCuentaActual; }
+        set { base.UsuCorreoPersonalCuentaActual = value; }
     }
 
-
     /// <summary>
-    /// Contraseña Encriptada en la Plataforma SACI
+    /// Contraseña Encriptada para ingresar a la Plataforma SACI
     /// </summary>
     [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CONTRASEÑA requerido.")]
     public new string UsuContrasenia
@@ -286,11 +279,10 @@ public class RequestDTO_Usuario: MpTbUsuario
     /// <summary>
     /// Correo Electrónico Institucional IPN
     /// </summary>
-    [RegularExpression("^[\\w-\\.]+@ipn\\.mx$|^[\\w-\\.]+@alumno\\.ipn\\.mx$|^[\\w-\\.]+@egresado\\.ipn\\.mx$", ErrorMessage = "CORREO inválido. (Formato: xxxxxx@ipn.mx ó @alumno.ipn.mx ó @egresado.ipn.mx)")]
+    [RegularExpression("^[\\w-\\.]+@ipn\\.mx$|^[\\w-\\.]+@alumno\\.ipn\\.mx$|^[\\w-\\.]+@egresado\\.ipn\\.mx$", ErrorMessage = "CORREO INSTITUCIONAL inválido. (Formato: xxxxxx@ipn.mx ó @alumno.ipn.mx ó @egresado.ipn.mx)")]
     public new string? UsuCorreoInstitucionalCuenta
     {
         get { return base.UsuCorreoInstitucionalCuenta; }
         set { base.UsuCorreoInstitucionalCuenta = value; }
     }
-
 }

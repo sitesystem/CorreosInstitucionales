@@ -64,6 +64,14 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
+        public async Task<Response<object>?> GetCountDataByProgressAsync(int idUser, int[] progress)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"{url}/countDataByIdUserProgress/{idUser}", progress, _options);
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<Response<object>?>(content, options: _options);
+            return result;
+        }
+
         public async Task<HttpResponseMessage> AddDataAsync(RequestDTO_Solicitud oSolicitud)
         {
             // var json = JsonSerializer.Serialize(oUsuario);

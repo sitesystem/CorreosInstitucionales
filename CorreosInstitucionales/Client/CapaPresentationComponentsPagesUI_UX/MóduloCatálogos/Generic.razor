@@ -44,7 +44,7 @@
                     @if (item.UsuStatus)
                     {
                         <text>
-                            @item.UsuNombre
+                            @item.UsuNombres
                             @item.UsuPrimerApellido
                             @item.UsuSegundoApellido
                         </text>
@@ -52,7 +52,7 @@
                     else
                     {
                         <del>
-                            @item.UsuNombre
+                            @item.UsuNombres
                             @item.UsuPrimerApellido
                             @item.UsuSegundoApellido
                         </del>
@@ -60,14 +60,13 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="UsuCorreoPersonalCuentaNueva" Filterable="false" Title="Correo Personal" TextAlign="TextAlign.End" />
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="UsuCorreoPersonalCuentaActual" Filterable="false" Title="Correo Personal" TextAlign="TextAlign.End" />
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Property="UsuCorreoInstitucionalCuenta" Filterable="false" Title="Correo Institucional" TextAlign="TextAlign.End" />
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Context="item"
                                   Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="false"
                                   Visible=@puede_editar>
-
                 <Template Context="item">
                     <RadzenButton title="Editar..."
                                   Icon="edit"
@@ -94,7 +93,6 @@
                                   Visible="item.UsuStatus.Equals(false)"
                                   Click="@(async ()=> await CambiarStatus(item, true))" @onclick:stopPropagation="true">
                     </RadzenButton>
-
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -144,15 +142,15 @@
                 (
                     "Actualizar Datos",
                     new Dictionary<string, object>()
-                                    {
+                    {
                         {"registro", registro}
-                                    },
+                    },
                     new DialogOptions()
-                        {
-                            ShowClose = false,
-                            Width = "75%",
-                            CssClass = "dialog_simple"
-                        }
+                    {
+                        ShowClose = false,
+                        Width = "75%",
+                        CssClass = "dialog_simple"
+                    }
                 );
     }
 
@@ -213,9 +211,9 @@
             (
                 "Confirmar",
                 new Dictionary<string, object>()
-                                        {
-                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.UsuNombre} {item.UsuPrimerApellido} {item.UsuSegundoApellido}?" }
-                                        },
+                {
+                    { "mensaje" , $"¿Desea {des}habilitar el registro de {item.UsuNombres} {item.UsuPrimerApellido} {item.UsuSegundoApellido}?" }
+                },
                 new DialogOptions() { ShowClose = false }
             );
 

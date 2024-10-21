@@ -9,7 +9,7 @@ namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
     public class RequestDTO_ChangePassword
     {
-        public int? IdUsuario { get; set; }
+        public int IdUsuario { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NUEVA CONTRASEÑA requerido.")]
         public string NewPassword { get; set; } = null!;

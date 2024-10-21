@@ -40,5 +40,5 @@ public partial class McCatEdificio
 
     [JsonIgnore]
     [InverseProperty("AreIdEdificioNavigation")]
-    public virtual ICollection<McCatAreasDepto> McCatAreasDeptos { get; set; } = new List<McCatAreasDepto>();
+    public virtual ICollection<McCatAreasDepto> McCatAreasDeptos { get; set; } = [];
 }

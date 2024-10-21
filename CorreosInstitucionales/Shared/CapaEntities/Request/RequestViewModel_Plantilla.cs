@@ -1,16 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
+
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
     public class RequestViewModel_Plantilla : McCatPlantilla
     {
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NOMBRE requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NOMBRE PLANTILLA requerido.")]
         public new string PlaNombre
         {
             get { return base.PlaNombre; }

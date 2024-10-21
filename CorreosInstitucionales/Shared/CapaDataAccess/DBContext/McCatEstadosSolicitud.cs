@@ -17,7 +17,7 @@ public partial class McCatEstadosSolicitud
     public int IdEstadoSolicitud { get; set; }
 
     /// <summary>
-    /// Estado de la Solicitud (1 - Levantado, 2 - Pendiente, 3 - En Proceso, 4 - Atendido)
+    /// Estado de la Solicitud (1 - Levantado, 2 - Pendiente, 3 - En Proceso, 4 - Atendido, 5 - Encuesta Contestada, 6 - Cancelada)
     /// </summary>
     [Column("edosolNombreEstado")]
     [StringLength(50)]
@@ -32,5 +32,5 @@ public partial class McCatEstadosSolicitud
 
     [JsonIgnore]
     [InverseProperty("SolIdEstadoSolicitudNavigation")]
-    public virtual ICollection<MtTbSolicitudesTicket> MtTbSolicitudesTickets { get; set; } = new List<MtTbSolicitudesTicket>();
+    public virtual ICollection<MtTbSolicitudesTicket> MtTbSolicitudesTickets { get; set; } = [];
 }

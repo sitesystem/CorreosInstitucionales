@@ -1,14 +1,14 @@
-﻿using CorreosInstitucionales.Shared.CapaEntities.Request;
-using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
-using CorreosInstitucionales.Shared.Constantes;
-using CorreosInstitucionales.Shared.Utils;
-using Microsoft.AspNetCore.Components.RenderTree;
+﻿using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
+using CorreosInstitucionales.Shared.Constantes;
 
 namespace CorreosInstitucionales.Shared.CapaTools
 {

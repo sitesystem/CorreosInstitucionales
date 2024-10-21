@@ -29,12 +29,12 @@ public partial class MpTbUsuario
     public int UsuIdTipoPersonal { get; set; }
 
     /// <summary>
-    /// Nombre del Usuario Solicitante o Administrador
+    /// Nombre(s) del Usuario Solicitante o Administrador
     /// </summary>
-    [Column("usuNombre")]
+    [Column("usuNombres")]
     [StringLength(200)]
     [Unicode(false)]
-    public string UsuNombre { get; set; } = null!;
+    public string UsuNombres { get; set; } = null!;
 
     /// <summary>
     /// Primer Apellido del Usuario
@@ -77,28 +77,28 @@ public partial class MpTbUsuario
     public string? UsuNoCelularAnterior { get; set; }
 
     /// <summary>
-    /// Número Celular Actual/Nuevo del Usuario
+    /// Número Celular Actual del Usuario
     /// </summary>
-    [Column("usuNoCelularNuevo")]
+    [Column("usuNoCelularActual")]
     [StringLength(20)]
     [Unicode(false)]
-    public string UsuNoCelularNuevo { get; set; } = null!;
+    public string UsuNoCelularActual { get; set; } = null!;
 
     /// <summary>
     /// Número de Boleta del Usuario Alumno/Egresado
     /// </summary>
-    [Column("usuBoletaAlumno")]
+    [Column("usuBoletaAlumnoEgresado")]
     [StringLength(10)]
     [Unicode(false)]
-    public string? UsuBoletaAlumno { get; set; }
+    public string? UsuBoletaAlumnoEgresado { get; set; }
 
     /// <summary>
-    /// Número de Boleta del Usuario Alumno de Maestría
+    /// Número de Boleta del Usuario Alumno de Posgrado
     /// </summary>
-    [Column("usuBoletaMaestria")]
+    [Column("usuBoletaPosgrado")]
     [StringLength(10)]
     [Unicode(false)]
-    public string? UsuBoletaMaestria { get; set; }
+    public string? UsuBoletaPosgrado { get; set; }
 
     /// <summary>
     /// FK ID de la Carrera que pertenece o cursó
@@ -107,7 +107,7 @@ public partial class MpTbUsuario
     public int? UsuIdCarrera { get; set; }
 
     /// <summary>
-    /// Semestre que cursa
+    /// Semestre que cursa o perteneció
     /// </summary>
     [Column("usuSemestre")]
     [StringLength(15)]
@@ -115,48 +115,51 @@ public partial class MpTbUsuario
     public string? UsuSemestre { get; set; }
 
     /// <summary>
-    /// Año de Egreso en caso de ser Alumno Egresado
+    /// Año de Egreso en caso de ser Egresado
     /// </summary>
     [Column("usuAnioEgreso")]
     public int? UsuAnioEgreso { get; set; }
 
     /// <summary>
-    /// Nombre del Archivo PDF de la Tira de Materias / Certificado de Calificaciones / SIP
+    /// Nombre del Archivo PDF de la Tira de Materias / Constancia o Certificado de Estudios / Boleta / SIP-10
     /// </summary>
-    [Column("usuFileNameComprobanteInscripcion")]
+    [Column("usuFileNameComprobanteEstudios")]
     [StringLength(200)]
     [Unicode(false)]
-    public string? UsuFileNameComprobanteInscripcion { get; set; }
+    public string? UsuFileNameComprobanteEstudios { get; set; }
 
     /// <summary>
-    /// Número de Empleado del Usuario { Administrativo, Docente }
+    /// Número de Empleado del Usuario { Administrativo, Docente } / Número de Contrato del Usuario { Honorarios }
     /// </summary>
-    [Column("usuNumeroEmpleado")]
+    [Column("usuNumeroEmpleadoContrato")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? UsuNumeroEmpleado { get; set; }
+    public string? UsuNumeroEmpleadoContrato { get; set; }
 
     /// <summary>
-    /// FK ID del Área / Departamento domde labora el Empleado
+    /// FK ID del Área / Departamento donde labora el Empleado
     /// </summary>
     [Column("usuIdAreaDepto")]
     public int? UsuIdAreaDepto { get; set; }
 
+    /// <summary>
+    /// Número de Extensión anterior del Área / Departamento
+    /// </summary>
     [Column("usuNoExtensionAnterior")]
     [StringLength(10)]
     [Unicode(false)]
     public string? UsuNoExtensionAnterior { get; set; }
 
     /// <summary>
-    /// Número de Extensión del Área / Departamento
+    /// Número de Extensión actual del Área / Departamento
     /// </summary>
-    [Column("usuNoExtension")]
+    [Column("usuNoExtensionActual")]
     [StringLength(10)]
     [Unicode(false)]
-    public string? UsuNoExtension { get; set; }
+    public string? UsuNoExtensionActual { get; set; }
 
     /// <summary>
-    /// Correo Personal Anterior
+    /// Correo Electrónico Personal Anterior
     /// </summary>
     [Column("usuCorreoPersonalCuentaAnterior")]
     [StringLength(100)]
@@ -164,15 +167,15 @@ public partial class MpTbUsuario
     public string? UsuCorreoPersonalCuentaAnterior { get; set; }
 
     /// <summary>
-    /// Correo Personal Actual / Nuevo
+    /// Correo Electrónico Personal Actual
     /// </summary>
-    [Column("usuCorreoPersonalCuentaNueva")]
+    [Column("usuCorreoPersonalCuentaActual")]
     [StringLength(100)]
     [Unicode(false)]
-    public string UsuCorreoPersonalCuentaNueva { get; set; } = null!;
+    public string UsuCorreoPersonalCuentaActual { get; set; } = null!;
 
     /// <summary>
-    /// Contraseña Encriptada en la Plataforma SACI
+    /// Contraseña Encriptada para ingresar a la Plataforma SACI
     /// </summary>
     [Column("usuContrasenia")]
     [StringLength(300)]
@@ -202,11 +205,14 @@ public partial class MpTbUsuario
     public string? UsuCorreoInstitucionalContrasenia { get; set; }
 
     /// <summary>
-    /// Fecha Hora del Alta del Usuario
+    /// Fecha Hora de Alta del Usuario
     /// </summary>
     [Column("usuFechaHoraAlta", TypeName = "datetime")]
-    public DateTime? UsuFechaHoraAlta { get; set; }
+    public DateTime UsuFechaHoraAlta { get; set; }
 
+    /// <summary>
+    /// Fecha Hora en que se va actualizando el Correo Institucional y/o Contraseña de la Plataforma SACI
+    /// </summary>
     [Column("usuFechaHoraActualizacion", TypeName = "datetime")]
     public DateTime UsuFechaHoraActualizacion { get; set; }
 
@@ -218,7 +224,7 @@ public partial class MpTbUsuario
 
     [JsonIgnore]
     [InverseProperty("SolIdUsuarioNavigation")]
-    public virtual ICollection<MtTbSolicitudesTicket> MtTbSolicitudesTickets { get; set; } = new List<MtTbSolicitudesTicket>();
+    public virtual ICollection<MtTbSolicitudesTicket> MtTbSolicitudesTickets { get; set; } = [];
 
     [ForeignKey("UsuIdAreaDepto")]
     [InverseProperty("MpTbUsuarios")]
@@ -230,9 +236,9 @@ public partial class MpTbUsuario
 
     [ForeignKey("UsuIdRol")]
     [InverseProperty("MpTbUsuarios")]
-    public virtual McCatRole UsuIdRolNavigation { get; set; } = null!;
+    public virtual McCatRole? UsuIdRolNavigation { get; set; } = null!;
 
     [ForeignKey("UsuIdTipoPersonal")]
     [InverseProperty("MpTbUsuarios")]
-    public virtual McCatTiposPersonal UsuIdTipoPersonalNavigation { get; set; } = null!;
+    public virtual McCatTiposPersonal? UsuIdTipoPersonalNavigation { get; set; } = null!;
 }

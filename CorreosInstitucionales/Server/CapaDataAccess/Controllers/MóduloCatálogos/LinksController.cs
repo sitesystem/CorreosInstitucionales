@@ -9,7 +9,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    // [Authorize]
     public class LinksController(DbCorreosInstitucionalesUpiicsaContext db) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
@@ -141,7 +141,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
             try
             {
                 McCatLink? oLink = await _db.McCatLinks.FindAsync(id);
-                //db.Remove(oPersona);
+                // db.Remove(oPersona);
 
                 if (oLink != null)
                 {

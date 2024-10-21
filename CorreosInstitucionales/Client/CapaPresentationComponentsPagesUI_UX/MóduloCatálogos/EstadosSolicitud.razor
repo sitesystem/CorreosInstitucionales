@@ -26,7 +26,6 @@
                 <br />
                 Cargando...
             </div>
-
         }
     </div>
 
@@ -98,15 +97,15 @@
                 (
                     "Actualizar Datos",
                     new Dictionary<string, object>()
-                                {
+                    {
                         {"registro", registro}
-                                },
+                    },
                     new DialogOptions()
-                        {
-                            ShowClose = false,
-                            Width = "50%",
-                            CssClass = "dialog_simple"
-                        }
+                    {
+                        ShowClose = false,
+                        Width = "50%",
+                        CssClass = "dialog_simple"
+                    }
                 );
     }
 
@@ -167,9 +166,9 @@
             (
                 "Confirmar",
                 new Dictionary<string, object>()
-                                    {
-                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.EdosolNombreEstado}?" }
-                                    },
+                {
+                    { "mensaje" , $"¿Desea {des}habilitar el registro de {item.EdosolNombreEstado}?" }
+                },
                 new DialogOptions() { ShowClose = false }
             );
 

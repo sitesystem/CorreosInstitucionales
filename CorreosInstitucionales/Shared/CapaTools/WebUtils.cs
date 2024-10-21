@@ -5,17 +5,18 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
 using CorreosInstitucionales.Shared.Constantes;
 
-namespace CorreosInstitucionales.Shared.Utils
+namespace CorreosInstitucionales.Shared.CapaTools
 {
     public static class WebUtils
     {
         public static async Task<List<T>> ListByStatusAsync<T>(IGenericService<T> service, bool filterByStatus = true)
         {
-            List<T> result = new();
+            List<T> result = [];
 
             try
             {
@@ -46,11 +47,11 @@ namespace CorreosInstitucionales.Shared.Utils
             switch (tipo_documento)
             {
                 case TipoDocumento.CURP:
-                    archivo = solicitud.SolIdUsuarioNavigation!.UsuFileNameCurp!;
+                    archivo = solicitud.SolIdUsuarioNavigation.UsuFileNameCurp!;
                     break;
 
                 case TipoDocumento.COM_INSCRIPCION:
-                    archivo = solicitud.SolIdUsuarioNavigation!.UsuFileNameComprobanteInscripcion!;
+                    archivo = solicitud.SolIdUsuarioNavigation.UsuFileNameComprobanteEstudios!;
                     break;
 
                 case TipoDocumento.CAP_BLOQUEO:

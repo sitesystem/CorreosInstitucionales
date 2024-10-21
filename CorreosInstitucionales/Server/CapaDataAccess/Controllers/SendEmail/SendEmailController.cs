@@ -8,7 +8,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    // [Authorize]
     public class SendEmailController(ISendEmailService servicioEmail) : ControllerBase
     {
         private readonly ISendEmailService _servicioEmail = servicioEmail;

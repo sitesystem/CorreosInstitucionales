@@ -21,7 +21,7 @@
         </RadzenAlert>
 
         <!-- ******************************************************************* DATOS PERSONALES ******************************************************************* -->
-        <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos Personales" CollapseTitle="Datos Personales" ExpandAriaLabel="" CollapseAriaLabel="" Class="rz-border-base-500 rz-border-radius-1 rz-shadow-3">
+        <RadzenFieldset AllowCollapse="true" ExpandTitle="Datos Personales" CollapseTitle="Datos Personales" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
                     <RadzenIcon Icon="account_box" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Datos Personales</b>
@@ -30,16 +30,16 @@
             <ChildContent>
                 <div class="row">
                     <div class="col-md-4 col-lg-4">
-                        <RadzenFormField Text="Nombre(s)" AllowFloatingLabel="false" Variant="Variant.Flat" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="Nombre(s)" AllowFloatingLabel="false" Variant="Variant.Flat" class="w-100 mt-3" Disabled="false">
                             @* <Start><RadzenIcon Icon="person" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start> *@
                             <ChildContent>
-                                <RadzenTextBox Name="@($@"names_{TipoPersonal}")" @bind-Value="@oUsuario.UsuNombre" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200" Placeholder="Escribe tu(s) Nombre(s)"
-                                               @oninput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
+                                <RadzenTextBox Name="@($@"names_{TipoPersonal}")" @bind-Value="@oUsuario!.UsuNombres" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200" Placeholder="Escribe tu(s) Nombre(s)"
+                                               @oninput="@((e) => oUsuario!.UsuNombres = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[a-zA-Z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
+                        <ValidationMessage For="@(() => oUsuario!.UsuNombres)" />
                     </div>
 
                     <div class="col-md-4 col-lg-4">
@@ -72,7 +72,7 @@
                         <RadzenFormField Text="@($@"{( ActionAddEdit == "agregar" ? "Número de Celular" : "Número de Celular Actual" )}")" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="phone_iphone" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
-                                <RadzenMask Name="@($@"phoneNumberCurrent_{TipoPersonal}")" @bind-Value="@oUsuario.UsuNoCelularNuevo" MinLength="0" MaxLength="20" style="border-bottom: 3px solid red;"
+                                <RadzenMask Name="@($@"phoneNumberCurrent_{TipoPersonal}")" @bind-Value="@oUsuario.UsuNoCelularActual" MinLength="0" MaxLength="20" style="border-bottom: 3px solid red;"
                                             Mask="** ** ** ** **" CharacterPattern="[0-9]" Placeholder="00 00 00 00 00" Disabled="@(ActionAddEdit == "actualizar" ? true : false)" ReadOnly="@(ActionAddEdit == "actualizar" ? true : false)" />
                             </ChildContent>
                             <Helper>
@@ -80,7 +80,7 @@
                                             Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de No. de Celular, levanta una Solicitud (Ticket)." : "No. de Celular en uso (10 dígitos)." )}")" />
                             </Helper>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuNoCelularNuevo)" />
+                        <ValidationMessage For="@(() => oUsuario.UsuNoCelularActual)" />
                     </div>
 
                     <div class="col-md-4 col-lg-4">
@@ -164,18 +164,18 @@
                             <ChildContent>
                                 @if (IdTipoPersonal == 1)
                                 {
-                                    <RadzenTextBox Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
+                                    <RadzenTextBox Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumnoEgresado" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
                                                    Placeholder="@($@"****{oEscuela.Data.EscNoEscuela}****")" aria-label="enter password"
-                                                   @oninput="(e => oUsuario.UsuBoletaAlumno = e.Value.ToString())" @onkeyup="@ValidarBoleta" />
+                                                   @oninput="(e => oUsuario.UsuBoletaAlumnoEgresado = e.Value.ToString())" @onkeyup="@ValidarBoleta" />
                                 }
                                 else if (IdTipoPersonal == 2)
                                 {
-                                    <RadzenMask Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumno" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
+                                    <RadzenMask Name="@($@"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaAlumnoEgresado" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
                                                 Mask="@($@"**********")" CharacterPattern="[A-Z0-9]" Placeholder="@($@"**********")" Pattern="" />
                                 }
                                 else if (IdTipoPersonal == 3)
                                 {
-                                    <RadzenMask Name="@($"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaMaestria" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
+                                    <RadzenMask Name="@($"boleta_{TipoPersonal}")" @bind-Value="@oUsuario.UsuBoletaPosgrado" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="10"
                                                 Mask="*******" CharacterPattern="[A-Z0-9]" Placeholder="B******" Pattern="" />
                                 }
                             </ChildContent>
@@ -185,17 +185,17 @@
                         </RadzenFormField>
                         @if (IdTipoPersonal == 1)
                         {
-                            <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumno)" />
+                            <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumnoEgresado)" />
                             <RadzenAlert Title="Ingresa tu Boleta" Text="@($@"Formato Válido: ****{oEscuela.Data.EscNoEscuela}****")" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker"
                                          ShowIcon="true" AllowClose="false" class="mb-0" @bind-Visible="flagErrorBoletaAlumno" />
                         }
                         else if (IdTipoPersonal == 2)
                         {
-                            <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumno)" />
+                            <ValidationMessage For="@(() => oUsuario.UsuBoletaAlumnoEgresado)" />
                         }
                         else if (IdTipoPersonal == 3)
                         {
-                            <ValidationMessage For="@(() => oUsuario.UsuBoletaMaestria)" />
+                            <ValidationMessage For="@(() => oUsuario.UsuBoletaPosgrado)" />
                         }
                     </div>
 
@@ -260,7 +260,7 @@
                         <RadzenFormField Text="@($@"{( (IdTipoPersonal == 1 || IdTipoPersonal == 2) ? "Archivo PDF del Comprobante de Horario (Tira de Materias) del Periodo Escolar Actual" : "Archivo PDF del SIP-10" )}")" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
-                                <RadzenUpload @ref="oUploadFile_ComprobanteInscripción" Url="@($"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}")" Accept=".pdf"
+                                <RadzenUpload @ref="oUploadFile_ComprobanteInscripción" Url="@($"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteEstudios}/{oGuid}")" Accept=".pdf"
                                               Icon="upload" ChooseText="Examinar Archivo" Auto="false" Multiple="false"
                                               Change=@(args => OnChangeFiles(args, Comprobante_Inscripcion))
                                               Error=@(args => OnErrorFiles(args, "FileInput"))
@@ -292,8 +292,8 @@
                                 </RadzenText>
                             </Helper>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuFileNameComprobanteInscripcion)" />
-                        <ValidationMessage For="@(() => oUsuario.UsuFileSizeComprobanteInscripcion)" />
+                        <ValidationMessage For="@(() => oUsuario.UsuFileNameComprobanteEstudios)" />
+                        <ValidationMessage For="@(() => oUsuario.UsuFileSizeComprobanteEstudios)" />
                     </div>
 
                     @if ((IdTipoPersonal == 2 || TipoPersonal == "egresado") || (IdTipoPersonal == 1 && ActionAddEdit == "actualizar"))
@@ -357,7 +357,7 @@
                         <RadzenFormField Text="@($@"{(ActionAddEdit == "agregar" ? "Correo Electrónico Personal" : "Correo Electrónico Personal Actual")}")" AllowFloatingLabel="false" Placeholder="" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
-                                <RadzenTextBox Name="@($@"email_personal_{TipoPersonal}")" @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="100"
+                                <RadzenTextBox Name="@($@"email_personal_{TipoPersonal}")" @bind-Value="@oUsuario.UsuCorreoPersonalCuentaActual" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="100"
                                                Disabled="@(ActionAddEdit == "actualizar" ? true : false)" ReadOnly="@(ActionAddEdit == "actualizar" ? true : false)" />
                             </ChildContent>
                             <Helper>
@@ -365,7 +365,7 @@
                                             Text="@($@"{( ActionAddEdit == "actualizar" ? "En caso de cambio de Correo Electrónico Personal, levanta una Solicitud (Ticket)." : "En caso de no contar con un Correo Personal, le recomendamos crear uno con dominio válido (gmail, outlook, hotmail, yahoo, msn, live, etc)." )}")" />
                             </Helper>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
+                        <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaActual)" />
                     </div>
 
                     <div class="col-md-4 col-lg-4">
@@ -375,22 +375,22 @@
                                 @if (ActionAddEdit == "agregar")
                                 {
                                     <RadzenTextBox Name="@($@"contraseña_{TipoPersonal}")" @bind-Value="@oUsuario.UsuContrasenia" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
-                                                   Visible="@(!VisibleContraseña)"
+                                                   AutoCompleteType="AutoCompleteType.Off" Visible="@(!VisibleContraseña)"
                                                    @oninput="(e => oUsuario.UsuContrasenia = e.Value.ToString())"
                                                    @onkeyup="@CompararContraseñas" />
                                     <RadzenPassword Name="@($@"contraseña_visible_{TipoPersonal}")" @bind-Value="@oUsuario.UsuContrasenia" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
-                                                    Visible="@VisibleContraseña"
+                                                    AutoCompleteType="AutoCompleteType.NewPassword" Visible="@VisibleContraseña"
                                                     @oninput="(e => oUsuario.UsuContrasenia = e.Value.ToString())"
                                                     @onkeyup="@CompararContraseñas" />
                                 }
                                 else if (ActionAddEdit == "actualizar")
                                 {
                                     <RadzenTextBox Name="@($@"contraseña_{TipoPersonal}")" @bind-Value="@UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
-                                                   Visible="@(!VisibleContraseña)"
+                                                   AutoCompleteType="AutoCompleteType.Off" Visible="@(!VisibleContraseña)"
                                                    @oninput="(e => UsuContraseña = e.Value.ToString())"
                                                    @onkeyup="@CompararContraseñas" />
                                     <RadzenPassword Name="@($@"contraseña_visible_{TipoPersonal}")" @bind-Value="@UsuContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
-                                                    Visible="@VisibleContraseña"
+                                                    AutoCompleteType="AutoCompleteType.NewPassword" Visible="@VisibleContraseña"
                                                     @oninput="(e => UsuContraseña = e.Value.ToString())"
                                                     @onkeyup="@CompararContraseñas" />
                                 }
@@ -405,7 +405,7 @@
                             </End>
                             <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuContrasenia)" />
+                        <ValidationMessage For="@(() => oUsuario!.UsuContrasenia)" />
                     </div>
 
                     <div class="col-md-4 col-lg-4 mb-3">
@@ -413,13 +413,13 @@
                             <Start><RadzenIcon Icon="lock" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
                                 <RadzenTextBox Name="@($@"confirmar_contraseña_{TipoPersonal}")" @bind-Value="@UsuConfirmarContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20"
-                                                @oninput="(e => UsuConfirmarContraseña = e.Value.ToString())"
-                                                @onkeyup="@CompararContraseñas"
-                                                Visible="@(!VisibleConfirmarContraseña)" />
+                                               AutoCompleteType="AutoCompleteType.Off" Visible="@(!VisibleConfirmarContraseña)"
+                                               @oninput="(e => UsuConfirmarContraseña = e.Value.ToString())"
+                                               @onkeyup="@CompararContraseñas" />
                                 <RadzenPassword Name="@($@"confirmar_contraseña_visible_{TipoPersonal}")" @bind-Value="@UsuConfirmarContraseña" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="20" aria-label="enter password"
+                                                AutoCompleteType="AutoCompleteType.NewPassword" Visible="@VisibleConfirmarContraseña"
                                                 @oninput="(e => UsuConfirmarContraseña = e.Value.ToString())"
-                                                @onkeyup="@CompararContraseñas"
-                                                Visible="@VisibleConfirmarContraseña" />
+                                                @onkeyup="@CompararContraseñas" />
                             </ChildContent>
                             <End>
                                 <RadzenButton Icon="@(VisibleConfirmarContraseña ? "visibility" : "visibility_off")"
@@ -456,7 +456,8 @@
                             <Start><RadzenIcon Icon="mail_outline" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
                                 <RadzenTextBox Name="@($@"email_institucional_{TipoPersonal}")" @bind-Value="@oUsuario.UsuCorreoInstitucionalCuenta" MinLength="0" MaxLength="100" class="@($@"{(ActionAddEdit == "actualizar" ? "text-center" : "")}")"
-                                               Disabled="@(ActionAddEdit == "actualizar" ? true : false)" ReadOnly="@(ActionAddEdit == "actualizar" ? true : false)" Style="font-family:var(--rz-text-font-family); font-weight:bold; font-size:18px;" />
+                                               Disabled="@(ActionAddEdit == "actualizar" ? true : false)" ReadOnly="@(ActionAddEdit == "actualizar" ? true : false)"
+                                               AutoCompleteType="AutoCompleteType.Off" Style="font-family:var(--rz-text-font-family); font-weight:bold; font-size:18px;" />
                             </ChildContent>
                             <Helper>
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.P" TextAlign="TextAlign.Justify" Style="font-family:var(--rz-text-font-family);">
@@ -588,28 +589,28 @@ else
         if (ActionAddEdit == "agregar")
         {
             @* DATOS ID DEL USUARIO *@
-            oUsuario.IdUsuario = 0;
+            oUsuario!.IdUsuario = 0;
             oUsuario.UsuIdRol = 2;                              // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
             oUsuario.UsuIdTipoPersonal = IdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
             @* DATOS PERSONALES *@
-            oUsuario.UsuNombre = "";                            // Nombre del Usuario Solicitante o Administrador
+            oUsuario.UsuNombres = "";                           // Nombre del Usuario Solicitante o Administrador
             oUsuario.UsuPrimerApellido = "";                    // Primer Apellido del Usuario Solicitante o Administrador
             oUsuario.UsuSegundoApellido = "";                   // Segundo Apellido del Usuario Solicitante o Administrador
             oUsuario.UsuCurp = "";                              // CURP con 18 caracteres como mínimo
             oUsuario.UsuFileNameCurp = "";                      // Nombre del Archivo y extensión .pdf del CURP
             oUsuario.UsuFileSizeCurp = 0L;                      // Tamaño del Archivo .pdf del CURP
             oUsuario.UsuNoCelularAnterior = "00 00 00 00 00";   // Número de Celular Anterior si llega a cambiar por uno nuevo
-            oUsuario.UsuNoCelularNuevo = "";                    // Número de Celular Nuevo que sería el número de celular actual
+            oUsuario.UsuNoCelularActual = "";                   // Número de Celular Nuevo que sería el número de celular actual
             @* DATOS ACADÉMICOS *@
             if (IdTipoPersonal == 1 || IdTipoPersonal == 2)     // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             { 
-                oUsuario.UsuBoletaAlumno = "";
-                oUsuario.UsuBoletaMaestria = "B000000";
+                oUsuario.UsuBoletaAlumnoEgresado = "";
+                oUsuario.UsuBoletaPosgrado = "B000000";
             }
             else if (IdTipoPersonal == 3)                       // Número de Boleta del Usuario (Alumno de Maestria)
             {
-                oUsuario.UsuBoletaAlumno = $@"0000{oEscuela?.Data?.EscNoEscuela}0000";
-                oUsuario.UsuBoletaMaestria = "";
+                oUsuario.UsuBoletaAlumnoEgresado = $@"0000{oEscuela?.Data?.EscNoEscuela}0000";
+                oUsuario.UsuBoletaPosgrado = "";
             }
             if (IdTipoPersonal == 1 || IdTipoPersonal == 2)
             {
@@ -621,30 +622,30 @@ else
                 oUsuario.UsuIdCarrera = 1;                      // FK ID de la Carrera del Alumno
                 oUsuario.UsuSemestre = "0";                     // Semestre que cursa el Alumno Inscrito o de Maestria
             }
-            oUsuario.UsuAnioEgreso = 1950;                       // Año de Egreso en dado caso
-            oUsuario.UsuFileNameComprobanteInscripcion = "";    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
-            oUsuario.UsuFileSizeComprobanteInscripcion = 0L;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            oUsuario.UsuAnioEgreso = 1950;                      // Año de Egreso en dado caso
+            oUsuario.UsuFileNameComprobanteEstudios = "";       // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            oUsuario.UsuFileSizeComprobanteEstudios = 0L;       // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             @* DATOS LABORALES *@
-            oUsuario.UsuNumeroEmpleado = "0";                   // Número del Empleado del Usuario (Administrador o Docente)
+            oUsuario.UsuNumeroEmpleadoContrato = "0";                   // Número del Empleado del Usuario (Administrador o Docente)
             oUsuario.UsuIdAreaDepto = 1;                        // FK ID del Área/Departamento del Usuario Empleado
             oUsuario.UsuNoExtensionAnterior = "0";              // Número de Extensión Anterior del Empleado
-            oUsuario.UsuNoExtension = "0";                      // Número de Extensión del Empleado
+            oUsuario.UsuNoExtensionActual = "0";                      // Número de Extensión del Empleado
             @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
             oUsuario.UsuCorreoPersonalCuentaAnterior = null;    // Correo Personal de la Cuenta Anterior
-            oUsuario.UsuCorreoPersonalCuentaNueva = "";         // Correo Personal de la Cuenta Nueva o Actual
-            oUsuario.UsuContrasenia = "";                        // Contraseña en la PLataforma del Usuario Solicitante o Administrador
-            oUsuario.UsuRecuperarContrasenia = false;            // Contraseña Temporal que se le proporciona al Usuario Solicitante
+            oUsuario.UsuCorreoPersonalCuentaActual = "";        // Correo Personal de la Cuenta Nueva o Actual
+            oUsuario.UsuContrasenia = "";                       // Contraseña en la PLataforma del Usuario Solicitante o Administrador
+            oUsuario.UsuRecuperarContrasenia = false;           // Contraseña Temporal que se le proporciona al Usuario Solicitante
             @* DATOS DEL CORREO INSTITUCIONAL *@
             oUsuario.UsuCorreoInstitucionalCuenta = "";         // Cuenta Correo Institucional IPN generada por DCyC
-            oUsuario.UsuCorreoInstitucionalContrasenia = "";     // Contraseña del Correo Institucional IPN Generada por DCyC
+            oUsuario.UsuCorreoInstitucionalContrasenia = "";    // Contraseña del Correo Institucional IPN Generada por DCyC
             @* OTROS DATOS *@
             // oUsuario.UsuFechaHoraAlta = DateTime.Parse(DateTime.Now.ToString()).Year; // Fecha y Hora de Alta del Usuario
             oUsuario.UsuStatus = true;                          // Usuario (1 - Activo / 0 - Inactivo)
             @* DATOS FK NAVIGATION *@
             oUsuario.UsuIdAreaDeptoNavigation = null;
             oUsuario.UsuIdCarreraNavigation = null;
-            oUsuario.UsuIdRolNavigation = null;
-            oUsuario.UsuIdTipoPersonalNavigation = null;
+            oUsuario.UsuIdRolNavigation = null!;
+            oUsuario.UsuIdTipoPersonalNavigation = null!;
 
             IconButton = "send";
             TextButton = "Enviar Registro";
@@ -653,11 +654,11 @@ else
         else if (ActionAddEdit == "actualizar")
         {
             @* DATOS ID DEL USUARIO *@
-            oUsuario.IdUsuario = oEditUsuario.IdUsuario;
+            oUsuario!.IdUsuario = oEditUsuario!.IdUsuario;
             oUsuario.UsuIdRol = oEditUsuario.UsuIdRol;                          // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
             oUsuario.UsuIdTipoPersonal = oEditUsuario.UsuIdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
             @* DATOS PERSONALES *@
-            oUsuario.UsuNombre = oEditUsuario.UsuNombre;                        // Nombre del Usuario Solicitante o Administrador
+            oUsuario.UsuNombres = oEditUsuario.UsuNombres;                        // Nombre del Usuario Solicitante o Administrador
             oUsuario.UsuPrimerApellido = oEditUsuario.UsuPrimerApellido;        // Primer Apellido del Usuario Solicitante o Administrador
             oUsuario.UsuSegundoApellido = oEditUsuario.UsuSegundoApellido;      // Segundo Apellido del Usuario Solicitante o Administrador
             oUsuario.UsuCurp = oEditUsuario.UsuCurp;                            // CURP con 18 caracteres como mínimo
@@ -665,24 +666,24 @@ else
             srcCURP = oUsuario.UsuFileNameCurp != "CURP.pdf" ? $"/repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}" : $"/repositorio/CURP.pdf";
             oUsuario.UsuFileSizeCurp = oEditUsuario.UsuFileSizeCurp;            // Tamaño del Archivo .pdf del CURP
             oUsuario.UsuNoCelularAnterior = oEditUsuario.UsuNoCelularAnterior;  // Número de Celular Anterior si llega a cambiar por uno nuevo
-            oUsuario.UsuNoCelularNuevo = oEditUsuario.UsuNoCelularNuevo;        // Número de Celular Nuevo que sería el número de celular actual
+            oUsuario.UsuNoCelularActual = oEditUsuario.UsuNoCelularActual;        // Número de Celular Nuevo que sería el número de celular actual
             @* DATOS ACADÉMICOS *@
-            oUsuario.UsuBoletaAlumno = oEditUsuario.UsuBoletaAlumno;            // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
-            oUsuario.UsuBoletaMaestria = oEditUsuario.UsuBoletaMaestria;        // Número de Boleta del Usuario (Alumno de Maestria)
+            oUsuario.UsuBoletaAlumnoEgresado = oEditUsuario.UsuBoletaAlumnoEgresado;            // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+            oUsuario.UsuBoletaPosgrado = oEditUsuario.UsuBoletaPosgrado;        // Número de Boleta del Usuario (Alumno de Maestria)
             oUsuario.UsuIdCarrera = oEditUsuario.UsuIdCarrera;                  // FK ID de la Carrera del Alumno
             oUsuario.UsuSemestre = oEditUsuario.UsuSemestre;                    // Semestre que cursa el Alumno Inscrito o de Maestria
             oUsuario.UsuAnioEgreso = oEditUsuario.UsuAnioEgreso;                  // Año de Egreso en dado caso
-            oUsuario.UsuFileNameComprobanteInscripcion = oEditUsuario.UsuFileNameComprobanteInscripcion;    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
-            srcComprobanteInscripcion = oUsuario.UsuFileNameComprobanteInscripcion != "Comprobante-Inscripcion.pdf" ? $"/repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteInscripcion}" : $"/repositorio/Comprobante-Inscripcion.pdf";
-            oUsuario.UsuFileSizeComprobanteInscripcion = oEditUsuario.UsuFileSizeComprobanteInscripcion;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            oUsuario.UsuFileNameComprobanteEstudios = oEditUsuario.UsuFileNameComprobanteEstudios;    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+            srcComprobanteInscripcion = oUsuario.UsuFileNameComprobanteEstudios != "Comprobante-Inscripcion.pdf" ? $"/repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteEstudios}" : $"/repositorio/Comprobante-Inscripcion.pdf";
+            oUsuario.UsuFileSizeComprobanteEstudios = oEditUsuario.UsuFileSizeComprobanteEstudios;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             @* DATOS LABORALES *@
-            oUsuario.UsuNumeroEmpleado = oEditUsuario.UsuNumeroEmpleado;        // Número del Empleado del Usuario (Administrador o Docente)
+            oUsuario.UsuNumeroEmpleadoContrato = oEditUsuario.UsuNumeroEmpleadoContrato;        // Número del Empleado del Usuario (Administrador o Docente)
             oUsuario.UsuIdAreaDepto = oEditUsuario.UsuIdAreaDepto;              // FK ID del Área/Departamento del Usuario Empleado
             oUsuario.UsuNoExtensionAnterior = oEditUsuario.UsuNoExtensionAnterior; // Número de Extensión Anterior del Empleado
-            oUsuario.UsuNoExtension = oEditUsuario.UsuNoExtension;              // Número de Extensión del Empleado
+            oUsuario.UsuNoExtensionActual = oEditUsuario.UsuNoExtensionActual;              // Número de Extensión del Empleado
             @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
             oUsuario.UsuCorreoPersonalCuentaAnterior = oEditUsuario.UsuCorreoPersonalCuentaAnterior;        // Correo Personal de la Cuenta Anterior
-            oUsuario.UsuCorreoPersonalCuentaNueva = oEditUsuario.UsuCorreoPersonalCuentaNueva;              // Correo Personal de la Cuenta Nueva o Actual
+            oUsuario.UsuCorreoPersonalCuentaActual = oEditUsuario.UsuCorreoPersonalCuentaActual;              // Correo Personal de la Cuenta Nueva o Actual
             oUsuario.UsuContrasenia = oEditUsuario.UsuContrasenia;                                            // Contraseña en la PLataforma del Usuario Solicitante o Administrador
             oUsuario.UsuRecuperarContrasenia = oEditUsuario.UsuRecuperarContrasenia;                          // Contraseña Temporal que se le proporciona al Usuario Solicitante
             @* DATOS DEL CORREO INSTITUCIONAL *@
@@ -694,8 +695,8 @@ else
             @* DATOS FK NAVIGATION *@
             oUsuario.UsuIdAreaDeptoNavigation = null;
             oUsuario.UsuIdCarreraNavigation = null;
-            oUsuario.UsuIdRolNavigation = null;
-            oUsuario.UsuIdTipoPersonalNavigation = null;
+            oUsuario.UsuIdRolNavigation = null!;
+            oUsuario.UsuIdTipoPersonalNavigation = null!;
 
             IconButton = "save_as";
             TextButton = "Editar Datos";
@@ -721,8 +722,8 @@ else
     @*///////////////////////////////////////////////  INICIALIZAR LISTA DE SEMESTRES  ///////////////////////////////////////////////*@
     public class Semestres
     {
-        public string Key { get; set; }
-        public string Value { get; set; }
+        public string Key { get; set; } = null!;
+        public string Value { get; set; } = null!;
     }
 
     private List<Semestres> oSemestres = new List<Semestres>
@@ -734,9 +735,7 @@ else
         new Semestres() { Key = "5", Value = "5to semestre" },
         new Semestres() { Key = "6", Value = "6to semestre" },
         new Semestres() { Key = "7", Value = "7mo semestre" },
-        new Semestres() { Key = "8", Value = "8vo semestre" },
-        // new Semestres() { Key = "9", Value = "9no semestre" },
-        // new Semestres() { Key = "10", Value = "10mo semestre" },
+        new Semestres() { Key = "8", Value = "8vo semestre" }
     };
 
     @*///////////////////////////////////////////////  Egresado  //////////////////////////////////////////////////////////////////////*@
@@ -745,7 +744,7 @@ else
     private bool onChangeSelectBarEgresado = false;
     public async Task ChangeSelectBarEgresado()
     {
-        oUsuario.UsuIdTipoPersonal = !flagEsEgresado ? 1 : 2;
+        oUsuario!.UsuIdTipoPersonal = !flagEsEgresado ? 1 : 2;
         oUsuario.UsuAnioEgreso = 1950;
         onChangeSelectBarEgresado = true;
     }
@@ -755,7 +754,7 @@ else
 
     @*///////////////////////////////////////////////  VALIDAR BOLETA DEL ALUMNO  ///////////////////////////////////////////////*@
     private bool flagErrorBoletaAlumno = false;
-    private async Task ValidarBoleta() => flagErrorBoletaAlumno = !System.Text.RegularExpressions.Regex.IsMatch(oUsuario.UsuBoletaAlumno, @"^\d{4}" + oEscuela.Data.EscNoEscuela + @"\d{4}$");
+    private async Task ValidarBoleta() => flagErrorBoletaAlumno = !System.Text.RegularExpressions.Regex.IsMatch(oUsuario?.UsuBoletaAlumnoEgresado!, @"^\d{4}" + oEscuela?.Data?.EscNoEscuela + @"\d{4}$");
 
     @*///////////////////////////////////////////////  VALIDAR CAMPOS CONTRASEÑA Y CONFIRMAR CONTRASEÑA  ///////////////////////////////////////////////*@
     // Hacer visible las Contraseñas con el ícono eye
@@ -775,7 +774,7 @@ else
         else if (ActionAddEdit == "actualizar")
         {
             flagErrorPasswords = !string.Equals(UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal);
-            oUsuario.UsuContrasenia = !string.IsNullOrEmpty(UsuContraseña) && !flagErrorPasswords ? CorreosInstitucionales.Shared.CapaTools.Encrypt.GetSHA256(UsuContraseña) : oEditUsuario.UsuContrasenia;
+            oUsuario!.UsuContrasenia = !string.IsNullOrEmpty(UsuContraseña) && !flagErrorPasswords ? CorreosInstitucionales.Shared.CapaTools.Encrypt.GetSHA256(UsuContraseña) : oEditUsuario!.UsuContrasenia;
         }
     }
 
@@ -799,14 +798,14 @@ else
         {
             if (name == CURP)
             {
-                oUsuario.UsuFileNameCurp = $"{CURP}_{oGuid}{Path.GetExtension(file.Name).ToLower()}";
+                oUsuario!.UsuFileNameCurp = $"{CURP}_{oGuid}{Path.GetExtension(file.Name).ToLower()}";
                 oUsuario.UsuFileSizeCurp = file.Size; // bytes
                 oFileInfoCURP = args.Files;
             }
             else if (name == Comprobante_Inscripcion)
             {
-                oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripcion}_{oGuid}{Path.GetExtension(file.Name).ToLower()}";
-                oUsuario.UsuFileSizeComprobanteInscripcion = file.Size; // bytes
+                oUsuario!.UsuFileNameComprobanteEstudios = $"{Comprobante_Inscripcion}_{oGuid}{Path.GetExtension(file.Name).ToLower()}";
+                oUsuario.UsuFileSizeComprobanteEstudios = file.Size; // bytes
                 oFileInfoComprobanteInscripcion = args.Files;
             }
         }
@@ -862,13 +861,13 @@ else
             busyLoading = true;
             oTipoPersonal = await servicioTipoPersonal.GetDataByIdAsync(oUsuario.UsuIdTipoPersonal);
             oCarrera = await servicioCarrera.GetDataByIdAsync(oUsuario.UsuIdCarrera);
-            string boleta = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumno : oUsuario.UsuBoletaMaestria);
+            string boleta = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumnoEgresado : oUsuario.UsuBoletaPosgrado);
             string carrera = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oCarrera?.Data?.CarrNombre : "N/A");
             string semestre = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuSemestre : "N/A");
             string correo_institucional = string.IsNullOrEmpty(oUsuario.UsuCorreoInstitucionalCuenta) ? oUsuario.UsuCorreoInstitucionalCuenta?.Trim() : "sin asignar";
             string isEgresado = flagEsEgresado ? "SI" : "NO";
             string añoEgreso = flagEsEgresado ? oUsuario.UsuAnioEgreso.ToString() : "N/A";
-            string fecha_hora_alta = ActionAddEdit == "agregar" ? DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'") : oUsuario.UsuFechaHoraAlta?.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");
+            string fecha_hora_alta = ActionAddEdit == "agregar" ? DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'") : oUsuario.UsuFechaHoraAlta.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");
             string password = ActionAddEdit == "agregar" ? oUsuario.UsuContrasenia : UsuContraseña;
             string agregar_actualizar = ActionAddEdit == "agregar" ? "registro" : "actualización de datos";
             string entrega_credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) ? "<br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>" : "";
@@ -880,13 +879,13 @@ else
 						                            <table style='padding:5px; border: 1px solid black; border-collapse:collapse;' >
 							                            <thead>
 								                            <tr style='background-color: #dddddd;'>
-									                            <th scope='col' colspan='2' style='border: 1px solid black;'><b>Credenciales de Acceso</b></th>
+									                            <th scope='col' colspan='2' style='border: 1px solid black;'><b>Credenciales de Acceso a SACI</b></th>
 								                            </tr>
 							                            </thead>
 							                            <tbody>
 								                            <tr style='background-color: #ffffff;'>
 									                            <td width='250px' style='border: 1px solid black;'><b>✉️ Usuario:</b></td>
-									                            <td width='250px' style='border: 1px solid black;'><b>{oUsuario.UsuCorreoPersonalCuentaNueva.Trim()}</b></td>
+									                            <td width='250px' style='border: 1px solid black;'><b>{oUsuario.UsuCorreoPersonalCuentaActual.Trim()}</b></td>
 								                            </tr>
 								                            <tr style='background-color: #dddddd;'>
 									                            <td width='250px' style='border: 1px solid black;'><b>🔑 Contraseña:</b></td>
@@ -909,7 +908,7 @@ else
 			                                <article style='background-color: rgb(255, 255, 255); border-radius:10px; padding:5px;'>
 				                                <p style='text-align:justify; color:black;'>
                                                     ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
-                                                    Estimad@: <br><b>{oUsuario.UsuNombre.Trim()} {oUsuario.UsuPrimerApellido.Trim()} {oUsuario.UsuSegundoApellido?.Trim()}</b><br><br>
+                                                    Estimad@: <br><b>{oUsuario.UsuNombres.Trim()} {oUsuario.UsuPrimerApellido.Trim()} {oUsuario.UsuSegundoApellido?.Trim()}</b><br><br>
 				                                    Se le informa que su {agregar_actualizar} fué exitoso en la <b>Plataforma SACI</b>
 				                                    de la Unidad Académica <b>{oEscuela?.Data?.EscNombreCorto} ({oEscuela?.Data?.EscNombreLargo})</b>.
                                                     {entrega_credenciales_acceso}
@@ -937,7 +936,7 @@ else
 								                                </tr>
 								                                <tr style='background-color: #dddddd;'>
 									                                <td width='200px' style='border: 1px solid black;'><b>✅ Nombre</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNombre}</td>
+									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNombres}</td>
 								                                </tr>
 								                                <tr>
 									                                <td width='200px' style='border: 1px solid black;'><b>✅ Primer Apellido</b></td>
@@ -953,7 +952,7 @@ else
 								                                </tr>
 								                                <tr style='background-color: #dddddd;'>
 									                                <td width='200px' style='border: 1px solid black;'><b>✅ No. de Celular</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNoCelularNuevo}</td>
+									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNoCelularActual}</td>
 								                                </tr>
 								                                <tr>
 									                                <td width='200px' style='border: 1px solid black;'><b>✅ Boleta</b></td>
@@ -1004,21 +1003,21 @@ else
                                 </body>";
 
             string credenciales_acceso_WA = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
-                                            "Por este medio se le hace entrega de sus _Credenciales de Acceso_:\n\n" +
-                                            "   ✉ Usuario:\n               *" + oUsuario.UsuCorreoPersonalCuentaNueva + "*\n" +
+                                            "Por este medio se le hace entrega de sus _Credenciales de Acceso_ *a la Plataforma SACI*:\n\n" +
+                                            "   ✉ Usuario:\n               *" + oUsuario.UsuCorreoPersonalCuentaActual + "*\n" +
                                             "   🔑 Contraseña:\n               *" + password + "*\n\n" : "";
 
-            oSendWhatsApp.Number = oUsuario.UsuNoCelularNuevo.Replace(" ", string.Empty);
+            oSendWhatsApp.Number = oUsuario.UsuNoCelularActual.Replace(" ", string.Empty);
             oSendWhatsApp.Message = "*SACI (Sistema de Atención para Correos Institucionales)*\n" +
                                     "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
                                     "Se le informa que su " + agregar_actualizar + " fué exitoso en la *Plataforma SACI* " + 
-                                    "de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
+                                    "de la Unidad Académica *" + oEscuela?.Data?.EscNombreCorto + " (" + oEscuela?.Data?.EscNombreLargo + ")*.\n\n" +
                                     credenciales_acceso_WA +
                                     "✅ Rol: *Usuario*\n" +
-                                    "✅ Tipo de Personal: *" + oTipoPersonal.Data.TipoperNombre + "*\n" +
-                                    "✅ Nombre: *" + oUsuario.UsuNombre.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido.Trim() + "*\n" +
+                                    "✅ Tipo de Personal: *" + oTipoPersonal?.Data?.TipoperNombre + "*\n" +
+                                    "✅ Nombre: *" + oUsuario.UsuNombres.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido?.Trim() + "*\n" +
                                     "✅ CURP: *" + oUsuario.UsuCurp + "*\n" +
-                                    "✅ No. de Celular: *" + oUsuario.UsuNoCelularNuevo + "*\n" +
+                                    "✅ No. de Celular: *" + oUsuario.UsuNoCelularActual + "*\n" +
                                     "✅ Boleta: *" + boleta + "*\n" +
                                     "✅ Carrera: *" + carrera + "*\n" +
                                     "✅ Semestre: *" + semestre + "*\n" +
@@ -1031,24 +1030,24 @@ else
 
             if (ActionAddEdit == "agregar")
             {
-                var verification = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaNueva.Trim(), oUsuario.UsuCurp);
+                var verification = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaActual.Trim(), oUsuario.UsuCurp);
 
                 if (ValidReCAPTCHA && verification?.Success == 1)
                 {
                     var respuesta = await servicioUsuario.AddDataAsync(oUsuario);
                     oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
 
-                    if (oRespuesta.Success == 1)
+                    if (respuesta.IsSuccessStatusCode && oRespuesta!.Success == 1)
                     {
-                        idResponse = int.Parse(oRespuesta.Message);
+                        idResponse = int.Parse(oRespuesta!.Message);
 
                         @*//  UPLOAD FILES  //*@
                         oUsuario.UsuFileNameCurp = $"{CURP}{Path.GetExtension(oUsuario.UsuFileNameCurp).ToLower()}";
                         oUploadFile_CURP.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
                         await oUploadFile_CURP.Upload();
 
-                        oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripcion}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
-                        oUploadFile_ComprobanteInscripción.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
+                        oUsuario.UsuFileNameComprobanteEstudios = $"{Comprobante_Inscripcion}{Path.GetExtension(oUsuario.UsuFileNameComprobanteEstudios).ToLower()}";
+                        oUploadFile_ComprobanteInscripción.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteEstudios}/{oGuid}";
                         await oUploadFile_ComprobanteInscripción.Upload();
 
                         @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@
@@ -1058,7 +1057,7 @@ else
                         servicioSendEmail.SendEmailAsync(
                             new RequestDTO_SendEmail()
                             {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva.Trim(),
+                                EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
                                 Subject = "SACI | REGISTRO DE USUARI@",
                                 Body = msgEmail
                             });
@@ -1093,7 +1092,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuNombre.Trim() @oUsuario.UsuPrimerApellido.Trim() @oUsuario.UsuSegundoApellido.Trim()</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuNombres.Trim() @oUsuario.UsuPrimerApellido.Trim() @oUsuario.UsuSegundoApellido?.Trim()</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">CURP:</RadzenText>
@@ -1101,7 +1100,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Boleta:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumno : oUsuario.UsuBoletaMaestria)</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumnoEgresado : oUsuario.UsuBoletaPosgrado)</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Carrera:</RadzenText>
@@ -1113,7 +1112,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Correo Electrónico Personal:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuCorreoPersonalCuentaNueva</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuCorreoPersonalCuentaActual</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">¿Egresado?:</RadzenText>
@@ -1155,9 +1154,9 @@ else
                         await servicioSendEmail.SendEmailAsync(
                             new RequestDTO_SendEmail()
                             {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva.Trim(),
+                                EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
                                 Subject = "SACI | ERROR DE REGISTRO",
-                                Body = "Estimad@: " + oUsuario.UsuNombre + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
+                                Body = "Estimad@: " + oUsuario.UsuNombres + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
                                        "Registro NO exitoso en el <b>Sistema de Atención para Correos Institucionales (SACI)</b><br>" +
                                        "Por favor no responder a este correo, acuda a la unidad de informática de tu escuela<br>"
                             });
@@ -1189,14 +1188,14 @@ else
             }
             else if (ActionAddEdit == "actualizar")
             {
-                // var verification = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaNueva, oUsuario.UsuCurp);
+                // var verification = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaActual, oUsuario.UsuCurp);
 
                 if (ValidReCAPTCHA)
                 {
                     var respuesta = await servicioUsuario.EditDataAsync(oUsuario);
                     oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
 
-                    if (respuesta.IsSuccessStatusCode)
+                    if (respuesta.IsSuccessStatusCode && oRespuesta!.Success == 1)
                     {
                         @*//  UPLOAD FILES  //*@
                         idResponse = oUsuario.IdUsuario;
@@ -1208,17 +1207,17 @@ else
                             await oUploadFile_CURP.Upload();
                         }
 
-                        if (!string.IsNullOrEmpty(oUsuario.UsuFileNameComprobanteInscripcion))
+                        if (!string.IsNullOrEmpty(oUsuario.UsuFileNameComprobanteEstudios))
                         {
-                            oUsuario.UsuFileNameComprobanteInscripcion = $"{Comprobante_Inscripcion}{Path.GetExtension(oUsuario.UsuFileNameComprobanteInscripcion).ToLower()}";
-                            oUploadFile_ComprobanteInscripción.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteInscripcion}/{oGuid}";
+                            oUsuario.UsuFileNameComprobanteEstudios = $"{Comprobante_Inscripcion}{Path.GetExtension(oUsuario.UsuFileNameComprobanteEstudios).ToLower()}";
+                            oUploadFile_ComprobanteInscripción.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteEstudios}/{oGuid}";
                             await oUploadFile_ComprobanteInscripción.Upload();
                         }
 
                         // var responseUsuario = await servicioUsuario.GetDataByIdAsync(oUsuario.IdUsuario);
                         // oUsuario = responseUsuario.Data;
                         // srcCURP = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}";
-                        // srcComprobanteInscripcion = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteInscripcion}";
+                        // srcComprobanteInscripcion = $@"/Repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteEstudios}";
                         
                         @*//  NOTIFICATION TOAST ACTUALIZACIÓN DE DATOS EXITOSO  //*@
                         NotificationService.Notify(
@@ -1250,7 +1249,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuNombre @oUsuario.UsuPrimerApellido @oUsuario.UsuSegundoApellido</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuNombres @oUsuario.UsuPrimerApellido @oUsuario.UsuSegundoApellido</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">CURP:</RadzenText>
@@ -1258,7 +1257,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Boleta:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumno : oUsuario.UsuBoletaMaestria)</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@(IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumnoEgresado : oUsuario.UsuBoletaPosgrado)</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Carrera:</RadzenText>
@@ -1270,7 +1269,7 @@ else
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Correo Electrónico Personal:</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuCorreoPersonalCuentaNueva</b></RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuCorreoPersonalCuentaActual</b></RadzenText>
                                     </RadzenStack>
                                     <RadzenStack Gap="0px">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">¿Egresado?:</RadzenText>
@@ -1339,18 +1338,18 @@ else
                                     <LoadingComponent />
                                 </div>,
                                 new DialogOptions()
-                                    {
-                                        CloseDialogOnOverlayClick = false,
-                                        CloseDialogOnEsc = false,
-                                        Width = "Auto",
-                                        Height = "Auto",
-                                        Resizable = true,
-                                        ShowTitle = true,
-                                        ShowClose = true,
-                                        Draggable = true,
-                                        CssClass = "custom-dialog-class",
-                                        WrapperCssClass = "custom-dialog-wrapper-class"
-                                    });
+                                {
+                                    CloseDialogOnOverlayClick = false,
+                                    CloseDialogOnEsc = false,
+                                    Width = "Auto",
+                                    Height = "Auto",
+                                    Resizable = true,
+                                    ShowTitle = true,
+                                    ShowClose = true,
+                                    Draggable = true,
+                                    CssClass = "custom-dialog-class",
+                                    WrapperCssClass = "custom-dialog-wrapper-class"
+                                });
 
                             @*//  ENVÍO DE WHATSAPP PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
                             await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
@@ -1359,7 +1358,7 @@ else
                             servicioSendEmail.SendEmailAsync(
                                 new RequestDTO_SendEmail()
                                 {
-                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva.Trim(),
+                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
                                     Subject = "SACI | Actualización de Datos",
                                     Body = msgEmail
                                 });
@@ -1373,9 +1372,9 @@ else
                     {
                         await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
                             {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaNueva.Trim(),
+                                EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
                                 Subject = "SACI | ERROR EN ACTUALIZACIÓN DE DATOS",
-                                Body = "Estimad@: " + oUsuario.UsuNombre.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido.Trim() + "<br><br>" +
+                                Body = "Estimad@: " + oUsuario.UsuNombres.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido?.Trim() + "<br><br>" +
                                        "Actualización de datos NO exitosa en el <b>Sistema de Atención de Correos Institucionales IPN (SACI)</b><br>"
                             });
                     }

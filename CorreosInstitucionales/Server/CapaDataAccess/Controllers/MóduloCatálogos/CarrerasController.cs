@@ -126,8 +126,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
             try
             {
                 McCatCarrera? oCarrera = await _db.McCatCarreras.FindAsync(id);
-
-                //db.Remove(oPersona);
+                // db.Remove(oPersona);
+                
                 if (oCarrera != null)
                 {
                     oCarrera.CarrStatus = isActivate;

@@ -1,6 +1,7 @@
 ﻿@inherits RadzenComponentWithChildren
 @ChildContent
-@code {
+@code
+{
     public override async Task SetParametersAsync(ParameterView parameters)
     {
         if (parameters.GetValueOrDefault<bool>(nameof(CanRender)))

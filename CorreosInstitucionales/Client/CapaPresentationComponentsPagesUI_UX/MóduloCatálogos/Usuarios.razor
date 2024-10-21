@@ -187,7 +187,7 @@
                                                     <RadzenBadge Variant="Variant.Flat" Shade="@(shade)" BadgeStyle="@(style)" Text="" IsPill="true" class="rz-display-block rz-ms-2">
                                                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.NoWrap" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
                                                             <RadzenIcon Icon="@(icon)" />
-                                                            @dataSolicitud.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
+                                                            @dataSolicitud.SolIdEstadoSolicitudNavigation.EdosolNombreEstado
                                                         </RadzenStack>
                                                     </RadzenBadge>
                                                 </div>
@@ -251,7 +251,7 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Nombre Completo" Property="@(nameof(RequestDTO_Usuario.UsuNombre))" Pickable="false"
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Nombre Completo" Property="@(nameof(RequestDTO_Usuario.UsuNombres))" Pickable="false"
                                   Filterable="true" Frozen="true" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Start" Width="200px">
                 <HeaderTemplate>
                     @* <span data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="popover-dark" class="d-block"
@@ -269,14 +269,14 @@
                     {
                         <div class="text-wrap">
                             <text>
-                                <strong>@item.UsuNombre @item.UsuPrimerApellido @item.UsuSegundoApellido</strong>
+                                <strong>@item.UsuNombres @item.UsuPrimerApellido @item.UsuSegundoApellido</strong>
                             </text>
                             <br />
                             <small>
                                 @item.UsuIdTipoPersonalNavigation?.TipoperNombre
                                 @(item.UsuIdTipoPersonal == 2 ? $@" en {item.UsuAnioEgreso} " : "")
                                 <div class="text-end">
-                                    <b>Alta:</b> @item.UsuFechaHoraAlta?.ToString("dd/MMM/yyyy HH:mm 'hrs.'")
+                                    <b>Alta:</b> @item.UsuFechaHoraAlta.ToString("dd/MMM/yyyy HH:mm 'hrs.'")
                                 </div>
                             </small>
                         </div>
@@ -285,14 +285,14 @@
                     {
                         <div class="text-wrap">
                             <del>
-                                <strong>@item.UsuNombre @item.UsuPrimerApellido @item.UsuSegundoApellido</strong>
+                                <strong>@item.UsuNombres @item.UsuPrimerApellido @item.UsuSegundoApellido</strong>
                             </del>
                             <br />
                             <small>
                                 @item.UsuIdTipoPersonalNavigation?.TipoperNombre
                                 @(item.UsuIdTipoPersonal == 2 ? $@" en {item.UsuAnioEgreso} " : "")
                                 <div class="text-end">
-                                    <b>Alta:</b> @item.UsuFechaHoraAlta?.ToString("dd/MMM/yyyy HH:mm 'hrs.'")
+                                    <b>Alta:</b> @item.UsuFechaHoraAlta.ToString("dd/MMM/yyyy HH:mm 'hrs.'")
                                 </div>
                             </small>
                         </div>
@@ -311,7 +311,7 @@
                 </HeaderTemplate>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Boleta de Licenciatura" Property="@nameof(RequestDTO_Usuario.UsuBoletaAlumno)" Pickable="false"
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Boleta de Licenciatura" Property="@nameof(RequestDTO_Usuario.UsuBoletaAlumnoEgresado)" Pickable="false"
                                   Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="100px">
                 <HeaderTemplate>
                     <RadzenButton Text="BOLETA LICENCIATURA" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
@@ -322,12 +322,12 @@
                 </HeaderTemplate>
                 <Template Context="item">
                     <div class="text-wrap">
-                        @((item.UsuIdTipoPersonal == 1 || item.UsuIdTipoPersonal == 2) ? $"{item.UsuBoletaAlumno}" : "sin asignar")
+                        @((item.UsuIdTipoPersonal == 1 || item.UsuIdTipoPersonal == 2) ? $"{item.UsuBoletaAlumnoEgresado}" : "sin asignar")
                     </div>
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="No. de Celular" Property="UsuNoCelularNuevo" Pickable="false"
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="No. de Celular" Property="UsuNoCelularActual" Pickable="false"
                                   Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Visible="true" Width="110px">
                 <HeaderTemplate>
                     <RadzenButton Text="NO. CELULAR (Filtro y búsqueda por el No. Celular Actual)" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
@@ -338,14 +338,14 @@
                 </HeaderTemplate>
                 <Template Context="item">
                     <div class="text-end text-wrap">
-                        <strong>Actual:</strong> @(!string.IsNullOrEmpty(item.UsuNoCelularNuevo) ? @$"{@item.UsuNoCelularNuevo}" : "no asignado")
+                        <strong>Actual:</strong> @(!string.IsNullOrEmpty(item.UsuNoCelularActual) ? @$"{@item.UsuNoCelularActual}" : "no asignado")
                         <br />
                         <strong>Anterior:</strong> @(!string.IsNullOrEmpty(item.UsuNoCelularAnterior) ? $"{@item.UsuNoCelularAnterior}" : "no asignado")
                     </div>
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Correo Electrónico Personal" Property="UsuCorreoPersonalCuentaNueva" Pickable="false"
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Correo Electrónico Personal" Property="UsuCorreoPersonalCuentaActual" Pickable="false"
                                   Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="150px">
                 <HeaderTemplate>
                     <RadzenButton Text="CORREO PERSONAL (Filtro y búsqueda por el Correo Electrónico Personal Actual)" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
@@ -356,7 +356,7 @@
                 </HeaderTemplate>
                 <Template Context="item">
                     <div class="text-start text-wrap">
-                        <strong>Actual:</strong> @(!string.IsNullOrEmpty(item.UsuCorreoPersonalCuentaNueva) ? @$"{@item.UsuCorreoPersonalCuentaNueva}" : "no asignado")
+                        <strong>Actual:</strong> @(!string.IsNullOrEmpty(item.UsuCorreoPersonalCuentaActual) ? @$"{@item.UsuCorreoPersonalCuentaActual}" : "no asignado")
                         <br />
                         <strong>Anterior:</strong> @(!string.IsNullOrEmpty(item.UsuCorreoPersonalCuentaAnterior) ? $"{@item.UsuCorreoPersonalCuentaAnterior}" : "no asignado")
                     </div>
@@ -415,7 +415,7 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Boleta Posgrado" Property="UsuBoletaMaestria"
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Boleta Posgrado" Property="UsuBoletaPosgrado"
                                   Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="100px" Visible="false">
                 <HeaderTemplate>
                     <RadzenButton Text="BOLETA POSGRADO" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
@@ -426,12 +426,12 @@
                 </HeaderTemplate>
                 <Template Context="item">
                     <div class="text-wrap">
-                        @((item.UsuIdTipoPersonal == 3) ? $"{item.UsuBoletaMaestria}" : "sin asignar")
+                        @((item.UsuIdTipoPersonal == 3) ? $"{item.UsuBoletaPosgrado}" : "sin asignar")
                     </div>
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="No. de Empleado / Contrato" Property="UsuNumeroEmpleado"
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="No. de Empleado / Contrato" Property="UsuNumeroEmpleadoContrato"
                                   Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="100px" Visible="false">
                 <HeaderTemplate>
                     <RadzenButton Text="NO. EMPLEADO / CONTRATO" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
@@ -442,7 +442,7 @@
                 </HeaderTemplate>
                 <Template Context="item">
                     <div class="text-wrap">
-                        @((item.UsuIdTipoPersonal == 4 || item.UsuIdTipoPersonal == 5 || item.UsuIdTipoPersonal == 6) ? $"{item.UsuNumeroEmpleado}" : "-")
+                        @((item.UsuIdTipoPersonal == 4 || item.UsuIdTipoPersonal == 5 || item.UsuIdTipoPersonal == 6) ? $"{item.UsuNumeroEmpleadoContrato}" : "-")
                     </div>
                 </Template>
             </RadzenDataGridColumn>
@@ -463,7 +463,7 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="No. Extensión" Property="@(nameof(RequestDTO_Usuario.UsuNoExtension))"
+            <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="No. Extensión" Property="@(nameof(RequestDTO_Usuario.UsuNoExtensionActual))"
                                   Filterable="true" Frozen="false" Reorderable="true" Resizable="true" Sortable="true" TextAlign="TextAlign.Center" Width="100px" Visible="false">
                 <HeaderTemplate>
                     <RadzenButton Text="NO. EXTENSIÓN" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
@@ -623,10 +623,10 @@
             MensajeCarga();
 
             result.Value.UsuCurp = result.Value.UsuCurp.ToUpper();
-            result.Value.UsuNombre = result.Value.UsuNombre.ToUpper();
+            result.Value.UsuNombres = result.Value.UsuNombres.ToUpper();
             result.Value.UsuPrimerApellido = result.Value.UsuPrimerApellido.ToUpper();
-            result.Value.UsuSegundoApellido = result.Value.UsuSegundoApellido ?? "".ToUpper();
-            result.Value.UsuCorreoPersonalCuentaNueva = result.Value.UsuCorreoPersonalCuentaNueva.ToLower();
+            result.Value.UsuSegundoApellido = result.Value.UsuSegundoApellido?.ToUpper();
+            result.Value.UsuCorreoPersonalCuentaActual = result.Value.UsuCorreoPersonalCuentaActual.ToLower();
             result.Value.UsuContrasenia = Encrypt.GetSHA256(result.Value.UsuContrasenia);
 
             HttpResponseMessage response = await servicioUsuario.AddDataAsync(result.Value);
@@ -641,15 +641,20 @@
 
     private async Task Editar(RequestDTO_Usuario item)
     {
+        item.UsuIdRolNavigation = null;
+        item.UsuIdTipoPersonalNavigation = null;
+        item.UsuIdCarreraNavigation = null;
+        item.UsuIdAreaDeptoNavigation = null;
+
         string json = JsonSerializer.Serialize(item);
         RequestDTO_Usuario? registro = JsonSerializer.Deserialize<RequestDTO_Usuario>(json);
 
-        List<string> mensajes = new List<string>();
+        List<string> mensajes = new();
         string? error = null;
 
         if (registro is not null)
         {
-            DocumentoAdjunto<RequestDTO_Usuario>? result = await MostrarFormulario(registro, $"Editar registro de {registro.UsuNombre}");
+            DocumentoAdjunto<RequestDTO_Usuario>? result = await MostrarFormulario(registro, $"Editar registro de {registro.UsuNombres}");
 
             if (result is not null)
             {
@@ -684,9 +689,9 @@
             (
                 "Confirmar",
                 new Dictionary<string, object>()
-                                            {
-                    {"mensaje" , $"¿Desea {des}habilitar el registro de {item.UsuNombre} {item.UsuPrimerApellido} {item.UsuSegundoApellido}?" }
-                                            },
+                {
+                    { "mensaje" , $"¿Desea {des}habilitar el registro de {item.UsuNombres} {item.UsuPrimerApellido} {item.UsuSegundoApellido}?" }
+                },
                 new DialogOptions() { ShowClose = false }
             );
 

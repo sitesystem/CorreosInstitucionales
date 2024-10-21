@@ -32,5 +32,5 @@ public partial class McCatRole
 
     [JsonIgnore]
     [InverseProperty("UsuIdRolNavigation")]
-    public virtual ICollection<MpTbUsuario> MpTbUsuarios { get; set; } = new List<MpTbUsuario>();
+    public virtual ICollection<MpTbUsuario> MpTbUsuarios { get; set; } = [];
 }

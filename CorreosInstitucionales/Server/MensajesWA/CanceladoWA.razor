@@ -4,7 +4,7 @@
 🚫 *Solicitud Cancelada*
 
 Saludos:
-*@usuario.UsuNombre @usuario.UsuPrimerApellido @usuario.UsuSegundoApellido*
+*@usuario.UsuNombres.Trim() @usuario.UsuPrimerApellido.Trim() @usuario.UsuSegundoApellido?.Trim()*
 
 Por medio del presente nos permitimos informarle que su
 solicitud de No. de Ticket *#@solicitud.IdSolicitudTicket,*
@@ -14,7 +14,8 @@ ha sido cancelada por el siguiente motivo:
 
 Sin más por el momento que tenga un excelente día.
 > NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
-@code {
+@code
+{
     [Parameter] public MtTbSolicitudesTicket solicitud { get; set; } = new() { SolIdUsuarioNavigation = new() };
     MpTbUsuario usuario { get { return solicitud.SolIdUsuarioNavigation; } }
 }

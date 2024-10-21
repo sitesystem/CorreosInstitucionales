@@ -74,7 +74,7 @@
                                     <RadzenFormField Text="Correo Electrónico Personal" Placeholder="Email" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-3" MaxLength="100" Disabled="false" AllowFloatingLabel="true">
                                         <Start><RadzenIcon Icon="email" /></Start>
                                         <ChildContent>
-                                            <RadzenTextBox Name="email_usuario" @bind-Value="@oLoginCredentials.UsuCorreoPersonal" ReadOnly="false"
+                                            <RadzenTextBox Name="email_usuario" @bind-Value="@oLoginCredentials.UsuCorreoPersonal" ReadOnly="false" AutoCompleteType="AutoCompleteType.On"
                                                            Attributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )" />
                                         </ChildContent>
                                         <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
@@ -84,8 +84,8 @@
                                     <RadzenFormField Text="Contraseña" Placeholder="Password" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-5" MaxLength="50" Disabled="false" AllowFloatingLabel="true">
                                         <Start><RadzenIcon Icon="vpn_key" /></Start>
                                         <ChildContent>
-                                            <RadzenTextBox Name="visiblePassword" @bind-Value="@oLoginCredentials.UsuContrasenia" Visible="@(!password)" />
-                                            <RadzenPassword Name="noVisiblePassword" @bind-Value="@oLoginCredentials.UsuContrasenia" Visible="@password" />
+                                            <RadzenTextBox Name="visiblePassword" @bind-Value="@oLoginCredentials.UsuContrasenia" AutoCompleteType="AutoCompleteType.NewPassword" Visible="@(!password)" />
+                                            <RadzenPassword Name="noVisiblePassword" @bind-Value="@oLoginCredentials.UsuContrasenia" AutoCompleteType="AutoCompleteType.NewPassword" Visible="@password" />
                                         </ChildContent>
                                         <End>
                                             <RadzenButton Icon="@(password ? "visibility" : "visibility_off")"
@@ -117,15 +117,15 @@
                                     <RadzenFormField Text="Correo Electrónico Personal" Placeholder="Email" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-3" MaxLength="100" MinLength="0" Disabled="false">
                                         <Start><RadzenIcon Icon="email" /></Start>
                                         <ChildContent>
-                                            <RadzenTextBox Name="email_reset" @bind-Value="@oRecuperarContraseñaCorreo.CorreoElectronicoPersonal" />
+                                            <RadzenTextBox Name="email_reset" @bind-Value="@oRecuperarContraseñaCorreo.CorreoElectronicoPersonal" AutoCompleteType="AutoCompleteType.On" />
                                         </ChildContent>
                                         <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption"/></Helper>
                                     </RadzenFormField>
 
-                                    <RadzenFormField Text="CURP" Placeholder="" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-4" Disabled="false">
+                                    <RadzenFormField Text="CURP" Placeholder="" AllowClear="true" Variant="Variant.Outlined" class="w-100 mt-4">
                                         <Start><RadzenIcon Icon="document_scanner" /></Start>
                                         <ChildContent>
-                                            <RadzenTextBox Name="curp_reset" @bind-Value="@oRecuperarContraseñaCorreo.Curp" MinLength="0" MaxLength="18"
+                                            <RadzenTextBox Name="curp_reset" @bind-Value="@oRecuperarContraseñaCorreo.Curp" MinLength="0" MaxLength="18" AutoCompleteType="AutoCompleteType.On"
                                                            @oninput="@((e) => oRecuperarContraseñaCorreo.Curp = e.Value.ToString().ToUpper())"
                                                            onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                                         </ChildContent>
@@ -322,19 +322,6 @@
     protected override async Task OnInitializedAsync()
     {
         oEscuela = await servicioEscuela.GetDataByIdAsync(1);
-
-        // if (DateTime.Today < new DateTime(2024, 10, 3))
-        //     @*//  NOTIFICATION TOAST ACTUALIZACIÓN PLATAFORMA SACI  //*@
-        //     NotificationService.Notify(
-        //         new NotificationMessage
-        //         {
-        //             Severity = NotificationSeverity.Warning,
-        //             Duration = 10000,
-        //             SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">Actualización de la Plataforma SACI: <br /> 01/10/2024</RadzenText>,
-        //             DetailContent = ns => @<RadzenButton Text="Cerrar" Click="@(args => ns.Messages.Clear())" />
-        //             // Summary = "¡Title!",
-        //             // Detail = "Content"
-        //         });
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -426,7 +413,7 @@
 
                 errorMsgVisible = false;
 
-                if (oRespuesta.Success == 1)
+                if (respuesta.IsSuccessStatusCode && oRespuesta!.Success == 1)
                 {
                     @*//  NOTIFICATION TOAST RECUPERACIÓN DE CONTRASEÑA TEMPORAL EXITOSA  //*@
                     NotificationService.Notify(
@@ -454,7 +441,7 @@
                             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="">
                                 <RadzenStack Gap="0px">
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@($@"{oRespuesta.Data.UsuNombre} {oRespuesta.Data.UsuPrimerApellido} {oRespuesta.Data.UsuSegundoApellido}")</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1"><b>@($@"{oRespuesta.Data?.UsuNombres} {oRespuesta.Data?.UsuPrimerApellido} {oRespuesta.Data?.UsuSegundoApellido}")</b></RadzenText>
                                 </RadzenStack>
                                 <RadzenAlert Title="Atención:" Text="Se le notificará por las vías de comunicación con la nueva contraseña temporal." AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false" class="my-2" />
                                 <RadzenButton Text="Cerrar"
@@ -484,12 +471,12 @@
                         });
 
                     @*//  ENVÍO DE WHATSAPP PARA AVISO DE RECUPERACIÓN DE CONTRASEÑA TEMPORAL EXITOSA  //*@
-                    oSendWhatsApp.Number = oRespuesta.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
+                    oSendWhatsApp.Number = oRespuesta!.Data!.UsuNoCelularActual!.Replace(" ", string.Empty);
                     oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                            "Estimad@:\n*" + oRespuesta.Data.UsuNombre + " " + oRespuesta.Data.UsuPrimerApellido + " " + oRespuesta.Data.UsuSegundoApellido + ".*\n\n" +
-                                            "Se le informa que se recuperó con éxito sus _Credenciales de Acceso_ en la *PLATAFORMA SACI*:\n" +
-                                            "  ✉ Usuario:\n               *" + oRespuesta.Data.UsuCorreoPersonalCuentaNueva + "*\n" +
+                                            "Estimad@:\n*" + oRespuesta.Data.UsuNombres.Trim() + " " + oRespuesta.Data.UsuPrimerApellido.Trim() + " " + oRespuesta.Data.UsuSegundoApellido?.Trim() + ".*\n\n" +
+                                            "Se le informa que se recuperó con éxito sus _Credenciales de Acceso_ en la *PLATAFORMA SACI*:\n\n" +
+                                            "  ✉ Usuario:\n               *" + oRespuesta.Data.UsuCorreoPersonalCuentaActual + "*\n" +
                                             "  🔑 Contraseña:\n               *" + oRespuesta.Message + "*\n\n" +
                                             "La contraseña que se le generó es de forma temporal, por lo que al momento de accesar a la Plataforma SACI se le solicitará que cambie su contraseña.\n\n" +
                                             "> Que tenga un excelente día.\n" +
@@ -507,9 +494,9 @@
 	                    </header>
 
                         <p style='text-align:justify; color:black;'>ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
-                            Estimad@:<br><b>{oRespuesta.Data.UsuNombre} {oRespuesta.Data.UsuPrimerApellido} {oRespuesta.Data.UsuSegundoApellido}</b><br><br>
+                            Estimad@:<br><b>{oRespuesta.Data.UsuNombres} {oRespuesta.Data.UsuPrimerApellido} {oRespuesta.Data.UsuSegundoApellido}</b><br><br>
                             Se le informa que se recuperó con éxito sus credenciales de la <b>Plataforma SACI</b> de la
-                            Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>,
+                            Unidad Académica <b>{oEscuela?.Data?.EscNombreCorto} ({oEscuela?.Data?.EscNombreLargo})</b>,
                             por este medio se le hace entrega de sus credenciales de acceso.<br>
                         </p>
 
@@ -525,7 +512,7 @@
 							            <tbody>
 								            <tr style='background-color: #ffffff;'>
 									            <td width='250px' style='border: 1px solid black;'>✉️ Usuario:</td>
-									            <td width='250px' style='border: 1px solid black;'><b>{oRespuesta.Data.UsuCorreoPersonalCuentaNueva}</b></td>
+									            <td width='250px' style='border: 1px solid black;'><b>{oRespuesta.Data.UsuCorreoPersonalCuentaActual}</b></td>
 								            </tr>
 								            <tr style='background-color: #dddddd;'>
 									            <td width='250px' style='border: 1px solid black;'>🔑 Contraseña:</td>
@@ -571,7 +558,7 @@
                 else
                 {
                     errorMsgVisible = true;
-                    contentErrorMsg = oRespuesta.Message;
+                    contentErrorMsg = oRespuesta!.Message;
                 }
             }
             catch (HttpRequestException e)

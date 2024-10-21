@@ -1,7 +1,7 @@
 ﻿using System.IO.Compression;
 using System.Text;
 
-namespace CorreosInstitucionales.Shared.Utils
+namespace CorreosInstitucionales.Shared.CapaTools
 {
     public static class ServerFS
     {
@@ -26,7 +26,6 @@ namespace CorreosInstitucionales.Shared.Utils
         {
             bool result = false;
 
-
             return result;
         }
 
@@ -38,11 +37,11 @@ namespace CorreosInstitucionales.Shared.Utils
 
             string? log = null;
 
-            List<string> messages = new();// [$"PATH: {Path.GetFullPath(".")}"];
+            List<string> messages = []; // [$"PATH: {Path.GetFullPath(".")}"];
 
-            using (FileStream fs = new FileStream($"{basedir}/{filename}", FileMode.CreateNew))
+            using (FileStream fs = new($"{basedir}/{filename}", FileMode.CreateNew))
             {
-                using (ZipArchive za = new ZipArchive(fs, ZipArchiveMode.Create, true))
+                using (ZipArchive za = new(fs, ZipArchiveMode.Create, true))
                 {
                     foreach (WebUtils.Link file in files)
                     {
@@ -66,14 +65,10 @@ namespace CorreosInstitucionales.Shared.Utils
                         log = string.Join(Environment.NewLine, messages);
 
                         ZipArchiveEntry logfile = za.CreateEntry("mensajes.log");
-                        using (Stream stream = logfile.Open())
-                        {
-                            using (StreamWriter sw = new StreamWriter(stream, Encoding.UTF8))
-                            {
-                                sw.Write(log);
-                                sw.Flush();
-                            }
-                        }
+                        using Stream stream = logfile.Open();
+                        using StreamWriter sw = new(stream, Encoding.UTF8);
+                        sw.Write(log);
+                        sw.Flush();
                     }
                 }
 

@@ -120,7 +120,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
             try
             {
                 McCatTiposSolicitud? oTipoSolicitud = await _db.McCatTiposSolicituds.FindAsync(id);
-                //db.Remove(oPersona);
+                // db.Remove(oPersona);
 
                 if (oTipoSolicitud != null)
                 {

@@ -35,7 +35,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.10" PrivateAssets="all" />
-    <PackageReference Include="Radzen.Blazor" Version="5.2.12" />
+    <PackageReference Include="Radzen.Blazor" Version="5.3.1" />
     <PackageReference Include="Toolbelt.Blazor.PWA.Updater" Version="2.1.0.1" />
   </ItemGroup>
 
@@ -48,9 +48,5 @@
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties wwwroot_4css_4bootstrap_4bootstrap_1min_1css_1map__JsonSchema="" /></VisualStudio></ProjectExtensions>
-
-  <ItemGroup>
-    <None Include="CapaPresentationComponentsPagesUI_UX\Debug\Pruebas.razor" />
-  </ItemGroup>
 
 </Project>

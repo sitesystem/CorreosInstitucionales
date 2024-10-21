@@ -8,14 +8,14 @@
             @*************************** Levantamiento del Nuevo Ticket ***************************@
             <RadzenPanelMenuItem Text="Nueva Solicitud de Ticket" Icon="local_offer" IconColor="@Colors.Warning" Path="NuevaSolicitudTicket" class="nav-menu-hover rz-border-base-800" />
             @*************************** Solicitudes (Ticket's) Pendientes y Atendidas ***************************@
-            <RadzenPanelMenuItem Text="@($@"Historial de Solicitudes")" Icon="hourglass_bottom" IconColor="@Colors.SuccessLight" Path="HistorialSolicitudesTickets" Click="@(CargarSolicitudesUsuario)" class="nav-menu-hover rz-border-base-800">
+            <RadzenPanelMenuItem Text="@($@"Historial de Solicitudes")" Icon="hourglass_bottom" IconColor="@Colors.SuccessLight" Path="HistorialSolicitudesTickets" Click="@(LoadCountTicketsByIdUsuario)" class="nav-menu-hover rz-border-base-800">
                 <Template>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Historial de Solicitudes&ensp;
                         @{
-                            if (!string.IsNullOrEmpty(oSolicitudesByIdUsuario?.Message))
+                            if (oCountTicketsByIdUsuario is not null && !string.IsNullOrEmpty(oCountTicketsByIdUsuario?.Message))
                             {
-                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesByIdUsuario?.Message} Tickets")" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Default)" IsPill="true" class="text-end" />
+                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oCountTicketsByIdUsuario?.Message} Tickets")" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
                             else
                             {
@@ -41,14 +41,14 @@
         @*************************** Módulo de Solicitudes (Tickets) ***************************@
         <RadzenPanelMenuItem Text="Solicitudes de Tickets" Icon="bookmarks" IconColor="@Colors.PrimaryLight" Style="font-size:16px;" Expanded="true" class="nav-menu-hover">
             @*************************** Solicitudes (Ticket's) Pendientes ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" IconColor="@Colors.PrimaryLight" Path="SolicitudesPendientes" Click="@(CargarSolicitudesAdministrador)" class="nav-menu-hover rz-border-base-800">
+            <RadzenPanelMenuItem Text="Solicitudes Pendientes" Icon="sell" IconColor="@Colors.PrimaryLight" Path="SolicitudesPendientes" Click="@(LoadCountTicketsByProgress)" class="nav-menu-hover rz-border-base-800">
                 <Template>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Solicitudes Pendientes&ensp;
                         @{
-                            if (!string.IsNullOrEmpty(oSolicitudesTicketsPendientes?.Message))
+                            if (oCountTicketsByPendientes is not null && !string.IsNullOrEmpty(oCountTicketsByPendientes?.Message))
                             {
-                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsPendientes?.Message}")" BadgeStyle="@(BadgeStyle.Warning)" Shade="@(Shade.Default)" IsPill="true" class="text-end" />
+                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oCountTicketsByPendientes?.Message}")" BadgeStyle="@(BadgeStyle.Warning)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
                             else
                             {
@@ -62,14 +62,14 @@
                 </Template>
             </RadzenPanelMenuItem>
             @*************************** Solicitudes (Ticket's) en Proceso ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes en Proceso" Icon="hourglass_empty" IconColor="@Colors.Warning" Path="SolicitudesProceso" Click="@(CargarSolicitudesAdministrador)" class="nav-menu-hover rz-border-base-800">
+            <RadzenPanelMenuItem Text="Solicitudes en Proceso" Icon="hourglass_empty" IconColor="@Colors.Warning" Path="SolicitudesProceso" Click="@(LoadCountTicketsByProgress)" class="nav-menu-hover rz-border-base-800">
                 <Template>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Solicitudes en Proceso&ensp;
                         @{
-                            if (!string.IsNullOrEmpty(oSolicitudesTicketsEnProceso?.Message))
+                            if (oCountTicketsByEnProceso is not null && !string.IsNullOrEmpty(oCountTicketsByEnProceso?.Message))
                             {
-                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsEnProceso?.Message}")" BadgeStyle="@(BadgeStyle.Secondary)" Shade="@(Shade.Default)" IsPill="true" class="text-end" />
+                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oCountTicketsByEnProceso?.Message}")" BadgeStyle="@(BadgeStyle.Secondary)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
                             else
                             {
@@ -83,14 +83,14 @@
                 </Template>
             </RadzenPanelMenuItem>
             @*************************** Solicitudes (Ticket's) Atendidas ***************************@
-            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" IconColor="@Colors.SuccessLight" Path="SolicitudesAtendidas" Click="@(CargarSolicitudesAdministrador)" class="nav-menu-hover rz-border-base-800">
+            <RadzenPanelMenuItem Text="Solicitudes Atendidas" Icon="bookmark" IconColor="@Colors.SuccessLight" Path="SolicitudesAtendidas" Click="@(LoadCountTicketsByProgress)" class="nav-menu-hover rz-border-base-800">
                 <Template>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Solicitudes Atendidas&ensp;
                         @{
-                            if (!string.IsNullOrEmpty(oSolicitudesTicketsAtendidos?.Message))
+                            if (oCountTicketsByAtendidos is not null && !string.IsNullOrEmpty(oCountTicketsByAtendidos?.Message))
                             {
-                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oSolicitudesTicketsAtendidos?.Message}")" BadgeStyle="@(BadgeStyle.Success)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                                <RadzenBadge Variant="Variant.Flat" Text="@($"{oCountTicketsByAtendidos?.Message}")" BadgeStyle="@(BadgeStyle.Success)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
                             else
                             {
@@ -142,7 +142,26 @@
         </RadzenPanelMenuItem>
 
         @*************************** tbUsuarios ***************************@
-        <RadzenPanelMenuItem Text="Lista de Usuarios" Icon="people_alt" IconColor="@Colors.SecondaryLight" Style="font-size:16px;" Path="catalogo/usuarios" class="nav-menu-hover" />
+        <RadzenPanelMenuItem Text="Lista de Usuarios" Icon="people_alt" IconColor="@Colors.SecondaryLight" Style="font-size:16px;" Path="catalogo/usuarios" Click="@(LoadCountUsers)" class="nav-menu-hover">
+            <Template>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
+                    Lista de Usuarios&ensp;
+                    @{
+                        if (oCountUsers is not null && !string.IsNullOrEmpty(oCountUsers?.Message))
+                        {
+                            <RadzenBadge Variant="Variant.Flat" Text="@($"{oCountUsers?.Message}")" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Default)" IsPill="true" class="" />
+                        }
+                        else
+                        {
+                            <div class="spinner-border text-info spinner-border-sm" role="status">
+                                &emsp;<span class="visually-hidden">Loading...</span>
+                            </div>
+                            // <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" Min="0" Max="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.ExtraSmall" />
+                        }
+                    }
+                </RadzenStack>
+            </Template>
+        </RadzenPanelMenuItem>
         @*************************** Manual del Administrador ***************************@
         <RadzenPanelMenuItem Text="Manual de Uso" Icon="book" IconColor="@Colors.White" Style="font-size:16px;" Path="ManualUso" class="nav-menu-hover" />
     </Authorized>
@@ -162,10 +181,11 @@
     [Parameter] public bool isExpanded { get; set; }
     [Parameter] public bool isDisplayed { get; set; }
     int id;
-    private Response<List<RequestDTO_Solicitud>>? oSolicitudesByIdUsuario = new();
-    private Response<List<RequestDTO_Solicitud>>? oSolicitudesTicketsPendientes = new();
-    private Response<List<RequestDTO_Solicitud>>? oSolicitudesTicketsEnProceso = new();
-    private Response<List<RequestDTO_Solicitud>>? oSolicitudesTicketsAtendidos = new();
+    private Response<object>? oCountTicketsByIdUsuario = new();
+    private Response<object>? oCountTicketsByPendientes = new();
+    private Response<object>? oCountTicketsByEnProceso = new();
+    private Response<object>? oCountTicketsByAtendidos = new();
+    private Response<object>? oCountUsers = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -178,30 +198,31 @@
 
             if (Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value) == 1)
             {
-                await CargarSolicitudesAdministrador();
+                await LoadCountTicketsByProgress();
+                await LoadCountUsers();
             }
             else if (Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "Rol")?.Value) == 2)
             {
-                await CargarSolicitudesUsuario();
+                await LoadCountTicketsByIdUsuario();
             }
         }
     }
 
-    private async Task CargarSolicitudesAdministrador()
+    private async Task LoadCountUsers()
     {
-        oSolicitudesTicketsPendientes!.Message = null!;
-        oSolicitudesTicketsEnProceso!.Message = null!;
-        oSolicitudesTicketsAtendidos!.Message = null!;
-
-        oSolicitudesTicketsPendientes = await servicioSolicitud.GetAllDataByProgressAsync(new int[] { 2 });
-        oSolicitudesTicketsEnProceso = await servicioSolicitud.GetAllDataByProgressAsync(new int[] { 3 });
-        oSolicitudesTicketsAtendidos = await servicioSolicitud.GetAllDataByProgressAsync(new int[] { 4, 5, 6 });
+        oCountUsers = await servicioUsuario.GetCountDataAsync();
     }
 
-    private async Task CargarSolicitudesUsuario()
+    private async Task LoadCountTicketsByProgress()
     {
-        oSolicitudesByIdUsuario!.Message = null!;
-        oSolicitudesByIdUsuario = await servicioSolicitud.GetAllDataByIdUsuarioAsync(id);
+        oCountTicketsByPendientes = await servicioSolicitud.GetCountDataByProgressAsync(0, new int[] { 2 });
+        oCountTicketsByEnProceso = await servicioSolicitud.GetCountDataByProgressAsync(0, new int[] { 3 });
+        oCountTicketsByAtendidos = await servicioSolicitud.GetCountDataByProgressAsync(0, new int[] { 4, 5, 6 });
+    }
+
+    private async Task LoadCountTicketsByIdUsuario()
+    {
+        oCountTicketsByIdUsuario = await servicioSolicitud.GetCountDataByProgressAsync(id, new int[] { });
     }
 
     private async Task LogOut()

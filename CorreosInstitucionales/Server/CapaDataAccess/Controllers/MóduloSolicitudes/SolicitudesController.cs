@@ -6,11 +6,11 @@ using System.Linq.Dynamic.Core;
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Server.Correos;
 using CorreosInstitucionales.Server.MensajesWA;
+using CorreosInstitucionales.Server.Utils;
 
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Shared.CapaTools;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.Constantes;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
@@ -44,14 +44,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     list = await _db.MtTbSolicitudesTickets
                                     .Where(st => st.SolIdEstadoSolicitud != 6)
                                     .Include(u => u.SolIdUsuarioNavigation)
-                                        .ThenInclude(tp => tp.UsuIdTipoPersonalNavigation)
+                                        .ThenInclude(tp => tp!.UsuIdTipoPersonalNavigation)
                                     .Include(st => st.SolIdEstadoSolicitudNavigation)
                                     .Include(st => st.SolIdTipoSolicitud)
                                     .ToListAsync();
                 else
                     list = await _db.MtTbSolicitudesTickets
                                     .Include(u => u.SolIdUsuarioNavigation)
-                                        .ThenInclude(tp => tp.UsuIdTipoPersonalNavigation)
+                                        .ThenInclude(tp => tp!.UsuIdTipoPersonalNavigation)
                                     .Include(st => st.SolIdEstadoSolicitudNavigation)
                                     .Include(st => st.SolIdTipoSolicitudNavigation)
                                     .ToListAsync();
@@ -79,7 +79,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                                 st => progress.Contains(st.SolIdEstadoSolicitud)
                             )
                             .Include(st => st.SolIdUsuarioNavigation)
-                                .ThenInclude(tp => tp.UsuIdTipoPersonalNavigation)
+                                .ThenInclude(tp => tp!.UsuIdTipoPersonalNavigation)
+                            .Include(u => u.SolIdUsuarioNavigation)
+                                .ThenInclude(a => a!.UsuIdAreaDeptoNavigation)
                             .Include(st => st.SolIdEstadoSolicitudNavigation)
                             .Include(st => st.SolIdTipoSolicitudNavigation)
                             .ToListAsync();
@@ -112,6 +114,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                                 .Include(e => e.SolIdEstadoSolicitudNavigation)
                                 .OrderByDescending(st => st.IdSolicitudTicket)
                                 .ToListAsync();
+
                 oResponse.Success = 1;
                 oResponse.Message = list.Count.ToString();
                 oResponse.Data = list;
@@ -225,6 +228,31 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             return Ok(oResponse);
         }
 
+        [HttpPost("countDataByIdUserProgress/{idUser}")]
+        public async Task<IActionResult> GetCountDataByProgress(int idUser, int[] progress)
+        {
+            Response<object> oResponse = new();
+
+            try
+            {
+                var count = 0;
+
+                if (idUser == 0)
+                    count = await _db.MtTbSolicitudesTickets.Where(st => progress.Contains(st.SolIdEstadoSolicitud)).CountAsync();
+                else
+                    count = await _db.MtTbSolicitudesTickets.Where(st => st.SolIdUsuario.Equals(idUser)).CountAsync();
+
+                oResponse.Message = count.ToString();
+                oResponse.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddData(RequestDTO_Solicitud model)
         {
@@ -238,17 +266,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 if (oUsuario != null)
                 {
                     oUsuario.UsuFileNameCurp = model.SolFileNameCurp;
-                    oUsuario.UsuFileNameComprobanteInscripcion = model.SolFileNameComprobanteInscripcion;
+                    oUsuario.UsuFileNameComprobanteEstudios = model.SolFileNameComprobanteInscripcion;
 
                     if (model.SolIdTipoSolicitud == 2)
                     {
-                        oUsuario.UsuCorreoPersonalCuentaAnterior = model.SolCorreoPersonalCuentaAnterior.Trim();
-                        oUsuario.UsuCorreoPersonalCuentaNueva = model.SolCorreoPersonalCuentaActual.Trim();
+                        oUsuario.UsuCorreoPersonalCuentaAnterior = model.SolCorreoPersonalCuentaAnterior?.Trim();
+                        oUsuario.UsuCorreoPersonalCuentaActual = model.SolCorreoPersonalCuentaActual!.Trim();
                     }
                     else if (model.SolIdTipoSolicitud == 3)
                     {
                         oUsuario.UsuNoCelularAnterior = model.SolNoCelularAnterior;
-                        oUsuario.UsuNoCelularNuevo = model.SolNoCelularActual;
+                        oUsuario.UsuNoCelularActual = model.SolNoCelularActual!;
                     }
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
@@ -274,9 +302,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     SolFechaHoraEncuesta = model.SolFechaHoraEncuesta,
                     SolRespuestaDcyC = model.SolRespuestaDcyC,
                     SolFechaHoraCreacion = DateTime.Now,
-                    SolIdTipoSolicitudNavigation = null,
-                    SolIdUsuarioNavigation = null,
-                    SolIdEstadoSolicitudNavigation = null,
+                    // DATOS FK NAVIGATION
+                    SolIdTipoSolicitudNavigation = null!,
+                    SolIdUsuarioNavigation = null!,
+                    SolIdEstadoSolicitudNavigation = null!,
                 };
 
                 await _db.MtTbSolicitudesTickets.AddAsync(oSolicitud);
@@ -284,7 +313,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 oResponse.Success = 1;
 
                 oCreatedAtActionResult = CreatedAtAction(nameof(AddData), new { id = oSolicitud.IdSolicitudTicket }, oSolicitud);
-                oResponse.Message = oSolicitud.IdSolicitudTicket.ToString(); // PK ID Único de la Solicitud-Ticket Creado o dado de Alta
+                oResponse.Message = oSolicitud.IdSolicitudTicket.ToString(); // PK ID Único de la Solicitud-Ticket creado o dado de alta
             }
             catch (Exception ex)
             {
@@ -305,8 +334,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
                 if (oSolicitud != null)
                 {
-                    oSolicitud.SolIdTipoSolicitud = model.SolIdTipoSolicitud;
-                    oSolicitud.SolToken = model.SolToken;
+                    // oSolicitud.SolToken = model.SolToken;
                     oSolicitud.SolIdTipoSolicitud = model.SolIdTipoSolicitud;
                     oSolicitud.SolIdUsuario = model.SolIdUsuario;
                     oSolicitud.SolCapturaEscaneoAntivirus = model.SolCapturaEscaneoAntivirus;
@@ -314,19 +342,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     oSolicitud.SolCapturaError = model.SolCapturaError;
                     oSolicitud.SolObservacionesSolicitud = model.SolObservacionesSolicitud;
                     oSolicitud.SolIdEstadoSolicitud = model.SolIdEstadoSolicitud;
-                    oSolicitud.SolFechaHoraActualizacion = model.SolFechaHoraActualizacion;
+                    oSolicitud.SolFechaHoraActualizacion = DateTime.Now;
                     oSolicitud.SolValidacionDatos = model.SolValidacionDatos;
                     oSolicitud.SolEnvioEncuesta = model.SolEnvioEncuesta;
                     oSolicitud.SolEncuestaCalidadCalificacion = model.SolEncuestaCalidadCalificacion;
                     oSolicitud.SolEncuestaCalidadComentarios = model.SolEncuestaCalidadComentarios;
                     oSolicitud.SolFechaHoraEncuesta = model.SolFechaHoraEncuesta;
                     oSolicitud.SolRespuestaDcyC = model.SolRespuestaDcyC;
-                    // oSolicitud.SolFechaHoraCreacion = model.SolFechaHoraCreacion;
-                    oSolicitud.SolIdEstadoSolicitudNavigation = null;
-                    oSolicitud.SolIdTipoSolicitudNavigation = null;
-                    oSolicitud.SolIdUsuarioNavigation = null;
-
-                    oSolicitud.SolFechaHoraActualizacion = DateTime.Now;
+                    // oSolicitud.SolFechaHoraCreacion = DateTime.Now;
+                    oSolicitud.SolIdTipoSolicitudNavigation = null!;
+                    oSolicitud.SolIdUsuarioNavigation = null!;
+                    oSolicitud.SolIdEstadoSolicitudNavigation = null!;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
@@ -350,7 +376,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             try
             {
                 MtTbSolicitudesTicket? oSolicitud = await _db.MtTbSolicitudesTickets.FindAsync(id);
-                //db.Remove(oPersona);
+                // db.Remove(oPersona);
 
                 if (oSolicitud != null)
                 {
@@ -379,15 +405,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             try
             {
                 MtTbSolicitudesTicket? oSolicitud = await _db.MtTbSolicitudesTickets.FindAsync(model.IdSolicitud);
-                //db.Remove(oPersona);
 
                 if (oSolicitud != null)
                 {
                     oSolicitud.SolIdEstadoSolicitud = 5;
+                    //oSolicitud.SolFechaHoraActualizacion = DateTime.Now; // No se actualiza la Fecha Hora de Encuesta Contestada ya tiene su campo SolFechaHoraEncuesta
                     oSolicitud.SolEncuestaCalidadCalificacion = model.Calificacion;
                     oSolicitud.SolEncuestaCalidadComentarios = model.Comentarios.Trim();
                     oSolicitud.SolFechaHoraEncuesta = DateTime.Now;
-                    oSolicitud.SolFechaHoraActualizacion = DateTime.Now;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
@@ -401,7 +426,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             }
 
             return Ok(oRespuesta);
-        }//ENCUESTA DE CALIDAD
+        } // ENCUESTA DE CALIDAD
 
         [HttpGet("generar_random")]
         public async Task<IActionResult> GenerarSolicitudes()
@@ -410,7 +435,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             MtTbSolicitudesTicket oSolicitud;
             TipoDocumento[] documentos = [];
 
-            int[] terminados = 
+            int[] terminados =
             [
                 (int)TipoEstadoSolicitud.ATENDIDA,
                 (int)TipoEstadoSolicitud.ENCUESTA_CALIDAD,
@@ -435,10 +460,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     .ToListAsync();
 
                 int tipo_solicitud;
-                Random rnd = new Random();
+                Random rnd = new();
                 string uid = string.Empty;
                 int estado_pendiente = (int)TipoEstadoSolicitud.PENDIENTE;
-
 
                 foreach (MpTbUsuario pendiente in pendientes)
                 {
@@ -473,13 +497,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 await _db.SaveChangesAsync();
                 oRespuesta.Success = 1;
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 oRespuesta.Message = ex.Message + Environment.NewLine + ex.StackTrace;
             }
 
             return Ok(oRespuesta);
-        }// GENERAR SOLICITUDES
+        } // GENERAR SOLICITUDES
 
         [HttpPatch("finalizar")]
         public async Task<IActionResult> FinalizarSolicitud(RequestDTO_FinalizarSolicitud oFinalizarSolicitud) // KeyValuePair<int, string> datos)
@@ -492,12 +517,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             try
             {
                 oSolicitud = await _db.MtTbSolicitudesTickets!
-                                    .Where(st => st.IdSolicitudTicket == oFinalizarSolicitud.IdSolicitud)
-                                    .Include(u => u.SolIdUsuarioNavigation)
-                                    .FirstAsync();
+                                      .Where(st => st.IdSolicitudTicket == oFinalizarSolicitud.IdSolicitud)
+                                      .Include(u => u.SolIdUsuarioNavigation)
+                                      .FirstAsync();
 
                 //FindAsync(oFinalizarSolicitud.IdSolicitud); // (datos.Key)
-                //db.Remove(oPersona);
 
                 if (oSolicitud is not null)
                 {
@@ -508,6 +532,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     _db.Entry(oSolicitud).State = EntityState.Modified;
                     guardados = await _db.SaveChangesAsync();
                 }
+
                 if (guardados == 1)
                 {
                     oRespuesta.Success = 1;
@@ -520,14 +545,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             }
 
             return Ok(oRespuesta);
-        }
-        // CANCELAR
+        } // CANCELAR
 
         [HttpPost("notificar")]
         public async Task<IActionResult> Notificar(MtTbSolicitudesTicket solicitud, TipoEstadoSolicitud estado)
         {
             Response<object> oRespuesta = new();
-            string correo_personal = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaNueva;
+            string correo_personal = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaActual;
             
             if (Dominios.EsCorreoDePrueba(correo_personal))
             {
@@ -537,9 +561,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
             try
             {
-                ComponentRenderer renderer = new ComponentRenderer(_serviceProvider);
+                ComponentRenderer renderer = new(_serviceProvider);
 
-                Dictionary<string, object?> variables_correo = new Dictionary<string, object?>
+                Dictionary<string, object?> variables_correo = new()
                 {
                     { "solicitud", solicitud }
                 };
@@ -551,7 +575,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
                 RequestDTO_SendWhatsApp mensaje = new()
                 {
-                    Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularNuevo.Replace(" ", string.Empty)
+                    Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularActual.Replace(" ", string.Empty)
                 };
 
                 switch(estado)

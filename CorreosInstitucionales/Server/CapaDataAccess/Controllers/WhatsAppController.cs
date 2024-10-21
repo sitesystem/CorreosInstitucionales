@@ -1,5 +1,4 @@
-﻿using CorreosInstitucionales.Shared.Utils;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Runtime.ConstrainedExecution;

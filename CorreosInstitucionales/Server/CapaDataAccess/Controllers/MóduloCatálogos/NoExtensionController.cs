@@ -27,16 +27,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                     list = await _db.McCatNoExtensions
                                     .Where(e => e.ExtStatus.Equals(filterByStatus))
                                     .Include(e => e.ExtIdAreaDeptoNavigation)
-                                    .ThenInclude(a => a.AreIdEdificioNavigation)
+                                        .ThenInclude(a => a!.AreIdEdificioNavigation)
                                     .Include(e => e.ExtIdAreaDeptoNavigation)
-                                    .ThenInclude(a => a.AreIdPisoNavigation)
+                                        .ThenInclude(a => a!.AreIdPisoNavigation)
                                     .ToListAsync();
                 else
                     list = await _db.McCatNoExtensions
                                     .Include(e => e.ExtIdAreaDeptoNavigation)
-                                    .ThenInclude(a => a.AreIdEdificioNavigation)
+                                        .ThenInclude(a => a!.AreIdEdificioNavigation)
                                     .Include(e => e.ExtIdAreaDeptoNavigation)
-                                    .ThenInclude(a => a.AreIdPisoNavigation)
+                                        .ThenInclude(a => a!.AreIdPisoNavigation)
                                     .ToListAsync();
 
                 oResponse.Success = 1;
@@ -59,9 +59,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
             {
                 var item = await _db.McCatNoExtensions
                                     .Include(e => e.ExtIdAreaDeptoNavigation)
-                                    .ThenInclude(a => a.AreIdEdificioNavigation)
+                                        .ThenInclude(a => a!.AreIdEdificioNavigation)
                                     .Include(e => e.ExtIdAreaDeptoNavigation)
-                                    .ThenInclude(a => a.AreIdPisoNavigation)
+                                        .ThenInclude(a => a!.AreIdPisoNavigation)
                                     .FirstOrDefaultAsync(e => e.IdExtension == id);
 
                 oResponse.Success = 1;
@@ -141,7 +141,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
             try
             {
                 McCatNoExtension? oExtension = await _db.McCatNoExtensions.FindAsync(id);
-                //db.Remove(oPersona);
+                // db.Remove(oPersona);
 
                 if (oExtension != null)
                 {

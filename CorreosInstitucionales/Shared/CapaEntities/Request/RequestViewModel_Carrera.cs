@@ -5,20 +5,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
     public class RequestViewModel_Carrera : McCatCarrera
     {
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CLAVE requerido.")]
         public new string? CarrClave
         {
             get { return base.CarrClave; }
             set { base.CarrClave = value; }
         }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo requerido.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Campo CARRERA/LICENCIATURA requerido.")]
         public new string CarrNombre
         {
             get { return base.CarrNombre; }

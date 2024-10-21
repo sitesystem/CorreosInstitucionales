@@ -32,6 +32,14 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             return result;
         }
 
+        public async Task<Response<object>?> GetCountDataAsync()
+        {
+            var response = await _httpClient.PostAsJsonAsync($"{url}/countData", _options);
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<Response<object>?>(content, options: _options);
+            return result;
+        }
+
         public async Task<Response<RequestDTO_Usuario>?> ValidateByEmailCURP(string correo, string curp)
         {
             var result = await _httpClient.GetFromJsonAsync<Response<RequestDTO_Usuario>>($"{url}/filterByEmailCURP/{correo}/{curp}", options: _options);

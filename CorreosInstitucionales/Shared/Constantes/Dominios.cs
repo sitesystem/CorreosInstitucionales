@@ -8,7 +8,7 @@ namespace CorreosInstitucionales.Shared.Constantes
 {
     public static class Dominios
     {
-        public static string[] Prueba =
+        public static readonly string[] Prueba =
         [
             "localhost",
             "example.com"

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-using static CorreosInstitucionales.Shared.Utils.WebUtils;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CorreosInstitucionales.Shared.CapaTools
@@ -20,7 +19,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
         {
             _rnd = new Random();
             _total = 0;
-            _items= new ();
+            _items= [];
 
             string[] lines = File.ReadAllLines(filename);
             string[] data;
@@ -48,7 +47,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
         {
             _rnd = new Random();
             _total = items.Count();
-            _items = new();
+            _items = [];
 
             foreach (T item in items)
             {

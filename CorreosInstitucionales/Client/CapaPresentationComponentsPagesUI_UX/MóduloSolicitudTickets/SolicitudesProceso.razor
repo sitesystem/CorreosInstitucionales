@@ -137,14 +137,38 @@
                         <strong>
                             @item.SolIdUsuarioNavigation!.UsuPrimerApellido
                             @item.SolIdUsuarioNavigation!.UsuSegundoApellido
-                            @item.SolIdUsuarioNavigation!.UsuNombre
+                            @item.SolIdUsuarioNavigation!.UsuNombres
                         </strong>
                         <br />
-                        <small>
+                        <small class="mb-0">
                             @item.SolIdUsuarioNavigation?.UsuIdTipoPersonalNavigation?.TipoperNombre
                             @(item.SolIdUsuarioNavigation?.UsuIdTipoPersonal == 2 ? $" en {item.SolIdUsuarioNavigation?.UsuAnioEgreso}" : "")
+                            @{
+                                if (empleado_base.Contains(item.SolIdUsuarioNavigation!.UsuIdTipoPersonal) || item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == (int)TipoPersonal.HONORARIOS)
+                                {
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0.25rem" class="rz-mt-2">
+                                        <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Light)" Text="" IsPill="false" class="rz-display-block">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.Wrap" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                                <RadzenIcon Icon="@($"lan")" />
+                                                <strong>Área/Depto: </strong>@item.SolIdUsuarioNavigation!.UsuIdAreaDeptoNavigation?.AreNombreAreaDepto
+                                            </RadzenStack>
+                                        </RadzenBadge>
+
+                                        <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Light)" Text="" IsPill="false" class="rz-display-block">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.NoWrap" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                                <RadzenIcon Icon="@($"call")" />
+                                                <strong>No. Extensión: </strong> @item.SolIdUsuarioNavigation!.UsuNoExtensionActual
+                                            </RadzenStack>
+                                        </RadzenBadge>
+                                    </RadzenStack>
+                                }
+                                else
+                                {
+                                    <br />
+                                }
+                            }
                         </small>
-                        <br /><br />
+                        <br />
                         <ul>
                             <li>
                                 <strong>CURP: </strong>
@@ -155,28 +179,28 @@
                                 @if (alumno_o_egresado.Contains(item.SolIdUsuarioNavigation!.UsuIdTipoPersonal))
                                 {
                                     <strong>Número de Boleta: </strong>
-                                    @item.SolIdUsuarioNavigation!.UsuBoletaAlumno
+                                    @item.SolIdUsuarioNavigation!.UsuBoletaAlumnoEgresado
                                 }
-                                else if (item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == 3)
+                                else if (item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == (int)TipoPersonal.MAESTRIA)
                                 {
                                     <strong>Número de Boleta de Maestría: </strong>
-                                    @item.SolIdUsuarioNavigation!.UsuBoletaMaestria
+                                    @item.SolIdUsuarioNavigation!.UsuBoletaPosgrado
                                 }
                                 else if (empleado_base.Contains(item.SolIdUsuarioNavigation!.UsuIdTipoPersonal))
                                 {
                                     <strong>Número de Empleado: </strong>
-                                    @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
+                                    @item.SolIdUsuarioNavigation!.UsuNumeroEmpleadoContrato
                                 }
-                                else if (item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == 6)
+                                else if (item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == (int)TipoPersonal.HONORARIOS)
                                 {
                                     <strong>Número de Contrato: </strong>
-                                    @item.SolIdUsuarioNavigation!.UsuNumeroEmpleado
+                                    @item.SolIdUsuarioNavigation!.UsuNumeroEmpleadoContrato
                                 }
                             </li>
 
                             <li>
                                 <strong>Correo Personal actual: </strong>
-                                <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaNueva</div>
+                                <div style="white-space: pre-wrap">@item.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaActual</div>
                             </li>
 
                             @if (!string.IsNullOrEmpty(item.SolIdUsuarioNavigation?.UsuCorreoPersonalCuentaAnterior))
@@ -189,15 +213,14 @@
 
                             <li>
                                 <strong>Correo Institucional: </strong>
-                                @{
-                                    var correo_institucional = !string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta : "no asignado";
-                                }
-                                <div style="white-space: pre-wrap">@correo_institucional</div>
+                                <div style="white-space: pre-wrap">
+                                    @(!string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta : "no asignado")
+                                </div>
                             </li>
 
                             <li>
                                 <strong>Número de Celular actual: </strong>
-                                @item.SolIdUsuarioNavigation!.UsuNoCelularNuevo
+                                @item.SolIdUsuarioNavigation!.UsuNoCelularActual
                             </li>
 
                             @if (!string.IsNullOrEmpty(item.SolIdUsuarioNavigation?.UsuNoCelularAnterior))
@@ -253,10 +276,10 @@
                                 <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerDocumento(item, TipoDocumento.CURP))">Ver</button>
                             </li>
 
-                            @if (item.SolIdUsuarioNavigation!.UsuFileNameComprobanteInscripcion != "-")
+                            @if (item.SolIdUsuarioNavigation!.UsuFileNameComprobanteEstudios != "-")
                             {
                                 <li>
-                                    <strong>Comprobante de Inscripción</strong>
+                                    <strong>Comprobante de Estudios</strong>
                                     <br />
                                     <a href="@WebUtils.GenerarURLArchivoUsuario(item, TipoDocumento.COM_INSCRIPCION)"
                                        download="@WebUtils.GenerarNombreArchivo(item, TipoDocumento.COM_INSCRIPCION)">
@@ -376,6 +399,8 @@
                     <div class="card-body">
                         <div class="my-2">
                             <InputCheckbox @bind-Value="exportar_zip"></InputCheckbox> Descargar como archivo Zip
+                            <br />
+                            <InputCheckbox @bind-Value="descargar_ajuntos"></InputCheckbox> Descargar adjuntos
                         </div>
 
                         <button class="btn btn-primary form-control" @onclick="Descargar">
@@ -545,8 +570,7 @@
         switch (documento)
         {
             case TipoDocumento.CURP:
-                titulo = $@"{usuario.UsuNombre} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido} - {usuario.UsuCurp}";
-
+                titulo = $@"{usuario.UsuNombres} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido} - {usuario.UsuCurp}";
                 documento_repositorio = false;
                 nombre = usuario.UsuFileNameCurp!;
                 break;
@@ -554,7 +578,7 @@
             case TipoDocumento.COM_INSCRIPCION:
                 titulo = "COMPROBANTE DE INSCRIPCIÓN";
                 documento_repositorio = false;
-                nombre = usuario.UsuFileNameComprobanteInscripcion!;
+                nombre = usuario.UsuFileNameComprobanteEstudios!;
                 break;
 
             case TipoDocumento.CAP_BLOQUEO:
@@ -582,7 +606,7 @@
     {
         string? mensaje = await DialogModalService.OpenAsync<MensajeRespuesta>
         (
-            $"{mensaje_confirmar} TICKET #{item.IdSolicitudTicket} de {item.SolIdUsuarioNavigation!.UsuNombre} {item.SolIdUsuarioNavigation!.UsuPrimerApellido} {item.SolIdUsuarioNavigation!.UsuSegundoApellido}",
+            $"{mensaje_confirmar} TICKET #{item.IdSolicitudTicket} de {item.SolIdUsuarioNavigation!.UsuNombres} {item.SolIdUsuarioNavigation!.UsuPrimerApellido} {item.SolIdUsuarioNavigation!.UsuSegundoApellido}",
             null,
             new DialogOptions()
             {
@@ -645,9 +669,11 @@
     {
         MensajeCarga();
         bool recargar_lista = false;
+
         /*
-        trabajando = false;
-        StateHasChanged();*/
+            trabajando = false;
+            StateHasChanged();
+        */
         
         int[] tickets = items.Where(i => i.SolValidacionDatos).Select(st => st.IdSolicitudTicket).ToArray();
 
@@ -671,8 +697,7 @@
                 }
                 links += "</ul>";
 
-                StateHasChanged();
-                
+                recargar_lista = true;
             }
             else
             {
@@ -688,7 +713,7 @@
             await CargarLista();
         }
         
-    }// DESCARGAR
+    } // DESCARGAR
 
     async Task OnPage(PagerEventArgs args)
     {

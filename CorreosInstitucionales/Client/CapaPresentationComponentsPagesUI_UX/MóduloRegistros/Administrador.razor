@@ -21,35 +21,35 @@
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Nombre(s)" AllowFloatingLabel="false" Placeholder="Nombre(s)" AllowClear="true" Variant="Variant.Flat" Class="w-100 mt-3" Disabled="false">
                             <ChildContent>
-                                <RadzenTextBox id="@($@"names_{TipoPersonal}")" @bind-Value="@oUsuario.UsuNombre" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"
-                                               @oninput="@((e) => oUsuario.UsuNombre = e.Value.ToString().ToUpper())"
+                                <RadzenTextBox id="@($@"names_{TipoPersonal}")" @bind-Value="@oUsuario!.UsuNombres" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="200"
+                                               @oninput="@((e) => oUsuario!.UsuNombres = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuNombre)" />
+                        <ValidationMessage For="@(() => oUsuario!.UsuNombres)" />
                     </div>
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Primer Apellido" AllowFloatingLabel="false" Placeholder="Primer Apellido" AllowClear="true" Variant="Variant.Flat" Class="w-100 mt-3" Disabled="false">
                             <ChildContent>
-                                <RadzenTextBox Name="@($@"lastName1_{TipoPersonal}")" @bind-Value="@oUsuario.UsuPrimerApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
-                                               @oninput="@((e) => oUsuario.UsuPrimerApellido = e.Value.ToString().ToUpper())"
+                                <RadzenTextBox Name="@($@"lastName1_{TipoPersonal}")" @bind-Value="@oUsuario!.UsuPrimerApellido" style="border-bottom: 3px solid red;" MinLength="0" MaxLength="150"
+                                               @oninput="@((e) => oUsuario!.UsuPrimerApellido = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuPrimerApellido)" />
+                        <ValidationMessage For="@(() => oUsuario!.UsuPrimerApellido)" />
                     </div>
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Segundo Apellido" AllowFloatingLabel="false" AllowClear="true" Variant="Variant.Flat" Class="w-100 mt-3" Disabled="false">
                             <ChildContent>
-                                <RadzenTextBox Name="@($@"lastName2_{TipoPersonal}")" @bind-Value="@oUsuario.UsuSegundoApellido" MinLength="0" MaxLength="150" Placeholder="Segundo Apellido"
-                                               @oninput="@((e) => oUsuario.UsuSegundoApellido = e.Value.ToString().ToUpper())"
+                                <RadzenTextBox Name="@($@"lastName2_{TipoPersonal}")" @bind-Value="@oUsuario!.UsuSegundoApellido" MinLength="0" MaxLength="150" Placeholder="Segundo Apellido"
+                                               @oninput="@((e) => oUsuario!.UsuSegundoApellido = e.Value.ToString().ToUpper())"
                                                onkeypress="return /^[A-Za-z. ]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                             </ChildContent>
                             <Helper><RadzenText TextStyle="TextStyle.Caption"></RadzenText></Helper>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuSegundoApellido)" />
+                        <ValidationMessage For="@(() => oUsuario!.UsuSegundoApellido)" />
                     </div>
                 </div>
             </ChildContent>
@@ -71,10 +71,10 @@
                         <RadzenFormField Text="Correo Electronico" AllowFloatingLabel="false" Placeholder="Correo Electronico" AllowClear="true" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="email" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent>
-                                <RadzenTextBox @bind-Value="@oUsuario.UsuCorreoPersonalCuentaNueva" style="border-bottom: 3px solid red;" />
+                                <RadzenTextBox @bind-Value="@oUsuario!.UsuCorreoPersonalCuentaActual" style="border-bottom: 3px solid red;" />
                             </ChildContent>
                         </RadzenFormField>
-                        <ValidationMessage For="@(() => oUsuario.UsuCorreoPersonalCuentaNueva)" />
+                        <ValidationMessage For="@(() => oUsuario!.UsuCorreoPersonalCuentaActual)" />
                     </div>
                     <div class="col-md-4 col-lg-4">
                         <RadzenFormField Text="Contraseña" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
@@ -144,7 +144,7 @@
                           ButtonType="ButtonType.Submit"
                           IsBusy="@busyLoading"
                           Icon="@IconButton"
-                          Class="w-100 rz-ripple"
+                          class="w-100 rz-ripple"
                           Shade="Shade.Default"
                           Disabled="false"
                           Size="ButtonSize.Large"
@@ -176,48 +176,48 @@ else
     protected override async Task OnInitializedAsync()
     {
         @* DATOS ID DEL USUARIO *@
-        oUsuario.IdUsuario = oEditUsuario.IdUsuario;
+        oUsuario!.IdUsuario = oEditUsuario!.IdUsuario;
         oUsuario.UsuIdRol = oEditUsuario.UsuIdRol;                          // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
         oUsuario.UsuIdTipoPersonal = oEditUsuario.UsuIdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios], [7 - Personal de la UDI])
         @* DATOS PERSONALES *@
-        oUsuario.UsuNombre = oEditUsuario.UsuNombre;                        // Nombre del Usuario Solicitante o Administrador
+        oUsuario.UsuNombres = oEditUsuario.UsuNombres;                      // Nombre del Usuario Solicitante o Administrador
         oUsuario.UsuPrimerApellido = oEditUsuario.UsuPrimerApellido;        // Primer Apellido del Usuario Solicitante o Administrador
         oUsuario.UsuSegundoApellido = oEditUsuario.UsuSegundoApellido;      // Segundo Apellido del Usuario Solicitante o Administrador
         oUsuario.UsuCurp = "XXXXXXXXXXXXXXXXXX";                            // CURP con 18 caracteres como mínimo
-        oUsuario.UsuFileNameCurp = "-";            // Nombre del Archivo y extensión .pdf del CURP
+        oUsuario.UsuFileNameCurp = "-";                                     // Nombre del Archivo y extensión .pdf del CURP
         
-        oUsuario.UsuFileSizeCurp = 2L;            // Tamaño del Archivo .pdf del CURP
-        oUsuario.UsuNoCelularAnterior = "00 00 00 00 00";  // Número de Celular Anterior si llega a cambiar por uno nuevo
-        oUsuario.UsuNoCelularNuevo = "00 00 00 00 00";        // Número de Celular Nuevo que sería el número de celular actual
+        oUsuario.UsuFileSizeCurp = 2L;                                      // Tamaño del Archivo .pdf del CURP
+        oUsuario.UsuNoCelularAnterior = "00 00 00 00 00";                   // Número de Celular Anterior si llega a cambiar por uno nuevo
+        oUsuario.UsuNoCelularActual = "00 00 00 00 00";                     // Número de Celular Nuevo que sería el número de celular actual
         @* DATOS ACADÉMICOS *@
-        oUsuario.UsuBoletaAlumno = "0000600000";            // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
-        oUsuario.UsuBoletaMaestria = "B000000";        // Número de Boleta del Usuario (Alumno de Maestria)
-        oUsuario.UsuIdCarrera = 8;                  // FK ID de la Carrera del Alumno
-        oUsuario.UsuSemestre = "0";                    // Semestre que cursa el Alumno Inscrito o de Maestria
-        oUsuario.UsuAnioEgreso = 1950;                  // Año de Egreso en dado caso
-        oUsuario.UsuFileNameComprobanteInscripcion = "-";    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
-        oUsuario.UsuFileSizeComprobanteInscripcion = 1L;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+        oUsuario.UsuBoletaAlumnoEgresado = "0000600000";                    // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
+        oUsuario.UsuBoletaPosgrado = "B000000";                             // Número de Boleta del Usuario (Alumno de Maestria)
+        oUsuario.UsuIdCarrera = 8;                                          // FK ID de la Carrera del Alumno
+        oUsuario.UsuSemestre = "0";                                         // Semestre que cursa el Alumno Inscrito o de Maestria
+        oUsuario.UsuAnioEgreso = 1950;                                      // Año de Egreso en dado caso
+        oUsuario.UsuFileNameComprobanteEstudios = "-";                      // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
+        oUsuario.UsuFileSizeComprobanteEstudios = 1L;                       // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
         @* DATOS LABORALES *@
-        oUsuario.UsuNumeroEmpleado = "000";        // Número del Empleado del Usuario (Administrador o Docente)
-        oUsuario.UsuIdAreaDepto = 1;              // FK ID del Área/Departamento del Usuario Empleado
-        oUsuario.UsuNoExtensionAnterior = "0"; // Número de Extensión del Empleado
-        oUsuario.UsuNoExtension = "1";              // Número de Extensión del Empleado
+        oUsuario.UsuNumeroEmpleadoContrato = "000";                         // Número del Empleado del Usuario (Administrador o Docente)
+        oUsuario.UsuIdAreaDepto = 1;                                        // FK ID del Área/Departamento del Usuario Empleado
+        oUsuario.UsuNoExtensionAnterior = "0";                        // Número de Extensión del Empleado
+        oUsuario.UsuNoExtensionActual = "1";                                // Número de Extensión del Empleado
         @* DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP *@
-        oUsuario.UsuCorreoPersonalCuentaAnterior = null;        // Correo Personal de la Cuenta Anterior
-        oUsuario.UsuCorreoPersonalCuentaNueva = oEditUsuario.UsuCorreoPersonalCuentaNueva;              // Correo Personal de la Cuenta Nueva o Actual
+        oUsuario.UsuCorreoPersonalCuentaAnterior = null;                    // Correo Personal de la Cuenta Anterior
+        oUsuario.UsuCorreoPersonalCuentaActual = oEditUsuario.UsuCorreoPersonalCuentaActual;              // Correo Personal de la Cuenta Nueva o Actual
         oUsuario.UsuContrasenia = oEditUsuario.UsuContrasenia;                                            // Contraseña en la PLataforma del Usuario Solicitante o Administrador
         oUsuario.UsuRecuperarContrasenia = false;                          // Contraseña Temporal que se le proporciona al Usuario Solicitante
         @* DATOS DEL CORREO INSTITUCIONAL *@
-        oUsuario.UsuCorreoInstitucionalCuenta = "";              // Cuenta Correo Institucional IPN generada por DCyC
-        oUsuario.UsuCorreoInstitucionalContrasenia = "";      // Contraseña del Correo Institucional IPN Generada por DCyC
+        oUsuario.UsuCorreoInstitucionalCuenta = "";                         // Cuenta Correo Institucional IPN generada por DCyC
+        oUsuario.UsuCorreoInstitucionalContrasenia = "";                    // Contraseña del Correo Institucional IPN Generada por DCyC
         @* OTROS DATOS *@
         oUsuario.UsuFechaHoraAlta = oEditUsuario.UsuFechaHoraAlta;          // Fecha y Hora de Alta del Usuario
-        oUsuario.UsuStatus = true;                        // Usuario (1 - Activo / 0 - Inactivo)
+        oUsuario.UsuStatus = true;                                          // Usuario (1 - Activo / 0 - Inactivo)
         @* DATOS FK NAVIGATION *@
         oUsuario.UsuIdAreaDeptoNavigation = null;
         oUsuario.UsuIdCarreraNavigation = null;
-        oUsuario.UsuIdRolNavigation = null;
-        oUsuario.UsuIdTipoPersonalNavigation = null;
+        oUsuario.UsuIdRolNavigation = null!;
+        oUsuario.UsuIdTipoPersonalNavigation = null!;
 
         IconButton = "save_as";
         TextButton = "Editar Datos";
@@ -238,7 +238,7 @@ else
     private async Task CompararContraseñas()
     {
         flagErrorPasswords = !string.Equals(UsuContraseña, UsuConfirmarContraseña, StringComparison.Ordinal);
-        oUsuario.UsuContrasenia = !string.IsNullOrEmpty(UsuContraseña) && !flagErrorPasswords ? CorreosInstitucionales.Shared.CapaTools.Encrypt.GetSHA256(UsuContraseña) : oEditUsuario.UsuContrasenia;
+        oUsuario!.UsuContrasenia = !string.IsNullOrEmpty(UsuContraseña) && !flagErrorPasswords ? CorreosInstitucionales.Shared.CapaTools.Encrypt.GetSHA256(UsuContraseña) : oEditUsuario.UsuContrasenia;
     }
 
     @*///////////////////////////////////////////////  VALIDAR ReCAPTCHA  ////////////////////////////////////////////////////////////////////////*@
@@ -276,7 +276,7 @@ else
                 var respuesta = await servicioUsuario.EditDataAsync(oUsuario);
                 oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
 
-                if (oRespuesta.Success == 1)
+                if (respuesta.IsSuccessStatusCode)
                 {
                     idResponse = oUsuario.IdUsuario;
 
@@ -292,6 +292,7 @@ else
                                 Summary = "¡Actualización Correcta!",
                                 Detail = "Se guardaron los cambios."
                             });
+
                     @*//  DIALOG MESSAGE ACTUALIZACIÓN DE DATOS EXITOSA  //*@
                     await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>Mensaje<span>", ds =>
                     @<div>
@@ -306,24 +307,24 @@ else
                         <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="">
                             <RadzenStack Gap="0px">
                                 <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">@(oUsuario.UsuIdRol == 2 ? "Usuario" : "Administrador"):</RadzenText>
-                                <RadzenText TextStyle="TextStyle.Body1"><b>@oTipoPersonal.Data.TipoperNombre</b></RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body1"><b>@oTipoPersonal?.Data?.TipoperNombre</b></RadzenText>
                             </RadzenStack>
                             <RadzenStack Gap="0px">
                                 <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
-                                <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuNombre @oUsuario.UsuPrimerApellido @oUsuario.UsuSegundoApellido</b></RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario!.UsuNombres @oUsuario.UsuPrimerApellido @oUsuario.UsuSegundoApellido</b></RadzenText>
                             </RadzenStack>
                             <RadzenStack Gap="0px">
                                 <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Correo Electrónico Personal:</RadzenText>
-                                <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario.UsuCorreoPersonalCuentaNueva</b></RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body1"><b>@oUsuario!.UsuCorreoPersonalCuentaActual</b></RadzenText>
                             </RadzenStack>
                             <RadzenAlert Title="Atención:" Text=""
                                          AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Light"
                                          ShowIcon="true" AllowClose="false" class="mb-0" Visible="@(!string.IsNullOrEmpty(UsuContraseña))">
                                 <ul>
                                     @if (!string.IsNullOrEmpty(UsuContraseña))
-                                {
-                                    <li>Se le notificará por los medios / vías de comunicación con la nueva contraseña y actualización de sus datos.</li>
-                                }
+                                    {
+                                        <li>Se le notificará por los medios / vías de comunicación con la nueva contraseña y actualización de sus datos.</li>
+                                    }
                                     <li>Se cerrará la sesión, tendrá que acceder con su nueva contraseña.</li>
                                 </ul>
                             </RadzenAlert>
@@ -403,25 +404,25 @@ else
             else
             {
                 await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>Validación de Datos<span>", ds =>
-                @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="">
-                    <RadzenAlert Title="Error" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="true"
-                                 Visible="true" Class="rz-border-radius-1">
-                        El <strong>Correo Electrónico Personal </strong> ya está registrado por lo que <b>NO</b> puede volverse a registrar con estos datos.
-                    </RadzenAlert>
-                </RadzenStack>,
-                new DialogOptions()
-                        {
-                            CloseDialogOnOverlayClick = true,
-                            CloseDialogOnEsc = true,
-                            Width = "500px",
-                            Height = "Auto",
-                            Resizable = true,
-                            ShowTitle = true,
-                            ShowClose = true,
-                            Draggable = true,
-                            CssClass = "custom-dialog-class",
-                            WrapperCssClass = "custom-dialog-wrapper-class"
-                        });
+                    @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="">
+                        <RadzenAlert Title="Error" AlertStyle="AlertStyle.Danger" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="true"
+                                     Visible="true" Class="rz-border-radius-1">
+                            El <strong>Correo Electrónico Personal </strong> ya está registrado por lo que <b>NO</b> puede volverse a registrar con estos datos.
+                        </RadzenAlert>
+                    </RadzenStack>,
+                    new DialogOptions()
+                    {
+                        CloseDialogOnOverlayClick = true,
+                        CloseDialogOnEsc = true,
+                        Width = "500px",
+                        Height = "Auto",
+                        Resizable = true,
+                        ShowTitle = true,
+                        ShowClose = true,
+                        Draggable = true,
+                        CssClass = "custom-dialog-class",
+                        WrapperCssClass = "custom-dialog-wrapper-class"
+                    });
             }
         }
         catch (HttpRequestException e)
@@ -438,44 +439,44 @@ else
     private async Task ShowDialogModal_iFrame(string srciFrame, string title)
     {
         await DialogModalService.OpenAsync($@"<span style='font-variant: small-caps; font-size:18px;'>{title}<span>", ds =>
-    @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="5px" class="w-100">
-        <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-m-0 rz-p-0 w-100">
-            <iframe src="@srciFrame" frameborder="1" scrolling="yes" class="w-100" style="height:500px;" />
-        </RadzenCard>
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" class="w-100">
-            <RadzenButton Text="Cerrar"
-                          BusyText=""
-                          ButtonStyle="ButtonStyle.Warning"
-                          ButtonType="ButtonType.Button"
-                          IsBusy="false"
-                          Icon="cancel"
-                          class="rz-color-white rz-ripple rz-my-0 w-100"
-                          Shade="Shade.Darker"
-                          Click="@(() => ds.Close(false))" />
-            <a href="@srciFrame" target="_blank" class="w-100">
-                <RadzenButton Text="Descargar"
-                              BusyText=""
-                              ButtonStyle="ButtonStyle.Secondary"
-                              ButtonType="ButtonType.Button"
-                              IsBusy="false"
-                              Icon="download"
-                              class="rz-ripple rz-my-0 w-100"
-                              Shade="Shade.Dark" />
-            </a>
-        </RadzenStack>
-    </RadzenStack>,
-    new DialogOptions()
-        {
-            CloseDialogOnOverlayClick = true,
-            CloseDialogOnEsc = true,
-            Width = "600px",
-            Height = "Auto",
-            Resizable = true,
-            ShowTitle = true,
-            ShowClose = true,
-            Draggable = true,
-            CssClass = "custom-dialog-class",
-            WrapperCssClass = "custom-dialog-wrapper-class"
-        });
+            @<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly" Gap="5px" class="w-100">
+                <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-m-0 rz-p-0 w-100">
+                    <iframe src="@srciFrame" frameborder="1" scrolling="yes" class="w-100" style="height:500px;" />
+                </RadzenCard>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" class="w-100">
+                    <RadzenButton Text="Cerrar"
+                                  BusyText=""
+                                  ButtonStyle="ButtonStyle.Warning"
+                                  ButtonType="ButtonType.Button"
+                                  IsBusy="false"
+                                  Icon="cancel"
+                                  class="rz-color-white rz-ripple rz-my-0 w-100"
+                                  Shade="Shade.Darker"
+                                  Click="@(() => ds.Close(false))" />
+                    <a href="@srciFrame" target="_blank" class="w-100">
+                        <RadzenButton Text="Descargar"
+                                      BusyText=""
+                                      ButtonStyle="ButtonStyle.Secondary"
+                                      ButtonType="ButtonType.Button"
+                                      IsBusy="false"
+                                      Icon="download"
+                                      class="rz-ripple rz-my-0 w-100"
+                                      Shade="Shade.Dark" />
+                    </a>
+                </RadzenStack>
+            </RadzenStack>,
+            new DialogOptions()
+            {
+                CloseDialogOnOverlayClick = true,
+                CloseDialogOnEsc = true,
+                Width = "600px",
+                Height = "Auto",
+                Resizable = true,
+                ShowTitle = true,
+                ShowClose = true,
+                Draggable = true,
+                CssClass = "custom-dialog-class",
+                WrapperCssClass = "custom-dialog-wrapper-class"
+            });
     }
 }

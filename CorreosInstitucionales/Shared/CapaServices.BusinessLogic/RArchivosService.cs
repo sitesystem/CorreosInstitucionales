@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,10 +9,11 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Forms;
 
 using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
-using CorreosInstitucionales.Shared.Utils;
 
 using static System.Collections.Specialized.BitVector32;
 
@@ -29,7 +29,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
         {
             HttpResponseMessage response;
 
-            using (MultipartFormDataContent fdContent = new MultipartFormDataContent())
+            using (MultipartFormDataContent fdContent = [])
             {
                 using (StreamContent fileContent = new StreamContent(new MemoryStream(data.Bytes)))
                 {
@@ -47,9 +47,9 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
         public async Task<string?> SubirDocumento(TipoDocumento documento, IBrowserFile file)
         {
             string? result = null;
-            using (MultipartFormDataContent content = new MultipartFormDataContent())
+            using (MultipartFormDataContent content = [])
             {
-                using (StreamContent fileContent = new StreamContent(file.OpenReadStream()))
+                using (StreamContent fileContent = new(file.OpenReadStream()))
                 {
                     fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
 
@@ -91,7 +91,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 
         public async Task<Response<List<WebUtils.Link>>?> NewFileFromSelection<T>(string extension, string action, List<T> selected)
         {
-            Response<List<WebUtils.Link>>? result = new Response<List<WebUtils.Link>>();
+            Response<List<WebUtils.Link>>? result = new();
 
             try
             {
@@ -110,7 +110,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 
         public async Task<Response<List<WebUtils.Link>>?> NewFileExportFromSelection<T>(string extension, string action, TExport<T> selected)
         {
-            Response<List<WebUtils.Link>>? result = new Response<List<WebUtils.Link>>();
+            Response<List<WebUtils.Link>>? result = new();
 
             try
             {

@@ -1,16 +1,15 @@
-﻿using CorreosInstitucionales.Shared;
-using CorreosInstitucionales.Shared.CapaEntities.Response;
-using DocumentFormat.OpenXml.Office.CustomUI;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+
+using CorreosInstitucionales.Shared;
+using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadisticas
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class EstadisticasController(DbCorreosInstitucionalesUpiicsaContext db) : Controller
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
@@ -21,11 +20,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadis
             int yy_e, int mm_e, int dd_e
             )
         {
-            DateTime inicio = new DateTime(yy_s, mm_s, dd_s);
-            DateTime fin = new DateTime(yy_e, mm_e, dd_e);
+            DateTime inicio = new(yy_s, mm_s, dd_s);
+            DateTime fin = new(yy_e, mm_e, dd_e);
 
-            Response<Dictionary<string, List<IntDataItem>>> oResponse = new();
-            oResponse.Data = new();
+            Response<Dictionary<string, List<IntDataItem>>> oResponse = new()
+            {
+                Data = []
+            };
 
             try
             {
@@ -162,8 +163,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadis
             int yy_e, int mm_e, int dd_e
             )
         {
-            DateTime inicio = new DateTime(yy_s, mm_s, dd_s);
-            DateTime fin = new DateTime(yy_e, mm_e, dd_e);
+            DateTime inicio = new(yy_s, mm_s, dd_s);
+            DateTime fin = new(yy_e, mm_e, dd_e);
 
             Response<List<IntDataItem>> oResponse = new();
 
@@ -200,8 +201,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.ModuloEstadis
             int yy_e, int mm_e, int dd_e
             )
         {
-            DateTime inicio = new DateTime(yy_s, mm_s, dd_s);
-            DateTime fin = new DateTime(yy_e, mm_e, dd_e);
+            DateTime inicio = new(yy_s, mm_s, dd_s);
+            DateTime fin = new(yy_e, mm_e, dd_e);
             
             /*
                 progress        SolIdEstadoSolicitud

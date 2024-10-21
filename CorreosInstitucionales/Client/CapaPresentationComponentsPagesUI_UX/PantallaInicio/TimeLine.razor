@@ -21,7 +21,7 @@
 
                     <div class="col-md-4 text-center">
                         <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Justify" class="">MOTIVO / INCIDENCIA:</RadzenText>
-                        <RadzenText TextStyle="TextStyle.Body1" class=""><b>@(oSolicitudLastTicket?.Data?.SolIdTipoSolicitudNavigation?.TiposolDescripcion)</b></RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class=""><b>@(oSolicitudLastTicket?.Data?.SolIdTipoSolicitudNavigation.TiposolDescripcion)</b></RadzenText>
                     </div>
 
                     <div class="col-md-3 text-center">
@@ -196,7 +196,9 @@
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 3" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
                                         <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
-                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> se envía a Mesa de Control para la Generación / Recuperación de las Credenciales del Correo Institucional y/o actualización de tus datos.</div>
+                                            <div>La Solicitud de Ticket <b>#@(oSolicitudLastTicket?.Data?.IdSolicitudTicket)</b> 
+                                                se envía a Mesa de Control para la Generación / Recuperación de las Credenciales del Correo Institucional y/o actualización de tus datos.
+                                            </div>
                                         </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
@@ -214,7 +216,9 @@
                                         </RadzenBadge>
                                         <RadzenText Text="Paso 4" TextStyle="TextStyle.Subtitle1" class="rz-m-0" />
                                         <RadzenText Text="" TextStyle="TextStyle.Body2" TextAlign="TextAlign.Justify" class="rz-m-0">
-                                            <div><strong>Credenciales del Correo Institucional</strong> generadas / recuperadas con éxito y tus datos actualizados, para visualizarlas por favor responde la <b>encuesta de calidad</b> y califica la atención del servicio.</div>
+                                            <div><strong>Credenciales del Correo Institucional</strong> 
+                                                generadas / recuperadas con éxito y tus datos actualizados, para visualizarlas por favor responde la <b>encuesta de calidad</b> y califica la atención del servicio.
+                                            </div>
                                         </RadzenText>
                                     </RadzenStack>
                                 </ChildContent>
@@ -550,17 +554,17 @@ else
                 var respuesta = await servicioSolicitud.EncuestaCalidadAsync(oEncuestaCalidad);
                 oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
 
-                if(oRespuesta?.Success == 1)
+                if(respuesta.IsSuccessStatusCode)
                 {
                     oEscuela = await servicioEscuela.GetDataByIdAsync(1);
 
                     @*//  ENVÍO DE WHATSAPP ENCUESTA DE CALIDAD CONTESTADA Y ENVÍO DE CREDENCIALES  //*@
-                    oSendWhatsApp.Number = oUsuario.Data.UsuNoCelularNuevo.Replace(" ", string.Empty);
+                    oSendWhatsApp.Number = oUsuario!.Data!.UsuNoCelularActual.Replace(" ", string.Empty);
                     oSendWhatsApp.Message = "*SACI | Sistema de Atención para Correos Institucionales*\n" +
                                             "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                            "Estimad@:\n*" + oUsuario.Data.UsuNombre.Trim() + " " + oUsuario.Data.UsuPrimerApellido.Trim() + " " + oUsuario.Data.UsuSegundoApellido.Trim() + "*\n\n" +
+                                            "Estimad@:\n*" + oUsuario.Data.UsuNombres.Trim() + " " + oUsuario.Data.UsuPrimerApellido.Trim() + " " + oUsuario.Data.UsuSegundoApellido?.Trim() + "*\n\n" +
                                             "Se le informa que su respuesta de la Encuesta de Calidad fué exitosa en la *Plataforma SACI* " +
-                                            "de la Unidad Académica *" + oEscuela.Data.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
+                                            "de la Unidad Académica *" + oEscuela!.Data!.EscNombreCorto + " (" + oEscuela.Data.EscNombreLargo + ")*.\n\n" +
                                             "Por este medio se le hace entrega de sus _Credenciales de Acceso_ a la Cuenta de *Correo Electrónico Institucional*:\n\n" +
                                             "   ✉ Correo Electrónico Institucional:\n                    *" + oUsuario.Data.UsuCorreoInstitucionalCuenta + "*\n" +
                                             "   🔑 Contraseña:\n                    *" + oUsuario.Data.UsuCorreoInstitucionalContrasenia + "*\n\n" +
@@ -571,9 +575,9 @@ else
                     await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
 
                     @*//  ENVÍO DE CORREO ELECTRÓNICO PARA AVISO DE CREDENCIALES GENERADAS  //*@
-                    servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
+                    await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
                         {
-                            EmailTo = oUsuario?.Data?.UsuCorreoPersonalCuentaNueva,
+                            EmailTo = oUsuario.Data.UsuCorreoPersonalCuentaActual,
                             Subject = "SACI | CREDENCIALES",
                             Body = $@"
                             <body>
@@ -587,7 +591,7 @@ else
 			                            <article style='background-color: rgb(255, 255, 255); border-radius:10px; padding:5px;'>
 				                            <p style='text-align:justify; color:black;'>
                                                 ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
-                                                Estimad@: <br><b>{oUsuario.Data.UsuNombre.Trim()} {oUsuario.Data.UsuPrimerApellido.Trim()} {oUsuario.Data.UsuSegundoApellido.Trim()}</b><br><br>
+                                                Estimad@: <br><b>{oUsuario!.Data.UsuNombres?.Trim()} {oUsuario.Data.UsuPrimerApellido?.Trim()} {oUsuario.Data.UsuSegundoApellido?.Trim()}</b><br><br>
 				                                Se le informa que su respuesta de la Encuesta de Calidad fué exitosa en la <b>Plataforma SACI</b>
 				                                de la Unidad Académica <b>{oEscuela.Data.EscNombreCorto} ({oEscuela.Data.EscNombreLargo})</b>.
                                                 <br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>
