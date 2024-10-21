@@ -24,7 +24,17 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                 var list = new List<McCatAnuncio>();
 
                 if (filterByStatus)
-                    list = await _db.McCatAnuncios.Where(a => a.AnuStatus.Equals(filterByStatus)).ToListAsync();
+                    list = await _db.McCatAnuncios
+                        .Where(
+                            a => 
+                                a.AnuStatus &&
+                                (
+                                    a.AnuVisibleDesde == null && a.AnuVisibleHasta == null ||
+                                    a.AnuVisibleDesde != null && a.AnuVisibleDesde >= DateTime.Now ||
+                                    a.AnuVisibleHasta != null && a.AnuVisibleHasta <= DateTime.Now
+                                )
+                        )
+                        .ToListAsync();
                 else
                     list = await _db.McCatAnuncios.ToListAsync();
 
@@ -65,18 +75,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-                McCatAnuncio oAnuncio = new()
-                {
-                    IdAnuncio = model.IdAnuncio,
-                    AnuDescripcion = model.AnuDescripcion,
-                    AnuArchivo = model.AnuArchivo,
-                    AnuEnlace = model.AnuEnlace,
-                    AnuVisibleDesde = model.AnuVisibleDesde,
-                    AnuVisibleHasta = model.AnuVisibleHasta,
-                    AnuStatus = true
-                };
-
-                await _db.McCatAnuncios.AddAsync(oAnuncio);
+                await _db.McCatAnuncios.AddAsync(model);
                 await _db.SaveChangesAsync();
 
                 oResponse.Success = 1;
@@ -96,20 +95,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
 
             try
             {
-                McCatAnuncio? oAnuncio = await _db.McCatAnuncios.FindAsync(model.IdAnuncio);
-
-                if (oAnuncio != null)
-                {
-                    oAnuncio.AnuDescripcion = model.AnuDescripcion;
-                    oAnuncio.AnuArchivo = model.AnuArchivo;
-                    oAnuncio.AnuEnlace = model.AnuEnlace;
-                    oAnuncio.AnuVisibleDesde = model.AnuVisibleDesde;
-                    oAnuncio.AnuVisibleHasta = model.AnuVisibleHasta;
-                    oAnuncio.AnuStatus = model.AnuStatus;
-
-                    _db.Entry(oAnuncio).State = EntityState.Modified;
-                    await _db.SaveChangesAsync();
-                }
+                _db.Entry(model).State = EntityState.Modified;
+                await _db.SaveChangesAsync();
 
                 oRespuesta.Success = 1;
             }
