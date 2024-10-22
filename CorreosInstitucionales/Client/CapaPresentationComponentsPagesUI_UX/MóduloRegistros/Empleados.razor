@@ -686,7 +686,7 @@ else
             string password = ActionAddEdit == "agregar" ? oUsuario.UsuContrasenia : UsuContraseña;
             string número = (IdTipoPersonal == 4 || IdTipoPersonal == 5 ? "Número de Empleado" : "Número de Contrato");
             string agregar_actualizar = ActionAddEdit == "agregar" ? "registro" : "actualización de datos";
-            string correo_institucional = string.IsNullOrEmpty(oUsuario.UsuCorreoInstitucionalCuenta) ? oUsuario.UsuCorreoInstitucionalCuenta?.Trim() : "sin asignar";
+            string correo_institucional = string.IsNullOrEmpty(oUsuario.UsuCorreoInstitucionalCuenta.Trim()) ? oUsuario.UsuCorreoInstitucionalCuenta?.Trim() : "sin asignar";
             string entrega_credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) ? "<br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>" : "";
             string credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
                                         $@"

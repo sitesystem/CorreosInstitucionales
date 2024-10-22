@@ -75,7 +75,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             return Ok(oResponse);
         }
 
-        [HttpPost("countData")]
+        [HttpGet("countData")]
         public async Task<IActionResult> GetCountData()
         {
             Response<object> oResponse = new();

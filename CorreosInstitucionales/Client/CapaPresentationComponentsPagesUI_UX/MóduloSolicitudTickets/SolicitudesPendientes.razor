@@ -192,10 +192,7 @@
 
                             <li>
                                 <strong>Correo Institucional: </strong>
-                                @{
-                                    var correo_institucional = !string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta : "no asignado";
-                                }
-                                @correo_institucional
+                                @(!string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta : "no asignado")
                             </li>
 
                             <li>

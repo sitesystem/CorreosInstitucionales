@@ -99,15 +99,16 @@
                                 if (empleado_base.Contains(item.SolIdUsuarioNavigation!.UsuIdTipoPersonal) || item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == (int)TipoPersonal.HONORARIOS)
                                 {
                                     <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0.25rem" class="rz-mt-2">
-                                        <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Light)" Text="" IsPill="false" class="rz-display-block">
-                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.Wrap" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                        <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Base)" Shade="@(Shade.Default)" Text="" IsPill="false" class="rz-display-block">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.Wrap" Gap="0.25rem" Style="padding:2px; text-transform:none;">
                                                 <RadzenIcon Icon="@($"lan")" />
-                                                <strong>Área/Depto: </strong>@item.SolIdUsuarioNavigation!.UsuIdAreaDeptoNavigation?.AreNombreAreaDepto
+                                                <strong>Área/Depto: </strong>
+                                                <div style="white-space:pre-wrap; text-align:justify;">@item.SolIdUsuarioNavigation!.UsuIdAreaDeptoNavigation?.AreNombreAreaDepto</div>
                                             </RadzenStack>
                                         </RadzenBadge>
 
-                                        <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Light)" Text="" IsPill="false" class="rz-display-block">
-                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.NoWrap" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                        <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Base)" Shade="@(Shade.Default)" Text="" IsPill="false" class="rz-display-block">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.NoWrap" Gap="0.25rem" Style="padding:2px; text-transform:none;">
                                                 <RadzenIcon Icon="@($"call")" />
                                                 <strong>No. Extensión: </strong> @item.SolIdUsuarioNavigation!.UsuNoExtensionActual
                                             </RadzenStack>
@@ -164,20 +165,6 @@
                             }
 
                             <li>
-                                <strong>Correo Institucional: </strong>
-                                <div style="white-space: pre-wrap">
-                                    @(!string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta : "no asignado")
-                                </div>
-                            </li>
-
-                            <li>
-                                <strong>Contraseña Correo Institucional: </strong>
-                                <div style="white-space: pre-wrap">
-                                    @(!string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalContrasenia) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalContrasenia : "no asignado")
-                                </div>
-                            </li>
-
-                            <li>
                                 <strong>Número de Celular actual: </strong>
                                 @item.SolIdUsuarioNavigation!.UsuNoCelularActual
                             </li>
@@ -190,6 +177,28 @@
                                 </li>
                             }
                         </ul>
+
+                        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0.25rem" class="rz-my-0">
+                            <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Light)" Text="" IsPill="false" class="rz-display-block">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0.25rem" Style="padding: 0 0 0 0; text-transform: none;">
+                                    <RadzenIcon Icon="@($"email")" />
+                                    Correo Electrónico Institucional:
+                                    <RadzenText Text="" TextStyle="TextStyle.Subtitle1" TagName="TagName.Auto" TextAlign="TextAlign.Center" class="rz-color-white rz-text-wrap rz-py-0 rz-mb-1">
+                                        @(!string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalCuenta : "no asignado")
+                                    </RadzenText>
+                                </RadzenStack>
+                            </RadzenBadge>
+
+                            <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Light)" Text="" IsPill="false" class="rz-display-block">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0.25rem" Style="padding: 0 0 1px 0; text-transform: none;">
+                                    <RadzenIcon Icon="@($"key")" />
+                                    Contraseña:
+                                    <RadzenText Text="" TextStyle="TextStyle.Subtitle2" TagName="TagName.Auto" TextAlign="TextAlign.Center" class="rz-color-white rz-text-wrap rz-py-0 rz-my-0">
+                                        @(!string.IsNullOrEmpty(item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalContrasenia) ? item.SolIdUsuarioNavigation!.UsuCorreoInstitucionalContrasenia : "no asignado")
+                                    </RadzenText>
+                                </RadzenStack>
+                            </RadzenBadge>
+                        </RadzenStack>
                     </div>
                 </Template>
             </RadzenDataGridColumn>
