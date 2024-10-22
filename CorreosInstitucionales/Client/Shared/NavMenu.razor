@@ -13,7 +13,7 @@
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Historial de Solicitudes&ensp;
                         @{
-                            if (oCountTicketsByIdUsuario is not null && !string.IsNullOrEmpty(oCountTicketsByIdUsuario?.Message))
+                            if (!loadingCountTicketsByIdUsuario)
                             {
                                 <RadzenBadge Variant="Variant.Flat" Text="@($"{oCountTicketsByIdUsuario?.Message} Tickets")" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
@@ -46,7 +46,7 @@
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Solicitudes Pendientes&ensp;
                         @{
-                            if (oCountTicketsByPendientes is not null && !string.IsNullOrEmpty(oCountTicketsByPendientes?.Message))
+                            if (!loadingCountTicketsByProgress)
                             {
                                 <RadzenBadge Variant="Variant.Flat" Text="@($"{oCountTicketsByPendientes?.Message}")" BadgeStyle="@(BadgeStyle.Warning)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
@@ -67,7 +67,7 @@
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Solicitudes en Proceso&ensp;
                         @{
-                            if (oCountTicketsByEnProceso is not null && !string.IsNullOrEmpty(oCountTicketsByEnProceso?.Message))
+                            if (!loadingCountTicketsByProgress)
                             {
                                 <RadzenBadge Variant="Variant.Flat" Text="@($"{oCountTicketsByEnProceso?.Message}")" BadgeStyle="@(BadgeStyle.Secondary)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
@@ -88,7 +88,7 @@
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                         Solicitudes Atendidas&ensp;
                         @{
-                            if (oCountTicketsByAtendidos is not null && !string.IsNullOrEmpty(oCountTicketsByAtendidos?.Message))
+                            if (!loadingCountTicketsByProgress)
                             {
                                 <RadzenBadge Variant="Variant.Flat" Text="@($"{oCountTicketsByAtendidos?.Message}")" BadgeStyle="@(BadgeStyle.Success)" Shade="@(Shade.Default)" IsPill="true" class="" />
                             }
@@ -147,7 +147,7 @@
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
                     Lista de Usuarios&ensp;
                     @{
-                        if (oCountUsers is not null && !string.IsNullOrEmpty(oCountUsers?.Message))
+                        if (!loadingCountUsers)
                         {
                             <RadzenBadge Variant="Variant.Flat" Text="@($"{oCountUsers?.Message}")" BadgeStyle="@(BadgeStyle.Info)" Shade="@(Shade.Default)" IsPill="true" class="" />
                         }
@@ -180,7 +180,12 @@
 {
     [Parameter] public bool isExpanded { get; set; }
     [Parameter] public bool isDisplayed { get; set; }
+
     int id;
+    bool loadingCountUsers = true;
+    bool loadingCountTicketsByProgress = true;
+    bool loadingCountTicketsByIdUsuario = true;
+
     private Response<object>? oCountTicketsByIdUsuario = new();
     private Response<object>? oCountTicketsByPendientes = new();
     private Response<object>? oCountTicketsByEnProceso = new();
@@ -210,19 +215,37 @@
 
     private async Task LoadCountUsers()
     {
+        loadingCountUsers = true;
+        StateHasChanged();
+
         oCountUsers = await servicioUsuario.GetCountDataAsync();
+
+        loadingCountUsers = false;
+        StateHasChanged();
     }
 
     private async Task LoadCountTicketsByProgress()
     {
+        loadingCountTicketsByProgress = true;
+        StateHasChanged();
+
         oCountTicketsByPendientes = await servicioSolicitud.GetCountDataByProgressAsync(0, new int[] { 2 });
         oCountTicketsByEnProceso = await servicioSolicitud.GetCountDataByProgressAsync(0, new int[] { 3 });
         oCountTicketsByAtendidos = await servicioSolicitud.GetCountDataByProgressAsync(0, new int[] { 4, 5, 6 });
+
+        loadingCountTicketsByProgress = false;
+        StateHasChanged();
     }
 
     private async Task LoadCountTicketsByIdUsuario()
     {
+        loadingCountTicketsByIdUsuario = true;
+        StateHasChanged();
+
         oCountTicketsByIdUsuario = await servicioSolicitud.GetCountDataByProgressAsync(id, new int[] { });
+
+        loadingCountTicketsByIdUsuario = false;
+        StateHasChanged();
     }
 
     private async Task LogOut()

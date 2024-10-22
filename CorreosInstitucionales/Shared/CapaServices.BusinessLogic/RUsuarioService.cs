@@ -34,9 +34,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
 
         public async Task<Response<object>?> GetCountDataAsync()
         {
-            var response = await _httpClient.PostAsJsonAsync($"{url}/countData", _options);
-            var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Response<object>?>(content, options: _options);
+            var result = await _httpClient.GetFromJsonAsync<Response<object>>($"{url}/countData", options: _options);
             return result;
         }
 
