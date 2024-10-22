@@ -32,16 +32,17 @@
         </div>
 
         <div class="col-6 my-2">
-            <InputFile OnChange="fuAnuncio_OnChange" class="form-control mb-3"></InputFile>
-        </div>
+            <span class="fw-bold">Archivo</span>
+            <InputFile OnChange="fuAnuncio_OnChange" class="form-control mb-3" ></InputFile>
+            <br />
 
-        <div class="col-6 mb-2">
-            <span class="fw-bold">Status<strong class="red" title="requerido">*</strong></span>
+            <span class="fw-bold">Enlace</span>
+            <InputText class="form-control mb-3" @bind-Value="@registro.AnuEnlace"></InputText>
+
+            <span class="fw-bold">Activo</span>
             <InputCheckbox @bind-Value="@registro.AnuStatus" class=" required form-check-input" />
             <ValidationMessage For="()=>registro.AnuStatus"></ValidationMessage>
         </div>
-
-
     </div><!--ROW-->
 
     <div class="container-fluid mt-3 py-3 bg-silver">
