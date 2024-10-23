@@ -294,7 +294,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     SolCapturaError = model.SolCapturaError,
                     SolObservacionesSolicitud = model.SolObservacionesSolicitud?.Trim(),
                     SolIdEstadoSolicitud = model.SolIdEstadoSolicitud,
-                    SolFechaHoraActualizacion = model.SolFechaHoraActualizacion,
+                    SolFechaHoraActualizacion = DateTime.Now,
                     SolValidacionDatos = model.SolValidacionDatos,
                     SolEnvioEncuesta = model.SolEnvioEncuesta,
                     SolEncuestaCalidadCalificacion = model.SolEncuestaCalidadCalificacion,
