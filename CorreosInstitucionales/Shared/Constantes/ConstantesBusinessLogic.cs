@@ -30,7 +30,7 @@ namespace CorreosInstitucionales.Shared.Constantes
             {
                 case TipoPersonal.ALUMNO:           return "ALUMNO";
                 case TipoPersonal.EGRESADO:         return "EGRESADO";
-                case TipoPersonal.MAESTRIA:         return "MAESTRÍA";
+                case TipoPersonal.POSGRADO:         return "POSGRADO";
                 case TipoPersonal.DOCENTE:          return "DOCENTE";
                 case TipoPersonal.HONORARIOS:       return "HONORARIOS";
             }

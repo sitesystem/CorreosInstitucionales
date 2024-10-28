@@ -106,7 +106,7 @@
         </div>
     </section>
 
-    @if (es_alumno || es_alumno_maestria || es_empleado)
+    @if (es_alumno || es_alumno_posgrado || es_empleado)
     {
         <section class="mb-2">
             <h1 class="my-4">Información General</h1>
@@ -141,10 +141,10 @@
                     </div>
                 }
 
-                @if (es_alumno_maestria)
+                @if (es_alumno_posgrado)
                 {
                     <div class="col-2">
-                        <span class="fw-bold">Boleta (Maestria)<strong class="red" title="requerido">*</strong></span>
+                        <span class="fw-bold">Boleta (Posgrado)<strong class="red" title="requerido">*</strong></span>
                         <InputText @bind-Value="@registro.UsuBoletaPosgrado" class="required form-control" />
                         <ValidationMessage For="()=>registro.UsuBoletaPosgrado"></ValidationMessage>
                     </div>
@@ -159,7 +159,7 @@
                     </div>
                 }
 
-                @if (es_alumno || es_alumno_maestria)
+                @if (es_alumno || es_alumno_posgrado)
                 {
                     <div class="col-3">
                         <span class="fw-bold">Comprobante de Etudios</span>
@@ -250,9 +250,8 @@
     private Dictionary<TipoDocumento, IBrowserFile?> archivos = new();
 
     private bool es_alumno { get { return tipo_personal_alumnos.Contains(registro.UsuIdTipoPersonal); } }
-
-    private bool es_egresado { get { return registro.UsuIdTipoPersonal == (int)TipoPersonal.EGRESADO || es_alumno_maestria; } }
-    private bool es_alumno_maestria { get { return registro.UsuIdTipoPersonal == (int)TipoPersonal.MAESTRIA; } }
+    private bool es_egresado { get { return registro.UsuIdTipoPersonal == (int)TipoPersonal.EGRESADO || es_alumno_posgrado; } }
+    private bool es_alumno_posgrado { get { return registro.UsuIdTipoPersonal == (int)TipoPersonal.POSGRADO; } }
     private bool es_empleado { get { return tipo_peronal_personal.Contains(registro.UsuIdTipoPersonal); } }
 
     private void fuCURP_OnChange(InputFileChangeEventArgs e)

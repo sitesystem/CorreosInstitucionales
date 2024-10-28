@@ -489,7 +489,7 @@ else
             @* DATOS ID DEL USUARIO *@
             oUsuario.IdUsuario = 0;
             oUsuario.UsuIdRol = 2;                              // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-            oUsuario.UsuIdTipoPersonal = IdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
+            oUsuario.UsuIdTipoPersonal = IdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Posgrado], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
             @* DATOS PERSONALES *@
             oUsuario.UsuNombres = "";                            // Nombre del Usuario Solicitante o Administrador
             oUsuario.UsuPrimerApellido = "";                    // Primer Apellido del Usuario Solicitante o Administrador
@@ -501,9 +501,9 @@ else
             oUsuario.UsuNoCelularActual = "";                   // Número de Celular Nuevo que sería el número de celular actual
             @* DATOS ACADÉMICOS *@
             oUsuario.UsuBoletaAlumnoEgresado = $@"0000{oEscuela?.Data?.EscNoEscuela}0000";            // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
-            oUsuario.UsuBoletaPosgrado = "B000000";             // Número de Boleta del Usuario (Alumno de Maestria)
+            oUsuario.UsuBoletaPosgrado = "B000000";             // Número de Boleta del Usuario (Alumno de Posgrado)
             oUsuario.UsuIdCarrera = 2;                          // FK ID de la Carrera del Alumno
-            oUsuario.UsuSemestre = "0";                         // Semestre que cursa el Alumno Inscrito o de Maestria
+            oUsuario.UsuSemestre = "0";                         // Semestre que cursa el Alumno Inscrito o de Posgrado
             oUsuario.UsuAnioEgreso = 1950;                      // Año de Egreso en dado caso
             oUsuario.UsuFileNameComprobanteEstudios = "-";      // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             oUsuario.UsuFileSizeComprobanteEstudios = 1L;       // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
@@ -538,7 +538,7 @@ else
             @* DATOS ID DEL USUARIO *@
             oUsuario!.IdUsuario = oEditUsuario!.IdUsuario;
             oUsuario.UsuIdRol = oEditUsuario.UsuIdRol;                              // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-            oUsuario.UsuIdTipoPersonal = oEditUsuario.UsuIdTipoPersonal;            // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
+            oUsuario.UsuIdTipoPersonal = oEditUsuario.UsuIdTipoPersonal;            // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Posgrado], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
             @* DATOS PERSONALES *@
             oUsuario.UsuNombres = oEditUsuario.UsuNombres;                          // Nombre del Usuario Solicitante o Administrador
             oUsuario.UsuPrimerApellido = oEditUsuario.UsuPrimerApellido;            // Primer Apellido del Usuario Solicitante o Administrador
@@ -551,9 +551,9 @@ else
             oUsuario.UsuNoCelularActual = oEditUsuario.UsuNoCelularActual;          // Número de Celular Nuevo que sería el número de celular actual
             @* DATOS ACADÉMICOS *@
             oUsuario.UsuBoletaAlumnoEgresado = oEditUsuario.UsuBoletaAlumnoEgresado;// Número de Boleta del Usuario (Alumno Inscrito o Egresado)
-            oUsuario.UsuBoletaPosgrado = oEditUsuario.UsuBoletaPosgrado;            // Número de Boleta del Usuario (Alumno de Maestria)
+            oUsuario.UsuBoletaPosgrado = oEditUsuario.UsuBoletaPosgrado;            // Número de Boleta del Usuario (Alumno de Posgrado)
             oUsuario.UsuIdCarrera = oEditUsuario.UsuIdCarrera;                      // FK ID de la Carrera del Alumno
-            oUsuario.UsuSemestre = oEditUsuario.UsuSemestre;                        // Semestre que cursa el Alumno Inscrito o de Maestria
+            oUsuario.UsuSemestre = oEditUsuario.UsuSemestre;                        // Semestre que cursa el Alumno Inscrito o de Posgrado
             oUsuario.UsuAnioEgreso = oEditUsuario.UsuAnioEgreso;                    // Año de Egreso en dado caso
             oUsuario.UsuFileNameComprobanteEstudios = oEditUsuario.UsuFileNameComprobanteEstudios;    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             oUsuario.UsuFileSizeComprobanteEstudios = oEditUsuario.UsuFileSizeComprobanteEstudios;    // Tamaño del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)

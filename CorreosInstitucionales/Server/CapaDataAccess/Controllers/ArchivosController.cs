@@ -173,7 +173,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                 {
                     case TipoPersonal.ALUMNO:
                     case TipoPersonal.EGRESADO:
-                    case TipoPersonal.MAESTRIA:
+                    case TipoPersonal.POSGRADO:
                         notificacion.correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_solicitud);
                         break;
                     default:
@@ -706,7 +706,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     case TipoPersonal.EGRESADO:
                         id_externo_usuario = usuario.UsuBoletaAlumnoEgresado;
                         break;
-                    case TipoPersonal.MAESTRIA:
+                    case TipoPersonal.POSGRADO:
                         id_externo_usuario = usuario.UsuBoletaPosgrado;
                         break;
                 }

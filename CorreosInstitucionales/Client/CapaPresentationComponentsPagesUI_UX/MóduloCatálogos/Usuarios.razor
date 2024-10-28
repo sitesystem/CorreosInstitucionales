@@ -45,7 +45,7 @@
                     GroupPanelText="Arrastra y suelta aquí un encabezado de una columna para agrupar sus datos."
                     Visible="@cargado">
         <HeaderTemplate>
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" class="">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.SpaceBetween" Gap="10px" Wrap="FlexWrap.Wrap" class="">
                 <button class="btn btn-secondary" @onclick="LoadList">
                     @* <RadzenIcon Icon="refresh" IconColor="@Colors.White" IconStyle="IconStyle.Warning" Style="font-size:20px;" /> *@
                     Recargar Listado
@@ -54,6 +54,13 @@
                         <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
                     </svg>
                 </button>
+                <RadzenSplitButton Icon="ios_share" Text="Exportar a Excel" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Variant="Variant.Flat" BusyText="Exportando a Excel..." IsBusy="@busy_export_excel" class="rz-shadow-4"
+                                   Click="@(async (args) => await Export(args, "excel"))">
+                    <ChildContent>
+                        <RadzenSplitButtonItem Icon="grid_on" Text="Todos los registros" Value="Todos los registros" Style="cursor:pointer;" />
+                    </ChildContent>
+                </RadzenSplitButton>
+                @* <RadzenButton Text="Export CSV" Icon="wrap_text" Click="@(async () => await Export("csv"))" /> *@
                 <RadzenSelectBar @bind-Value="@Density" TextProperty="Text" ValueProperty="Value" Visible="false"
                                  Data="@(Enum.GetValues(typeof(Density)).Cast<Density>().Select(t => new { Text = $"{t}", Value = t }))" Size="ButtonSize.Small">
                 </RadzenSelectBar>
@@ -187,7 +194,7 @@
                                                     <RadzenBadge Variant="Variant.Flat" Shade="@(shade)" BadgeStyle="@(style)" Text="" IsPill="true" class="rz-display-block rz-ms-2">
                                                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.NoWrap" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
                                                             <RadzenIcon Icon="@(icon)" />
-                                                            @dataSolicitud.SolIdEstadoSolicitudNavigation.EdosolNombreEstado
+                                                            @dataSolicitud.SolIdEstadoSolicitudNavigation!.EdosolNombreEstado
                                                         </RadzenStack>
                                                     </RadzenBadge>
                                                 </div>
@@ -242,6 +249,13 @@
                 <Template Context="item">
                     <RadzenBadge Variant="Variant.Flat" Text="@($"{items.IndexOf(item) + 1}")" BadgeStyle="@(BadgeStyle.Danger)" Shade="@(Shade.Dark)" IsPill="false" class="" />
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="#" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>#</b><br>Número consecutivo.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="ID" Property="@nameof(RequestDTO_Usuario.IdUsuario)" Pickable="false"
@@ -249,6 +263,13 @@
                 <Template Context="item">
                     <h5 class="text-wrap">@item.IdUsuario</h5>
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="ID" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>ID</b><br>Llave Primaria / Identificador Único.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Nombre Completo" Property="@(nameof(RequestDTO_Usuario.UsuNombres))" Pickable="false"
@@ -298,6 +319,13 @@
                         </div>
                     }
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="NOMBRE COMPLETO (Filtro y búsqueda por el Nombre de pila)" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>Nombre Completo</b><br>Filtro y búsqueda por el Nombre de pila.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="CURP" Property="@nameof(RequestDTO_Usuario.UsuCurp)" Pickable="false"
@@ -309,6 +337,13 @@
                                                 Text = "<b>CURP</b><br>Filtro y búsqueda por el CURP.",
                                                 Position = TooltipPosition.Top, Delay = 0, Duration = 10000 }))" />
                 </HeaderTemplate>
+                <FooterTemplate>
+                    <RadzenButton Text="CURP" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>CURP</b><br>Filtro y búsqueda por el CURP.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Boleta de Licenciatura" Property="@nameof(RequestDTO_Usuario.UsuBoletaAlumnoEgresado)" Pickable="false"
@@ -325,6 +360,13 @@
                         @((item.UsuIdTipoPersonal == 1 || item.UsuIdTipoPersonal == 2) ? $"{item.UsuBoletaAlumnoEgresado}" : "sin asignar")
                     </div>
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="BOLETA LICENCIATURA" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>Boleta Licenciatura</b><br>Filtro y búsqueda por la Boleta de Licenciatura.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="No. de Celular" Property="UsuNoCelularActual" Pickable="false"
@@ -343,6 +385,13 @@
                         <strong>Anterior:</strong> @(!string.IsNullOrEmpty(item.UsuNoCelularAnterior) ? $"{@item.UsuNoCelularAnterior}" : "no asignado")
                     </div>
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="NO. CELULAR (Filtro y búsqueda por el No. Celular Actual)" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>No. de Celular</b><br>Filtro y búsqueda por el No. Celular Actual",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Correo Electrónico Personal" Property="UsuCorreoPersonalCuentaActual" Pickable="false"
@@ -361,6 +410,13 @@
                         <strong>Anterior:</strong> @(!string.IsNullOrEmpty(item.UsuCorreoPersonalCuentaAnterior) ? $"{@item.UsuCorreoPersonalCuentaAnterior}" : "no asignado")
                     </div>
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="CORREO PERSONAL (Filtro y búsqueda por el Correo Electrónico Personal Actual)" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>Correo Electrónico Personal</b><br>Filtro y búsqueda por el Correo Electrónico Personal Actual",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Correo Institucional" Property="UsuCorreoInstitucionalCuenta" Pickable="false"
@@ -381,6 +437,13 @@
                         </text>
                     </div>
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="CORREO INSTITUCIONAL" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>Correo Institucional</b><br>Filtro y búsqueda por el Correo Institucional",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Usuario" Title="Carrera / Licenciatura" Property="UsuIdCarreraNavigation.CarrNombre"
@@ -757,4 +820,34 @@
     void OnGroupRowRender(GroupRowRenderEventArgs args) => args.Expanded = true;
 
     void ShowTooltipWithHtml(ElementReference elementReference, TooltipOptions options = null!) => TooltipService.Open(elementReference, ds => null!, options);
+
+    bool busy_export_excel;
+    public async Task Export(RadzenSplitButtonItem item, string type)
+    {
+        busy_export_excel = true;
+        var query = new Radzen.Query();
+
+        if (item == null)
+        {
+            NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Registros exportados a Excel", Detail = $"Usuarios" });
+
+            query = new Radzen.Query()
+            {
+                OrderBy = oUsuariosRef?.Query.OrderBy,
+                Filter = oUsuariosRef?.Query.Filter,
+                Select = string.Join(",", oUsuariosRef!.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property))
+                                .Select(c => c.Property.Contains(".") ? $"{c.Property} as {c.Property.Replace(".", "_")}" : c.Property))
+            };
+        }
+        else
+        {
+            NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Registros exportados a Excel", Detail = $"{item.Value}" });
+            query = null;
+        }
+
+        navigationManager.NavigateTo(query != null ? query.ToUrl($"/api/RExportExcelCSV/export/usuarios/{type}") : $"/api/RExportExcelCSV/export/usuarios/{type}", true);
+
+        await Task.Delay(2000);
+        busy_export_excel = false;
+    }
 }

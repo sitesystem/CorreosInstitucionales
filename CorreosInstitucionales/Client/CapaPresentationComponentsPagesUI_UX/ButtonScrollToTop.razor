@@ -1,24 +1,34 @@
 ﻿<!-- ... Contenido para pantallas pequeñas móviles -->
 <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none">
-    <RadzenButton id="scroll-to-top-movil" Click=@(args => JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0)) Text="" Icon="arrow_upward" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Large" Shade="Shade.Dark" Variant="Variant.Flat"
-                  class="rz-border-radius-10 rz-shadow-10 rz-ripple" Style="display: none; position: fixed; bottom: 80px; right: 20px; z-index:1000;" />
+    <RadzenButton id="scroll-to-top-movil" Click=@(async () => await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0)) Text="" Icon="arrow_upward" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Large" Shade="Shade.Dark" Variant="Variant.Flat"
+                  Style="display: none; position: fixed; bottom: 80px; right: 20px; z-index:10000;" class="rz-border-radius-10 rz-shadow-10 rz-ripple" />
 </div>
 
 <!-- ... Contenido para pantallas grandes ... -->
 <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block">
-    <RadzenButton id="scroll-to-top-monitor" Click=@(args => JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0)) Text="Subir" Icon="arrow_upward" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Large" Shade="Shade.Light" Variant="Variant.Flat"
-                  class="rz-border-radius-10 rz-shadow-10 rz-ripple" Style="display: none; position: fixed; bottom: 80px; right: 20px; z-index:1000;" />
+    <RadzenButton id="scroll-to-top-monitor" Click=@(async () => await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0)) Text="Subir" Icon="arrow_upward" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Large" Shade="Shade.Light" Variant="Variant.Flat"
+                  Style="display: none; position: fixed; bottom: 80px; right: 20px; z-index:10000;" class="rz-border-radius-10 rz-shadow-10 rz-ripple" />
 </div>
 
 @code
 {
+    private bool isButtonVisible = false;
+
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         await JSRuntime.InvokeVoidAsync("onscroll");
+        // await JSRuntime.InvokeVoidAsync("addScrollListener", DotNetObjectReference.Create(this));
 
         if (firstRender)
         {
         }
+    }
+
+    [JSInvokable]
+    public void ToggleButtonVisibility(bool isVisible)
+    {
+        isButtonVisible = isVisible;
+        StateHasChanged();
     }
 }

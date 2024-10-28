@@ -91,6 +91,17 @@
                 }))
         }
 
+        window.initCarousel = function () {
+            new bootstrap.Carousel(document.querySelector('#carouselExampleAutoplaying'), {
+                interval: 5000,
+                touch: true,
+                keyboard: true,
+                pause: "hover",
+                ride: "carousel",
+                wrap: true
+            })
+        };
+
         window.onscroll = function () {
             var scrollToTopBtn_movil = document.querySelector("#scroll-to-top-movil");
             var scrollToTopBtn_monitor = document.querySelector("#scroll-to-top-monitor");
@@ -105,15 +116,11 @@
             }
         };
 
-        window.initCarousel = function () {
-            new bootstrap.Carousel(document.querySelector('#carouselExampleAutoplaying'), {
-                interval: 5000,
-                touch: true,
-                keyboard: true,
-                pause: "hover",
-                ride: "carousel",
-                wrap: true
-            })
+        window.addScrollListener = function (dotNetHelper) {
+            window.onscroll = () => {
+                const isVisible = window.scrollY > 300;
+                dotNetHelper.invokeMethodAsync("ToggleButtonVisibility", isVisible);
+            };
         };
 
         window.scrollToTop = function () {

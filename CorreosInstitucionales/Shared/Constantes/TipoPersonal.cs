@@ -12,7 +12,7 @@ namespace CorreosInstitucionales.Shared.Constantes
         NINGUNO = 0,
         ALUMNO = 1,
         EGRESADO = 2,
-        MAESTRIA = 3,
+        POSGRADO = 3,
         ADMINISTRATIVO = 4,
         DOCENTE = 5,
         HONORARIOS = 6,

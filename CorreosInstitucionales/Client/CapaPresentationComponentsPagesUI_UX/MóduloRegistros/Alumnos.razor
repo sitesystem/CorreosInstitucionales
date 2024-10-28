@@ -299,11 +299,11 @@
                     @if ((IdTipoPersonal == 2 || TipoPersonal == "egresado") || (IdTipoPersonal == 1 && ActionAddEdit == "actualizar"))
                     {
                         <div class="col-md-4 col-lg-4">
-                            <RadzenFormField Text="¿Eres Egresado?" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3" Disabled="true">
+                            <RadzenFormField Text="¿Eres Egresado?" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
                                 <ChildContent>
                                     <div class="rz-text-align-center">
-                                        <RadzenSelectBar @bind-Value="@flagEsEgresado" TValue="bool" ValueProperty="" TextProperty="" Size="ButtonSize.Medium" Multiple="false" Disabled="@flagEsEgresadoDisabled" class="rz-m-4"
-                                                         Change="@ChangeSelectBarEgresado">
+                                        <RadzenSelectBar @bind-Value="@flagEsEgresado" TValue="bool" ValueProperty="" TextProperty="" Size="ButtonSize.Medium" Multiple="false"
+                                                         Disabled="@flagEsEgresadoDisabled" Change="@ChangeSelectBarEgresado" class="rz-m-4">
                                             <Items>
                                                 <RadzenSelectBarItem Value="true" Text="Sí" Icon="check_circle" IconColor="@(!flagEsEgresado ? Colors.SuccessDarker : Colors.White)" />
                                                 <RadzenSelectBarItem Value="false" Text="No" Icon="cancel" IconColor="@(flagEsEgresado ? Colors.DangerDarker : Colors.White)" />
@@ -591,7 +591,7 @@ else
             @* DATOS ID DEL USUARIO *@
             oUsuario!.IdUsuario = 0;
             oUsuario.UsuIdRol = 2;                              // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-            oUsuario.UsuIdTipoPersonal = IdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
+            oUsuario.UsuIdTipoPersonal = IdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Posgrado], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
             @* DATOS PERSONALES *@
             oUsuario.UsuNombres = "";                           // Nombre del Usuario Solicitante o Administrador
             oUsuario.UsuPrimerApellido = "";                    // Primer Apellido del Usuario Solicitante o Administrador
@@ -607,7 +607,7 @@ else
                 oUsuario.UsuBoletaAlumnoEgresado = "";
                 oUsuario.UsuBoletaPosgrado = "B000000";
             }
-            else if (IdTipoPersonal == 3)                       // Número de Boleta del Usuario (Alumno de Maestria)
+            else if (IdTipoPersonal == 3)                       // Número de Boleta del Usuario (Alumno de Posgrado)
             {
                 oUsuario.UsuBoletaAlumnoEgresado = $@"0000{oEscuela?.Data?.EscNoEscuela}0000";
                 oUsuario.UsuBoletaPosgrado = "";
@@ -615,12 +615,12 @@ else
             if (IdTipoPersonal == 1 || IdTipoPersonal == 2)
             {
                 // oUsuario.UsuIdCarrera = 1;                   // FK ID de la Carrera del Alumno
-                oUsuario.UsuSemestre = "";                      // Semestre que cursa el Alumno Inscrito o de Maestria
+                oUsuario.UsuSemestre = "";                      // Semestre que cursa el Alumno Inscrito o de Posgrado
             }
             else if (IdTipoPersonal == 3)
             {
                 oUsuario.UsuIdCarrera = 1;                      // FK ID de la Carrera del Alumno
-                oUsuario.UsuSemestre = "0";                     // Semestre que cursa el Alumno Inscrito o de Maestria
+                oUsuario.UsuSemestre = "0";                     // Semestre que cursa el Alumno Inscrito o de Posgrado
             }
             oUsuario.UsuAnioEgreso = 1950;                      // Año de Egreso en dado caso
             oUsuario.UsuFileNameComprobanteEstudios = "";       // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
@@ -656,7 +656,7 @@ else
             @* DATOS ID DEL USUARIO *@
             oUsuario!.IdUsuario = oEditUsuario!.IdUsuario;
             oUsuario.UsuIdRol = oEditUsuario.UsuIdRol;                          // FK ID del Rol (1 - Administrador, 2 - Usuario Solicitante)
-            oUsuario.UsuIdTipoPersonal = oEditUsuario.UsuIdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
+            oUsuario.UsuIdTipoPersonal = oEditUsuario.UsuIdTipoPersonal;        // FK ID del Tipo de Personal ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Posgrado], [4 - Administrativo], [5 - Docente], [6 - Honorarios])
             @* DATOS PERSONALES *@
             oUsuario.UsuNombres = oEditUsuario.UsuNombres;                        // Nombre del Usuario Solicitante o Administrador
             oUsuario.UsuPrimerApellido = oEditUsuario.UsuPrimerApellido;        // Primer Apellido del Usuario Solicitante o Administrador
@@ -669,9 +669,9 @@ else
             oUsuario.UsuNoCelularActual = oEditUsuario.UsuNoCelularActual;        // Número de Celular Nuevo que sería el número de celular actual
             @* DATOS ACADÉMICOS *@
             oUsuario.UsuBoletaAlumnoEgresado = oEditUsuario.UsuBoletaAlumnoEgresado;            // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
-            oUsuario.UsuBoletaPosgrado = oEditUsuario.UsuBoletaPosgrado;        // Número de Boleta del Usuario (Alumno de Maestria)
+            oUsuario.UsuBoletaPosgrado = oEditUsuario.UsuBoletaPosgrado;        // Número de Boleta del Usuario (Alumno de Posgrado)
             oUsuario.UsuIdCarrera = oEditUsuario.UsuIdCarrera;                  // FK ID de la Carrera del Alumno
-            oUsuario.UsuSemestre = oEditUsuario.UsuSemestre;                    // Semestre que cursa el Alumno Inscrito o de Maestria
+            oUsuario.UsuSemestre = oEditUsuario.UsuSemestre;                    // Semestre que cursa el Alumno Inscrito o de Posgrado
             oUsuario.UsuAnioEgreso = oEditUsuario.UsuAnioEgreso;                  // Año de Egreso en dado caso
             oUsuario.UsuFileNameComprobanteEstudios = oEditUsuario.UsuFileNameComprobanteEstudios;    // Nombre del Archivo en .pdf del Comprobante de Inscripcion (Tira de Materias)
             srcComprobanteInscripcion = oUsuario.UsuFileNameComprobanteEstudios != "Comprobante-Inscripcion.pdf" ? $"/repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameComprobanteEstudios}" : $"/repositorio/Comprobante-Inscripcion.pdf";

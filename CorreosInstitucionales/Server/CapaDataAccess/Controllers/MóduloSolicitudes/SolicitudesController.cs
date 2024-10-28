@@ -587,7 +587,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                         {
                             case TipoPersonal.ALUMNO:
                             case TipoPersonal.EGRESADO:
-                            case TipoPersonal.MAESTRIA:
+                            case TipoPersonal.POSGRADO:
                                 correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_correo);
                                 break;
                             default:

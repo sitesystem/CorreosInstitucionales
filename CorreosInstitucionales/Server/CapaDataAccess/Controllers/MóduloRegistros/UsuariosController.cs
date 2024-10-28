@@ -150,10 +150,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     UsuAnioEgreso = model.UsuAnioEgreso,
                     UsuFileNameComprobanteEstudios = model.UsuFileNameComprobanteEstudios,
                     // DATOS LABORALES
-                    UsuNumeroEmpleadoContrato = model.UsuNumeroEmpleadoContrato,
+                    UsuNumeroEmpleadoContrato = model.UsuNumeroEmpleadoContrato?.Trim(),
                     UsuIdAreaDepto = model.UsuIdAreaDepto,
-                    UsuNoExtensionAnterior = model.UsuNoExtensionAnterior,
-                    UsuNoExtensionActual = model.UsuNoExtensionActual,
+                    UsuNoExtensionAnterior = model.UsuNoExtensionAnterior?.Trim(),
+                    UsuNoExtensionActual = model.UsuNoExtensionActual?.Trim(),
                     // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
                     UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior,
                     UsuCorreoPersonalCuentaActual = model.UsuCorreoPersonalCuentaActual.Trim(),
@@ -371,7 +371,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 {
                     new (50,    TipoPersonal.ALUMNO),
                     new (10,    TipoPersonal.EGRESADO),
-                    new (10,    TipoPersonal.MAESTRIA),
+                    new (10,    TipoPersonal.POSGRADO),
                     new (10,    TipoPersonal.DOCENTE),
                     new (10,    TipoPersonal.HONORARIOS),
                     new (5,     TipoPersonal.ADMINISTRATIVO),
@@ -465,7 +465,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                             tmp.UsuAnioEgreso = DateTime.Now.Year - (anios_egreso + anios_estudio);
                             break;
 
-                        case TipoPersonal.MAESTRIA:
+                        case TipoPersonal.POSGRADO:
                             es_alumno = true;
                             anios_estudio = rnd.Next(4, 6);
                             anios_egreso = rnd.Next(0, 20);

@@ -144,7 +144,7 @@
         @*************************** tbUsuarios ***************************@
         <RadzenPanelMenuItem Text="Lista de Usuarios" Icon="people_alt" IconColor="@Colors.SecondaryLight" Style="font-size:16px;" Path="catalogo/usuarios" Click="@(LoadCountUsers)" class="nav-menu-hover">
             <Template>
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="5px" class="" Visible="@(isDisplayed)">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" class="" Visible="@(isDisplayed)">
                     Lista de Usuarios&ensp;
                     @{
                         if (!loadingCountUsers)

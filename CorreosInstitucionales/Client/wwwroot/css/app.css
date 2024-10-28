@@ -14,6 +14,11 @@ html, body {
         --pwa-updater-bar-z-index: 10;
     }
 
+::selection {
+    background-color: #0078d7 !important; /* Azul típico de selección */
+    color: #FFFFFF !important; /* Blanco para el texto */
+}
+
 h1:focus {
     outline: none;
 }

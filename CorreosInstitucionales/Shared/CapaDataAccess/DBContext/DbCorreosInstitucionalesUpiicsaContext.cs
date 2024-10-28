@@ -280,7 +280,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
                 .HasComment("FK ID Único del Rol { Administrador, Usuario Solicitante }");
             entity.Property(e => e.UsuIdTipoPersonal)
                 .HasDefaultValue(1)
-                .HasComment("FK ID del Tipo de Personal del Usuario Solicitante ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])");
+                .HasComment("FK ID del Tipo de Personal del Usuario Solicitante ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Posgrado], [4 - Administrativo], [5 - Docente])");
             entity.Property(e => e.UsuNoCelularActual).HasComment("Número Celular Actual del Usuario");
             entity.Property(e => e.UsuNoCelularAnterior).HasComment("Número Celular Anterior del Usuario");
             entity.Property(e => e.UsuNoExtensionActual).HasComment("Número de Extensión actual del Área / Departamento");

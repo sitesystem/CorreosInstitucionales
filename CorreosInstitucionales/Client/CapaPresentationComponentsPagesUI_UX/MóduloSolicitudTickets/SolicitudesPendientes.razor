@@ -93,6 +93,13 @@
                 <Template Context="item">
                     <RadzenBadge Variant="Variant.Flat" Text="@($"{items.IndexOf(item) + 1}")" BadgeStyle="@(BadgeStyle.Dark)" Shade="@(Shade.Darker)" IsPill="false" class="" />
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="#" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>#</b><br>Número consecutivo.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="# Ticket" Property="IdSolicitudTicket" Pickable="false"
@@ -100,6 +107,13 @@
                 <Template Context="data">
                     <h5 class="text-wrap">@data.IdSolicitudTicket</h5>
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="# TICKET" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b># TICKET</b><br>Número de Ticket.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitante" Property="SolIdUsuarioNavigation.UsuCurp" Pickable="false"
@@ -160,7 +174,7 @@
                                     <strong>Número de Boleta: </strong>
                                     @item.SolIdUsuarioNavigation!.UsuBoletaAlumnoEgresado
                                 }
-                                else if (item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == (int)TipoPersonal.MAESTRIA)
+                                else if (item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == (int)TipoPersonal.POSGRADO)
                                 {
                                     <strong>Número de Boleta de Maestría: </strong>
                                     @item.SolIdUsuarioNavigation!.UsuBoletaPosgrado
@@ -210,6 +224,13 @@
                         </ul>
                     </div>
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="SOLICITANTE (Filtro y búsqueda por el CURP)" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>Solicitante</b><br>Filtro y búsqueda por el CURP.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Solicitud" Property="SolIdTipoSolicitudNavigation.TiposolDescripcion" Pickable="false"
@@ -228,6 +249,13 @@
                         <div class="text-end">@item.SolFechaHoraCreacion.ToString("dddd',' dd/MMMM/yyyy HH:mm:ss 'hrs.'")</div>
                     </div>
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="SOLICITUD" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>Solicitud</b><br>Filtro y búsqueda por el tipo o motivo de Solicitud.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Adjuntos"
@@ -329,6 +357,13 @@
                         </ul>
                     </div>
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="ARCHIVOS ADJUNTOS" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>Archivos Adjuntos</b><br>Archivos en PDF requeridos para la revisión y<br>validación de los datos del usuario solicitante.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn><!--ARCHIVOS-->
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Seleccionar"
@@ -337,6 +372,13 @@
                     <RadzenSwitch @bind-Value="@item.SolValidacionDatos" Change="StateHasChanged" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})"
                                   style="--rz-border-width: 2px;" class="rz-border rz-border-base-400 rz-background-color-base-400" />
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="SELECCIONAR" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>Seleccionar</b><br>Selecciona los registros validados.",
+                                                Position = TooltipPosition.Bottom }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="RequestDTO_Solicitud" Title="Cancelar" Context="item"
@@ -350,6 +392,13 @@
                                   Click="@(async ()=> await Actualizar(item, TipoEstadoSolicitud.CANCELADA, "Cancelar"))" @onclick:stopPropagation="true">
                     </RadzenButton>
                 </Template>
+                <FooterTemplate>
+                    <RadzenButton Text="CANCELAR" ButtonStyle="ButtonStyle.Base" Shade="Shade.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                  MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){
+                                                Style = "background: var(--rz-warning-light); color: var(--rz-text-color)",
+                                                Text = "<b>Cancelar</b><br>Cancelación de un Ticket.",
+                                                Position = TooltipPosition.Left }))" />
+                </FooterTemplate>
             </RadzenDataGridColumn>
         </Columns>
         <EmptyTemplate>

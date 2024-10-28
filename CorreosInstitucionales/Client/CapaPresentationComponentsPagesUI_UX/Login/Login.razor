@@ -277,12 +277,10 @@
                 anuncios = oAnuncios.Data;
                 n_anuncios = anuncios.Count;
                 debug_anuncios = $"{n_anuncios} ANUNCIOS CARGADOS";
-                
             }
 
             carrusel_cargado = true;
             StateHasChanged();
-
 
             await JSRuntime.InvokeVoidAsync("initCarousel");
         }

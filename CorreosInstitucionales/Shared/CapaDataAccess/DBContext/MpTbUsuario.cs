@@ -23,7 +23,7 @@ public partial class MpTbUsuario
     public int UsuIdRol { get; set; }
 
     /// <summary>
-    /// FK ID del Tipo de Personal del Usuario Solicitante ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Maestria], [4 - Administrativo], [5 - Docente])
+    /// FK ID del Tipo de Personal del Usuario Solicitante ([1 - Alumno Inscrito], [2 - Alumno Egresado], [3 - Posgrado], [4 - Administrativo], [5 - Docente])
     /// </summary>
     [Column("usuIdTipoPersonal")]
     public int UsuIdTipoPersonal { get; set; }

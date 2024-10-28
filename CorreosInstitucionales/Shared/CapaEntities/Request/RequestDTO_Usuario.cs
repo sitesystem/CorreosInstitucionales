@@ -19,7 +19,7 @@ public class RequestDTO_Usuario : MpTbUsuario
     [
         Constantes.TipoPersonal.ALUMNO,
         Constantes.TipoPersonal.EGRESADO,
-        Constantes.TipoPersonal.MAESTRIA
+        Constantes.TipoPersonal.POSGRADO
     ];
 
     public bool EsAlumnoOEgresado() => perfiles_alumno_egresado.Contains((TipoPersonal)UsuIdTipoPersonal);
