@@ -13,6 +13,7 @@ using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolDebug;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -35,8 +36,9 @@ builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider =>
 builder.Services.AddScoped<RArchivosService>();
 
 // Inyección de Dependencias - Módulo de Send Email & Send WhatsApp
-builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
-builder.Services.AddScoped<ISendWhatsAppService, RSendWhatsAppService>();
+builder.Services.AddScoped<RSendEmailService>();
+builder.Services.AddScoped<RSendWhatsAppService>();
+builder.Services.AddScoped<RSendNotificacionesService>();
 
 // Inyección de Dependencias - Módulo de Registro del Usuario
 builder.Services.AddScoped<RUsuarioService>();
@@ -57,6 +59,7 @@ builder.Services.AddScoped<RPisoService>();
 builder.Services.AddScoped<RTipoPersonalService>();
 builder.Services.AddScoped<RTipoSolicitudService>();
 builder.Services.AddScoped<RAnuncioService>();
+builder.Services.AddScoped<RPlantillaService>();
 
 // Inyección de Dependencias - Módulo de Estadísticas
 builder.Services.AddScoped<REstadisticasService>();

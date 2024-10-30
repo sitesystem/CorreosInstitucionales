@@ -36,38 +36,5 @@ namespace CorreosInstitucionales.Shared.CapaTools
         {
             return wa.Number == "5500000000";
         }
-
-        public async Task<List<string>> Enviar(ISendEmailService servicioCorreo, WhatsApp WA)
-        {
-            string id = Guid.NewGuid().ToString();
-            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/{id}.txt";
-
-            List<string> log = [];
-
-            if (EsCorreoPrueba())
-            {
-                log.Add($"[CORREO DE PRUEBA] {correo.EmailTo}");
-            }
-            else
-            {
-                _ = Task.Run(() => servicioCorreo.SendEmailAsync(correo));
-                log.Add($"[CORREO ENVIADO:] {correo.EmailTo}");
-            }
-
-            if (EsWAPrueba())
-            {
-                log.Add($"[WA DE PRUEBA] {wa.Message}");
-            }
-            else
-            {
-                log.Add($"[ENVIO DE WA] {correo.EmailTo}");
-                Response<string> response = await WA.SendMessage(wa);
-                log.Add(response.Success == 1 ? "[OK]" : "[ERROR]");
-            }
-            
-            System.IO.File.WriteAllText(archivo, string.Join(Environment.NewLine, log));
-
-            return log;
-        }
     }
 }
