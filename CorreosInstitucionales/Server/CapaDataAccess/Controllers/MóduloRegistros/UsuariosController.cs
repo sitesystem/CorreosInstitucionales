@@ -7,17 +7,26 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+using System.Dynamic;
+using Azure.Identity;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegistros
 {
     [Route("api/[controller]")]
     [ApiController]
     // [Authorize]
-    public class UsuariosController(DbCorreosInstitucionalesUpiicsaContext db, IHostEnvironment hostEnvironment, IWebHostEnvironment webHostEnvironment) : ControllerBase
+    public class UsuariosController(
+        DbCorreosInstitucionalesUpiicsaContext db, 
+        IHostEnvironment hostEnvironment, 
+        IWebHostEnvironment webHostEnvironment,
+        RSendNotificacionesService servicioNotificacion
+        ) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
         private readonly IHostEnvironment _hostEnvironment = hostEnvironment;
         private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
+        private readonly RSendNotificacionesService _servicioNotificacion = servicioNotificacion;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
@@ -124,66 +133,79 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         {
             Response<object> oResponse = new();
             CreatedAtActionResult oCreatedAtActionResult;
+            McCatPlantillas[] plantillas;
+            PlantillaManager plantilla;
 
             try
             {
-                MpTbUsuario oUsuario = new()
-                {
-                    // DATOS ID DEL USUARIO
-                    IdUsuario = model.IdUsuario,
-                    UsuIdRol = model.UsuIdRol,
-                    UsuIdTipoPersonal = model.UsuIdTipoPersonal,
-                    // UsuToken = Guid.NewGuid().ToString("D"),
-                    // DATOS PERSONALES
-                    UsuNombres = model.UsuNombres.ToUpper().Trim(),
-                    UsuPrimerApellido = model.UsuPrimerApellido.ToUpper().Trim(),
-                    UsuSegundoApellido = model.UsuSegundoApellido?.ToUpper().Trim(),
-                    UsuCurp = model.UsuCurp.ToUpper(),
-                    UsuFileNameCurp = model.UsuFileNameCurp,
-                    UsuNoCelularAnterior = null,
-                    UsuNoCelularActual = model.UsuNoCelularActual,
-                    // DATOS ACADÉMICOS
-                    UsuBoletaAlumnoEgresado = model.UsuBoletaAlumnoEgresado,
-                    UsuBoletaPosgrado = model.UsuBoletaPosgrado,
-                    UsuIdCarrera = model.UsuIdCarrera,
-                    UsuSemestre = model.UsuSemestre,
-                    UsuAnioEgreso = model.UsuAnioEgreso,
-                    UsuFileNameComprobanteEstudios = model.UsuFileNameComprobanteEstudios,
-                    // DATOS LABORALES
-                    UsuNumeroEmpleadoContrato = model.UsuNumeroEmpleadoContrato?.Trim(),
-                    UsuIdAreaDepto = model.UsuIdAreaDepto,
-                    UsuNoExtensionAnterior = model.UsuNoExtensionAnterior?.Trim(),
-                    UsuNoExtensionActual = model.UsuNoExtensionActual?.Trim(),
-                    // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
-                    UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior,
-                    UsuCorreoPersonalCuentaActual = model.UsuCorreoPersonalCuentaActual.Trim(),
-                    UsuContrasenia = Encrypt.GetSHA256(model.UsuContrasenia),
-                    UsuRecuperarContrasenia = false,
-                    // DATOS DEL CORREO INSTITUCIONAL
-                    UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta?.Trim(),
-                    UsuCorreoInstitucionalContrasenia = model.UsuCorreoInstitucionalContrasenia,
-                    // OTROS DATOS
-                    UsuFechaHoraAlta = DateTime.Now,
-                    UsuFechaHoraActualizacion = DateTime.Now,
-                    UsuStatus = model.UsuStatus,
-                    // DATOS FK NAVIGATION
-                    UsuIdAreaDeptoNavigation = null,
-                    UsuIdCarreraNavigation = null,
-                    UsuIdRolNavigation = null!,
-                    UsuIdTipoPersonalNavigation = null!
-                };
+                model.UsuContrasenia = Encrypt.GetSHA256(model.UsuContrasenia);
+                model.UsuFechaHoraAlta = DateTime.Now;
+                model.UsuFechaHoraActualizacion = DateTime.Now;
 
-                await _db.MpTbUsuarios.AddAsync(oUsuario);
+                await _db.MpTbUsuarios.AddAsync(model);
                 await _db.SaveChangesAsync();
 
                 oResponse.Success = 1;
 
-                oCreatedAtActionResult = CreatedAtAction(nameof(AddData), new { id = oUsuario.IdUsuario }, oUsuario);
-                oResponse.Message = oUsuario.IdUsuario.ToString(); // PK ID Único del Usuario Creado o dado de Alta
+                oCreatedAtActionResult = CreatedAtAction(nameof(AddData), new { id = model.IdUsuario }, model);
+                oResponse.Message = model.IdUsuario.ToString(); // PK ID Único del Usuario Creado o dado de Alta
+
+                plantillas = await _db.McCatPlantillas
+                    .Where(p => p.PlaStatus && p.PlaFiltro == PlantillaManager.FILTRO_ERROR_ALTA_USUARIO)
+                    .ToArrayAsync();
+
+                plantilla = new PlantillaManager(plantillas);
+
+                Response<Notificacion?> notificacion = plantilla.GetNotificacion
+                (
+                    new()
+                    {
+                        { "usuario", model }
+                    },
+                    1, PlantillaManager.FILTRO_ALTA_USUARIO
+                );
+
+                Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data!);
+
+                if (response.Success != 1)
+                {
+                    oResponse.Message += Environment.NewLine + "NO SE PUDO NOTIFICAR";
+                }
+
+                if (model.UsuSemestre == "ERROR")
+                {
+                    throw new Exception("DEBUG");
+                }
             }
             catch (Exception ex)
             {
+                string traceid = $"{ServerFS.GetBaseDir(true)}/logs/error_alta_{Guid.NewGuid()}.txt";
+
                 oResponse.Message = ex.Message;
+
+                plantillas = await _db.McCatPlantillas
+                    .Where(p => p.PlaStatus && p.PlaFiltro == PlantillaManager.FILTRO_ERROR_ALTA_USUARIO)
+                    .ToArrayAsync();
+
+                plantilla = new PlantillaManager(plantillas);
+
+                Response<Notificacion?> notificacion = plantilla.GetNotificacion
+                (
+                    new()
+                    {
+                        { "usuario", model }
+                    },
+                    1,PlantillaManager.FILTRO_ERROR_ALTA_USUARIO
+                );
+
+                Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data!);
+
+                if(response.Success != 1)
+                {
+                    oResponse.Message += Environment.NewLine + "NO SE PUDO NOTIFICAR";
+                }
+
+                await System.IO.File.WriteAllTextAsync(traceid, oResponse.Message);
             }
 
             return Ok(oResponse);
@@ -258,7 +280,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         [HttpPut("resetPassword/{correoPersonal}/{curp}")]
         public async Task<IActionResult> ResetPassword(string correoPersonal, string curp)
         {
-            Response<MpTbUsuario> oRespuesta = new();
+            Response<bool> oRespuesta = new();
             try
             {
                 MpTbUsuario? oUsuario = await _db.MpTbUsuarios.Where(u => u.UsuCorreoPersonalCuentaActual == correoPersonal && u.UsuCurp == curp && u.UsuStatus == true)
@@ -266,19 +288,62 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                 if (oUsuario != null)
                 {
+                    
                     const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&";
-                    string tmpPassword = new(Enumerable.Repeat(chars, 10).Select(s => s[new Random().Next(s.Length)]).ToArray());
-
-                    oUsuario.UsuContrasenia = Encrypt.GetSHA256(tmpPassword);
+                    
+                    string clave = new string(Enumerable.Repeat(chars, 10).Select(s => s[new Random().Next(s.Length)]).ToArray());
+                    
+                    oUsuario.UsuContrasenia = Encrypt.GetSHA256(clave);
                     oUsuario.UsuRecuperarContrasenia = true;
                     oUsuario.UsuFechaHoraActualizacion = DateTime.Now;
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
-                    await _db.SaveChangesAsync();
 
-                    oRespuesta.Success = 1;
-                    oRespuesta.Message = $"{tmpPassword}";
-                    oRespuesta.Data = oUsuario;
+                    int cambios = await _db.SaveChangesAsync();
+
+                    if(cambios == 1)
+                    {
+                        oRespuesta.Success = 1;
+
+                        Dictionary<string, object?> datos = new()
+                        {
+                            {
+                                "usuario", oUsuario 
+                            },
+                            {
+                                "datos", new Dictionary<string, object?>()
+                                {
+                                    {"clave" , clave }
+                                }
+                            }
+                        };
+                        
+                        McCatPlantillas[] plantillas = _db.McCatPlantillas
+                            .Where(p => p.PlaStatus && p.PlaFiltro == PlantillaManager.FILTRO_RECUPERACION_CONTRA)
+                            .ToArray();
+
+                        PlantillaManager plantilla = new PlantillaManager(plantillas);
+
+                        Response<Notificacion?> notificacion = plantilla.GetNotificacion(datos, 1 , PlantillaManager.FILTRO_RECUPERACION_CONTRA);
+
+                        oRespuesta.Data = notificacion is not null && notificacion.Success == 1;
+
+                        if (oRespuesta.Data)
+                        {
+                            Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion!.Data!);
+                            oRespuesta.Data = response.Success == 1;
+                            if (!oRespuesta.Data)
+                            {
+                                oRespuesta.Message = response.Data!;
+                            }
+                        }
+                        else
+                        {
+                            oRespuesta.Message = notificacion!.Message;
+                        }
+                    }
+
+
                 }
                 else
                     oRespuesta.Message = "Verifique sus datos, no se encontró registrado el Correo Electrónico Personal y/o CURP. Si el problema persisite acudir a la Unidad Informática (UDI).";

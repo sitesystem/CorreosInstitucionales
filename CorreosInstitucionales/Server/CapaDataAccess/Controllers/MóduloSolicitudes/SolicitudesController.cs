@@ -12,6 +12,9 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.Constantes;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+using CorreosInstitucionales.Shared.CapaTools;
+using Serilog;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
 {
@@ -21,15 +24,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
     public class SolicitudesController
         (
             DbCorreosInstitucionalesUpiicsaContext db,
-            ISendEmailService servicioEmail,
-            IServiceProvider serviceProvider,
-            ISendWhatsAppService servicioWA
+            RSendNotificacionesService servicioNotificaciones
         ) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
-        private readonly ISendEmailService _servicioCorreo = servicioEmail;
-        private readonly IServiceProvider _serviceProvider = serviceProvider;
-        private readonly ISendWhatsAppService _servicioWA = servicioWA;
+        private readonly RSendNotificacionesService _servicioNotificaciones = servicioNotificaciones;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
@@ -509,7 +508,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
         [HttpPatch("finalizar")]
         public async Task<IActionResult> FinalizarSolicitud(RequestDTO_FinalizarSolicitud oFinalizarSolicitud) // KeyValuePair<int, string> datos)
         {
-            Response<object> oRespuesta = new();
+            Response<string> oRespuesta = new();
             int guardados = 0;
 
             MtTbSolicitudesTicket? oSolicitud = null;
@@ -536,7 +535,45 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 if (guardados == 1)
                 {
                     oRespuesta.Success = 1;
-                    await Notificar(oSolicitud!, (TipoEstadoSolicitud)oFinalizarSolicitud.Estado);
+
+                    McCatPlantillas[] plantillas =  await _db.McCatPlantillas
+                        .Where(
+                            p => p.PlaStatus && 
+                            p.PlaIdEstadoSolicitud == oFinalizarSolicitud.Estado
+                        )
+                        .ToArrayAsync();
+
+                    Dictionary<string, object?> datos = new()
+                    {
+                        {"solicitud", oSolicitud },
+                        {"usuario", oSolicitud!.SolIdUsuarioNavigation },
+                    };
+
+                    int filtro = (TipoEstadoSolicitud)oSolicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
+                        ((TipoPersonal)oSolicitud.SolIdUsuarioNavigation!.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
+
+                    PlantillaManager manager = new PlantillaManager(plantillas);
+
+                    Response<Notificacion?> notificacion = manager.GetNotificacion(datos, oFinalizarSolicitud.Estado, filtro);
+
+                    if(notificacion.Success == 1)
+                    {
+                        Response<string> response = await _servicioNotificaciones.EnviarAsync(notificacion.Data!);
+
+                        if(response.Success == 1)
+                        {
+                            oRespuesta.Success = 1;
+                            oRespuesta.Data = "";
+                        }
+                        else
+                        {
+                            oRespuesta.Message = response.Data??"???";
+                        }
+                    }
+                    else
+                    {
+                        oRespuesta.Message = $"[ERROR] NO SE PUDO GENERAR LA NOTIFICACIÓN:\n{notificacion.Message}";
+                    }
                 }
             }
             catch (Exception ex)
@@ -546,83 +583,5 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
             return Ok(oRespuesta);
         } // CANCELAR
-
-        [HttpPost("notificar")]
-        public async Task<IActionResult> Notificar(MtTbSolicitudesTicket solicitud, TipoEstadoSolicitud estado)
-        {
-            Response<object> oRespuesta = new();
-            string correo_personal = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaActual;
-            
-            if (Dominios.EsCorreoDePrueba(correo_personal))
-            {
-                oRespuesta.Success = 1;
-                return Ok(oRespuesta);
-            }
-
-            try
-            {
-                ComponentRenderer renderer = new(_serviceProvider);
-
-                Dictionary<string, object?> variables_correo = new()
-                {
-                    { "solicitud", solicitud }
-                };
-
-                RequestDTO_SendEmail correo = new()
-                {
-                    EmailTo = correo_personal,
-                };
-
-                RequestDTO_SendWhatsApp mensaje = new()
-                {
-                    Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularActual.Replace(" ", string.Empty)
-                };
-
-                switch(estado)
-                {
-                    case TipoEstadoSolicitud.ATENDIDA:
-                        correo.Subject = "Su solicitud ha sido atendida por la mesa de control";
-
-                        switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
-                        {
-                            case TipoPersonal.ALUMNO:
-                            case TipoPersonal.EGRESADO:
-                            case TipoPersonal.POSGRADO:
-                                correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_correo);
-                                break;
-                            default:
-                                correo.Body = await renderer.GetHTML<AtendidoPersonal>(variables_correo);
-                                break;
-                        }
-
-                        mensaje.Message = await renderer.GetHTML<AtendidoWA>(variables_correo);
-
-                        break;
-
-                    case TipoEstadoSolicitud.CANCELADA:
-                        correo.Subject = "Su solicitud ha sido cancelada";
-                        correo.Body = await renderer.GetHTML<Cancelada>(variables_correo);
-
-                        mensaje.Message = await renderer.GetHTML<CanceladoWA>(variables_correo);
-                        break;
-                }
-
-                await _servicioCorreo.SendEmail(correo);
-
-                HttpResponseMessage oResponse =  await _servicioWA.SendWhatsAppAsync(mensaje);
-                if(!oResponse.IsSuccessStatusCode)
-                {
-                    oRespuesta.Success = 0;
-                    oRespuesta.Data = await oResponse.Content.ReadAsStringAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                oRespuesta.Success = 0;
-                oRespuesta.Data = ex.Message;
-            }
-
-            return Ok(oRespuesta);
-        }
     }
 }

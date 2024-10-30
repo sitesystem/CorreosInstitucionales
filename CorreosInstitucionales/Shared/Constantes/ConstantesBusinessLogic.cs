@@ -10,6 +10,13 @@ namespace CorreosInstitucionales.Shared.Constantes
 {
     public static class TipoExt
     {
+        public static TipoPersonal[] ListaTipoAlumnoEgresado =
+        [
+            TipoPersonal.ALUMNO,
+            TipoPersonal.EGRESADO,
+            TipoPersonal.POSGRADO
+        ];
+
         public static string GetNombre(this TipoDocumento documento)
         {
             switch (documento)
@@ -40,7 +47,7 @@ namespace CorreosInstitucionales.Shared.Constantes
 
         public static string GetNombre(this TipoDatoXLSX dato)
         {
-            switch(dato)
+            switch (dato)
             {
                 case TipoDatoXLSX.TODO: return "TODO";
                 case TipoDatoXLSX.NINGUNO: return "NINGUNO";
@@ -61,6 +68,11 @@ namespace CorreosInstitucionales.Shared.Constantes
             }
 
             return "NO DEFINIDO?";
+        }
+
+        public static bool EsAlumnoOEgresado(this TipoPersonal tipoPersonal)
+        {
+            return ListaTipoAlumnoEgresado.Contains(tipoPersonal);
         }
 
         public static string GetPlantilla(this TipoSolicitud solicitud)

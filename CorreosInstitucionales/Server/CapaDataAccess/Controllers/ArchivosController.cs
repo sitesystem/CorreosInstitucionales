@@ -22,23 +22,22 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
     public class ArchivosController (
-            DbCorreosInstitucionalesUpiicsaContext db, 
-            ISendEmailService servicioEmail,
-            IServiceProvider serviceProvider,
-            HttpClient client
+            DbCorreosInstitucionalesUpiicsaContext db,
+            RSendNotificacionesService servicioNotificaciones
         ) : Controller
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
-        private readonly ComponentRenderer renderer = new(serviceProvider);
-
-        private readonly ISendEmailService _servicioCorreo = servicioEmail;
-        private readonly WhatsApp WA = new(client);
+        private readonly RSendNotificacionesService _servicioNotificaciones = servicioNotificaciones;
 
         [ApiExplorerSettings(IgnoreApi = true)]
         protected string? FormatoTexto(string? texto)
@@ -111,158 +110,19 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task<List<string>> EnvioMasivo(IEnumerable<Notificacion> notificaciones)
+        private async Task<string> EnvioMasivo(
+            IEnumerable<MtTbSolicitudesTicket> lista,
+            int tipoEstado
+        )
         {
-            List<string> log = new();
+            McCatPlantillas[] plantillas = _db.McCatPlantillas
+                .Where(
+                    p => p.PlaStatus && p.PlaIdEstadoSolicitud == tipoEstado
+                )
+                .ToArray();
 
-            string id = Guid.NewGuid().ToString();
-            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/notificacion_{id}.txt";
-
-            WhatsApp WA = new(client);
-
-            foreach (Notificacion notificacion in notificaciones)
-            {
-                if (notificacion.EsCorreoPrueba())
-                {
-                    log.Add($"[CORREO DE PRUEBA] {notificacion.correo.EmailTo}");
-                }
-                else
-                {
-                    _ = Task.Run(() => _servicioCorreo.SendEmail(notificacion.correo));
-                    log.Add($"[CORREO ENVIADO:] {notificacion.correo.EmailTo}");
-                }
-
-                if (notificacion.EsWAPrueba())
-                {
-                    log.Add($"[WA DE PRUEBA] {notificacion.wa.Message}");
-                }
-                else
-                {
-                    log.Add($"[ENVIO DE WA] {notificacion.correo.EmailTo}");
-                    Response<string> response = await WA.SendMessage(notificacion.wa);
-                    log.Add(response.Success == 1 ? "[OK]" : "[ERROR]");
-                }
-            }//FOREACH solicitud
-
-            System.IO.File.WriteAllText(archivo, string.Join(Environment.NewLine, log));
-            return log;
+            return await _servicioNotificaciones.EnvioMasivoAsync(lista, plantillas, tipoEstado);
         }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task<List<string>> EnvioMasivoAtendidos(List<MtTbSolicitudesTicket> lista)
-        {
-            string id = Guid.NewGuid().ToString();
-            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/{id}.txt";
-
-            List<string> log = [];
-
-            Notificacion notificacion = new();
-            notificacion.correo.Subject = "Su solicitud ha sido atendida por mesa de control";
-
-            Dictionary<string, object?> variables_solicitud = new()
-            {
-                { "solicitud", null}
-            };
-
-            foreach (MtTbSolicitudesTicket solicitud in lista)
-            {
-                variables_solicitud["solicitud"] = solicitud;
-
-                notificacion.correo.EmailTo = solicitud.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaActual;
-                switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
-                {
-                    case TipoPersonal.ALUMNO:
-                    case TipoPersonal.EGRESADO:
-                    case TipoPersonal.POSGRADO:
-                        notificacion.correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_solicitud);
-                        break;
-                    default:
-                        notificacion.correo.Body = await renderer.GetHTML<AtendidoPersonal>(variables_solicitud);
-                        break;
-                }
-
-                notificacion.wa.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularActual!.Replace(" ", string.Empty);
-                notificacion.wa.Message = await renderer.GetHTML<AtendidoWA>(variables_solicitud);
-
-                if (notificacion.EsCorreoPrueba())
-                {
-                    log.Add($"[CORREO DE PRUEBA] {notificacion.correo.EmailTo}");
-                }
-                else
-                {
-                    _ = Task.Run(() => _servicioCorreo.SendEmail(notificacion.correo));
-                    log.Add($"[CORREO ENVIADO:] {notificacion.correo.EmailTo}");
-                }
-
-                if (notificacion.EsWAPrueba())
-                {
-                    log.Add($"[WA DE PRUEBA] {notificacion.wa.Message}");
-                }
-                else
-                {
-                    log.Add($"[ENVIO DE WA] {notificacion.correo.EmailTo}");
-                    Response<string> response = await WA.SendMessage(notificacion.wa);
-                    log.Add(response.Success == 1 ? "[OK]" : "[ERROR]");
-                }
-            }//FOREACH solicitud
-
-            System.IO.File.WriteAllText(archivo, string.Join(Environment.NewLine, log));
-
-            return log;
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        private async Task<List<string>> EnvioMasivoPendientes(List<MtTbSolicitudesTicket> lista)
-        {
-            string id = Guid.NewGuid().ToString();
-            string archivo = $"{ServerFS.GetBaseDir(true)}/repositorio/envios/{id}.txt";
-
-            List<string> log = [];
-
-            Notificacion notificacion = new();
-            notificacion.correo.Subject = "Su solicitud ha sido canalizada hacia la mesa de control";
-
-            Dictionary<string, object?> variables_solicitud = new Dictionary<string, object?>
-            {
-                { "solicitud", null}
-            };
-
-            foreach (MtTbSolicitudesTicket solicitud in lista)
-            {
-                variables_solicitud["solicitud"] = solicitud;
-
-                notificacion.correo.EmailTo = solicitud.SolIdUsuarioNavigation!.UsuCorreoPersonalCuentaActual;
-                notificacion.correo.Body = await renderer.GetHTML<EnProceso>(variables_solicitud);
-
-                notificacion.wa.Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularActual.Replace(" ", string.Empty);
-                notificacion.wa.Message = await renderer.GetHTML<EnProcesoWA>(variables_solicitud);
-
-                if (notificacion.EsCorreoPrueba())
-                {
-                    log.Add($"[CORREO DE PRUEBA] {notificacion.correo.EmailTo}");
-                }
-                else
-                {
-                    _ = Task.Run(() => _servicioCorreo.SendEmail(notificacion.correo));
-                    log.Add($"[CORREO ENVIADO:] {notificacion.correo.EmailTo}");
-                }
-
-                if (notificacion.EsWAPrueba())
-                {
-                    log.Add($"[WA DE PRUEBA] {notificacion.wa.Message}");
-                }
-                else
-                {
-                    log.Add($"[ENVIO DE WA] {notificacion.correo.EmailTo}");
-                    Response<string> response = await WA.SendMessage(notificacion.wa);
-                    log.Add(response.Success == 1 ? "[OK]" : "[ERROR]");
-                }
-            }//FOREACH solicitud
-
-            System.IO.File.WriteAllText(archivo, string.Join(Environment.NewLine, log));
-
-            return log;
-        }// ENVIO  MASIVO (EN PROCESO)
 
         [ApiExplorerSettings(IgnoreApi = true)]
         private WebUtils.Link GenerarLink(
@@ -353,34 +213,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             }
 
             return TipoDatoXLSX.NINGUNO;
-        }
-
-        [HttpPost("notificar_debug")]
-        public async Task<IActionResult> DEBUG_Notificar()
-        {
-            Response<string> oResponse = new();
-
-            List<Notificacion> notificaciones =
-            [
-                new()
-                {
-                    correo = new RequestDTO_SendEmail()
-                    {
-                        Subject ="Prueba",
-                        EmailTo= "gabrielmtzcarrillo@live.com.mx",
-                        Body="Mensaje de Prueba"
-                    },
-                    wa = new RequestDTO_SendWhatsApp()
-                    {
-                        Number="5512011876",
-                        Message="> Prueba"
-                    }
-                }
-            ];
-
-            await EnvioMasivo(notificaciones); // Envío Masivo
-
-            return Ok(oResponse);
         }
 
         [HttpPost("subir/anuncio")]
@@ -608,9 +440,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
                     int guardados = await _db.SaveChangesAsync();
 
-                    if(guardados>0)
+                    if (guardados > 0)
                     {
-                        await EnvioMasivoAtendidos(notificar);
+                        await EnvioMasivo(notificar, (int)TipoEstadoSolicitud.ATENDIDA);
                     }
                 }
 
@@ -955,10 +787,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     if (string.IsNullOrEmpty(error) && data.Notify)
                     {
                         //TODO: Verificar
-                        await EnvioMasivoPendientes(pendientes);
-                        await EnvioMasivoPendientes(pendientes_celular);
-                        await EnvioMasivoPendientes(pendientes_correo_personal);
-                        await EnvioMasivoPendientes(pendientes_desbloqueo);
+                        await EnvioMasivo(pendientes, data.Status);
+                        await EnvioMasivo(pendientes_celular, data.Status);
+                        await EnvioMasivo(pendientes_correo_personal, data.Status);
+                        await EnvioMasivo(pendientes_desbloqueo, data.Status);
                     }
                     else
                     {

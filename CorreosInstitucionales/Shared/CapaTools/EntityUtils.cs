@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.Constantes;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CorreosInstitucionales.Shared.CapaTools
 {
@@ -20,10 +22,16 @@ namespace CorreosInstitucionales.Shared.CapaTools
             if(v != null)
             {
                 Type t = result.GetType();
+                PropertyInfo? pInfo;
 
                 foreach (var prop in v.GetType().GetProperties())
                 {
-                    t.GetProperty(prop.Name)!.SetValue(result, prop.GetValue(v, null), null);
+                    pInfo = t.GetProperty(prop.Name);
+
+                    if(pInfo is not null)
+                    {
+                        pInfo.SetValue(result, prop.GetValue(v, null), null);
+                    }
                 }
             }
 

@@ -1,11 +1,68 @@
 ﻿@page "/debug/correos"
 
-@inject IServiceProvider serviceProvider
+@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones
+
+@inject DialogService dialogService
+@inject RPlantillaService servicioPlantilla
+@inject RSendEmailService servicioCorreo
+@inject RSendWhatsAppService servicioWA
+@inject RSendNotificacionesService servicioNotificaciones
 
 <PageTitle>@Title</PageTitle>
 
 <div class="p-4 rounded-1 mb-3 bg-white shadow">
-    <h1>@Title</h1>
+    <div class="my-2">
+        <h1>Plantillas</h1>
+    </div>
+    @if (trabajando)
+    {
+        <div class="row my-4">
+            <div class="col text-center">
+                <img src="img/mail.png" class="loading_img" />
+                <br />
+                <strong>Cargando datos...</strong>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12 col-md-3">
+                <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0.5rem">
+                    <RadzenLabel Text="Tipo Solicitud" Component="DDTipoSolicitud" />
+                    <RadzenDropDown @bind-Value=@solicitud.SolIdTipoSolicitud Data=@tipos_solicitud class="form-control" Name="DDTipoSolicitud" TextProperty="@nameof(RequestViewModel_TipoSolicitud.TiposolDescripcion)" ValueProperty="@nameof(RequestViewModel_TipoSolicitud.IdTipoSolicitud)" />
+                </RadzenStack>
+            </div>
+
+            <div class="col-12 col-md-3">
+                <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0.5rem">
+                    <RadzenLabel Text="Tipo Personal" Component="DDTipoPersonal" />
+                    <RadzenDropDown @bind-Value=@usuario.UsuIdTipoPersonal Data=@tipos_personal class="form-control" Name="DDTipoPersonal" TextProperty="@nameof(RequestViewModel_TipoPersonal.TipoperDescripcion)" ValueProperty="@nameof(RequestViewModel_TipoPersonal.IdTipoPersonal)" />
+                </RadzenStack>
+            </div>
+
+            <div class="col-12 col-md-3">
+                <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0.5rem">
+                    <RadzenLabel Text="Estado Solicitud" Component="DDEstadoSolicitud" />
+                    <RadzenDropDown @bind-Value=@solicitud.SolIdEstadoSolicitud Data=@estados_solicitud class="form-control" Name="DDEstadoSolicitud" TextProperty="@nameof(RequestViewModel_EstadoSolicitud.EdosolNombreEstado)" ValueProperty="@nameof(RequestViewModel_EstadoSolicitud.IdEstadoSolicitud)" />
+                </RadzenStack>
+            </div>
+
+            <div class="col-12 col-md-3">
+                <button type="button" class="btn btn-primary form-control mb-2" @onclick="()=>VistaPrevia(1)">
+                    Vista Previa (Correo)
+                </button>
+
+                <button type="button" class="btn btn-primary form-control mb-2" @onclick="()=>VistaPrevia(2)">
+                    Vista Previa (WA)
+                </button>
+
+                <button type="button" class="btn btn-success form-control mb-2" @onclick="Notificar">
+                    Enviar Notificación
+                </button>
+            </div>
+        </div>
+    }
 </div>
 
 <div class="row">
@@ -17,6 +74,15 @@
             <strong>Mensaje</strong>
             <RadzenHtmlEditor class="form-control mb-3" style="height:480px" required @bind-Value=@mensaje_correo />
 
+            @if(!trabajando)
+            {
+                <label>
+                    <InputCheckbox class="mb-3" @bind-Value=@usar_plantilla_correo/>
+                    Usar plantilla
+                </label>
+                
+            }
+            
             <button @onclick="EnviarCorreo" class="btn btn-primary form-control">Enviar Correo</button>
         </div>
     </div>
@@ -28,6 +94,15 @@
 
             <strong>Mensaje</strong>
             <InputTextArea class="form-control mb-3" required @bind-Value=mensaje_wa style="height:480px" />
+
+            @if (!trabajando)
+            {
+                <label>
+                    <InputCheckbox class="mb-3" @bind-Value=@usar_plantilla_wa />
+                    Usar plantilla
+                </label>
+                
+            }
 
             <button @onclick="EnviarMensajeWA" class="btn btn-primary form-control">Enviar WA</button>
         </div>
@@ -51,7 +126,108 @@
     string numero = string.Empty;
     string mensaje_wa = string.Empty;
 
-    public RequestDTO_Usuario usuario = new();
+    bool trabajando = true;
+
+    public RequestDTO_Usuario usuario = EntityUtils.DefaultUsuario();
+    public RequestDTO_Solicitud solicitud = EntityUtils.DefaultSolicitud();
+
+    List<RequestViewModel_TipoSolicitud> tipos_solicitud = new();
+    List<RequestViewModel_TipoPersonal> tipos_personal = new();
+
+    List<RequestViewModel_EstadoSolicitud> estados_solicitud = new();
+
+    PlantillaManager plantillas;
+
+    string plantilla_correo = string.Empty;
+    string plantilla_wa = string.Empty;
+
+    bool usar_plantilla_correo = false;
+    bool usar_plantilla_wa = false;
+
+    private async void Notificar()
+    {
+        Dictionary<string, object?> datos = new()
+        {
+            {"solicitud",solicitud },
+            {"usuario", usuario },
+            { "tipo_solicitud", tipos_solicitud.Where(t=>t.IdTipoSolicitud == solicitud.SolIdTipoSolicitud).FirstOrDefault() }
+        };
+
+        int filtro = (TipoEstadoSolicitud)solicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
+                        ((TipoPersonal)usuario.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
+
+        Response<Notificacion?> notificacion = plantillas.GetNotificacion(datos,solicitud.SolIdEstadoSolicitud, filtro);
+
+        if (notificacion.Success == 1)
+        {
+            Response<string> response = await servicioNotificaciones.EnviarAsync(notificacion.Data!);
+
+            if (response.Success == 1)
+            {
+                debug += Environment.NewLine + "NOTIFICACIÓN ENVIADA.";
+            }
+            else
+            {
+                debug += Environment.NewLine + "ERROR ENVIANDO NOTIFICACIÓN:" + Environment.NewLine + response.Data;
+            }
+        }
+        else
+        {
+            debug += Environment.NewLine + $"ERROR GENERANDO NOTIFICACIÓN: {notificacion.Message}";
+        }
+    }
+
+    private string GenerarMensaje(int tipo)
+    {
+        string html = "PLANTILLA NO CARGADA";
+        solicitud.SolRespuestaDcyC = tipo == PlantillaManager.PLANTILLA_CORREO ? mensaje_correo : mensaje_wa;
+
+        try
+        {
+            int filtro = (TipoEstadoSolicitud)solicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
+                        ((TipoPersonal)usuario.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
+
+            McCatPlantillas? plantilla = plantillas.GetPlantilla(solicitud.SolIdEstadoSolicitud, tipo, filtro);
+
+            if (plantilla is not null)
+            {
+                html = PlantillaManager.LLenar(plantilla.PlaContenido, new()
+                {
+                    {"solicitud",solicitud },
+                    {"usuario", usuario },
+                    { "tipo_solicitud", tipos_solicitud.Where(t=>t.IdTipoSolicitud == solicitud.SolIdTipoSolicitud).FirstOrDefault() }
+                });
+            }
+
+        }
+        catch (Exception ex)
+        {
+            html = $"{ex.Message}<br><pre>{ex.StackTrace}</pre>";
+        }
+
+        return html;
+    }
+
+    protected async void VistaPrevia(int tipo)
+    {
+        string html = string.Empty;
+
+        html = GenerarMensaje(tipo);
+
+        await dialogService.OpenAsync<VistaHTML>
+        (
+            "Vista Previa",
+            new Dictionary<string, object>()
+                        {
+                {"HTML", html}
+                        },
+            new DialogOptions()
+                {
+                    ShowClose = true,
+                    Width = "50%"
+                }
+        );
+    } 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -64,7 +240,7 @@
 
             Response<RequestDTO_Usuario>? response = await servicioUsuario.GetDataByIdAsync(idUsuario);
 
-            if(response is not null && response.Data is not null && response.Success == 1)
+            if (response is not null && response.Success == 1 && response.Data is not null)
             {
                 usuario = response.Data;
                 correo = usuario.UsuCorreoPersonalCuentaActual!;
@@ -73,23 +249,62 @@
                 mensaje_wa = $"MENSAJE DE PRUEBA PARA *{usuario.UsuNombres}*";
             }
 
+            Response<List<RequestViewModel_TipoSolicitud>>? r_t_solicitud = await servicioTipoSolicitud.GetAllDataByStatusAsync(true);
+
+            if(r_t_solicitud is not null && r_t_solicitud.Success == 1 && r_t_solicitud.Data is not null)
+            {
+                tipos_solicitud = r_t_solicitud.Data!;
+
+            }
+            /*
+            tipos_solicitud.Insert(0, new RequestViewModel_TipoSolicitud()
+                {
+                IdTipoSolicitud = 0,
+                TiposolDescripcion = "(Ninguna)"
+            });
+            */
+
+            Response<List<RequestViewModel_TipoPersonal>>? r_t_personal = await servicioTipoPersonal.GetAllDataByStatusAsync(true);
+
+            if (r_t_personal is not null && r_t_personal.Success == 1 && r_t_personal.Data is not null)
+            {
+                tipos_personal = r_t_personal.Data!;
+            }
+            /*
+            tipos_personal.Insert(0, new()
+                {
+                IdTipoPersonal = 0,
+                TipoperDescripcion = "(Ninguno)"
+            });
+            */
+
+            Response<List<RequestViewModel_EstadoSolicitud>>? r_e_solicitud = await servicioEstadoSolicitud.GetAllDataByStatusAsync(true);
+
+            if (r_e_solicitud is not null && r_e_solicitud.Success == 1 && r_e_solicitud.Data is not null)
+            {
+                estados_solicitud = r_e_solicitud.Data!;
+            }
+
+            Response<List<RequestViewModel_Plantilla>>? r_plantilla = await servicioPlantilla.GetAllDataByStatusAsync(true);
+
+            if (r_plantilla is not null && r_plantilla.Success == 1 && r_plantilla.Data is not null)
+            {
+                plantillas = new(r_plantilla.Data!);
+            }
+
+            trabajando = false;
             StateHasChanged();
         }
     }
 
     private async Task EnviarCorreo()
     {
-        HttpResponseMessage response;
-
-        ILoggerFactory loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-        HtmlRenderer htmlRenderer = new HtmlRenderer(serviceProvider, loggerFactory);
-
-        string body = mensaje_correo;
+        string body = usar_plantilla_correo ? GenerarMensaje(PlantillaManager.PLANTILLA_CORREO) : mensaje_correo;
 
         debug += Environment.NewLine + "Enviando mensaje";
         StateHasChanged();
 
-        response = await servicioSendEmail.SendEmailAsync
+        Response<string> response = await servicioCorreo.SendEmailAsync
         (
             new RequestDTO_SendEmail()
             {
@@ -99,39 +314,38 @@
             }
         );
 
-        if(response.IsSuccessStatusCode)
+        if(response.Success == 1)
         {
             debug += Environment.NewLine + "CORREO ENVIADO";
         }
         else
         {
-            string content = await response.Content.ReadAsStringAsync();
-            debug += Environment.NewLine + $"ERROR ENVIANDO CORREO: {content}";
+            debug += Environment.NewLine + $"ERROR ENVIANDO CORREO: {response.Message}";
         }
     }//ENVIAR CORREO
 
     private async Task EnviarMensajeWA()
     {
-        HttpResponseMessage response;
+        Response<string> response;
+        string mensaje = usar_plantilla_wa ? GenerarMensaje(PlantillaManager.PLANTILLA_WA) : mensaje_wa;
 
         RequestDTO_SendWhatsApp MensajeWA = new()
         {
-            Message = mensaje_wa,
+            Message = mensaje,
             Number = numero.Replace(" ", string.Empty)
         };
 
         debug += Environment.NewLine + "Enviando mensaje";
         StateHasChanged();
 
-        response = await servicioSendWhatsApp.SendWhatsAppAsync(MensajeWA);
-        if (response.IsSuccessStatusCode)
+        response = await servicioWA.SendWhatsAppAsync(MensajeWA);
+        if (response.Success == 1)
         {
             debug += Environment.NewLine + "MENSAJE ENVIADO POR WA CORECTAMENTE.";
         }
         else
         {
-            string content = await response.Content.ReadAsStringAsync();
-            debug += Environment.NewLine + $"ERROR ENVIANDO MENSAJE WA: {content}";
+            debug += Environment.NewLine + $"ERROR ENVIANDO MENSAJE WA: {response.Message}";
         }
     }
 }
