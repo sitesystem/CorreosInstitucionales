@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -49,8 +50,16 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic
             // var json = JsonSerializer.Serialize(oUsuario);
             // var content = new StringContent(json, Encoding.UTF8, "application/json");
             // var response = await _httpClient.PostAsync(url, content);
-            var response = await _httpClient.PostAsJsonAsync(url, oUsuario, options: _options);
+            
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync(url, oUsuario, options: _options);
+
             return response;
+            /*
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<Response<int>>(content, options: _options);
+
+            return result;
+            */
         }
 
         public async Task<HttpResponseMessage> EditDataAsync(RequestDTO_Usuario oUsuario)

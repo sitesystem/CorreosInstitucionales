@@ -131,8 +131,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         [HttpPost]
         public async Task<IActionResult> AddData(RequestDTO_Usuario model)
         {
-            Response<object> oResponse = new();
-            CreatedAtActionResult oCreatedAtActionResult;
+            Response<int> oResponse = new();
+            //CreatedAtActionResult oCreatedAtActionResult;
             McCatPlantillas[] plantillas;
             PlantillaManager plantilla;
 
@@ -146,9 +146,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 await _db.SaveChangesAsync();
 
                 oResponse.Success = 1;
-
-                oCreatedAtActionResult = CreatedAtAction(nameof(AddData), new { id = model.IdUsuario }, model);
-                oResponse.Message = model.IdUsuario.ToString(); // PK ID Único del Usuario Creado o dado de Alta
+                oResponse.Data = model.IdUsuario; // PK ID Único del Usuario Creado o dado de Alta
 
                 plantillas = await _db.McCatPlantillas
                     .Where(p => p.PlaStatus && p.PlaFiltro == PlantillaManager.FILTRO_ERROR_ALTA_USUARIO)
@@ -176,6 +174,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 {
                     throw new Exception("DEBUG");
                 }
+
+                /*
+                if(response.Success == 1)
+                {
+                    oCreatedAtActionResult = CreatedAtAction(nameof(AddData), new { id = model.IdUsuario }, model);
+                }*/
             }
             catch (Exception ex)
             {

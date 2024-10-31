@@ -43,7 +43,11 @@ namespace CorreosInstitucionales.Shared.CapaTools
         {
             return new RequestDTO_Usuario()
             {
+                IdUsuario = 0,
                 UsuIdRol = 2,
+                UsuNombres = string.Empty,
+                UsuPrimerApellido = string.Empty,
+                UsuSegundoApellido = string.Empty,
                 UsuIdTipoPersonal = 1,
                 UsuCurp = "XAXX010101HDFXXX00",
                 UsuFileNameCurp = "-",
@@ -57,6 +61,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
                 UsuNumeroEmpleadoContrato = "0",
                 UsuIdAreaDepto = 1,
                 UsuNoExtensionActual = "0",
+                UsuNoExtensionAnterior = "0",
                 UsuCorreoPersonalCuentaActual = "noreply@example.com",
                 UsuContrasenia = Encrypt.GetSHA256(Guid.NewGuid().ToString()),
                 UsuRecuperarContrasenia = false,
