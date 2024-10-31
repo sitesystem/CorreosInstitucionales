@@ -58,6 +58,7 @@ builder.Services.AddScoped<RRolesService>();
 builder.Services.AddScoped<RPisoService>();
 builder.Services.AddScoped<RTipoPersonalService>();
 builder.Services.AddScoped<RTipoSolicitudService>();
+builder.Services.AddScoped<RSemestreService>();
 builder.Services.AddScoped<RAnuncioService>();
 builder.Services.AddScoped<RPlantillaService>();
 
