@@ -11,6 +11,8 @@ namespace CorreosInstitucionales.Shared.CapaTools
 {
     public class PlantillaManager(IEnumerable<McCatPlantillas> plantillas)
     {
+        public static McCatPlantillas[] Plantillas = [];
+
         public const int PLANTILLA_CORREO = 1;
         public const int PLANTILLA_WA = 2;
 
