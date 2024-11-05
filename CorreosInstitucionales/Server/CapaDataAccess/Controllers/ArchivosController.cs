@@ -318,7 +318,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public TipoDatoXLSX GetTipoDato(string columna)
         {
-            string colname = columna.Replace("Á", "A");
+            string colname = columna.Replace("Á", "A").Trim();
             colname = colname.Replace("É", "E");
             colname = colname.Replace("Í", "I");
             colname = colname.Replace("Ó", "O");
