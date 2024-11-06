@@ -1,0 +1,24 @@
+﻿@page "/DashboardPowerBI"
+
+@attribute [Authorize(Policy = "[Rol] Administrador")]
+
+<PageTitle>SACI | Logs</PageTitle>
+
+<AuthorizeView Policy="[Rol] Administrador">
+    <Authorized>
+        <iframe title="Estados solicitudes SACI1" height="800" class="rz-w-100"
+                src="https://app.powerbi.com/view?r=eyJrIjoiZjhkMjM2ZDgtY2M4OC00NmFhLWI3ODgtZDViZWMyZDg4ODhlIiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9"
+                frameborder="0" allowFullScreen="true">
+        </iframe>
+    </Authorized>
+    <NotAuthorized>
+        @* <p>No Autorizado</p> *@
+    </NotAuthorized>
+    <Authorizing>
+        <p>Autorizando...</p>
+    </Authorizing>
+</AuthorizeView>
+
+@code
+{
+}
