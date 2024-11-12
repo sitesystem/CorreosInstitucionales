@@ -864,7 +864,7 @@ else
             string boleta = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumnoEgresado : oUsuario.UsuBoletaPosgrado);
             string carrera = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oCarrera?.Data?.CarrNombre : "N/A");
             string semestre = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuSemestre : "N/A");
-            string correo_institucional = string.IsNullOrEmpty(oUsuario.UsuCorreoInstitucionalCuenta.Trim()) ? oUsuario.UsuCorreoInstitucionalCuenta?.Trim() : "sin asignar";
+            string correo_institucional = !string.IsNullOrEmpty(oUsuario.UsuCorreoInstitucionalCuenta.Trim()) ? oUsuario.UsuCorreoInstitucionalCuenta?.Trim() : "sin asignar";
             string isEgresado = flagEsEgresado ? "SI" : "NO";
             string añoEgreso = flagEsEgresado ? oUsuario.UsuAnioEgreso.ToString() : "N/A";
             string fecha_hora_alta = ActionAddEdit == "agregar" ? DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'") : oUsuario.UsuFechaHoraAlta.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");
