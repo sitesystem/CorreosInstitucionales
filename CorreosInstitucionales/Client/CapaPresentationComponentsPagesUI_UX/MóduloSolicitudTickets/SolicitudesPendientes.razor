@@ -137,7 +137,26 @@
                             @item.SolIdUsuarioNavigation?.UsuIdTipoPersonalNavigation?.TipoperNombre
                             @(item.SolIdUsuarioNavigation?.UsuIdTipoPersonal == 2 ? $" en {item.SolIdUsuarioNavigation?.UsuAnioEgreso}" : "")
                             @{
-                                if (empleado_base.Contains(item.SolIdUsuarioNavigation!.UsuIdTipoPersonal) || item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == (int)TipoPersonal.HONORARIOS)
+                                if (alumno_o_egresado.Contains(item.SolIdUsuarioNavigation!.UsuIdTipoPersonal))
+                                {
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0.25rem" class="rz-mt-2">
+                                        <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Base)" Shade="@(Shade.Default)" Text="" IsPill="false" class="rz-display-block">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.Wrap" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                                <RadzenIcon Icon="@($"school")" />
+                                                <strong>Carrera (Licenciatura) / Especialidad: </strong>
+                                                <div style="white-space:pre-wrap; text-align:justify;">@item.SolIdUsuarioNavigation!.UsuIdCarreraNavigation?.CarrNombre</div>
+                                            </RadzenStack>
+                                        </RadzenBadge>
+
+                                        <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Base)" Shade="@(Shade.Default)" Text="" IsPill="false" class="rz-display-block">
+                                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.NoWrap" Gap="0.25rem" Style="padding: 0 0.25rem 0 0; text-transform: none;">
+                                                <RadzenIcon Icon="@($"tag")" />
+                                                <strong>Semestre: </strong> @item.SolIdUsuarioNavigation!.UsuSemestre
+                                            </RadzenStack>
+                                        </RadzenBadge>
+                                    </RadzenStack>
+                                }
+                                else if (empleado_base.Contains(item.SolIdUsuarioNavigation!.UsuIdTipoPersonal) || item.SolIdUsuarioNavigation!.UsuIdTipoPersonal == (int)TipoPersonal.HONORARIOS)
                                 {
                                     <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0.25rem" class="rz-mt-2">
                                         <RadzenBadge Variant="Variant.Flat" BadgeStyle="@(BadgeStyle.Base)" Shade="@(Shade.Default)" Text="" IsPill="false" class="rz-display-block">
