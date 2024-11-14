@@ -85,3 +85,4 @@ artifacts/
 /CorreosInstitucionales/Server/wwwroot/banners
 /CorreosInstitucionales/Server/wwwroot/repositorio/Solicitudes-Tickets
 /CorreosInstitucionales/Server/wwwroot/repositorio/Usuarios
+/Docker/Sync/service/publish

@@ -1,0 +1,6 @@
+name: servicios
+
+services:
+  sincronizacion:
+    build: ./service
+    restart: unless-stopped
