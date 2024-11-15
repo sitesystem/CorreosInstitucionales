@@ -57,7 +57,7 @@ namespace CorreosInstitucionales.Shared.Constantes
 
                 case TipoDatoXLSX.CORREO_PERSONAL_NUEVO: return "CORREO PERSONAL ACTUAL";
                 case TipoDatoXLSX.CELULAR_NUEVO: return "NÚMERO DE CELULAR ACTUAL";
-                case TipoDatoXLSX.EXTENSION_NUEVO: return "NÚMERO DE EXTENSIÓN NUEVO ";
+                case TipoDatoXLSX.EXTENSION_NUEVO: return "NÚMERO DE EXTENSIÓN ACTUAL";
             }
 
             return "NO DEFINIDO?";

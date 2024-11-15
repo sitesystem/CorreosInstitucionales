@@ -100,7 +100,7 @@ public partial class TbUsuario
     public string? UsuNoCelularAnterior { get; set; }
 
     /// <summary>
-    /// Número de Celular Actual / Nuevo
+    /// Número de Celular Actual
     /// </summary>
     [Column("usuNoCelularActual")]
     [StringLength(20)]
@@ -116,7 +116,7 @@ public partial class TbUsuario
     public string? UsuCorreoPersonalAnterior { get; set; }
 
     /// <summary>
-    /// Correo Personal Actual / Nuevo
+    /// Correo Personal Actual
     /// </summary>
     [Column("usuCorreoPersonalActual")]
     [StringLength(100)]
