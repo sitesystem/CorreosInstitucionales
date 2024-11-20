@@ -80,6 +80,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                             .Include(st => st.SolIdUsuarioNavigation)
                                 .ThenInclude(tp => tp!.UsuIdTipoPersonalNavigation)
                             .Include(u => u.SolIdUsuarioNavigation)
+                                .ThenInclude(c => c!.UsuIdCarreraNavigation)
+                            .Include(u => u.SolIdUsuarioNavigation)
                                 .ThenInclude(a => a!.UsuIdAreaDeptoNavigation)
                             .Include(st => st.SolIdEstadoSolicitudNavigation)
                             .Include(st => st.SolIdTipoSolicitudNavigation)

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CorreosInstitucionales.Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CorreosInstitucionales.Shared", "CorreosInstitucionales\Shared\CorreosInstitucionales.Shared.csproj", "{18CB0D77-534D-4E95-8551-F4FFACC13EF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncDB", "SyncDB\SyncDB.csproj", "{EDE0EF60-B89A-47E6-9666-F22FD23C50BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{18CB0D77-534D-4E95-8551-F4FFACC13EF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18CB0D77-534D-4E95-8551-F4FFACC13EF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18CB0D77-534D-4E95-8551-F4FFACC13EF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDE0EF60-B89A-47E6-9666-F22FD23C50BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDE0EF60-B89A-47E6-9666-F22FD23C50BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDE0EF60-B89A-47E6-9666-F22FD23C50BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDE0EF60-B89A-47E6-9666-F22FD23C50BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

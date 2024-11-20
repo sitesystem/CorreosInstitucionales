@@ -257,7 +257,8 @@
                     }
 
                     <div class="@($@"{((IdTipoPersonal == 2 || TipoPersonal == "egresado") || (IdTipoPersonal == 1 && ActionAddEdit == "actualizar") ? "col-md-4 col-lg-4" : "col-md-4 col-lg-4 mb-3")}")">
-                        <RadzenFormField Text="@($@"{( (IdTipoPersonal == 1 || IdTipoPersonal == 2) ? "Archivo PDF del Comprobante de Horario (Tira de Materias) del Periodo Escolar Actual" : "Archivo PDF del SIP-10" )}")" AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
+                        <RadzenFormField Text="@($@"{(IdTipoPersonal == 1 ? "Archivo PDF del Comprobante de Inscripción/Estudios/Horario" : IdTipoPersonal == 2 ? "Archivo PDF cualquier Constancia o Comprobante de Estudios / Boleta" : "Archivo PDF del SIP-10")}")"
+                                         AllowFloatingLabel="false" Variant="Variant.Outlined" Class="w-100 mt-3" Disabled="false">
                             <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                             <ChildContent> @* image/*, .pdf, .doc, .docx *@
                                 <RadzenUpload @ref="oUploadFile_ComprobanteInscripción" Url="@($"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteEstudios}/{oGuid}")" Accept=".pdf"
@@ -270,7 +271,7 @@
                             </ChildContent>
                             <End>
                                 <RadzenButton Icon="visibility"
-                                              Click="@(() => ShowDialogModal_iFrame(srcComprobanteInscripcion, $@"{( (IdTipoPersonal == 1 || IdTipoPersonal == 2) ? "Archivo PDF del Comprobante de Horario (Tira de Materias) del Periodo Escolar Actual" : "Archivo PDF del SIP-10" )}"))"
+                                              Click="@(() => ShowDialogModal_iFrame(srcComprobanteInscripcion, $@"{(IdTipoPersonal == 1 ? "Archivo PDF del Comprobante de Inscripción/Estudios/Horario (Tira de Materias) del Periodo Escolar Actual" : IdTipoPersonal == 2 ? "Archivo PDF cualquier Constancia o Comprobante de Estudios / Boleta" : "Archivo PDF del SIP-10")}"))"
                                               Variant="Variant.Text"
                                               Size="ButtonSize.Small"
                                               ButtonStyle="ButtonStyle.Secondary"
@@ -279,16 +280,28 @@
                             </End>
                             <Helper>
                                 <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P" TextAlign="TextAlign.JustifyAll">
-                                    @if (IdTipoPersonal == 1 || IdTipoPersonal == 2)
+                                @{
+                                    if (IdTipoPersonal == 1)
                                     {
                                         <a href="@oLinkSAES.Data.LinkEnlace" target="_blank" class="icon-link icon-link-hover">
-                                            Consulta tu <br /><strong>Comprobante de Horario (Tira de Materias)</strong>
+                                                    Consulta tu <br /><strong>Comprobante de Horario (Tira de Materias) del Periodo Escolar Actual</strong>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
                                                 <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
                                                 <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
                                             </svg>
                                         </a>
                                     }
+                                    else if (IdTipoPersonal == 2)
+                                    {
+                                        <a href="@oLinkSAES.Data.LinkEnlace" target="_blank" class="icon-link icon-link-hover">
+                                            Consulta tu <br /><strong>Archivo PDF cualquier Constancia o Comprobante de Estudios / Boleta</strong>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
+                                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+                                            </svg>
+                                        </a>
+                                    }
+                                }
                                 </RadzenText>
                             </Helper>
                         </RadzenFormField>
@@ -600,7 +613,7 @@ else
             oUsuario.UsuFileNameCurp = "";                      // Nombre del Archivo y extensión .pdf del CURP
             oUsuario.UsuFileSizeCurp = 0L;                      // Tamaño del Archivo .pdf del CURP
             oUsuario.UsuNoCelularAnterior = "00 00 00 00 00";   // Número de Celular Anterior si llega a cambiar por uno nuevo
-            oUsuario.UsuNoCelularActual = "";                   // Número de Celular Nuevo que sería el número de celular actual
+            oUsuario.UsuNoCelularActual = "";                   // Número de Celular Actual que sería el número de celular actual
             @* DATOS ACADÉMICOS *@
             if (IdTipoPersonal == 1 || IdTipoPersonal == 2)     // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             { 
@@ -666,7 +679,7 @@ else
             srcCURP = oUsuario.UsuFileNameCurp != "CURP.pdf" ? $"/repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}" : $"/repositorio/CURP.pdf";
             oUsuario.UsuFileSizeCurp = oEditUsuario.UsuFileSizeCurp;            // Tamaño del Archivo .pdf del CURP
             oUsuario.UsuNoCelularAnterior = oEditUsuario.UsuNoCelularAnterior;  // Número de Celular Anterior si llega a cambiar por uno nuevo
-            oUsuario.UsuNoCelularActual = oEditUsuario.UsuNoCelularActual;        // Número de Celular Nuevo que sería el número de celular actual
+            oUsuario.UsuNoCelularActual = oEditUsuario.UsuNoCelularActual;      // Número de Celular Actual que sería el número de celular actual
             @* DATOS ACADÉMICOS *@
             oUsuario.UsuBoletaAlumnoEgresado = oEditUsuario.UsuBoletaAlumnoEgresado;            // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             oUsuario.UsuBoletaPosgrado = oEditUsuario.UsuBoletaPosgrado;        // Número de Boleta del Usuario (Alumno de Posgrado)
@@ -864,7 +877,7 @@ else
             string boleta = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuBoletaAlumnoEgresado : oUsuario.UsuBoletaPosgrado);
             string carrera = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oCarrera?.Data?.CarrNombre : "N/A");
             string semestre = (IdTipoPersonal == 1 || IdTipoPersonal == 2 ? oUsuario.UsuSemestre : "N/A");
-            string correo_institucional = string.IsNullOrEmpty(oUsuario.UsuCorreoInstitucionalCuenta.Trim()) ? oUsuario.UsuCorreoInstitucionalCuenta?.Trim() : "sin asignar";
+            string correo_institucional = !string.IsNullOrEmpty(oUsuario.UsuCorreoInstitucionalCuenta.Trim()) ? oUsuario.UsuCorreoInstitucionalCuenta?.Trim() : "sin asignar";
             string isEgresado = flagEsEgresado ? "SI" : "NO";
             string añoEgreso = flagEsEgresado ? oUsuario.UsuAnioEgreso.ToString() : "N/A";
             string fecha_hora_alta = ActionAddEdit == "agregar" ? DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'") : oUsuario.UsuFechaHoraAlta.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");

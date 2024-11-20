@@ -135,7 +135,7 @@
 
                                         @if (idTipoPersonal == 1 || idTipoPersonal == 2 || idTipoPersonal == 3)
                                         {
-                                            <RadzenFormField Text="@($@"{(idTipoPersonal == 1 ? "Archivo PDF del Comprobante de Inscripción/Estudios/Horario" : idTipoPersonal == 2 ? "Archivo PDF cuaquier Constancia o Comprobante de Estudios / Boleta" : "Archivo PDF del SIP-10")}")"
+                                            <RadzenFormField Text="@($@"{(idTipoPersonal == 1 ? "Archivo PDF del Comprobante de Inscripción/Estudios/Horario" : idTipoPersonal == 2 ? "Archivo PDF cualquier Constancia o Comprobante de Estudios / Boleta" : "Archivo PDF del SIP-10")}")"
                                                              AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100 mt-3">
                                                 <Start><RadzenIcon Icon="picture_as_pdf" IconColor="@Colors.Base400" IconStyle="IconStyle.Secondary" /></Start>
                                                 <ChildContent>
@@ -257,7 +257,7 @@
                                                               Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
                                                               Complete="@(args => OnCompleteFiles(args))" />
                                             </ChildContent>
-                                            <Helper></Helper>
+                                            <Helper><RadzenText Text="ESCANEO COMPLETO del dispositivo (PC, Laptop) con tu ANTIVIRUS dónde se muestre que se realizó un ESCANEO COMPLETO (duración del escaneo, fecha y hora, número de archivos analizados, etc.)" TextStyle="TextStyle.Caption" TagName="TagName.Div" TextAlign="TextAlign.Justify" class="mb-0" /></Helper>
                                         </RadzenFormField>
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaEscaneoAntivirus)" hidden="@(!isVisibleCapturaEscaneoAntivirus)" />
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaEscaneoAntivirus)" hidden="@(!isVisibleCapturaEscaneoAntivirus)" />
@@ -273,7 +273,7 @@
                                                               Progress="@(args => OnProgressFiles(args, "Manual Upload"))"
                                                               Complete="@(args => OnCompleteFiles(args))" />
                                             </ChildContent>
-                                            <Helper></Helper>
+                                            <Helper><RadzenText Text="Algún error" TextStyle="TextStyle.Caption" TagName="TagName.Pre" TextAlign="TextAlign.Justify" class="mb-0" /></Helper>
                                         </RadzenFormField>
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolCapturaError)" hidden="@(!isVisibleCapturaError)" />
                                         <ValidationMessage For="@(() => oSolicitudTicket.SolFileSizeCapturaError)" hidden="@(!isVisibleCapturaError)" />

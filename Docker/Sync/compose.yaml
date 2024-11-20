@@ -1,0 +1,10 @@
+name: servicios
+
+services:
+  sincronizacion:
+    build: ./service
+    restart: no
+    #unless-stopped
+    entrypoint: ["tail", "-f", "/dev/null"]
+    volumes:
+      - ./storage/:/storage/

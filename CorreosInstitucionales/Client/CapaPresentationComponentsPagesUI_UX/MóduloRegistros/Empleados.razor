@@ -498,7 +498,7 @@ else
             oUsuario.UsuFileNameCurp = "";                      // Nombre del Archivo y extensión .pdf del CURP
             oUsuario.UsuFileSizeCurp = 0L;                      // Tamaño del Archivo .pdf del CURP
             oUsuario.UsuNoCelularAnterior = "00 00 00 00 00";   // Número de Celular Anterior si llega a cambiar por uno nuevo
-            oUsuario.UsuNoCelularActual = "";                   // Número de Celular Nuevo que sería el número de celular actual
+            oUsuario.UsuNoCelularActual = "";                   // Número de Celular Actual que sería el número de celular actual
             @* DATOS ACADÉMICOS *@
             oUsuario.UsuBoletaAlumnoEgresado = $@"0000{oEscuela?.Data?.EscNoEscuela}0000";            // Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             oUsuario.UsuBoletaPosgrado = "B000000";             // Número de Boleta del Usuario (Alumno de Posgrado)
@@ -548,7 +548,7 @@ else
             srcCURP = oUsuario.UsuFileNameCurp != "CURP.pdf" ? $@"/repositorio/{folder}/{oUsuario.IdUsuario}/{oUsuario.IdUsuario}_{oUsuario.UsuFileNameCurp}" : $@"/repositorio/CURP.pdf";
             oUsuario.UsuFileSizeCurp = oEditUsuario.UsuFileSizeCurp;                // Tamaño del Archivo .pdf del CURP
             oUsuario.UsuNoCelularAnterior = oEditUsuario.UsuNoCelularAnterior;      // Número de Celular Anterior si llega a cambiar por uno nuevo
-            oUsuario.UsuNoCelularActual = oEditUsuario.UsuNoCelularActual;          // Número de Celular Nuevo que sería el número de celular actual
+            oUsuario.UsuNoCelularActual = oEditUsuario.UsuNoCelularActual;          // Número de Celular Actual que sería el número de celular actual
             @* DATOS ACADÉMICOS *@
             oUsuario.UsuBoletaAlumnoEgresado = oEditUsuario.UsuBoletaAlumnoEgresado;// Número de Boleta del Usuario (Alumno Inscrito o Egresado)
             oUsuario.UsuBoletaPosgrado = oEditUsuario.UsuBoletaPosgrado;            // Número de Boleta del Usuario (Alumno de Posgrado)
@@ -686,7 +686,7 @@ else
             string password = ActionAddEdit == "agregar" ? oUsuario.UsuContrasenia : UsuContraseña;
             string número = (IdTipoPersonal == 4 || IdTipoPersonal == 5 ? "Número de Empleado" : "Número de Contrato");
             string agregar_actualizar = ActionAddEdit == "agregar" ? "registro" : "actualización de datos";
-            string correo_institucional = string.IsNullOrEmpty(oUsuario.UsuCorreoInstitucionalCuenta.Trim()) ? oUsuario.UsuCorreoInstitucionalCuenta?.Trim() : "sin asignar";
+            string correo_institucional = !string.IsNullOrEmpty(oUsuario.UsuCorreoInstitucionalCuenta.Trim()) ? oUsuario.UsuCorreoInstitucionalCuenta?.Trim() : "sin asignar";
             string entrega_credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) ? "<br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>" : "";
             string credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
                                         $@"

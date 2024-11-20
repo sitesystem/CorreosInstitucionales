@@ -63,7 +63,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.RepositorioFi
 
             try
             {
-                if (files.Count < 1 || files.IsNullOrEmpty())
+                if (files.Count < 1 || files is null)
                     return BadRequest(oResponse);
 
                 foreach (var file in files)
