@@ -3,4 +3,8 @@ name: servicios
 services:
   sincronizacion:
     build: ./service
-    restart: unless-stopped
+    restart: no
+    #unless-stopped
+    entrypoint: ["tail", "-f", "/dev/null"]
+    volumes:
+      - ./storage/:/storage/
