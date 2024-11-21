@@ -36,9 +36,9 @@ builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider =>
 builder.Services.AddScoped<RArchivosService>();
 
 // Inyección de Dependencias - Módulo de Send Email & Send WhatsApp
-builder.Services.AddScoped<RSendEmailService>();
-builder.Services.AddScoped<RSendWhatsAppService>();
-builder.Services.AddScoped<RSendNotificacionesService>();
+//builder.Services.AddSingleton<RSendEmailService>();
+//builder.Services.AddSingleton<RSendWhatsAppService>();
+//builder.Services.AddSingleton<RSendNotificacionesService>();
 
 // Inyección de Dependencias - Módulo de Registro del Usuario
 builder.Services.AddScoped<RUsuarioService>();

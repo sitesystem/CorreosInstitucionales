@@ -1,5 +1,8 @@
 ﻿@page "/NuevaSolicitudTicket"
 
+@inject RSendWhatsAppService servicioSendWhatsApp;
+@inject RSendEmailService servicioSendEmail;
+
 @attribute [Authorize(Policy = "[Rol] Usuario Solicitante")]
 
 <PageTitle>SACI | Nueva Solicitud-Ticket</PageTitle>

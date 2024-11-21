@@ -1,4 +1,7 @@
-﻿@if (oUsuario is not null && oUsuario.Data != null)
+﻿@inject RSendWhatsAppService servicioSendWhatsApp;
+@inject RSendEmailService servicioSendEmail;
+
+@if (oUsuario is not null && oUsuario.Data != null)
 {
     <RadzenPanel Visible="@(existenSolicitudes)">
         <RadzenFieldset AllowCollapse="false" ExpandTitle="Seguimiento de Solicitud" CollapseTitle="Seguimiento de Solicitud" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 mt-0 py-0">

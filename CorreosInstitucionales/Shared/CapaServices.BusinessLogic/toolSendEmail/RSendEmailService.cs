@@ -32,8 +32,8 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
             _port = Convert.ToInt32(config.GetSection("Email:Port").Value ?? string.Empty);
             _emailFrom = config.GetSection("Email:UserName").Value ?? string.Empty;
             _password = config.GetSection("Email:PassWord").Value ?? string.Empty;
-
         }
+
         public async Task<Response<string>> SendManyAsync
             (
                 IEnumerable<RequestDTO_SendEmail> oList,

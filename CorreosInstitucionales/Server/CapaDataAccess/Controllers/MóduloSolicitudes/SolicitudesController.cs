@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
-using CorreosInstitucionales.Server.Correos;
-using CorreosInstitucionales.Server.MensajesWA;
 using CorreosInstitucionales.Server.Utils;
 
 using CorreosInstitucionales.Shared.CapaEntities.Request;

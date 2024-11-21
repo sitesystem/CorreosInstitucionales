@@ -1,5 +1,8 @@
 ﻿@page "/NuevaContraseña"
 
+@inject RSendEmailService servicioSendEmail;
+@inject RSendWhatsAppService servicioSendWhatsApp;
+
 @* @attribute [Authorize(Policy = "[Rol] Ambos")] *@
 
 <PageTitle>SACI | Nueva Contraseña</PageTitle>

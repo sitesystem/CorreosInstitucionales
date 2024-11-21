@@ -18,14 +18,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
     // [Authorize]
     public class UsuariosController(
         DbCorreosInstitucionalesUpiicsaContext db, 
-        IHostEnvironment hostEnvironment, 
-        IWebHostEnvironment webHostEnvironment,
         RSendNotificacionesService servicioNotificacion
         ) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
-        private readonly IHostEnvironment _hostEnvironment = hostEnvironment;
-        private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
         private readonly RSendNotificacionesService _servicioNotificacion = servicioNotificacion;
 
         [HttpGet("filterByStatus/{filterByStatus}")]

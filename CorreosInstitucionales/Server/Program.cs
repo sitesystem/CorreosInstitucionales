@@ -18,6 +18,7 @@ using CorreosInstitucionales.Shared.Constantes;
 
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -152,6 +153,7 @@ builder.Services.AddScoped<ILoginAuthService, RLoginAuthService>();
 // Inyección de Dependencias - Módulo de Send Email & Send WhatsApp
 builder.Services.AddScoped<RSendEmailService>();
 builder.Services.AddScoped<RSendWhatsAppService>();
+builder.Services.AddScoped<RSendNotificacionesService>();
 
 // HTTCLIENT QUE ACEPTA HTTPS CON CERTIFICADOS AUTOFIRMADOS
 builder.Services.AddScoped
