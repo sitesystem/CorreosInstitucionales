@@ -85,6 +85,7 @@ artifacts/
 **/assets/external
 **/volumes
 
-*/publish.zip
+**/publish.zip
 **/publish/
 **/storage/
+
