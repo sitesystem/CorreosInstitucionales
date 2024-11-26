@@ -536,13 +536,6 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                 {
                     oRespuesta.Success = 1;
 
-                    McCatPlantillas[] plantillas =  await _db.McCatPlantillas
-                        .Where(
-                            p => p.PlaStatus && 
-                            p.PlaIdEstadoSolicitud == oFinalizarSolicitud.Estado
-                        )
-                        .ToArrayAsync();
-
                     Dictionary<string, object?> datos = new()
                     {
                         {"solicitud", oSolicitud },
@@ -552,9 +545,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     int filtro = (TipoEstadoSolicitud)oSolicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
                         ((TipoPersonal)oSolicitud.SolIdUsuarioNavigation!.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
 
-                    PlantillaManager manager = new PlantillaManager(plantillas);
-
-                    Response<Notificacion?> notificacion = manager.GetNotificacion(datos, oFinalizarSolicitud.Estado, filtro);
+                    Response<Notificacion?> notificacion = PlantillaManager.GetNotificacion(datos, oFinalizarSolicitud.Estado, filtro);
 
                     if(notificacion.Success == 1)
                     {

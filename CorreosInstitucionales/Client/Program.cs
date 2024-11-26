@@ -10,8 +10,7 @@ using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Login;
 using CorreosInstitucionales.Client.Shared.Components.Utils;
 
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolDebug;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
 
@@ -38,7 +37,7 @@ builder.Services.AddScoped<RArchivosService>();
 // Inyección de Dependencias - Módulo de Send Email & Send WhatsApp
 //builder.Services.AddSingleton<RSendEmailService>();
 //builder.Services.AddSingleton<RSendWhatsAppService>();
-//builder.Services.AddSingleton<RSendNotificacionesService>();
+builder.Services.AddScoped<RNotificacionesService>();
 
 // Inyección de Dependencias - Módulo de Registro del Usuario
 builder.Services.AddScoped<RUsuarioService>();

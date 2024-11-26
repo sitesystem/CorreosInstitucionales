@@ -7,6 +7,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.Constantes;
+using System.Numerics;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones
 {
@@ -16,6 +17,18 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificac
     {
         RSendEmailService _servicioCorreo = servicioCorreo;
         RSendWhatsAppService _servicioWA = servicioWA;
+
+        public async Task<Response<string>> EnviarCorreoAsync(
+            RequestDTO_SendEmail email, 
+            IDictionary<string, byte[]>? attachments = null)
+        {
+            return await _servicioCorreo.SendEmailAsync(email, attachments);
+        }
+
+        public async Task<Response<string>> EnviarWAAsync(RequestDTO_SendWhatsApp wa)
+        {
+            return await _servicioWA.SendWhatsAppAsync(wa);
+        }
 
         public async Task<Response<string>> EnviarAsync(Notificacion notificacion)
         {
@@ -72,7 +85,6 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificac
 
         public async Task<string> EnvioMasivoAsync(
             IEnumerable<MtTbSolicitudesTicket> lista,
-            IEnumerable<McCatPlantillas> plantillas,
             int tipoEstado
         )
         {
@@ -84,8 +96,6 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificac
             Response<Notificacion?> notificacion;
             Response<string> response;
                         
-            PlantillaManager plantilla = new(plantillas);
-
             int filtro = 0;
 
             Dictionary<string, object?> datos = new()
@@ -102,7 +112,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificac
                 datos["solicitud"] = solicitud;
                 datos["usuario"] = solicitud.SolIdUsuarioNavigation;
 
-                notificacion = plantilla.GetNotificacion(datos, tipoEstado, filtro);
+                notificacion = PlantillaManager.GetNotificacion(datos, tipoEstado, filtro);
 
                 if(notificacion.Success == 1)
                 {

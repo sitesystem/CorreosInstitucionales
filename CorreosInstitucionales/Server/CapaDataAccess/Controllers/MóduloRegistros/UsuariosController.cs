@@ -144,13 +144,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 oResponse.Success = 1;
                 oResponse.Data = model.IdUsuario; // PK ID Único del Usuario Creado o dado de Alta
 
-                plantillas = await _db.McCatPlantillas
-                    .Where(p => p.PlaStatus && p.PlaFiltro == PlantillaManager.FILTRO_ERROR_ALTA_USUARIO)
-                    .ToArrayAsync();
-
-                plantilla = new PlantillaManager(plantillas);
-
-                Response<Notificacion?> notificacion = plantilla.GetNotificacion
+                Response<Notificacion?> notificacion = PlantillaManager.GetNotificacion
                 (
                     new()
                     {
@@ -183,13 +177,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                 oResponse.Message = ex.Message;
 
-                plantillas = await _db.McCatPlantillas
-                    .Where(p => p.PlaStatus && p.PlaFiltro == PlantillaManager.FILTRO_ERROR_ALTA_USUARIO)
-                    .ToArrayAsync();
-
-                plantilla = new PlantillaManager(plantillas);
-
-                Response<Notificacion?> notificacion = plantilla.GetNotificacion
+                Response<Notificacion?> notificacion = PlantillaManager.GetNotificacion
                 (
                     new()
                     {
@@ -318,13 +306,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                             }
                         };
                         
-                        McCatPlantillas[] plantillas = _db.McCatPlantillas
-                            .Where(p => p.PlaStatus && p.PlaFiltro == PlantillaManager.FILTRO_RECUPERACION_CONTRA)
-                            .ToArray();
-
-                        PlantillaManager plantilla = new PlantillaManager(plantillas);
-
-                        Response<Notificacion?> notificacion = plantilla.GetNotificacion(datos, 1 , PlantillaManager.FILTRO_RECUPERACION_CONTRA);
+                        Response<Notificacion?> notificacion = PlantillaManager.GetNotificacion(datos, 1 , PlantillaManager.FILTRO_RECUPERACION_CONTRA);
 
                         oRespuesta.Data = notificacion is not null && notificacion.Success == 1;
 
@@ -364,6 +346,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             try
             {
                 MpTbUsuario? oUsuario = await _db.MpTbUsuarios.FindAsync(id);
+                
+                //PlantillaManager plantillaManager = new PlantillaManager(plantillas);
+                //McCatPlantillas plantillas1 = plantillaManager.GetPlantilla()
 
                 if (oUsuario != null)
                 {

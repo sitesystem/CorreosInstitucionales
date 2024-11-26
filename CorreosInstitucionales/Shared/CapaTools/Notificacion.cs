@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 using CorreosInstitucionales.Shared.Constantes;
 
 namespace CorreosInstitucionales.Shared.CapaTools

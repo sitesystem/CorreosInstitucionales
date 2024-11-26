@@ -3,10 +3,7 @@
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones
 
 @inject DialogService dialogService
-@inject RPlantillaService servicioPlantilla
-@inject RSendEmailService servicioCorreo
-@inject RSendWhatsAppService servicioWA
-@inject RSendNotificacionesService servicioNotificaciones
+@inject RNotificacionesService servicioNotificaciones
 
 <PageTitle>@Title</PageTitle>
 
@@ -136,8 +133,6 @@
 
     List<RequestViewModel_EstadoSolicitud> estados_solicitud = new();
 
-    PlantillaManager plantillas;
-
     string plantilla_correo = string.Empty;
     string plantilla_wa = string.Empty;
 
@@ -156,7 +151,7 @@
         int filtro = (TipoEstadoSolicitud)solicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
                         ((TipoPersonal)usuario.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
 
-        Response<Notificacion?> notificacion = plantillas.GetNotificacion(datos,solicitud.SolIdEstadoSolicitud, filtro);
+        Response<Notificacion?> notificacion = PlantillaManager.GetNotificacion(datos, solicitud.SolIdEstadoSolicitud, filtro);
 
         if (notificacion.Success == 1)
         {
@@ -187,7 +182,7 @@
             int filtro = (TipoEstadoSolicitud)solicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
                         ((TipoPersonal)usuario.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
 
-            McCatPlantillas? plantilla = plantillas.GetPlantilla(solicitud.SolIdEstadoSolicitud, tipo, filtro);
+            McCatPlantillas? plantilla = PlantillaManager.GetPlantilla(solicitud.SolIdEstadoSolicitud, tipo, filtro);
 
             if (plantilla is not null)
             {
@@ -285,13 +280,6 @@
                 estados_solicitud = r_e_solicitud.Data!;
             }
 
-            Response<List<RequestViewModel_Plantilla>>? r_plantilla = await servicioPlantilla.GetAllDataByStatusAsync(true);
-
-            if (r_plantilla is not null && r_plantilla.Success == 1 && r_plantilla.Data is not null)
-            {
-                plantillas = new(r_plantilla.Data!);
-            }
-
             trabajando = false;
             StateHasChanged();
         }
@@ -304,7 +292,7 @@
         debug += Environment.NewLine + "Enviando mensaje";
         StateHasChanged();
 
-        Response<string> response = await servicioCorreo.SendEmailAsync
+        Response<string> response = await servicioNotificaciones.EnviarCorreo
         (
             new RequestDTO_SendEmail()
             {
@@ -338,7 +326,7 @@
         debug += Environment.NewLine + "Enviando mensaje";
         StateHasChanged();
 
-        response = await servicioWA.SendWhatsAppAsync(MensajeWA);
+        response = await servicioNotificaciones.EnviarWA(MensajeWA);
         if (response.Success == 1)
         {
             debug += Environment.NewLine + "MENSAJE ENVIADO POR WA CORECTAMENTE.";

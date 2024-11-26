@@ -1,5 +1,6 @@
 global using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
+using CorreosInstitucionales.Server.CapaDataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,11 @@ using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+
+using CorreosInstitucionales.Server.CapaDataAccess;
+
+using CorreosInstitucionales.Shared.CapaTools;
+using CorreosInstitucionales.Shared.CapaDataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -172,11 +178,6 @@ builder.Services.AddScoped
     )
 );
 
-
-builder.Services.AddMemoryCache();
-
-builder.Services.AddTransient<DBCacheInitializer>();
-
 /******************************************************************************************************/
 
 var app = builder.Build();
@@ -218,11 +219,14 @@ app.MapFallbackToFile("index.html");
 //https://stackoverflow.com/questions/75816727/blazor-webassembly-dbcontext-use-on-startup
 //https://stackoverflow.com/questions/72447401/cannot-resolve-scoped-service-from-root-provider-in-asp-net-core-6
 
-using (var scope = app.Services.CreateScope())
+using (DBSACI dbsaci = new DBSACI(builder.Configuration.GetConnectionString("SQLServer_Connection")!))
 {
-    DBCacheInitializer dbcache = scope.ServiceProvider.GetRequiredService<DBCacheInitializer>();
-    dbcache.Init();
+    AppCache.Plantillas = await dbsaci.McCatPlantillas.Where(p => p.PlaStatus.Equals(true)).ToArrayAsync();
+    AppCache.Enlaces = await dbsaci.McCatLinks.Where(p => p.LinkStatus.Equals(true)).ToArrayAsync();
+    AppCache.Anuncios = await dbsaci.McCatAnuncios.Where(p => p.AnuStatus.Equals(true)).ToListAsync();
 }
+
+AppCache.LogoSACI = File.ReadAllBytes($"{ServerFS.GetBaseDir(true)}/assets/img/logo_128.png");
 
 app.Run();
 

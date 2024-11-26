@@ -113,13 +113,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
             int tipoEstado
         )
         {
-            McCatPlantillas[] plantillas = _db.McCatPlantillas
-                .Where(
-                    p => p.PlaStatus && p.PlaIdEstadoSolicitud == tipoEstado
-                )
-                .ToArray();
-
-            return await _servicioNotificaciones.EnvioMasivoAsync(lista, plantillas, tipoEstado);
+            return await _servicioNotificaciones.EnvioMasivoAsync(lista, tipoEstado);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

@@ -1,15 +1,40 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaEntities.Response;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+using CorreosInstitucionales.Shared.CapaTools;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
-    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
 
-    public class NotificacionesController : Controller
+    public class NotificacionesController(RSendNotificacionesService servicioNotificacion) : ControllerBase
     {
-        public IActionResult Index()
+        RSendNotificacionesService _servicioNotificacion = servicioNotificacion;
+
+        [HttpPost("enviar")]
+        public async Task<IActionResult> Notificar(Notificacion notificacion)
         {
-            return View();
+            Response<string> oResponse = await _servicioNotificacion.EnviarAsync(notificacion);
+            return Ok(oResponse);
+        }
+
+        [HttpPost("enviarCorreo")]
+        public async Task<IActionResult> EnviarCorreo(
+                RequestDTO_SendEmail correo,
+                Dictionary<string, byte[]>? attachments = null
+            )
+        {
+            Response<string> oResponse = await _servicioNotificacion.EnviarCorreoAsync(correo, attachments);
+            return Ok(oResponse);
+        }
+
+        [HttpPost("enviarWA")]
+        public async Task<IActionResult> EnviarWA(RequestDTO_SendWhatsApp wa)
+        {
+            Response<string> oResponse = await _servicioNotificacion.EnviarWAAsync(wa);
+            return Ok(oResponse);
         }
     }
 }

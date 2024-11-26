@@ -6,13 +6,12 @@ using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using System.Collections;
+using CorreosInstitucionales.Shared.CapaDataAccess;
 
 namespace CorreosInstitucionales.Shared.CapaTools
 {
-    public class PlantillaManager(IEnumerable<McCatPlantillas> plantillas)
+    public class PlantillaManager()
     {
-        public static McCatPlantillas[] Plantillas = [];
-
         public const int PLANTILLA_CORREO = 1;
         public const int PLANTILLA_WA = 2;
 
@@ -24,10 +23,7 @@ namespace CorreosInstitucionales.Shared.CapaTools
         public const int FILTRO_ALTA_USUARIO = 5;
         public const int FILTRO_EDICION_USUARIO = 6;
 
-
-        public IEnumerable<McCatPlantillas> Items = plantillas;
-
-        public Response<Notificacion?> GetNotificacion(Dictionary<string, object?> datos, int estado, int filtro = 0)
+        public static Response<Notificacion?> GetNotificacion(Dictionary<string, object?> datos, int estado, int filtro = 0)
         {
             Response<Notificacion?> response = new Response<Notificacion?>() { Success = 0 };
 
@@ -113,12 +109,12 @@ namespace CorreosInstitucionales.Shared.CapaTools
             return sb.ToString();
         }
 
-        public McCatPlantillas? GetPlantilla(
+        public static McCatPlantillas? GetPlantilla(
             int estado_solicitud, 
             int tipo_plantilla = PLANTILLA_CORREO,
             int filtro = 0)
         {
-            McCatPlantillas[] plantillas = Items
+            McCatPlantillas[] plantillas = AppCache.Plantillas
                .Where(p =>
                    p.PlaIdEstadoSolicitud == estado_solicitud &&
                    p.PlaTipo == tipo_plantilla

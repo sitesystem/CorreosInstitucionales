@@ -1,0 +1,18 @@
+*SACI | Sistema de Atención para Correos Institucionales*
+
+👉 *FAVOR DE NO RESPONDER A ESTE MENSAJE*
+
+Saludos, {usuario.UsuNombres} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}:
+
+
+A través de este medio, deseamos notificarle que se ha procesado exitosamente su solicitud de cambio de contraseña, de acceso a la Plataforma SACI de la Unidad Académica {escuela.EscNombreCorto} ({escuela.EscNombreLargo}).
+
+*Datos de Acceso:*
+- 📧 *Correo personal* - {usuario.UsuCorreoPersonalCuentaActual}
+- 🔑 *Contraseña* - {datos.password}
+
+Le recordamos que puede acceder a la plataforma desde la dirección  https://www.saci.upiicsa.ipn.mx, con su 📧*correo personal* y 🔑*contraseña*.
+
+Sin más que añadir, que tenga un excelente día.
+
+> NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
