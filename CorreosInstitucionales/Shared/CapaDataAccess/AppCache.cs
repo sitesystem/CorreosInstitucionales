@@ -16,6 +16,7 @@ namespace CorreosInstitucionales.Shared.CapaDataAccess
         
         public static McCatLink[] Enlaces = [];
         public static McCatPlantillas[] Plantillas = [];
+        public static McCatSemestre[] Semestres = [];
 
         public static List<McCatAnuncio> Anuncios = [];
 

@@ -224,6 +224,7 @@ using (DBSACI dbsaci = new DBSACI(builder.Configuration.GetConnectionString("SQL
     AppCache.Plantillas = await dbsaci.McCatPlantillas.Where(p => p.PlaStatus.Equals(true)).ToArrayAsync();
     AppCache.Enlaces = await dbsaci.McCatLinks.Where(p => p.LinkStatus.Equals(true)).ToArrayAsync();
     AppCache.Anuncios = await dbsaci.McCatAnuncios.Where(p => p.AnuStatus.Equals(true)).ToListAsync();
+    AppCache.Semestres = await dbsaci.McCatSemestres.ToArrayAsync();
 }
 
 AppCache.LogoSACI = File.ReadAllBytes($"{ServerFS.GetBaseDir(true)}/assets/img/logo_128.png");
