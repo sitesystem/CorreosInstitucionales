@@ -20,9 +20,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones;
 using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.MóduloCatálogos;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers

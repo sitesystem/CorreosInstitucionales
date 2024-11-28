@@ -1,7 +1,7 @@
 ﻿using CorreosInstitucionales.Shared.CapaDataAccess;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones;
 using CorreosInstitucionales.Shared.CapaTools;
 using Microsoft.AspNetCore.Mvc;
 

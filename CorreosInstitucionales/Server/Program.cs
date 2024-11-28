@@ -19,7 +19,7 @@ using CorreosInstitucionales.Shared.Constantes;
 
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones;
 
 using CorreosInstitucionales.Server.CapaDataAccess;
 

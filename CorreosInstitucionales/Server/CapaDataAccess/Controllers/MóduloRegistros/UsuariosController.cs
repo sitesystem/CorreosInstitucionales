@@ -7,7 +7,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones;
 using System.Dynamic;
 using Azure.Identity;
 

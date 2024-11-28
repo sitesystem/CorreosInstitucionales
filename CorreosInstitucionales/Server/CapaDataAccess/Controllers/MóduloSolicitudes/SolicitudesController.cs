@@ -10,7 +10,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.Constantes;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones;
 using CorreosInstitucionales.Shared.CapaTools;
 using Serilog;
 
