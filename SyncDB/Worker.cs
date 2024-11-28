@@ -1,5 +1,7 @@
-﻿using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
+﻿using CorreosInstitucionales.Shared.CapaDataAccess;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContextCentral;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SyncDB.Context;
@@ -17,15 +19,8 @@ namespace SyncDB
         protected readonly DBCentral _db_central;
         public bool IsRunning { get; private set; } = true;
 
-        public Worker()
+        public Worker(IConfiguration config)
         {
-            /* ================ CONFIGURACIÓN ================*/
-            var builder = new ConfigurationBuilder();
-            builder.SetBasePath(Directory.GetCurrentDirectory())
-                   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
-            IConfiguration config = builder.Build();
-
             /* ================ CONEXIÓN A BD ================*/
 
             _db_saci = new DBSACI(config.GetConnectionString("SQLServer_Connection")!);

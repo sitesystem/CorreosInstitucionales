@@ -9,7 +9,7 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.Constantes;
 using System.Numerics;
 
-namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones
+namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones
 {
     public class RSendNotificacionesService(
         RSendEmailService servicioCorreo, 

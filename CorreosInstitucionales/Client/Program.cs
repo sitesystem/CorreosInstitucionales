@@ -12,7 +12,7 @@ using CorreosInstitucionales.Client.Shared.Components.Utils;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
 
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolDebug;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.Notificaciones;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

@@ -1,6 +1,6 @@
 ﻿@page "/debug/correos"
 
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones
+@    using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones
 
 @inject DialogService dialogService
 @inject RNotificacionesService servicioNotificaciones
@@ -155,9 +155,9 @@
 
         if (notificacion.Success == 1)
         {
-            Response<string> response = await servicioNotificaciones.EnviarAsync(notificacion.Data!);
+            Response<string>? response = await servicioNotificaciones.Notificar(notificacion.Data!);
 
-            if (response.Success == 1)
+            if (response is not null && response.Success == 1)
             {
                 debug += Environment.NewLine + "NOTIFICACIÓN ENVIADA.";
             }

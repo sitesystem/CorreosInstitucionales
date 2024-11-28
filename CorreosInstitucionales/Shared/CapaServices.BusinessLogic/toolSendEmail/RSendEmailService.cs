@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Net.Mail;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Threading.Tasks;
-
+﻿using CorreosInstitucionales.Shared.CapaDataAccess;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
-using CorreosInstitucionales.Shared.CapaTools;
 using Microsoft.Extensions.Configuration;
+using System.Net;
+using System.Net.Mail;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
 {
@@ -77,22 +65,30 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
                 return "Correo de prueba\n\r";
             }
 
-            using MailMessage mailMessage = new(_emailFrom, oSendEmail.EmailTo, oSendEmail.Subject, oSendEmail.Body)
+            using MailMessage mailMessage = new(_emailFrom, oSendEmail.EmailTo, oSendEmail.Subject, null)
             {
                 IsBodyHtml = true
             };
 
-            if (attachments != null)
+            LinkedResource logo = new LinkedResource(
+                new MemoryStream(AppCache.LogoSACI) { Position = 0 },
+                new System.Net.Mime.ContentType("image/png"));
+
+            string body = (oSendEmail.Body??"").Replace("{logo_saci}",$"cid:{logo.ContentId}");
+
+            AlternateView av = AlternateView.CreateAlternateViewFromString(body, null, System.Net.Mime.MediaTypeNames.Text.Html);
+
+            av.LinkedResources.Add(logo);
+
+            if (attachments is not null)
             {
-                MemoryStream ms = new();
-                foreach (var attachment in attachments)
+                foreach( KeyValuePair<string,byte[]> attachment in attachments )
                 {
-                    ms.SetLength(0);
-                    ms.Write(attachment.Value);
-                    mailMessage.Attachments.Add(new Attachment(ms, attachment.Key));
+                    mailMessage.Attachments.Add(new Attachment(new MemoryStream(attachment.Value), attachment.Key));
                 }
-                ms.Dispose();
             }
+
+            mailMessage.AlternateViews.Add(av);
 
             await smtpClient.SendMailAsync(mailMessage);
             return null;

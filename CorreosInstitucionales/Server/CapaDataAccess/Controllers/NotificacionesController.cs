@@ -1,4 +1,5 @@
-﻿using CorreosInstitucionales.Shared.CapaEntities.Request;
+﻿using CorreosInstitucionales.Shared.CapaDataAccess;
+using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones;
 using CorreosInstitucionales.Shared.CapaTools;
@@ -22,11 +23,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 
         [HttpPost("enviarCorreo")]
         public async Task<IActionResult> EnviarCorreo(
-                RequestDTO_SendEmail correo,
-                Dictionary<string, byte[]>? attachments = null
+                RequestDTO_SendEmail correo
             )
         {
-            Response<string> oResponse = await _servicioNotificacion.EnviarCorreoAsync(correo, attachments);
+            Response<string> oResponse = await _servicioNotificacion.EnviarCorreoAsync(correo);
             return Ok(oResponse);
         }
 

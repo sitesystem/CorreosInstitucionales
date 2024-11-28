@@ -10,7 +10,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificaciones
+namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.Notificaciones
 {
     public class RNotificacionesService(HttpClient httpClient)
     {
@@ -29,7 +29,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolNotificac
                 var content = await response.Content.ReadAsStringAsync();
                 result = JsonSerializer.Deserialize<Response<string>>(content, options: _options);
             }
-            
+
             return result;
         }
 
