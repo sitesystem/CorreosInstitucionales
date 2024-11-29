@@ -1,0 +1,21 @@
+*SACI | Sistema de Atención para Correos Institucionales*
+
+👉 *FAVOR DE NO RESPONDER A ESTE MENSAJE*
+
+Saludos, {usuario.UsuNombres} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}:
+
+Por medio del presente nos permitimos informarle que su solicitud con No. de Ticket *{solicitud.IdSolicitudTicket}*, ha sido atendida con éxito con la siguiente observación de la Mesa de Control:
+> {solicitud.SolRespuestaDcyC}
+
+Para poder acceder al servicio deberá dirigirse a: https://outlook.com/correo.ipn.mx
+
+Otra manera de ingresar es ir a la página de la UPIICSA y en el apartado de "Correo electrónico" que se encuentra en la parte superior derecha. Seleccionar la opción "Alumno y Egresados".
+
+*Puede cambiar su contraseña después de 48 horas* de haber recibido su buzón de correo, (si Ud. Intenta cambiar la contraseña antes de las 48 hrs. el sistema no se lo permitirá), por lo que, es necesario seguir las instrucciones del procedimiento alojado en la siguiente URL: https://www.ipn.mx/assets/files/dcyc/docs/computo/guia-tecnica-correo.pdf
+
+
+Le recordamos que *para poder visualizar sus datos de CORREO INSTITUCIONAL, es necesario que conteste la encuesta de calidad*, accediendo a la *Plataforma SACI* desde la dirección https://www.saci.upiicsa.ipn.mx, con su 📧*correo personal* y 🔑*contraseña*.
+
+Sin más que añadir, que tenga un excelente día.
+
+> NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
