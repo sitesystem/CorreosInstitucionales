@@ -1,6 +1,5 @@
 global using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
-using CorreosInstitucionales.Server.CapaDataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -221,6 +220,7 @@ app.MapFallbackToFile("index.html");
 
 using (DBSACI dbsaci = new DBSACI(builder.Configuration.GetConnectionString("SQLServer_Connection")!))
 {
+    //AppCache.Escuela = await dbsaci.McCatEscuelas.Where(e => e.IdEscuela.Equals(appSettings!.IDEscuela ?? 1)).FirstAsync();
     AppCache.Plantillas = await dbsaci.McCatPlantillas.Where(p => p.PlaStatus.Equals(true)).ToArrayAsync();
     AppCache.Enlaces = await dbsaci.McCatLinks.Where(p => p.LinkStatus.Equals(true)).ToArrayAsync();
     AppCache.Anuncios = await dbsaci.McCatAnuncios.Where(p => p.AnuStatus.Equals(true)).ToListAsync();

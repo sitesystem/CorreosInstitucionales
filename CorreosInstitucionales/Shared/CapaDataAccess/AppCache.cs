@@ -10,9 +10,7 @@ namespace CorreosInstitucionales.Shared.CapaDataAccess
 {
     public static class AppCache
     {
-        public static string NombreEscuela = string.Empty;
-        public static string NombreEscuela_Corto = string.Empty;
-        public static int IdEscuela = 0;
+        public static McCatEscuela Escuela = new McCatEscuela();
         
         public static McCatLink[] Enlaces = [];
         public static McCatPlantillas[] Plantillas = [];

@@ -10,6 +10,7 @@ using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones;
 using System.Dynamic;
 using Azure.Identity;
+using CorreosInstitucionales.Shared.CapaDataAccess;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegistros
 {
@@ -128,9 +129,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         public async Task<IActionResult> AddData(RequestDTO_Usuario model)
         {
             Response<int> oResponse = new();
-            //CreatedAtActionResult oCreatedAtActionResult;
-            McCatPlantillas[] plantillas;
-            PlantillaManager plantilla;
+            
+            PlantillaManager plantilla = new PlantillaManager(AppCache.Plantillas);
 
             try
             {
@@ -144,7 +144,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 oResponse.Success = 1;
                 oResponse.Data = model.IdUsuario; // PK ID Único del Usuario Creado o dado de Alta
 
-                Response<Notificacion?> notificacion = PlantillaManager.GetNotificacion
+                Response<Notificacion?> notificacion = plantilla.GetNotificacion
                 (
                     new()
                     {
@@ -177,7 +177,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                 oResponse.Message = ex.Message;
 
-                Response<Notificacion?> notificacion = PlantillaManager.GetNotificacion
+                Response<Notificacion?> notificacion = plantilla.GetNotificacion
                 (
                     new()
                     {
@@ -305,8 +305,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                                 }
                             }
                         };
-                        
-                        Response<Notificacion?> notificacion = PlantillaManager.GetNotificacion(datos, 1 , PlantillaManager.FILTRO_RECUPERACION_CONTRA);
+
+                        PlantillaManager plantillas = new PlantillaManager(AppCache.Plantillas);
+                        Response<Notificacion?> notificacion = plantillas.GetNotificacion(datos, 1 , PlantillaManager.FILTRO_RECUPERACION_CONTRA);
 
                         oRespuesta.Data = notificacion is not null && notificacion.Success == 1;
 

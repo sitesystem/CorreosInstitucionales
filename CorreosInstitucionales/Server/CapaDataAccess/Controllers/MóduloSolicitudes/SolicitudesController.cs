@@ -13,6 +13,7 @@ using CorreosInstitucionales.Shared.Constantes;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones;
 using CorreosInstitucionales.Shared.CapaTools;
 using Serilog;
+using CorreosInstitucionales.Shared.CapaDataAccess;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
 {
@@ -545,7 +546,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     int filtro = (TipoEstadoSolicitud)oSolicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
                         ((TipoPersonal)oSolicitud.SolIdUsuarioNavigation!.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
 
-                    Response<Notificacion?> notificacion = PlantillaManager.GetNotificacion(datos, oFinalizarSolicitud.Estado, filtro);
+                    PlantillaManager plantillas = new PlantillaManager(AppCache.Plantillas);
+                    Response<Notificacion?> notificacion = plantillas.GetNotificacion(datos, oFinalizarSolicitud.Estado, filtro);
 
                     if(notificacion.Success == 1)
                     {

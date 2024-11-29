@@ -10,7 +10,7 @@ using CorreosInstitucionales.Shared.CapaDataAccess;
 
 namespace CorreosInstitucionales.Shared.CapaTools
 {
-    public class PlantillaManager()
+    public class PlantillaManager
     {
         public const int PLANTILLA_CORREO = 1;
         public const int PLANTILLA_WA = 2;
@@ -23,7 +23,14 @@ namespace CorreosInstitucionales.Shared.CapaTools
         public const int FILTRO_ALTA_USUARIO = 5;
         public const int FILTRO_EDICION_USUARIO = 6;
 
-        public static Response<Notificacion?> GetNotificacion(Dictionary<string, object?> datos, int estado, int filtro = 0)
+        McCatPlantillas[] Plantillas;
+
+        public PlantillaManager(IEnumerable<McCatPlantillas> plantillas)
+        {
+            Plantillas = plantillas.ToArray();
+        }
+
+        public Response<Notificacion?> GetNotificacion(Dictionary<string, object?> datos, int estado, int filtro = 0)
         {
             Response<Notificacion?> response = new Response<Notificacion?>() { Success = 0 };
 
@@ -109,12 +116,12 @@ namespace CorreosInstitucionales.Shared.CapaTools
             return sb.ToString();
         }
 
-        public static McCatPlantillas? GetPlantilla(
+        public McCatPlantillas? GetPlantilla(
             int estado_solicitud, 
             int tipo_plantilla = PLANTILLA_CORREO,
             int filtro = 0)
         {
-            McCatPlantillas[] plantillas = AppCache.Plantillas
+            McCatPlantillas[] plantillas = Plantillas
                .Where(p =>
                    p.PlaIdEstadoSolicitud == estado_solicitud &&
                    p.PlaTipo == tipo_plantilla

@@ -8,6 +8,7 @@ using System.Text;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.Constantes;
 using System.Numerics;
+using CorreosInstitucionales.Shared.CapaDataAccess;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones
 {
@@ -104,6 +105,8 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotif
                 {"usuario", null },
             };
 
+            PlantillaManager plantillas = new PlantillaManager(AppCache.Plantillas);
+
             foreach (MtTbSolicitudesTicket solicitud in lista)
             {
                 filtro = (TipoEstadoSolicitud)solicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
@@ -112,7 +115,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotif
                 datos["solicitud"] = solicitud;
                 datos["usuario"] = solicitud.SolIdUsuarioNavigation;
 
-                notificacion = PlantillaManager.GetNotificacion(datos, tipoEstado, filtro);
+                notificacion = plantillas.GetNotificacion(datos, tipoEstado, filtro);
 
                 if(notificacion.Success == 1)
                 {
