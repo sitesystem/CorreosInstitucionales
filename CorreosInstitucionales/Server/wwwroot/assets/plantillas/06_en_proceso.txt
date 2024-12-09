@@ -4,7 +4,7 @@
 
 Saludos, {usuario.UsuNombres} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}:
 
-Por medio del presente nos permitimos informarle que su solicitud con No. de Ticket *#{solicitud.IdSolicitudTicket}* de *{solicitud.SolIdTipoSolicitudNavigation.TiposolDescripcion}*, ha sido canalizada para su atención.
+Por medio del presente nos permitimos informarle que su solicitud con No. de Ticket *#{solicitud.IdSolicitudTicket}* de *{tipo_solicitud.TiposolDescripcion}*, ha sido canalizada para su atención.
 
 Le recordamos que puede acceder a la plataforma desde la dirección  https://www.saci.upiicsa.ipn.mx, con su 📧*correo personal* y 🔑*contraseña*.
 

@@ -1,0 +1,19 @@
+*SACI | Sistema de Atención para Correos Institucionales*
+
+👉 *FAVOR DE NO RESPONDER A ESTE MENSAJE*
+
+Saludos, {usuario.UsuNombres} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}:
+
+En primer lugar, queremos expresar nuestro más sincero agradecimiento por haber dedicado su tiempo a completar nuestra encuesta de calidad, ya que su opinión es sumamente valiosa para nosotros, dado que nos permite mejorar continuamente nuestro servicio.
+
+Como parte de este proceso, nos permitimos enviarle una *copia* de los datos de acceso proporcionados por mesa de control institucional; mismos que se encuentran en la sección de *Perfil* de la *Plataforma SACI*.
+
+*Datos de acceso al Correo Institucional:*
+	- 📥 *Correo Institucional* - {usuario.UsuCorreoInstitucionalCuenta}
+	- ⌛ *Contraseña Institucional* - {usuario.UsuCorreoInstitucionalContrasenia}
+
+Le recordamos que puede acceder a la plataforma desde la dirección  https://www.saci.upiicsa.ipn.mx, con su 📧*correo personal* y 🔑*contraseña*.
+
+Sin más que añadir, que tenga un excelente día.
+
+> NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.

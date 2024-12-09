@@ -13,14 +13,14 @@ namespace CorreosInstitucionales.Shared.CapaTools
 {
     public class Notificacion
     {
-        public RequestDTO_SendEmail correo = new()
+        public RequestDTO_SendEmail correo { get; set; } = new()
         {
             Subject = "Asunto",
             EmailTo = "postmaster@localhost",
             Body = "NO DEFINIDO"
         };
 
-        public RequestDTO_SendWhatsApp wa = new()
+        public RequestDTO_SendWhatsApp wa { get; set; } = new()
         {
             Message = "PRUEBA",
             Number = "5500000000"
