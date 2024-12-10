@@ -1,7 +1,7 @@
 ﻿using CorreosInstitucionales.Shared.CapaDataAccess;
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContextCentral;
-
+using CorreosInstitucionales.Shared.Constantes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SyncDB.Context;
@@ -29,6 +29,33 @@ namespace SyncDB
 
         public async Task RunAsync()
         {
+            await Syncronize();
+            await EncuestaCalidad();
+        }
+
+        public async Task EncuestaCalidad()
+        {
+            int id_pendinte = (int)TipoEstadoSolicitud.ATENDIDA;
+
+            MtTbSolicitudesTicket[] encuestas = await _db_saci.MtTbSolicitudesTickets
+                .Where(
+                    s => 
+                        s.SolEncuestaCalidadCalificacion == null &&
+                        s.SolIdEstadoSolicitud == id_pendinte
+                )
+                .Include(u => u.SolIdUsuarioNavigation)
+                .ToArrayAsync();
+
+            Console.WriteLine($"ENCUESTAS PENDIENTES: {encuestas.Length}");
+
+            foreach(MtTbSolicitudesTicket encuesta in encuestas)
+            {
+                Console.WriteLine($"{encuesta.IdSolicitudTicket} - {encuesta.SolEnvioEncuesta}");   
+            }
+        }
+
+        public async Task Syncronize()
+        {
             int max_id_usuario_saci = await _db_saci.MpTbUsuarios.MaxAsync(u => u.IdUsuario);
             int max_id_usuario_central = 0;
             int delta_usuarios = 0;
@@ -44,7 +71,7 @@ namespace SyncDB
 
             delta_usuarios = usuarios_nuevos.Count;
 
-            if(delta_usuarios == 0)
+            if (delta_usuarios == 0)
             {
                 //Console.WriteLine("NO HAY REGISTROS PARA ACTUALIZAR.");
                 return;
@@ -111,7 +138,7 @@ namespace SyncDB
                 }
 
             }
-            Console.WriteLine($"================================");
+            //Console.WriteLine($"================================");
         }
 
         public void Dispose()
