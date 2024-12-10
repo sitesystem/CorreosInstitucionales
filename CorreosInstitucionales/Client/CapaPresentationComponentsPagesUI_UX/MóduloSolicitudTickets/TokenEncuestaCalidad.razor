@@ -1,0 +1,55 @@
+﻿@page "/encuesta/{token}"
+
+<PageTitle>@Title</PageTitle>
+
+<div class="p-4 rounded-1 mb-3 bg-white shadow">
+    <div class="my-2">
+        <h1>@Title</h1>
+    </div>
+
+    <div class="row my-4">
+        @if (trabajando)
+        {
+            <div class="col text-center">
+                <img src="img/mail.png" class="loading_img" />
+                <br />
+                <strong>Cargando datos...</strong>
+            </div>
+        }else{
+            <EncuestaCalidad solicitud="solicitud"/>
+        }
+    </div>
+</div>
+
+@if(solicitud is not null)
+{
+    <text>@Title</text>
+}
+
+@code {
+    string Title { get; set; } = "ENCUESTA DE CALIDAD";
+    bool trabajando = true;
+
+    [Parameter]
+    public string token { get; set; }
+
+    RequestDTO_Solicitud? solicitud { get; set; } = null;
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            Response<RequestDTO_Solicitud?>? request = await servicioSolicitud.GetDataByToken(token);
+
+            if (request is not null && request.Data is not null)
+            {
+                solicitud = request.Data!;
+                Title = $"ENCUESTA DE CALIDAD DE LA SOLICITUD #{solicitud.IdSolicitudTicket} - {solicitud.SolIdTipoSolicitudNavigation!.TiposolDescripcion}";
+            }
+
+            trabajando = false;
+            StateHasChanged();
+        }
+    }
+
+}

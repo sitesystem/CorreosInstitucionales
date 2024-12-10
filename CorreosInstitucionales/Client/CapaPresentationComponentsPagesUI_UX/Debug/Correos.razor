@@ -4,6 +4,7 @@
 
 @inject DialogService dialogService
 @inject RNotificacionesService servicioNotificaciones
+@inject RPlantillaService servicioPlantillas;
 
 <PageTitle>@Title</PageTitle>
 
@@ -77,9 +78,9 @@
                     <InputCheckbox class="mb-3" @bind-Value=@usar_plantilla_correo/>
                     Usar plantilla
                 </label>
-                
+
             }
-            
+
             <button @onclick="EnviarCorreo" class="btn btn-primary form-control">Enviar Correo</button>
         </div>
     </div>
@@ -98,7 +99,7 @@
                     <InputCheckbox class="mb-3" @bind-Value=@usar_plantilla_wa />
                     Usar plantilla
                 </label>
-                
+
             }
 
             <button @onclick="EnviarMensajeWA" class="btn btn-primary form-control">Enviar WA</button>
@@ -114,6 +115,9 @@
 
 @code 
 {
+
+
+
     readonly string Title = "Enviar Mensaje";
     string debug = "";
 
@@ -139,6 +143,8 @@
     bool usar_plantilla_correo = false;
     bool usar_plantilla_wa = false;
 
+    PlantillaManager plantillas;
+
     private async void Notificar()
     {
         Dictionary<string, object?> datos = new()
@@ -151,11 +157,14 @@
         int filtro = (TipoEstadoSolicitud)solicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
                         ((TipoPersonal)usuario.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
 
-        Response<Notificacion?> notificacion = PlantillaManager.GetNotificacion(datos, solicitud.SolIdEstadoSolicitud, filtro);
+        Response<Notificacion?> notificacion = plantillas.GetNotificacion(datos, solicitud.SolIdEstadoSolicitud, filtro);
 
-        if (notificacion.Success == 1)
+        if (notificacion.Data is not null)
         {
-            Response<string>? response = await servicioNotificaciones.Notificar(notificacion.Data!);
+            notificacion.Data.correo.EmailTo = correo;
+            notificacion.Data.wa.Number = numero;
+
+            Response<string>? response = await servicioNotificaciones.Notificar(notificacion.Data);
 
             if (response is not null && response.Success == 1)
             {
@@ -182,7 +191,7 @@
             int filtro = (TipoEstadoSolicitud)solicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
                         ((TipoPersonal)usuario.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
 
-            McCatPlantillas? plantilla = PlantillaManager.GetPlantilla(solicitud.SolIdEstadoSolicitud, tipo, filtro);
+            McCatPlantillas? plantilla = plantillas.GetPlantilla(solicitud.SolIdEstadoSolicitud, tipo, filtro);
 
             if (plantilla is not null)
             {
@@ -208,6 +217,7 @@
         string html = string.Empty;
 
         html = GenerarMensaje(tipo);
+        html = html.Replace("{logo_saci}", "../assets/img/logo_128.png");
 
         await dialogService.OpenAsync<VistaHTML>
         (
@@ -242,6 +252,13 @@
                 numero = usuario.UsuNoCelularActual!.Replace(" ", string.Empty);
                 mensaje_correo = $"MENSAJE DE PRUEBA PARA {usuario.UsuNombres}";
                 mensaje_wa = $"MENSAJE DE PRUEBA PARA *{usuario.UsuNombres}*";
+            }
+
+            Response<List<RequestViewModel_Plantilla>>? r_plantillas = await servicioPlantillas.GetAllDataByStatusAsync(true);
+
+            if(r_plantillas is not null && r_plantillas.Success == 1 && r_plantillas.Data is not null)
+            {
+                plantillas = new PlantillaManager(r_plantillas.Data!);
             }
 
             Response<List<RequestViewModel_TipoSolicitud>>? r_t_solicitud = await servicioTipoSolicitud.GetAllDataByStatusAsync(true);
@@ -292,7 +309,7 @@
         debug += Environment.NewLine + "Enviando mensaje";
         StateHasChanged();
 
-        Response<string> response = await servicioNotificaciones.EnviarCorreo
+        Response<string>? response = await servicioNotificaciones.EnviarCorreo
         (
             new RequestDTO_SendEmail()
             {
@@ -302,7 +319,7 @@
             }
         );
 
-        if(response.Success == 1)
+        if(response is not null && response.Success == 1)
         {
             debug += Environment.NewLine + "CORREO ENVIADO";
         }
