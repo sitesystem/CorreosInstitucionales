@@ -239,8 +239,9 @@
             int id = Convert.ToInt32(user.Claims.FirstOrDefault(c => c.Type == "ID")?.Value);
             oResponseUsuario = await servicioUsuario.GetDataByIdAsync(id);
         }
+        /*
         else
-            navigationManager.NavigateTo("/");
+            navigationManager.NavigateTo("/");*/
     }
 
     private async Task LogOut()
