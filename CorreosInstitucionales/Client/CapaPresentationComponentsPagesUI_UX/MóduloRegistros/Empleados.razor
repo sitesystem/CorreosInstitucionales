@@ -1,8 +1,5 @@
 ﻿@page "/RegistroEmpleados"
 
-@inject RSendWhatsAppService servicioSendWhatsApp;
-@inject RSendEmailService servicioSendEmail;
-
 @attribute [AllowAnonymous]
 
 <style type="text/css">
@@ -856,18 +853,6 @@ else
                         oUploadFile_CURP.Url = $@"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameCurp}/{oGuid}";
                         await oUploadFile_CURP.Upload();
 
-                        @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@
-                        await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
-
-                        @*//  ENVÍO DE CORREO ELECTRÓNICO PARA AVISO DE REGISTRO EXITOSO  //*@
-                        servicioSendEmail.SendEmailAsync(
-                            new RequestDTO_SendEmail()
-                            {
-                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
-                                Subject = "SACI | REGISTRO DE USUARI@",
-                                Body = msgEmail
-                            });
-
                         @*//  NOTIFICATION TOAST REGISTRO EXITOSO  //*@
                         NotificationService.Notify(
                             new NotificationMessage
@@ -949,14 +934,7 @@ else
                     }
                     else
                     {
-                        await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
-                            {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
-                                Subject = "SACI | ERROR DE REGISTRO",
-                                Body = "Estimad@: " + oUsuario.UsuNombres.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido.Trim() + "<br><br>" +
-                                       "Registro NO exitoso en el <b>Sistema de Atención para Correos Institucionales (SACI)</b><br>" +
-                                       "Por favor no responder a este correo, acuda a la unidad de informática de tu escuela<br>"
-                            });
+                        //TODO
                     }
                 }
                 else
@@ -1125,18 +1103,6 @@ else
                                     WrapperCssClass = "custom-dialog-wrapper-class"
                                 });
 
-                            @*//  ENVÍO DE WHATSAPP PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
-                            await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
-
-                            @*//  ENVÍO DE EMAIL PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
-                            servicioSendEmail.SendEmailAsync(
-                                new RequestDTO_SendEmail()
-                                {
-                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
-                                    Subject = "SACI | Actualización de Datos",
-                                    Body = msgEmail
-                                });
-
                             await loginService.Logout();
                         }
 
@@ -1144,13 +1110,7 @@ else
                     }
                     else
                     {
-                        await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
-                            {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
-                                Subject = "SACI | ERROR EN ACTUALIZACIÓN DE DATOS",
-                                Body = "Estimad@: " + oUsuario.UsuNombres.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido?.Trim() + "<br><br>" +
-                                       "Actualización de datos NO exitosa en el <b>Sistema de Atención de Correos Institucionales IPN (SACI)</b><br>"
-                            });
+                        //TODO
                     }
                 }
                 else

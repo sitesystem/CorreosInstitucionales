@@ -1,7 +1,85 @@
-﻿<h3>@Title</h3>
-<small>@Subtitle</small>
+﻿@inject DialogService DialogService
 
-<RadzenPanel Visible="@(solicitud is not null && solicitud.SolEncuestaCalidadCalificacion is null)">
+<h3>@Title</h3>
+
+@if(solicitud is not null)
+{
+    <div class="row">
+        <div class="col mb-4 text-end">
+            <hr />
+            <strong>Última Actualización:</strong> @solicitud.SolFechaHoraActualizacion<br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <strong>Observaciones</strong>
+            <pre class="shadow border border-secondary rounded-2 p-3">@solicitud.SolObservacionesSolicitud</pre>
+
+            <div class="row my-2">
+                @if (solicitud.SolCapturaCuentaBloqueada != "-")
+                {
+                    <div class="col">
+                        <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerDocumento(solicitud.SolCapturaCuentaBloqueada!, solicitud))">Ver Captura de cuenta Bloqueada (PDF)</button>
+                    </div>                    
+                }
+
+                @if (solicitud.SolCapturaEscaneoAntivirus != "-")
+                {
+                    <div class="col">
+                        <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerDocumento(solicitud.SolCapturaEscaneoAntivirus!, solicitud))">Ver Captura de Escaneo de Antivirus (PDF)</button>
+                    </div>
+                }
+
+                @if (solicitud.SolCapturaError != "-")
+                {
+                    <div class="col">
+                        <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerDocumento(solicitud.SolCapturaError!, solicitud))">Ver Captura de Error (PDF)</button>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col">
+            <strong>Respuesta Mesa de Control</strong>
+            <pre class="shadow border border-info rounded-2 p-3">@solicitud.SolRespuestaDcyC</pre>
+        </div>
+
+        @if (solicitud.SolEncuestaCalidadCalificacion is not null)
+        {
+            <div class="col">
+                <strong>Encuesta de Calidad:</strong>
+                <pre class="shadow border border-secondary rounded-2 p-3">@solicitud.SolEncuestaCalidadComentarios</pre>
+                @switch (solicitud.SolEncuestaCalidadCalificacion)
+                {
+                    case 1:
+                        <span class="h1">😣</span>
+                        <small><b>Muy Malo</b></small>
+                        break;
+                    case 2:
+                        <span class="h1">😦</span>
+                        <small><b>Malo</b></small>
+                        break;
+                    case 3:
+                        <span class="h1">😶</span>
+                        <small><b>Normal</b></small>
+                        break;
+                    case 4:
+                        <span class="h1">😊</span>
+                        <small><b>Bien</b></small>
+                        break;
+                    case 5:
+                        <span class="h1">😄</span>
+                        <small><b>Excelente</b></small>
+                        break;
+                    default:
+                        break;
+                }
+            </div>
+        }
+
+    </div>
+}
+
+<RadzenPanel Visible="@(solicitud is not null && solicitud.SolEncuestaCalidadCalificacion is null && !encuesta_enviada)">
     <RadzenFieldset AllowCollapse="false" ExpandTitle="Encuesta de Satisfacción" CollapseTitle="Encuesta de Satisfacción" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 py-0">
         <HeaderTemplate>
             <span class="d-inline-flex align-items-center align-middle">
@@ -107,9 +185,12 @@
     public RequestDTO_EncuestaCalidad oEncuestaCalidad { get; set; } = new() { Calificacion = 5, Comentarios = ""};
 
     string Title = "No se ha podido encontrar la solicitud";
-    string Subtitle = string.Empty;
 
     string debug = string.Empty;
+
+    bool encuesta_enviada = false;
+
+    List<string> capturas = new();
 
     @*///////////////////////////////////////////////  VALIDAR ReCAPTCHA  ////////////////////////////////////////////////////////////////////////*@
     ReCAPTCHA oReCAPTCHAComponent = new();
@@ -126,8 +207,7 @@
     {
         if(solicitud is not null && solicitud.SolIdTipoSolicitudNavigation is not null)
         {
-            Title = $"Solicitud #{solicitud.IdSolicitudTicket}";
-            Subtitle = solicitud.SolIdTipoSolicitudNavigation.TiposolDescripcion;
+            Title = $"Solicitud #{solicitud.IdSolicitudTicket} - {solicitud.SolIdTipoSolicitudNavigation.TiposolDescripcion}";
         }
     }
 
@@ -163,6 +243,9 @@
                             Summary = "Su opinión ha sido guardada"
                         }
                     );
+
+                    encuesta_enviada = true;
+                    StateHasChanged();
                 }else{
                     NotificationService.Notify(new NotificationMessage
                         {
@@ -186,11 +269,36 @@
             }
 
         }
-        
-
-
 
         busyLoading = false;
         StateHasChanged();
+    }// ENVIAR ENCUESTA DE CALIDAD
+
+    private async Task VerDocumento(string archivo, MtTbSolicitudesTicket solicitud)
+    {
+        string ruta = ServerFS.ArchivoRepositorio(solicitud.IdSolicitudTicket, archivo);
+        await VerPDF(ruta);
     }
+
+    private async Task VerPDF(string archivo, string titulo = "Ver")
+    {
+        await DialogModalService.OpenAsync<PDFViewer>
+        (
+            titulo,
+            new Dictionary<string, object>()
+                {
+                {"file", archivo}
+                },
+            new DialogOptions()
+                {
+                    Width = "calc( 100vw - 8em )",
+                    Height = "calc( 100vh - 8em )",
+                    CssClass = "dialog_simple p-0",
+                    CloseDialogOnEsc = true,
+                    CloseDialogOnOverlayClick = true,
+                    Resizable = true,
+                    Draggable = true
+                }
+        );
+    }// VER PDF
 }

@@ -1,8 +1,5 @@
 ﻿@page "/NuevaSolicitudTicket"
 
-@inject RSendWhatsAppService servicioSendWhatsApp;
-@inject RSendEmailService servicioSendEmail;
-
 @attribute [Authorize(Policy = "[Rol] Usuario Solicitante")]
 
 <PageTitle>SACI | Nueva Solicitud-Ticket</PageTitle>
@@ -842,18 +839,6 @@ else
                         await oUploadFile_SolCapturaError.Upload();
                     }
 
-                    @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@
-                    await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
-
-                    @*//  ENVÍO DE CORREO ELECTRÓNICO PARA AVISO DE REGISTRO DE SOLICITUD-TICKET EXITOSO  //*@
-                    servicioSendEmail.SendEmailAsync(
-                        new RequestDTO_SendEmail()
-                        {
-                            EmailTo = oSolicitudTicket.SolCorreoPersonalCuentaActual!.Trim(),
-                            Subject = $@"SACI | SOLICITUD-TICKET #{idResponse}",
-                            Body = msgEmail
-                        });
-
                     @*//  NOTIFICATION TOAST REGISTRO DE SOLICITUD-TICKET EXITOSO  //*@
                     NotificationService.Notify(
                         new NotificationMessage
@@ -938,15 +923,7 @@ else
                 }
                 else
                 {
-                    await servicioSendEmail.SendEmailAsync(
-                        new RequestDTO_SendEmail()
-                        {
-                            EmailTo = oSolicitudTicket.SolCorreoPersonalCuentaActual!.Trim(),
-                            Subject = "SACI | ERROR DE SOLICITUD-TICKET",
-                            Body = $@"Estimad@: {oResponseUsuario.Data.UsuNombres?.Trim()} {oResponseUsuario.Data.UsuPrimerApellido?.Trim()} {oResponseUsuario.Data.UsuSegundoApellido?.Trim()} <br><br>" +
-                                   "Solicitud-Ticket NO exitosa en el <b>Sistema de Atención para Correos Institucionales IPN (SACI)</b><br>" +
-                                   "Por favor no responder a este correo, acuda a la unidad de informática de tu escuela<br>"
-                        });
+                    //TODO
                 }
             }
             else
