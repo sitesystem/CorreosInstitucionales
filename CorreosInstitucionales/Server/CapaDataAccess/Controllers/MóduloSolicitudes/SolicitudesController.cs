@@ -253,6 +253,31 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
             return Ok(oResponse);
         }
 
+        [HttpGet("filterByToken/{token}")]
+        public async Task<IActionResult> GetDataByToken(string token)
+        {
+            Response<MtTbSolicitudesTicket?> oResponse = new();
+
+            try
+            {
+                MtTbSolicitudesTicket? item = await _db.MtTbSolicitudesTickets
+                    .Where(
+                        s => s.SolToken.ToString().ToLower().Equals(token.ToLower())
+                    )
+                    .Include(t=>t.SolIdTipoSolicitudNavigation)
+                    .FirstOrDefaultAsync();
+
+                oResponse.Success = item is not null ? 1 : 0;
+                oResponse.Data = item;
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddData(RequestDTO_Solicitud model)
         {
