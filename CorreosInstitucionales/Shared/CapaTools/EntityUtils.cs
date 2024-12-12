@@ -4,10 +4,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContextCentral;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.Constantes;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CorreosInstitucionales.Shared.CapaTools
 {
@@ -105,6 +107,58 @@ namespace CorreosInstitucionales.Shared.CapaTools
                 AnuArchivo = "-",
                 AnuStatus = true
             };
+        }
+
+        public static TbUsuario Convertir_UsuarioCentral(MpTbUsuario usuario)
+        {
+            return new TbUsuario()
+            {
+                IdUsuario = usuario.IdUsuario,
+                UsuNombres = usuario.UsuNombres,
+                UsuPrimerApellido = usuario.UsuPrimerApellido,
+                UsuSegundoApellido = usuario.UsuSegundoApellido,
+
+                UsuCurp = usuario.UsuCurp,
+
+                UsuNoCelularActual = usuario.UsuNoCelularActual,
+                UsuNoCelularAnterior = usuario.UsuNoCelularAnterior,
+
+                UsuCorreoPersonalActual = usuario.UsuCorreoPersonalCuentaActual,
+                UsuCorreoPersonalAnterior = usuario.UsuCorreoPersonalCuentaAnterior,
+                UsuCorreoInstitucional = usuario.UsuCorreoInstitucionalCuenta,
+
+                UsuContraseniaPlataformas = usuario.UsuContrasenia,
+                UsuContraseniaCorreoInstitucional = usuario.UsuCorreoInstitucionalContrasenia,
+
+                UsuFechaHoraAlta = usuario.UsuFechaHoraAlta,
+                UsuFechaHoraActualizacion = usuario.UsuFechaHoraActualizacion,
+
+                UsuRecuperacionContrasenia = usuario.UsuRecuperarContrasenia,
+                UsuStatus = usuario.UsuStatus
+            };
+        }// CONVERTIR
+
+        public static Dictionary<string,object?> Diferencias<T>(T a, T b, bool return_a = true)
+        {
+            Dictionary<string, object?> delta = new Dictionary<string, object?>();
+
+            PropertyInfo[] info = typeof(T).GetProperties();
+
+            object? value_a;
+            object? value_b;
+
+            foreach (PropertyInfo pi in info)
+            {
+                value_a = pi.GetValue(a, null);
+                value_b = pi.GetValue(b, null);
+
+                if(value_a != value_b)
+                {
+                    delta.Add(pi.Name, return_a ? value_a : value_b);
+                }
+            }
+
+            return delta;
         }
     }
 }

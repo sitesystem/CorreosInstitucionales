@@ -76,7 +76,7 @@
                                         <Start><RadzenIcon Icon="email" /></Start>
                                         <ChildContent>
                                             <RadzenTextBox Name="email_usuario" @bind-Value="@oLoginCredentials.UsuCorreoPersonal" ReadOnly="false" AutoCompleteType="AutoCompleteType.On"
-                                                           Attributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )" />
+                                            Attributes="@(new Dictionary<string, object> { { "maxlength", "100" }, { "minlength", "0" }, { "rows", false ? 3 : 1 } } )" />
                                         </ChildContent>
                                         <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                                     </RadzenFormField>
@@ -90,24 +90,24 @@
                                         </ChildContent>
                                         <End>
                                             <RadzenButton Icon="@(password ? "visibility" : "visibility_off")"
-                                                          Click="@(() => password = !password)"
-                                                          Variant="Variant.Text"
-                                                          Size="ButtonSize.Small"
-                                                          ButtonStyle="ButtonStyle.Secondary"
-                                                          Shade="Shade.Dark" />
+                                            Click="@(() => password = !password)"
+                                            Variant="Variant.Text"
+                                            Size="ButtonSize.Small"
+                                            ButtonStyle="ButtonStyle.Secondary"
+                                            Shade="Shade.Dark" />
                                         </End>
                                         <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
                                     </RadzenFormField>
                                     <ValidationMessage For="@(() => oLoginCredentials.UsuContrasenia)" />
 
                                     <RadzenButton Text="Iniciar Sesión"
-                                                  BusyText="Iniciando Sesión ..."
-                                                  ButtonStyle="ButtonStyle.Secondary"
-                                                  ButtonType="ButtonType.Submit"
-                                                  IsBusy="@busy"
-                                                  Icon="login"
-                                                  class="w-100 mt-5 mb-3 rz-ripple"
-                                                  Shade="Shade.Darker" />
+                                    BusyText="Iniciando Sesión ..."
+                                    ButtonStyle="ButtonStyle.Secondary"
+                                    ButtonType="ButtonType.Submit"
+                                    IsBusy="@busy"
+                                    Icon="login"
+                                    class="w-100 mt-5 mb-3 rz-ripple"
+                                    Shade="Shade.Darker" />
                                 </EditForm>
                             </RadzenTabsItem>
                             <RadzenTabsItem Text="Recuperar Contraseña" Icon="lock_reset" IconColor="@Colors.Base900">
@@ -127,8 +127,8 @@
                                         <Start><RadzenIcon Icon="document_scanner" /></Start>
                                         <ChildContent>
                                             <RadzenTextBox Name="curp_reset" @bind-Value="@oRecuperarContraseñaCorreo.Curp" MinLength="0" MaxLength="18" AutoCompleteType="AutoCompleteType.On"
-                                                           @oninput="@((e) => oRecuperarContraseñaCorreo.Curp = e.Value.ToString().ToUpper())"
-                                                           onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
+                                            @oninput="@((e) => oRecuperarContraseñaCorreo.Curp = e.Value.ToString().ToUpper())"
+                                            onkeypress="return /^[A-Za-z0-9]+$/.test(String.fromCharCode(event.keyCode || event.which));" />
                                         </ChildContent>
                                         <Helper><RadzenText TextStyle="Radzen.Blazor.TextStyle.Caption" /></Helper>
                                     </RadzenFormField>
@@ -154,15 +154,15 @@
                     </RadzenTabs>
 
                     <RadzenAlert Variant="Variant.Filled"
-                                 AlertStyle="AlertStyle.Danger"
-                                 Size="AlertSize.Small"
-                                 Shade="Shade.Dark"
-                                 ShowIcon="true"
-                                 AllowClose="false"
-                                 @bind-Visible="@errorMsgVisible"
-                                 Title="Error"
-                                 class=""
-                                 Text="@contentErrorMsg">
+                    AlertStyle="AlertStyle.Danger"
+                    Size="AlertSize.Small"
+                    Shade="Shade.Dark"
+                    ShowIcon="true"
+                    AllowClose="false"
+                    @bind-Visible="@errorMsgVisible"
+                    Title="Error"
+                    class=""
+                    Text="@contentErrorMsg">
                     </RadzenAlert>
                 </div>
             </div>
@@ -186,23 +186,23 @@
         </div>
 
         <div class="col-md-6 order-2">
-        @if(carrusel_cargado)
-        {
-            <Carrusel anuncios="@anuncios"/>
-        }
-        else
-        {
-            <div class="row">
-                <div class="col text-center bg-white py-3">
-                    
-                    <img src="img/mail.png" class="loading_img" />
-                    <br />
-                    Cargando<br />
-                    Anuncios
-                    
+            @if(carrusel_cargado)
+            {
+                <Carrusel anuncios="@anuncios"/>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col text-center bg-white py-3">
+
+                        <img src="img/mail.png" class="loading_img" />
+                        <br />
+                        Cargando<br />
+                        Anuncios
+
+                    </div>
                 </div>
-            </div>
-        }
+            }
         </div>
     </div>
 </div>
@@ -256,7 +256,7 @@
     private int n_anuncios = 0;
     private bool carrusel_cargado = false;
     private string debug_anuncios = string.Empty;
-    
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -335,10 +335,9 @@
 
     ///////////////////////////////////////////////  INICIALIZAR OBJETOS Y VARIABLES  ///////////////////////////////////////////////
     public RecuperarContraseñaCorreo oRecuperarContraseñaCorreo = new();
-    public Response<RequestDTO_Usuario>? oRespuesta = new();
     public string contentRecuperarContraseñaBtn = "Recuperar Contraseña";
     public bool isSpinningHidden = true;
-    
+
     public Response<RequestViewModel_Link>? oLinkCURP = new();
     private string srcCURP = string.Empty;
 
@@ -350,8 +349,6 @@
         public string Curp { get; set; } = null!;
     }
 
-    private RequestDTO_SendWhatsApp oSendWhatsApp = new();
-
     public async Task RecuperarContraseña()
     {
         if (ValidReCAPTCHA)
@@ -362,8 +359,8 @@
                 contentRecuperarContraseñaBtn = "Recuperando Contraseña...";
                 isSpinningHidden = false;
 
-                var respuesta = await servicioUsuario.ResetPassword(oRecuperarContraseñaCorreo.CorreoElectronicoPersonal, oRecuperarContraseñaCorreo.Curp);
-                oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<RequestDTO_Usuario>>().Result;
+                HttpResponseMessage respuesta = await servicioUsuario.ResetPassword(oRecuperarContraseñaCorreo.CorreoElectronicoPersonal, oRecuperarContraseñaCorreo.Curp);
+                Response<bool>? oRespuesta = await respuesta.Content.ReadFromJsonAsync<Response<bool>>();
 
                 errorMsgVisible = false;
 
@@ -394,8 +391,6 @@
                             </RadzenStack>
                             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.NoWrap" Gap="5px" Class="">
                                 <RadzenStack Gap="0px">
-                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-0 rz-p-0">Nombre Completo:</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@($@"{oRespuesta.Data?.UsuNombres} {oRespuesta.Data?.UsuPrimerApellido} {oRespuesta.Data?.UsuSegundoApellido}")</b></RadzenText>
                                 </RadzenStack>
                                 <RadzenAlert Title="Atención:" Text="Se le notificará por las vías de comunicación con la nueva contraseña temporal." AlertStyle="AlertStyle.Info" Variant="Variant.Filled" Size="AlertSize.Small" Shade="Shade.Darker" ShowIcon="true" AllowClose="false" class="my-2" />
                                 <RadzenButton Text="Cerrar"

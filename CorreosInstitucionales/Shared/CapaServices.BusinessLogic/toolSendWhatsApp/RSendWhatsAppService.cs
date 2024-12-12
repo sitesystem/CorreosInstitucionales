@@ -24,9 +24,9 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhats
         {
             Response<string> oResponse = new() { Success = 0 };
 
-            oSendWhatsApp.Number = oSendWhatsApp.Number.Replace(" ", string.Empty);
+            oSendWhatsApp.Number = (oSendWhatsApp.Number ?? "5500000000").Replace(" ", string.Empty);
 
-            if (oSendWhatsApp.Number == "5500000000")
+            if (oSendWhatsApp.Number == "5500000000" || oSendWhatsApp.Number == "0000000000")
             {
                 oResponse.Success = 1;
                 oResponse.Data = "EL MENSAJE NO SE ENVIÓ DADO QUE ES UN NÚMERO DE PRUEBA.";

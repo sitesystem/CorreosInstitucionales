@@ -1,6 +1,7 @@
 ﻿using CorreosInstitucionales.Shared.CapaDataAccess;
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContextCentral;
+using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -92,31 +93,7 @@ namespace SyncDB
 
                 foreach (MpTbUsuario nuevo in usuarios_nuevos)
                 {
-                    await _db_central.TbUsuarios.AddAsync(new TbUsuario()
-                    {
-                        IdUsuario = nuevo.IdUsuario,
-                        UsuNombres = nuevo.UsuNombres,
-                        UsuPrimerApellido = nuevo.UsuPrimerApellido,
-                        UsuSegundoApellido = nuevo.UsuSegundoApellido,
-
-                        UsuCurp = nuevo.UsuCurp,
-
-                        UsuNoCelularActual = nuevo.UsuNoCelularActual,
-                        UsuNoCelularAnterior = nuevo.UsuNoCelularAnterior,
-
-                        UsuCorreoPersonalActual = nuevo.UsuCorreoPersonalCuentaActual,
-                        UsuCorreoPersonalAnterior = nuevo.UsuCorreoPersonalCuentaAnterior,
-                        UsuCorreoInstitucional = nuevo.UsuCorreoInstitucionalCuenta,
-
-                        UsuContraseniaPlataformas = nuevo.UsuContrasenia,
-                        UsuContraseniaCorreoInstitucional = nuevo.UsuCorreoInstitucionalContrasenia,
-
-                        UsuFechaHoraAlta = nuevo.UsuFechaHoraAlta,
-                        UsuFechaHoraActualizacion = nuevo.UsuFechaHoraActualizacion,
-
-                        UsuRecuperacionContrasenia = nuevo.UsuRecuperarContrasenia,
-                        UsuStatus = nuevo.UsuStatus
-                    });
+                    await _db_central.TbUsuarios.AddAsync(EntityUtils.Convertir_UsuarioCentral(nuevo));
                     Console.WriteLine($"AGREGADO {nuevo.IdUsuario}");
                 }
 

@@ -1,4 +1,5 @@
 global using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
+global using CorreosInstitucionales.Shared.CapaDataAccess.DBContextCentral;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -53,6 +54,11 @@ builder.Services.AddDbContext<DbCorreosInstitucionalesUpiicsaContext>(optionsBui
 {
     optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer_Connection"),
     ob => ob.UseCompatibilityLevel(120));
+});
+
+builder.Services.AddDbContext<DbCentralizadaUpiicsaContext>(optionsBuilder =>
+{
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DBCentral_Connection"));
 });
 
 // LogReg (Archivo de Registros de Eventos)
@@ -220,7 +226,7 @@ app.MapFallbackToFile("index.html");
 
 using (DBSACI dbsaci = new DBSACI(builder.Configuration.GetConnectionString("SQLServer_Connection")!))
 {
-    //AppCache.Escuela = await dbsaci.McCatEscuelas.Where(e => e.IdEscuela.Equals(appSettings!.IDEscuela ?? 1)).FirstAsync();
+    AppCache.Escuela = await dbsaci.McCatEscuelas.Where(e => e.EscNoEscuela.Equals(appSettings!.ClaveEscuela)).FirstAsync();
     AppCache.Plantillas = await dbsaci.McCatPlantillas.Where(p => p.PlaStatus.Equals(true)).ToArrayAsync();
     AppCache.Enlaces = await dbsaci.McCatLinks.Where(p => p.LinkStatus.Equals(true)).ToArrayAsync();
     AppCache.Anuncios = await dbsaci.McCatAnuncios.Where(p => p.AnuStatus.Equals(true)).ToListAsync();
