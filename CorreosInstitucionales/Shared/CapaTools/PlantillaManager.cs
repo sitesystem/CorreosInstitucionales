@@ -17,14 +17,13 @@ namespace CorreosInstitucionales.Shared.CapaTools
 
         public const int FILTRO_NINGUNO = 0;
         public const int FILTRO_EMPLEADO = 1;
-        public const int FILTRO_RECORDATORIO = 2;
+
+        public const int FILTRO_REGISTRO_USUARIO = 2;
         public const int FILTRO_RECUPERACION_CONTRA = 3;
-        public const int FILTRO_ERROR_ALTA_USUARIO = 4;
-        public const int FILTRO_ALTA_USUARIO = 5;
-        public const int FILTRO_EDICION_USUARIO = 6;
-        public const int FILTRO_ENCUENTA_DE_CALIDAD_1 = 7;
-        public const int FILTRO_ENCUENTA_DE_CALIDAD_X = 8;
-        public const int FILTRO_ENCUENTA_DE_CALIDAD_N = 9;
+        public const int FILTRO_CAMBIO_CONTRA = 4;
+
+        public const int FILTRO_ERROR = 99;
+
 
         McCatPlantillas[] Plantillas;
 

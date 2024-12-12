@@ -19,10 +19,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
     // [Authorize]
     public class UsuariosController(
         DbCorreosInstitucionalesUpiicsaContext db, 
+        DbCentralizadaUpiicsaContext dbCentral,
         RSendNotificacionesService servicioNotificacion
         ) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
+        private readonly DbCentralizadaUpiicsaContext _db_central = dbCentral;
         private readonly RSendNotificacionesService _servicioNotificacion = servicioNotificacion;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
@@ -131,7 +133,8 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             Response<int> oResponse = new();
             
             PlantillaManager plantilla = new PlantillaManager(AppCache.Plantillas);
-
+            TbUsuario usuario = EntityUtils.Convertir_UsuarioCentral(model);
+            
             try
             {
                 model.UsuContrasenia = Encrypt.GetSHA256(model.UsuContrasenia);
@@ -140,6 +143,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                 await _db.MpTbUsuarios.AddAsync(model);
                 await _db.SaveChangesAsync();
+
+                await _db_central.AddAsync(usuario);
+                await _db_central.SaveChangesAsync();
 
                 oResponse.Success = 1;
                 oResponse.Data = model.IdUsuario; // PK ID Único del Usuario Creado o dado de Alta
@@ -150,7 +156,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                     {
                         { "usuario", model }
                     },
-                    1, PlantillaManager.FILTRO_ALTA_USUARIO
+                    1, PlantillaManager.FILTRO_REGISTRO_USUARIO
                 );
 
                 Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data!);
@@ -181,9 +187,10 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 (
                     new()
                     {
-                        { "usuario", model }
+                        { "usuario", model },
+                        { "escuela", AppCache.Escuela }
                     },
-                    1,PlantillaManager.FILTRO_ERROR_ALTA_USUARIO
+                    1,PlantillaManager.FILTRO_ERROR
                 );
 
                 Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data!);
@@ -295,13 +302,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                         Dictionary<string, object?> datos = new()
                         {
-                            {
-                                "usuario", oUsuario 
-                            },
+                            { "usuario", oUsuario },
+                            { "escuela", AppCache.Escuela },
                             {
                                 "datos", new Dictionary<string, object?>()
                                 {
-                                    {"clave" , clave }
+                                    {"password" , clave }
                                 }
                             }
                         };
@@ -313,6 +319,9 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                         if (oRespuesta.Data)
                         {
+                            notificacion!.Data!.correo.EmailTo = oUsuario.UsuCorreoPersonalCuentaActual;
+                            notificacion!.Data!.wa.Number = oUsuario.UsuNoCelularActual;
+
                             Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion!.Data!);
                             oRespuesta.Data = response.Success == 1;
                             if (!oRespuesta.Data)
@@ -343,6 +352,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         public async Task<IActionResult> ChangePassword(int id, string newPassword)
         {
             Response<object> oRespuesta = new();
+            PlantillaManager plantilla = new PlantillaManager(AppCache.Plantillas);
 
             try
             {
@@ -359,6 +369,28 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
+
+                    TbUsuario? usuario = await _db_central.TbUsuarios.FindAsync(id);
+                    if (usuario != null)
+                    {
+                        usuario.UsuContraseniaPlataformas = newPassword;
+                        usuario.UsuFechaHoraActualizacion = DateTime.Now;
+
+                        _db_central.Entry(usuario).State = EntityState.Modified;
+                        await _db_central.SaveChangesAsync();
+                    }
+
+                    Response<Notificacion?> notificacion = plantilla.GetNotificacion
+                    (
+                        new()
+                        {
+                            { "usuario", oUsuario },
+                            { "datos",new Dictionary<string,string> {{ "password", newPassword } } }
+                        },
+                        1, PlantillaManager.FILTRO_CAMBIO_CONTRA
+                    );
+
+                    Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data!);
                 }
 
                 oRespuesta.Success = 1;
@@ -366,6 +398,15 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             catch (Exception ex)
             {
                 oRespuesta.Message = ex.Message;
+                /*
+                Response<Notificacion?> notificacion = plantilla.GetNotificacion
+                (
+                    new(),
+                    1, PlantillaManager.FILTRO_ALTA_USUARIO
+                );
+
+                Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data!);
+                */
             }
 
             return Ok(oRespuesta);
