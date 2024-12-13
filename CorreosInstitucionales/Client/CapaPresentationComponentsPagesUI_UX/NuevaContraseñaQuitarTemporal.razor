@@ -113,7 +113,6 @@
 @code
 {
     public Response<RequestDTO_Usuario>? oResponse = new();
-    public Response<object>? oRespuesta = new();
     public RequestDTO_ChangePassword oChangePassword = new();
     private Response<RequestViewModel_Escuela>? oEscuela = new();
 
@@ -152,9 +151,9 @@
         {
             busyLoading = true;
             var respuesta = await servicioUsuario.ChangePassword(oResponse!.Data!.IdUsuario, oChangePassword.NewPassword);
-            oRespuesta = respuesta.Content.ReadFromJsonAsync<Response<object>>().Result;
+            Response<string>? oRespuesta = await respuesta.Content.ReadFromJsonAsync<Response<string>>();
 
-            if (respuesta.IsSuccessStatusCode)
+            if (respuesta.IsSuccessStatusCode && oRespuesta is not null && oRespuesta.Success == 1)
             {
                 @*//  NOTIFICATION TOAST CAMBIO DE CONTRASEÑA EXITOSO  //*@
                 NotificationService.Notify(

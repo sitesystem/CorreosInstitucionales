@@ -1,5 +1,6 @@
 ﻿@page "/debug/correos"
 
+@using CorreosInstitucionales.Shared.CapaDataAccess
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.Notificaciones
 
 @inject DialogService dialogService
@@ -151,6 +152,7 @@
         {
             {"solicitud",solicitud },
             {"usuario", usuario },
+            {"escuela", AppCache.Escuela },
             { "tipo_solicitud", tipos_solicitud.Where(t=>t.IdTipoSolicitud == solicitud.SolIdTipoSolicitud).FirstOrDefault() }
         };
 

@@ -31,6 +31,24 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotif
             return await _servicioWA.SendWhatsAppAsync(wa);
         }
 
+        public async Task<Response<string>> NotificarUsuario(Dictionary<string, object?> datos, MpTbUsuario usuario, int filtro, int estado = 1)
+        {
+            PlantillaManager plantillas = new PlantillaManager(AppCache.Plantillas);
+            Response<Notificacion?> notificacion = plantillas.GetNotificacion(datos, estado, filtro);
+
+            Response<string> response = new() { Success = 0 };
+
+            if (notificacion != null && notificacion.Data != null && notificacion.Success == 1)
+            {
+                notificacion.Data.correo.EmailTo = usuario.UsuCorreoPersonalCuentaActual;
+                notificacion.Data.wa.Number = usuario.UsuNoCelularActual;
+
+                response = await EnviarAsync(notificacion.Data);
+            }
+
+            return response;
+        }
+
         public async Task<Response<string>> EnviarAsync(Notificacion notificacion)
         {
             Response<string> notificacion_correo = await _servicioCorreo.SendEmailAsync(notificacion.correo);

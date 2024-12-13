@@ -150,21 +150,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                 oResponse.Success = 1;
                 oResponse.Data = model.IdUsuario; // PK ID Único del Usuario Creado o dado de Alta
 
-                Response<Notificacion?> notificacion = plantilla.GetNotificacion
-                (
-                    new()
-                    {
-                        { "usuario", model }
-                    },
-                    1, PlantillaManager.FILTRO_REGISTRO_USUARIO
+                await _servicioNotificacion.NotificarUsuario(
+                    new() {
+                        { "usuario", model },
+                        { "escuela", AppCache.Escuela }
+                    }
+                    , model, PlantillaManager.FILTRO_REGISTRO_USUARIO
                 );
-
-                Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data!);
-
-                if (response.Success != 1)
-                {
-                    oResponse.Message += Environment.NewLine + "NO SE PUDO NOTIFICAR";
-                }
 
                 if (model.UsuSemestre == "ERROR")
                 {
@@ -183,22 +175,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                 oResponse.Message = ex.Message;
 
-                Response<Notificacion?> notificacion = plantilla.GetNotificacion
-                (
-                    new()
-                    {
+                await _servicioNotificacion.NotificarUsuario(
+                    new() {
                         { "usuario", model },
                         { "escuela", AppCache.Escuela }
-                    },
-                    1,PlantillaManager.FILTRO_ERROR
+                    }
+                    , model, PlantillaManager.FILTRO_ERROR
                 );
-
-                Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data!);
-
-                if(response.Success != 1)
-                {
-                    oResponse.Message += Environment.NewLine + "NO SE PUDO NOTIFICAR";
-                }
 
                 await System.IO.File.WriteAllTextAsync(traceid, oResponse.Message);
             }
@@ -352,17 +335,16 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         public async Task<IActionResult> ChangePassword(int id, string newPassword)
         {
             Response<object> oRespuesta = new();
-            PlantillaManager plantilla = new PlantillaManager(AppCache.Plantillas);
+            
 
             try
             {
                 MpTbUsuario? oUsuario = await _db.MpTbUsuarios.FindAsync(id);
                 
-                //PlantillaManager plantillaManager = new PlantillaManager(plantillas);
-                //McCatPlantillas plantillas1 = plantillaManager.GetPlantilla()
-
                 if (oUsuario != null)
                 {
+                    PlantillaManager plantilla = new PlantillaManager(AppCache.Plantillas);
+
                     oUsuario.UsuContrasenia = Encrypt.GetSHA256(newPassword);
                     oUsuario.UsuRecuperarContrasenia = false;
                     oUsuario.UsuFechaHoraActualizacion = DateTime.Now;
@@ -385,12 +367,23 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
                         new()
                         {
                             { "usuario", oUsuario },
-                            { "datos",new Dictionary<string,string> {{ "password", newPassword } } }
-                        },
-                        1, PlantillaManager.FILTRO_CAMBIO_CONTRA
+                            { "escuela", AppCache.Escuela },
+                            {
+                                "datos", new Dictionary<string, object?>()
+                                {
+                                    {"password" , newPassword }
+                                }
+                            }
+                        }, 1, PlantillaManager.FILTRO_CAMBIO_CONTRA
                     );
 
-                    Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data!);
+                    if (notificacion!= null && notificacion.Data != null)
+                    {
+                        notificacion.Data.correo.EmailTo = oUsuario.UsuCorreoPersonalCuentaActual;
+                        notificacion.Data.wa.Number = oUsuario.UsuNoCelularActual;
+
+                        Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data);
+                    }
                 }
 
                 oRespuesta.Success = 1;

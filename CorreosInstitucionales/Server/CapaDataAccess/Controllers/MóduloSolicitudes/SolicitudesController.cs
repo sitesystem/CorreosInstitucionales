@@ -534,8 +534,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
         [HttpPatch("finalizar")]
         public async Task<IActionResult> FinalizarSolicitud(RequestDTO_FinalizarSolicitud oFinalizarSolicitud) // KeyValuePair<int, string> datos)
         {
-            Response<string> oRespuesta = new();
-            int guardados = 0;
+            Response<string?> oRespuesta = new();
 
             MtTbSolicitudesTicket? oSolicitud = null;
             
@@ -555,43 +554,28 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     oSolicitud.SolFechaHoraActualizacion = DateTime.Now;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
-                    guardados = await _db.SaveChangesAsync();
-                }
-
-                if (guardados == 1)
-                {
+                    await _db.SaveChangesAsync();
+                
                     oRespuesta.Success = 1;
 
                     Dictionary<string, object?> datos = new()
                     {
                         {"solicitud", oSolicitud },
                         {"usuario", oSolicitud!.SolIdUsuarioNavigation },
+                        {"escuela", AppCache.Escuela }
                     };
 
                     int filtro = (TipoEstadoSolicitud)oSolicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
                         ((TipoPersonal)oSolicitud.SolIdUsuarioNavigation!.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
 
-                    PlantillaManager plantillas = new PlantillaManager(AppCache.Plantillas);
-                    Response<Notificacion?> notificacion = plantillas.GetNotificacion(datos, oFinalizarSolicitud.Estado, filtro);
+                    Response<string> notificar = await _servicioNotificaciones.NotificarUsuario(
+                        datos, 
+                        oSolicitud!.SolIdUsuarioNavigation!, 
+                        filtro, 
+                        oFinalizarSolicitud.Estado
+                    );
 
-                    if(notificacion.Success == 1)
-                    {
-                        Response<string> response = await _servicioNotificaciones.EnviarAsync(notificacion.Data!);
-
-                        if(response.Success == 1)
-                        {
-                            oRespuesta.Success = 1;
-                            oRespuesta.Data = "";
-                        }
-                        else
-                        {
-                            oRespuesta.Message = response.Data??"???";
-                        }
-                    }
-                    else
-                    {
-                        oRespuesta.Message = $"[ERROR] NO SE PUDO GENERAR LA NOTIFICACIÓN:\n{notificacion.Message}";
-                    }
+                    oRespuesta.Data = notificar.Data;
                 }
             }
             catch (Exception ex)
