@@ -121,6 +121,7 @@ namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotif
             {
                 {"solicitud", null },
                 {"usuario", null },
+                {"escuela", AppCache.Escuela }
             };
 
             PlantillaManager plantillas = new PlantillaManager(AppCache.Plantillas);
