@@ -1,0 +1,11 @@
+﻿<RadzenTabs RenderMode="TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
+    <Tabs>
+        <RadzenTabsItem Text="Vista">@((MarkupString)HTML)</RadzenTabsItem>
+        <RadzenTabsItem Text="HTML"><pre>@HTML</pre></RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
+@code {
+    [Parameter] public string HTML { get; set; } = string.Empty;
+    int selectedIndex = 0;
+}

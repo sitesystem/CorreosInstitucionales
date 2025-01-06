@@ -24,6 +24,13 @@
                         context.User.HasClaim(c => (c.Type == "Rol" && c.Value == "2")) && context.User.HasClaim(c => (c.Type == "RecuperarContrasenia" && c.Value == "false"))
                     ));
                 });
+                options.AddPolicy("Anónimo", rol =>
+                {
+                    rol.RequireAssertion(context =>
+                    (
+                        true
+                    ));
+                });
             });
 
             return services;

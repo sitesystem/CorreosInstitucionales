@@ -10,19 +10,44 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaEntities.Response;
 
 namespace CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp
 {
-    public class RSendWhatsAppService(HttpClient httpClient) : ISendWhatsAppService
+    public class RSendWhatsAppService(HttpClient client)
     {
-        private readonly HttpClient _httpClient = httpClient;
-        private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true };
-        const string url = "/api/WhatsApp";
+        const string url = "https://www.developers.upiicsa.ipn.mx:8081/api/SendWhatsApp";
+        HttpClient _client = client;
+        JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
 
-        public async Task<HttpResponseMessage> SendWhatsAppAsync(RequestDTO_SendWhatsApp oSendWhatsApp)
+        public async Task<Response<string>> SendWhatsAppAsync(RequestDTO_SendWhatsApp oSendWhatsApp)
         {
-            var response = await _httpClient.PostAsJsonAsync($"{url}/send", oSendWhatsApp, options: _options);
-            return response;
+            Response<string> oResponse = new() { Success = 0 };
+
+            oSendWhatsApp.Number = (oSendWhatsApp.Number ?? "5500000000").Replace(" ", string.Empty);
+
+            if (oSendWhatsApp.Number == "5500000000" || oSendWhatsApp.Number == "0000000000")
+            {
+                oResponse.Success = 1;
+                oResponse.Data = "EL MENSAJE NO SE ENVIÓ DADO QUE ES UN NÚMERO DE PRUEBA.";
+                return oResponse;
+            }
+
+            try
+            {
+                HttpResponseMessage response = await _client.PostAsJsonAsync(url, oSendWhatsApp, options: _options);
+
+                if (response.IsSuccessStatusCode)
+                    oResponse.Success = 1;
+
+                oResponse.Data = await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message + Environment.NewLine + ex.StackTrace;
+            }
+
+            return oResponse;
         }
     }
 }

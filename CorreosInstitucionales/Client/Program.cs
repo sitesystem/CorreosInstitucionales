@@ -10,9 +10,9 @@ using CorreosInstitucionales.Client.CapaPresentationComponentsPagesUI_UX.Login;
 using CorreosInstitucionales.Client.Shared.Components.Utils;
 
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
-using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolDebug;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.Notificaciones;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -35,8 +35,9 @@ builder.Services.AddScoped<ILoginServices, JwtAuthenticatorProvider>(provider =>
 builder.Services.AddScoped<RArchivosService>();
 
 // Inyección de Dependencias - Módulo de Send Email & Send WhatsApp
-builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
-builder.Services.AddScoped<ISendWhatsAppService, RSendWhatsAppService>();
+//builder.Services.AddSingleton<RSendEmailService>();
+//builder.Services.AddSingleton<RSendWhatsAppService>();
+builder.Services.AddScoped<RNotificacionesService>();
 
 // Inyección de Dependencias - Módulo de Registro del Usuario
 builder.Services.AddScoped<RUsuarioService>();
@@ -56,7 +57,9 @@ builder.Services.AddScoped<RRolesService>();
 builder.Services.AddScoped<RPisoService>();
 builder.Services.AddScoped<RTipoPersonalService>();
 builder.Services.AddScoped<RTipoSolicitudService>();
+builder.Services.AddScoped<RSemestreService>();
 builder.Services.AddScoped<RAnuncioService>();
+builder.Services.AddScoped<RPlantillaService>();
 
 // Inyección de Dependencias - Módulo de Estadísticas
 builder.Services.AddScoped<REstadisticasService>();

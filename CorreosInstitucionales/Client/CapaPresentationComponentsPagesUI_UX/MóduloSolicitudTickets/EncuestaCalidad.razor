@@ -1,0 +1,304 @@
+﻿@inject DialogService DialogService
+
+<h3>@Title</h3>
+
+@if(solicitud is not null)
+{
+    <div class="row">
+        <div class="col mb-4 text-end">
+            <hr />
+            <strong>Última Actualización:</strong> @solicitud.SolFechaHoraActualizacion<br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <strong>Observaciones</strong>
+            <pre class="shadow border border-secondary rounded-2 p-3">@solicitud.SolObservacionesSolicitud</pre>
+
+            <div class="row my-2">
+                @if (solicitud.SolCapturaCuentaBloqueada != "-")
+                {
+                    <div class="col">
+                        <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerDocumento(solicitud.SolCapturaCuentaBloqueada!, solicitud))">Ver Captura de cuenta Bloqueada (PDF)</button>
+                    </div>                    
+                }
+
+                @if (solicitud.SolCapturaEscaneoAntivirus != "-")
+                {
+                    <div class="col">
+                        <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerDocumento(solicitud.SolCapturaEscaneoAntivirus!, solicitud))">Ver Captura de Escaneo de Antivirus (PDF)</button>
+                    </div>
+                }
+
+                @if (solicitud.SolCapturaError != "-")
+                {
+                    <div class="col">
+                        <button class="btn btn-primary form-control" @onclick="@(async ()=> await VerDocumento(solicitud.SolCapturaError!, solicitud))">Ver Captura de Error (PDF)</button>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col">
+            <strong>Respuesta Mesa de Control</strong>
+            <pre class="shadow border border-info rounded-2 p-3">@solicitud.SolRespuestaDcyC</pre>
+        </div>
+
+        @if (solicitud.SolEncuestaCalidadCalificacion is not null)
+        {
+            <div class="col">
+                <strong>Encuesta de Calidad:</strong>
+                <pre class="shadow border border-secondary rounded-2 p-3">@solicitud.SolEncuestaCalidadComentarios</pre>
+                @switch (solicitud.SolEncuestaCalidadCalificacion)
+                {
+                    case 1:
+                        <span class="h1">😣</span>
+                        <small><b>Muy Malo</b></small>
+                        break;
+                    case 2:
+                        <span class="h1">😦</span>
+                        <small><b>Malo</b></small>
+                        break;
+                    case 3:
+                        <span class="h1">😶</span>
+                        <small><b>Normal</b></small>
+                        break;
+                    case 4:
+                        <span class="h1">😊</span>
+                        <small><b>Bien</b></small>
+                        break;
+                    case 5:
+                        <span class="h1">😄</span>
+                        <small><b>Excelente</b></small>
+                        break;
+                    default:
+                        break;
+                }
+            </div>
+        }
+
+    </div>
+}
+
+<RadzenPanel Visible="@(solicitud is not null && solicitud.SolEncuestaCalidadCalificacion is null && !encuesta_enviada)">
+    <RadzenFieldset AllowCollapse="false" ExpandTitle="Encuesta de Satisfacción" CollapseTitle="Encuesta de Satisfacción" ExpandAriaLabel="" CollapseAriaLabel="" class="rz-border-base-500 rz-border-radius-1 rz-shadow-3 py-0">
+        <HeaderTemplate>
+            <span class="d-inline-flex align-items-center align-middle">
+                <RadzenIcon Icon="hourglass_top" IconColor="@Colors.Secondary" />&ensp;<b style="font-variant: small-caps;">Encuesta de Satisfacción</b>
+            </span>
+        </HeaderTemplate>
+        <ChildContent>
+            @if (oEncuestaCalidad is not null)
+            {
+                <EditForm Model="@oEncuestaCalidad" OnValidSubmit="@EnviarEncuestaCalidad">
+
+                    <DataAnnotationsValidator />
+
+                    <div class="row gap-0">
+                        <div class="col-md-6 col-lg-6 align-items-center mb-3">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceEvenly" Wrap="FlexWrap.NoWrap" Gap="10px" class="">
+
+                                <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0px" class="">
+                                    <RadzenText Text="@($@"Califica la calidad del servicio atendido:")" TextAlign="TextAlign.Center" TextStyle="TextStyle.Body1" Visible="true" />
+                                    <RadzenRating Stars="5" @bind-Value="@oEncuestaCalidad.Calificacion" Change="@(args => Console.WriteLine(args))" Placeholder="1-5" Disabled="false" ReadOnly="false" style="" />
+                                    <ValidationMessage For="@(() => oEncuestaCalidad.Calificacion)" />
+                                </RadzenStack>
+
+
+                            </RadzenStack>
+                        </div>
+
+                        <div class="col-md-6 col-lg-6 mb-3">
+                            <RadzenFormField Text="Observaciones" AllowFloatingLabel="false" Variant="Variant.Outlined" class="w-100">
+                                <Start>
+                                    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap" Gap="0px" class="p-3">
+                                        @{
+                                            switch (oEncuestaCalidad.Calificacion)
+                                            {
+                                                case 1:
+                                                    <span class="h1">😣</span>
+                                                    <small><b>Muy Malo</b></small>
+                                                    break;
+                                                case 2:
+                                                    <span class="h1">😦</span>
+                                                    <small><b>Malo</b></small>
+                                                    break;
+                                                case 3:
+                                                    <span class="h1">😶</span>
+                                                    <small><b>Normal</b></small>
+                                                    break;
+                                                case 4:
+                                                    <span class="h1">😊</span>
+                                                    <small><b>Bien</b></small>
+                                                    break;
+                                                case 5:
+                                                    <span class="h1">😄</span>
+                                                    <small><b>Excelente</b></small>
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    </RadzenStack>
+
+                                </Start>
+                                <ChildContent>
+                                    <RadzenTextArea Name="@($@"observaciones")" Placeholder="Escribe un comentario, nota o aclaración por el servicio de la Solicitud-Ticket atendida..." @bind-Value="@oEncuestaCalidad.Comentarios" aria-label="TextArea"
+                                    @oninput="@(e => oEncuestaCalidad.Comentarios = e.Value.ToString())" Cols="30" Rows="3" style="border-bottom: 3px solid red;" MinLength="1" MaxLength="300" class="w-100" Disabled="false" ReadOnly="false" />
+                                </ChildContent>
+                                <Helper><RadzenText TextStyle="TextStyle.Caption" /></Helper>
+                            </RadzenFormField>
+                            <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.Body1" class="rz-m-0">
+                                <b>@(300 - oEncuestaCalidad.Comentarios.Length)</b> caracteres restantes de <b>300</b> permitidos.
+                            </RadzenText>
+                            <ValidationMessage For="@(() => oEncuestaCalidad.Comentarios)" />
+                        </div>
+
+                        <div class="col-md-12 col-lg-12">
+                            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap" Gap="10px" class="">
+                                <ReCAPTCHA @ref="oReCAPTCHAComponent" SiteKey="6Ld6058pAAAAACiEYq0Khine3FWbHZpfyEraTlOX" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                                <RadzenButton Text="Calificar Encuesta de Calidad"
+                                BusyText="Calificando Encuesta de Calidad..."
+                                ButtonStyle="ButtonStyle.Success"
+                                ButtonType="ButtonType.Submit"
+                                IsBusy="@busyLoading"
+                                Icon="star"
+                                class="w-100 rz-ripple mt-3 mb-0"
+                                Shade="Shade.Default"
+                                Disabled="@(DisablePostButton || !context.Validate())"
+                                Size="ButtonSize.Medium"
+                                Variant="Variant.Filled"
+                                />
+                            </RadzenStack>
+                        </div>
+
+                    </div>
+                </EditForm>
+            }
+        </ChildContent>
+    </RadzenFieldset>
+</RadzenPanel>
+@code {
+    [Parameter]
+    public MtTbSolicitudesTicket? solicitud { get; set; } = null;
+
+    [Parameter]
+    public RequestDTO_EncuestaCalidad oEncuestaCalidad { get; set; } = new() { Calificacion = 5, Comentarios = ""};
+
+    string Title = "No se ha podido encontrar la solicitud";
+
+    string debug = string.Empty;
+
+    bool encuesta_enviada = false;
+
+    List<string> capturas = new();
+
+    @*///////////////////////////////////////////////  VALIDAR ReCAPTCHA  ////////////////////////////////////////////////////////////////////////*@
+    ReCAPTCHA oReCAPTCHAComponent = new();
+    // private bool ServerVerificatiing = false;
+    bool ValidReCAPTCHA = false;
+
+    void OnSuccess() => ValidReCAPTCHA = true;
+    void OnExpired() => ValidReCAPTCHA = false;
+
+    bool busyLoading = false;
+    bool DisablePostButton => !ValidReCAPTCHA;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(solicitud is not null && solicitud.SolIdTipoSolicitudNavigation is not null)
+        {
+            Title = $"Solicitud #{solicitud.IdSolicitudTicket} - {solicitud.SolIdTipoSolicitudNavigation.TiposolDescripcion}";
+        }
+    }
+
+    public async Task EnviarEncuestaCalidad()
+    {
+        if(solicitud is not null && ValidReCAPTCHA)
+        {
+            NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Duration = 3000,
+                    Summary = "Enviando su opinión"
+                }
+            );
+
+            busyLoading = true;
+            StateHasChanged();
+
+            oEncuestaCalidad.IdSolicitud = solicitud!.IdSolicitudTicket;
+
+            HttpResponseMessage request = await servicioSolicitud.EncuestaCalidadAsync(oEncuestaCalidad);
+
+            if(request.IsSuccessStatusCode)
+            {
+                Response<object>? oRespuesta = await request.Content.ReadFromJsonAsync<Response<object>>();
+
+                if (oRespuesta is not null && oRespuesta.Success == 1)
+                {
+                    NotificationService.Notify(new NotificationMessage
+                        {
+                            Severity = NotificationSeverity.Success,
+                            Duration = 3000,
+                            Summary = "Su opinión ha sido guardada"
+                        }
+                    );
+
+                    encuesta_enviada = true;
+                    StateHasChanged();
+                }else{
+                    NotificationService.Notify(new NotificationMessage
+                        {
+                            Severity = NotificationSeverity.Error,
+                            Duration = 3000,
+                            Summary = "No se pudo guardar."
+                        }
+                    );
+                }
+
+            }else{
+                NotificationService.Notify(
+                    new NotificationMessage
+                        {
+                            Severity = NotificationSeverity.Error,
+                            Duration = 3000,
+                            Summary = "Error",
+                            Detail = request.ReasonPhrase??await request.Content.ReadAsStringAsync()
+                        }
+                );
+            }
+
+        }
+
+        busyLoading = false;
+        StateHasChanged();
+    }// ENVIAR ENCUESTA DE CALIDAD
+
+    private async Task VerDocumento(string archivo, MtTbSolicitudesTicket solicitud)
+    {
+        string ruta = ServerFS.ArchivoRepositorio(solicitud.IdSolicitudTicket, archivo);
+        await VerPDF(ruta);
+    }
+
+    private async Task VerPDF(string archivo, string titulo = "Ver")
+    {
+        await DialogModalService.OpenAsync<PDFViewer>
+        (
+            titulo,
+            new Dictionary<string, object>()
+                {
+                {"file", archivo}
+                },
+            new DialogOptions()
+                {
+                    Width = "calc( 100vw - 8em )",
+                    Height = "calc( 100vh - 8em )",
+                    CssClass = "dialog_simple p-0",
+                    CloseDialogOnEsc = true,
+                    CloseDialogOnOverlayClick = true,
+                    Resizable = true,
+                    Draggable = true
+                }
+        );
+    }// VER PDF
+}

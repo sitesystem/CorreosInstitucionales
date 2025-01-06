@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Correo Guardado</title>
+</head>
+<body>
+<!--PLANTILLA_INICIO-->
+<div style="text-align:center;font-family: Arial, Helvetica, sans-serif">
+	<div style="display:inline-block;width:100%;max-width:700px;border:1px solid #AAA;border-radius:2px">
+		<div style="color:#691C32; background-color:#eee;padding:1em;">
+			<img 
+				id="correo_logo_saci" 
+				src="{logo_saci}"
+				title="Sistema de Atención para Correos Institucionales"
+				alt = "Sistema de Atención para Correos Institucionales"
+			>
+			<h1 style="text-align:center;font-size: 1.5em;">Sistema de Atención para Correos Institucionales</h1>
+		</div>
+		<div style="padding:1em; text-align:start">
+			<p style="text-align:center">  👉 <b>FAVOR DE NO RESPONDER A ESTE CORREO.</b></p>
+			<br>
+
+			<p>Saludos, {usuario.UsuNombres} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}:</p>
+			<p>
+				Por medio del presente nos permitimos informarle que su
+				solicitud de No. de Ticket <b>#{solicitud.IdSolicitudTicket}</b>,
+				ha sido cancelada por el siguiente motivo:	
+			</p>
+			
+			<blockquote>{solicitud.SolRespuestaDcyC}</blockquote>
+
+			<p>
+				Le recordamos que puede acceder a la <b>Plataforma SACI</b> desde la dirección 
+				<a href="https://www.saci.upiicsa.ipn.mx" target="_blank">https://www.saci.upiicsa.ipn.mx</a>,
+				utilizando su 
+				<span style="white-space: nowrap;">📧 <b>correo personal</b></span> 
+				y
+				<span style="white-space: nowrap;">🔑 <b>contraseña</b></span>
+				.
+			</p>
+
+			<p style="text-align: end;">Sin más que añadir, que tenga un excelente día.</p>
+		</div>
+		
+		<div style="padding:1em; text-align:justify;background-color: #eee;">
+			NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
+		</div>
+	</div>
+</div>
+<!--PLANTILLA_FIN-->
+<script>
+document.getElementById("correo_logo_saci").src="../img/logo_128.png";
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

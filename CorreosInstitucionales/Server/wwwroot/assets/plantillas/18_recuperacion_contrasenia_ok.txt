@@ -1,0 +1,24 @@
+*SACI | Sistema de Atención para Correos Institucionales*
+
+👉 *FAVOR DE NO RESPONDER A ESTE MENSAJE*
+
+Saludos, {usuario.UsuNombres} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}:
+
+Nos dirigimos a usted con el propósito de informarle que se ha procesado su solicitud de restablecimiento credenciales de acceso a la *Plataforma SACI* de la Unidad Académica *{escuela.EscNombreCorto} ({escuela.EscNombreLargo})*.
+
+*Datos de Acceso:*
+- 📧 *Correo personal* - {usuario.UsuCorreoPersonalCuentaActual}
+- ⏳ *Contraseña Temporal* - {datos.password}
+
+Le recordamos que puede acceder a la plataforma desde la dirección https://www.saci.upiicsa.ipn.mx, con su 📧*correo personal* y ⏳*contraseña temporal*.
+
+🔄 Adicionalmente, cabe mencionar que al momento de acceder al sistema, *se le solicitará que cambie su contraseña*; la cual deberá cumplir con los siguientes criterios de seguridad:
+
+- 8 caracteres como mínimo
+- Debe contener 1 número
+- Contener una mayúscula
+- Contener un carácter especial(#,$,!,?,etc.)
+
+Sin más que añadir, que tenga un excelente día.
+
+> NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.

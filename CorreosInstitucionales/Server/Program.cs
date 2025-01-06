@@ -1,4 +1,5 @@
 global using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
+global using CorreosInstitucionales.Shared.CapaDataAccess.DBContextCentral;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -13,9 +14,17 @@ using System.Text.Unicode;
 using Serilog;
 
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.LoginAuth;
-using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
 using CorreosInstitucionales.Shared.CapaEntities.Common;
+using CorreosInstitucionales.Shared.Constantes;
+
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones;
+
+using CorreosInstitucionales.Server.CapaDataAccess;
+
+using CorreosInstitucionales.Shared.CapaTools;
+using CorreosInstitucionales.Shared.CapaDataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +54,11 @@ builder.Services.AddDbContext<DbCorreosInstitucionalesUpiicsaContext>(optionsBui
 {
     optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer_Connection"),
     ob => ob.UseCompatibilityLevel(120));
+});
+
+builder.Services.AddDbContext<DbCentralizadaUpiicsaContext>(optionsBuilder =>
+{
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DBCentral_Connection"));
 });
 
 // LogReg (Archivo de Registros de Eventos)
@@ -148,8 +162,9 @@ builder.Services.AddAuthentication(auth =>
 builder.Services.AddScoped<ILoginAuthService, RLoginAuthService>();
 
 // Inyección de Dependencias - Módulo de Send Email & Send WhatsApp
-builder.Services.AddScoped<ISendEmailService, RSendEmailService>();
-builder.Services.AddScoped<ISendWhatsAppService, RSendWhatsAppService>();
+builder.Services.AddScoped<RSendEmailService>();
+builder.Services.AddScoped<RSendWhatsAppService>();
+builder.Services.AddScoped<RSendNotificacionesService>();
 
 // HTTCLIENT QUE ACEPTA HTTPS CON CERTIFICADOS AUTOFIRMADOS
 builder.Services.AddScoped
@@ -167,12 +182,6 @@ builder.Services.AddScoped
         }
     )
 );
-
-
-//builder.Services.AddSingleton<Plantillas>();
-builder.Services.AddMemoryCache();
-
-//builder.Services.AddTransient<DBCacheInitializer>();
 
 /******************************************************************************************************/
 
@@ -212,15 +221,19 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
-/*
 //https://stackoverflow.com/questions/75816727/blazor-webassembly-dbcontext-use-on-startup
 //https://stackoverflow.com/questions/72447401/cannot-resolve-scoped-service-from-root-provider-in-asp-net-core-6
 
-using (var scope = app.Services.CreateScope())
+using (DBSACI dbsaci = new DBSACI(builder.Configuration.GetConnectionString("SQLServer_Connection")!))
 {
-    DBCacheInitializer dbcache = scope.ServiceProvider.GetRequiredService<DBCacheInitializer>();
-    dbcache.Init();
+    AppCache.Escuela = await dbsaci.McCatEscuelas.Where(e => e.EscNoEscuela.Equals(appSettings!.ClaveEscuela)).FirstAsync();
+    AppCache.Plantillas = await dbsaci.McCatPlantillas.Where(p => p.PlaStatus.Equals(true)).ToArrayAsync();
+    AppCache.Enlaces = await dbsaci.McCatLinks.Where(p => p.LinkStatus.Equals(true)).ToArrayAsync();
+    AppCache.Anuncios = await dbsaci.McCatAnuncios.Where(p => p.AnuStatus.Equals(true)).ToListAsync();
+    AppCache.Semestres = await dbsaci.McCatSemestres.ToArrayAsync();
 }
-*/
+
+AppCache.LogoSACI = File.ReadAllBytes($"{ServerFS.GetBaseDir(true)}/assets/img/logo_128.png");
+
 app.Run();
 

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaDataAccess;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatálogos
 {
@@ -24,7 +25,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                 var list = new List<McCatAnuncio>();
 
                 if (filterByStatus)
-                    list = await _db.McCatAnuncios
+                    list = AppCache.Anuncios
                         .Where(
                             a => 
                                 a.AnuStatus &&
@@ -34,7 +35,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloCatál
                                     a.AnuVisibleHasta != null && a.AnuVisibleHasta <= DateTime.Now
                                 )
                         )
-                        .ToListAsync();
+                        .ToList();
                 else
                     list = await _db.McCatAnuncios.ToListAsync();
 

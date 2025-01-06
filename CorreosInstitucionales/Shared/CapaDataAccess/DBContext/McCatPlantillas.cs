@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 [Table("MC_catPlantillas")]
-public partial class McCatPlantilla
+public partial class McCatPlantillas
 {
     [Key]
     public int IdPlantilla { get; set; }

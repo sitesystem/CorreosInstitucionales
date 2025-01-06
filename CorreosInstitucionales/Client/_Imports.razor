@@ -40,8 +40,6 @@
 @using CorreosInstitucionales.Shared.CapaEntities.Request
 @using CorreosInstitucionales.Shared.CapaEntities.Response
 @using CorreosInstitucionales.Shared.CapaServices.BusinessLogic
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendEmail
-@using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp
 @using CorreosInstitucionales.Shared.CapaTools;
 @using CorreosInstitucionales.Shared.Constantes;
 
@@ -61,8 +59,6 @@
 
 @* Capa Tools Helper *@
 @inject IJSRuntime JSRuntime
-@inject ISendEmailService servicioSendEmail
-@inject ISendWhatsAppService servicioSendWhatsApp
 
 @* Módulo de Archivos *@
 @inject RArchivosService servicioArchivos

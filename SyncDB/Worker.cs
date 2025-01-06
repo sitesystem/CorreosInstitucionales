@@ -1,5 +1,8 @@
-﻿using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
+﻿using CorreosInstitucionales.Shared.CapaDataAccess;
+using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContextCentral;
+using CorreosInstitucionales.Shared.CapaTools;
+using CorreosInstitucionales.Shared.Constantes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SyncDB.Context;
@@ -17,15 +20,8 @@ namespace SyncDB
         protected readonly DBCentral _db_central;
         public bool IsRunning { get; private set; } = true;
 
-        public Worker()
+        public Worker(IConfiguration config)
         {
-            /* ================ CONFIGURACIÓN ================*/
-            var builder = new ConfigurationBuilder();
-            builder.SetBasePath(Directory.GetCurrentDirectory())
-                   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
-            IConfiguration config = builder.Build();
-
             /* ================ CONEXIÓN A BD ================*/
 
             _db_saci = new DBSACI(config.GetConnectionString("SQLServer_Connection")!);
@@ -33,6 +29,33 @@ namespace SyncDB
         }
 
         public async Task RunAsync()
+        {
+            await Syncronize();
+            await EncuestaCalidad();
+        }
+
+        public async Task EncuestaCalidad()
+        {
+            int id_pendinte = (int)TipoEstadoSolicitud.ATENDIDA;
+
+            MtTbSolicitudesTicket[] encuestas = await _db_saci.MtTbSolicitudesTickets
+                .Where(
+                    s => 
+                        s.SolEncuestaCalidadCalificacion == null &&
+                        s.SolIdEstadoSolicitud == id_pendinte
+                )
+                .Include(u => u.SolIdUsuarioNavigation)
+                .ToArrayAsync();
+
+            Console.WriteLine($"ENCUESTAS PENDIENTES: {encuestas.Length}");
+
+            foreach(MtTbSolicitudesTicket encuesta in encuestas)
+            {
+                Console.WriteLine($"{encuesta.IdSolicitudTicket} - {encuesta.SolEnvioEncuesta}");   
+            }
+        }
+
+        public async Task Syncronize()
         {
             int max_id_usuario_saci = await _db_saci.MpTbUsuarios.MaxAsync(u => u.IdUsuario);
             int max_id_usuario_central = 0;
@@ -49,7 +72,7 @@ namespace SyncDB
 
             delta_usuarios = usuarios_nuevos.Count;
 
-            if(delta_usuarios == 0)
+            if (delta_usuarios == 0)
             {
                 //Console.WriteLine("NO HAY REGISTROS PARA ACTUALIZAR.");
                 return;
@@ -70,31 +93,7 @@ namespace SyncDB
 
                 foreach (MpTbUsuario nuevo in usuarios_nuevos)
                 {
-                    await _db_central.TbUsuarios.AddAsync(new TbUsuario()
-                    {
-                        IdUsuario = nuevo.IdUsuario,
-                        UsuNombres = nuevo.UsuNombres,
-                        UsuPrimerApellido = nuevo.UsuPrimerApellido,
-                        UsuSegundoApellido = nuevo.UsuSegundoApellido,
-
-                        UsuCurp = nuevo.UsuCurp,
-
-                        UsuNoCelularActual = nuevo.UsuNoCelularActual,
-                        UsuNoCelularAnterior = nuevo.UsuNoCelularAnterior,
-
-                        UsuCorreoPersonalActual = nuevo.UsuCorreoPersonalCuentaActual,
-                        UsuCorreoPersonalAnterior = nuevo.UsuCorreoPersonalCuentaAnterior,
-                        UsuCorreoInstitucional = nuevo.UsuCorreoInstitucionalCuenta,
-
-                        UsuContraseniaPlataformas = nuevo.UsuContrasenia,
-                        UsuContraseniaCorreoInstitucional = nuevo.UsuCorreoInstitucionalContrasenia,
-
-                        UsuFechaHoraAlta = nuevo.UsuFechaHoraAlta,
-                        UsuFechaHoraActualizacion = nuevo.UsuFechaHoraActualizacion,
-
-                        UsuRecuperacionContrasenia = nuevo.UsuRecuperarContrasenia,
-                        UsuStatus = nuevo.UsuStatus
-                    });
+                    await _db_central.TbUsuarios.AddAsync(EntityUtils.Convertir_UsuarioCentral(nuevo));
                     Console.WriteLine($"AGREGADO {nuevo.IdUsuario}");
                 }
 
@@ -116,7 +115,7 @@ namespace SyncDB
                 }
 
             }
-            Console.WriteLine($"================================");
+            //Console.WriteLine($"================================");
         }
 
         public void Dispose()

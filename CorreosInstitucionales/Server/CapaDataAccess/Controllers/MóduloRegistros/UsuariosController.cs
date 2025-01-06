@@ -7,17 +7,25 @@ using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaTools;
 using CorreosInstitucionales.Shared.Constantes;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones;
+using System.Dynamic;
+using Azure.Identity;
+using CorreosInstitucionales.Shared.CapaDataAccess;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegistros
 {
     [Route("api/[controller]")]
     [ApiController]
     // [Authorize]
-    public class UsuariosController(DbCorreosInstitucionalesUpiicsaContext db, IHostEnvironment hostEnvironment, IWebHostEnvironment webHostEnvironment) : ControllerBase
+    public class UsuariosController(
+        DbCorreosInstitucionalesUpiicsaContext db, 
+        DbCentralizadaUpiicsaContext dbCentral,
+        RSendNotificacionesService servicioNotificacion
+        ) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
-        private readonly IHostEnvironment _hostEnvironment = hostEnvironment;
-        private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
+        private readonly DbCentralizadaUpiicsaContext _db_central = dbCentral;
+        private readonly RSendNotificacionesService _servicioNotificacion = servicioNotificacion;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
@@ -122,68 +130,60 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         [HttpPost]
         public async Task<IActionResult> AddData(RequestDTO_Usuario model)
         {
-            Response<object> oResponse = new();
-            CreatedAtActionResult oCreatedAtActionResult;
-
+            Response<int> oResponse = new();
+            
+            PlantillaManager plantilla = new PlantillaManager(AppCache.Plantillas);
+            TbUsuario usuario = EntityUtils.Convertir_UsuarioCentral(model);
+            
             try
             {
-                MpTbUsuario oUsuario = new()
-                {
-                    // DATOS ID DEL USUARIO
-                    IdUsuario = model.IdUsuario,
-                    UsuIdRol = model.UsuIdRol,
-                    UsuIdTipoPersonal = model.UsuIdTipoPersonal,
-                    // UsuToken = Guid.NewGuid().ToString("D"),
-                    // DATOS PERSONALES
-                    UsuNombres = model.UsuNombres.ToUpper().Trim(),
-                    UsuPrimerApellido = model.UsuPrimerApellido.ToUpper().Trim(),
-                    UsuSegundoApellido = model.UsuSegundoApellido?.ToUpper().Trim(),
-                    UsuCurp = model.UsuCurp.ToUpper(),
-                    UsuFileNameCurp = model.UsuFileNameCurp,
-                    UsuNoCelularAnterior = null,
-                    UsuNoCelularActual = model.UsuNoCelularActual,
-                    // DATOS ACADÉMICOS
-                    UsuBoletaAlumnoEgresado = model.UsuBoletaAlumnoEgresado,
-                    UsuBoletaPosgrado = model.UsuBoletaPosgrado,
-                    UsuIdCarrera = model.UsuIdCarrera,
-                    UsuSemestre = model.UsuSemestre,
-                    UsuAnioEgreso = model.UsuAnioEgreso,
-                    UsuFileNameComprobanteEstudios = model.UsuFileNameComprobanteEstudios,
-                    // DATOS LABORALES
-                    UsuNumeroEmpleadoContrato = model.UsuNumeroEmpleadoContrato?.Trim(),
-                    UsuIdAreaDepto = model.UsuIdAreaDepto,
-                    UsuNoExtensionAnterior = model.UsuNoExtensionAnterior?.Trim(),
-                    UsuNoExtensionActual = model.UsuNoExtensionActual?.Trim(),
-                    // DATOS DE LAS CREDENCIALES DE LA CUENTA EN LA APP
-                    UsuCorreoPersonalCuentaAnterior = model.UsuCorreoPersonalCuentaAnterior,
-                    UsuCorreoPersonalCuentaActual = model.UsuCorreoPersonalCuentaActual.Trim(),
-                    UsuContrasenia = Encrypt.GetSHA256(model.UsuContrasenia),
-                    UsuRecuperarContrasenia = false,
-                    // DATOS DEL CORREO INSTITUCIONAL
-                    UsuCorreoInstitucionalCuenta = model.UsuCorreoInstitucionalCuenta?.Trim(),
-                    UsuCorreoInstitucionalContrasenia = model.UsuCorreoInstitucionalContrasenia,
-                    // OTROS DATOS
-                    UsuFechaHoraAlta = DateTime.Now,
-                    UsuFechaHoraActualizacion = DateTime.Now,
-                    UsuStatus = model.UsuStatus,
-                    // DATOS FK NAVIGATION
-                    UsuIdAreaDeptoNavigation = null,
-                    UsuIdCarreraNavigation = null,
-                    UsuIdRolNavigation = null!,
-                    UsuIdTipoPersonalNavigation = null!
-                };
+                model.UsuContrasenia = Encrypt.GetSHA256(model.UsuContrasenia);
+                model.UsuFechaHoraAlta = DateTime.Now;
+                model.UsuFechaHoraActualizacion = DateTime.Now;
 
-                await _db.MpTbUsuarios.AddAsync(oUsuario);
+                await _db.MpTbUsuarios.AddAsync(model);
                 await _db.SaveChangesAsync();
 
-                oResponse.Success = 1;
+                await _db_central.AddAsync(usuario);
+                await _db_central.SaveChangesAsync();
 
-                oCreatedAtActionResult = CreatedAtAction(nameof(AddData), new { id = oUsuario.IdUsuario }, oUsuario);
-                oResponse.Message = oUsuario.IdUsuario.ToString(); // PK ID Único del Usuario Creado o dado de Alta
+                oResponse.Success = 1;
+                oResponse.Data = model.IdUsuario; // PK ID Único del Usuario Creado o dado de Alta
+
+                await _servicioNotificacion.NotificarUsuario(
+                    new() {
+                        { "usuario", model },
+                        { "escuela", AppCache.Escuela }
+                    }
+                    , model, PlantillaManager.FILTRO_REGISTRO_USUARIO
+                );
+
+                if (model.UsuSemestre == "ERROR")
+                {
+                    throw new Exception("DEBUG");
+                }
+
+                /*
+                if(response.Success == 1)
+                {
+                    oCreatedAtActionResult = CreatedAtAction(nameof(AddData), new { id = model.IdUsuario }, model);
+                }*/
             }
             catch (Exception ex)
             {
+                string traceid = $"{ServerFS.GetBaseDir(true)}/logs/error_alta_{Guid.NewGuid()}.txt";
+
                 oResponse.Message = ex.Message;
+
+                await _servicioNotificacion.NotificarUsuario(
+                    new() {
+                        { "usuario", model },
+                        { "escuela", AppCache.Escuela }
+                    }
+                    , model, PlantillaManager.FILTRO_ERROR
+                );
+
+                await System.IO.File.WriteAllTextAsync(traceid, oResponse.Message);
             }
 
             return Ok(oResponse);
@@ -258,7 +258,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         [HttpPut("resetPassword/{correoPersonal}/{curp}")]
         public async Task<IActionResult> ResetPassword(string correoPersonal, string curp)
         {
-            Response<MpTbUsuario> oRespuesta = new();
+            Response<bool> oRespuesta = new();
             try
             {
                 MpTbUsuario? oUsuario = await _db.MpTbUsuarios.Where(u => u.UsuCorreoPersonalCuentaActual == correoPersonal && u.UsuCurp == curp && u.UsuStatus == true)
@@ -266,19 +266,59 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
 
                 if (oUsuario != null)
                 {
+                    
                     const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&";
-                    string tmpPassword = new(Enumerable.Repeat(chars, 10).Select(s => s[new Random().Next(s.Length)]).ToArray());
-
-                    oUsuario.UsuContrasenia = Encrypt.GetSHA256(tmpPassword);
+                    
+                    string clave = new string(Enumerable.Repeat(chars, 10).Select(s => s[new Random().Next(s.Length)]).ToArray());
+                    
+                    oUsuario.UsuContrasenia = Encrypt.GetSHA256(clave);
                     oUsuario.UsuRecuperarContrasenia = true;
                     oUsuario.UsuFechaHoraActualizacion = DateTime.Now;
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
-                    await _db.SaveChangesAsync();
 
-                    oRespuesta.Success = 1;
-                    oRespuesta.Message = $"{tmpPassword}";
-                    oRespuesta.Data = oUsuario;
+                    int cambios = await _db.SaveChangesAsync();
+
+                    if(cambios == 1)
+                    {
+                        oRespuesta.Success = 1;
+
+                        Dictionary<string, object?> datos = new()
+                        {
+                            { "usuario", oUsuario },
+                            { "escuela", AppCache.Escuela },
+                            {
+                                "datos", new Dictionary<string, object?>()
+                                {
+                                    {"password" , clave }
+                                }
+                            }
+                        };
+
+                        PlantillaManager plantillas = new PlantillaManager(AppCache.Plantillas);
+                        Response<Notificacion?> notificacion = plantillas.GetNotificacion(datos, 1 , PlantillaManager.FILTRO_RECUPERACION_CONTRA);
+
+                        oRespuesta.Data = notificacion is not null && notificacion.Success == 1;
+
+                        if (oRespuesta.Data)
+                        {
+                            notificacion!.Data!.correo.EmailTo = oUsuario.UsuCorreoPersonalCuentaActual;
+                            notificacion!.Data!.wa.Number = oUsuario.UsuNoCelularActual;
+
+                            Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion!.Data!);
+                            oRespuesta.Data = response.Success == 1;
+                            if (!oRespuesta.Data)
+                            {
+                                oRespuesta.Message = response.Data!;
+                            }
+                        }
+                        else
+                        {
+                            oRespuesta.Message = notificacion!.Message;
+                        }
+                    }
+
+
                 }
                 else
                     oRespuesta.Message = "Verifique sus datos, no se encontró registrado el Correo Electrónico Personal y/o CURP. Si el problema persisite acudir a la Unidad Informática (UDI).";
@@ -295,19 +335,55 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
         public async Task<IActionResult> ChangePassword(int id, string newPassword)
         {
             Response<object> oRespuesta = new();
+            
 
             try
             {
                 MpTbUsuario? oUsuario = await _db.MpTbUsuarios.FindAsync(id);
-
+                
                 if (oUsuario != null)
                 {
+                    PlantillaManager plantilla = new PlantillaManager(AppCache.Plantillas);
+
                     oUsuario.UsuContrasenia = Encrypt.GetSHA256(newPassword);
                     oUsuario.UsuRecuperarContrasenia = false;
                     oUsuario.UsuFechaHoraActualizacion = DateTime.Now;
 
                     _db.Entry(oUsuario).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
+
+                    TbUsuario? usuario = await _db_central.TbUsuarios.FindAsync(id);
+                    if (usuario != null)
+                    {
+                        usuario.UsuContraseniaPlataformas = newPassword;
+                        usuario.UsuFechaHoraActualizacion = DateTime.Now;
+
+                        _db_central.Entry(usuario).State = EntityState.Modified;
+                        await _db_central.SaveChangesAsync();
+                    }
+
+                    Response<Notificacion?> notificacion = plantilla.GetNotificacion
+                    (
+                        new()
+                        {
+                            { "usuario", oUsuario },
+                            { "escuela", AppCache.Escuela },
+                            {
+                                "datos", new Dictionary<string, object?>()
+                                {
+                                    {"password" , newPassword }
+                                }
+                            }
+                        }, 1, PlantillaManager.FILTRO_CAMBIO_CONTRA
+                    );
+
+                    if (notificacion!= null && notificacion.Data != null)
+                    {
+                        notificacion.Data.correo.EmailTo = oUsuario.UsuCorreoPersonalCuentaActual;
+                        notificacion.Data.wa.Number = oUsuario.UsuNoCelularActual;
+
+                        Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data);
+                    }
                 }
 
                 oRespuesta.Success = 1;
@@ -315,6 +391,15 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloRegist
             catch (Exception ex)
             {
                 oRespuesta.Message = ex.Message;
+                /*
+                Response<Notificacion?> notificacion = plantilla.GetNotificacion
+                (
+                    new(),
+                    1, PlantillaManager.FILTRO_ALTA_USUARIO
+                );
+
+                Response<string> response = await _servicioNotificacion.EnviarAsync(notificacion.Data!);
+                */
             }
 
             return Ok(oRespuesta);

@@ -37,7 +37,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
 
     public virtual DbSet<McCatPiso> McCatPisos { get; set; }
 
-    public virtual DbSet<McCatPlantilla> McCatPlantillas { get; set; }
+    public virtual DbSet<McCatPlantillas> McCatPlantillas { get; set; }
 
     public virtual DbSet<McCatRole> McCatRoles { get; set; }
 
@@ -198,7 +198,7 @@ public partial class DbCorreosInstitucionalesUpiicsaContext : DbContext
                 .HasComment("Estado (1 = Activo, 0 = Inactivo)");
         });
 
-        modelBuilder.Entity<McCatPlantilla>(entity =>
+        modelBuilder.Entity<McCatPlantillas>(entity =>
         {
             entity.Property(e => e.PlaAsunto).HasDefaultValue("NO DEFINIDO");
             entity.Property(e => e.PlaStatus).HasDefaultValue(true);

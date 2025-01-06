@@ -4,14 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
 using CorreosInstitucionales.Server.CapaDataAccess.Controllers.SendEmail;
-using CorreosInstitucionales.Server.Correos;
-using CorreosInstitucionales.Server.MensajesWA;
 using CorreosInstitucionales.Server.Utils;
 
 using CorreosInstitucionales.Shared.CapaEntities.Request;
 using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendWhatsApp;
 using CorreosInstitucionales.Shared.Constantes;
+using CorreosInstitucionales.Shared.CapaServices.BusinessLogic.toolSendNotificaciones;
+using CorreosInstitucionales.Shared.CapaTools;
+using Serilog;
+using CorreosInstitucionales.Shared.CapaDataAccess;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolicitudes
 {
@@ -21,15 +23,11 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
     public class SolicitudesController
         (
             DbCorreosInstitucionalesUpiicsaContext db,
-            ISendEmailService servicioEmail,
-            IServiceProvider serviceProvider,
-            ISendWhatsAppService servicioWA
+            RSendNotificacionesService servicioNotificaciones
         ) : ControllerBase
     {
         private readonly DbCorreosInstitucionalesUpiicsaContext _db = db;
-        private readonly ISendEmailService _servicioCorreo = servicioEmail;
-        private readonly IServiceProvider _serviceProvider = serviceProvider;
-        private readonly ISendWhatsAppService _servicioWA = servicioWA;
+        private readonly RSendNotificacionesService _servicioNotificaciones = servicioNotificaciones;
 
         [HttpGet("filterByStatus/{filterByStatus}")]
         public async Task<IActionResult> GetAllDataByStatus(bool filterByStatus)
@@ -246,6 +244,31 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
                 oResponse.Message = count.ToString();
                 oResponse.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.Message = ex.Message;
+            }
+
+            return Ok(oResponse);
+        }
+
+        [HttpGet("filterByToken/{token}")]
+        public async Task<IActionResult> GetDataByToken(string token)
+        {
+            Response<MtTbSolicitudesTicket?> oResponse = new();
+
+            try
+            {
+                MtTbSolicitudesTicket? item = await _db.MtTbSolicitudesTickets
+                    .Where(
+                        s => s.SolToken.ToString().ToLower().Equals(token.ToLower())
+                    )
+                    .Include(t=>t.SolIdTipoSolicitudNavigation)
+                    .FirstOrDefaultAsync();
+
+                oResponse.Success = item is not null ? 1 : 0;
+                oResponse.Data = item;
             }
             catch (Exception ex)
             {
@@ -511,8 +534,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
         [HttpPatch("finalizar")]
         public async Task<IActionResult> FinalizarSolicitud(RequestDTO_FinalizarSolicitud oFinalizarSolicitud) // KeyValuePair<int, string> datos)
         {
-            Response<object> oRespuesta = new();
-            int guardados = 0;
+            Response<string?> oRespuesta = new();
 
             MtTbSolicitudesTicket? oSolicitud = null;
             
@@ -532,13 +554,28 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
                     oSolicitud.SolFechaHoraActualizacion = DateTime.Now;
 
                     _db.Entry(oSolicitud).State = EntityState.Modified;
-                    guardados = await _db.SaveChangesAsync();
-                }
-
-                if (guardados == 1)
-                {
+                    await _db.SaveChangesAsync();
+                
                     oRespuesta.Success = 1;
-                    await Notificar(oSolicitud!, (TipoEstadoSolicitud)oFinalizarSolicitud.Estado);
+
+                    Dictionary<string, object?> datos = new()
+                    {
+                        {"solicitud", oSolicitud },
+                        {"usuario", oSolicitud!.SolIdUsuarioNavigation },
+                        {"escuela", AppCache.Escuela }
+                    };
+
+                    int filtro = (TipoEstadoSolicitud)oSolicitud.SolIdEstadoSolicitud != TipoEstadoSolicitud.ATENDIDA ||
+                        ((TipoPersonal)oSolicitud.SolIdUsuarioNavigation!.UsuIdTipoPersonal).EsAlumnoOEgresado() ? 0 : 1;
+
+                    Response<string> notificar = await _servicioNotificaciones.NotificarUsuario(
+                        datos, 
+                        oSolicitud!.SolIdUsuarioNavigation!, 
+                        filtro, 
+                        oFinalizarSolicitud.Estado
+                    );
+
+                    oRespuesta.Data = notificar.Data;
                 }
             }
             catch (Exception ex)
@@ -548,83 +585,5 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers.MóduloSolici
 
             return Ok(oRespuesta);
         } // CANCELAR
-
-        [HttpPost("notificar")]
-        public async Task<IActionResult> Notificar(MtTbSolicitudesTicket solicitud, TipoEstadoSolicitud estado)
-        {
-            Response<object> oRespuesta = new();
-            string correo_personal = solicitud.SolIdUsuarioNavigation.UsuCorreoPersonalCuentaActual;
-            
-            if (Dominios.EsCorreoDePrueba(correo_personal))
-            {
-                oRespuesta.Success = 1;
-                return Ok(oRespuesta);
-            }
-
-            try
-            {
-                ComponentRenderer renderer = new(_serviceProvider);
-
-                Dictionary<string, object?> variables_correo = new()
-                {
-                    { "solicitud", solicitud }
-                };
-
-                RequestDTO_SendEmail correo = new()
-                {
-                    EmailTo = correo_personal,
-                };
-
-                RequestDTO_SendWhatsApp mensaje = new()
-                {
-                    Number = solicitud.SolIdUsuarioNavigation.UsuNoCelularActual.Replace(" ", string.Empty)
-                };
-
-                switch(estado)
-                {
-                    case TipoEstadoSolicitud.ATENDIDA:
-                        correo.Subject = "Su solicitud ha sido atendida por la mesa de control";
-
-                        switch ((TipoPersonal)solicitud.SolIdUsuarioNavigation.UsuIdTipoPersonal)
-                        {
-                            case TipoPersonal.ALUMNO:
-                            case TipoPersonal.EGRESADO:
-                            case TipoPersonal.POSGRADO:
-                                correo.Body = await renderer.GetHTML<AtendidoAlumnoYEgresado>(variables_correo);
-                                break;
-                            default:
-                                correo.Body = await renderer.GetHTML<AtendidoPersonal>(variables_correo);
-                                break;
-                        }
-
-                        mensaje.Message = await renderer.GetHTML<AtendidoWA>(variables_correo);
-
-                        break;
-
-                    case TipoEstadoSolicitud.CANCELADA:
-                        correo.Subject = "Su solicitud ha sido cancelada";
-                        correo.Body = await renderer.GetHTML<Cancelada>(variables_correo);
-
-                        mensaje.Message = await renderer.GetHTML<CanceladoWA>(variables_correo);
-                        break;
-                }
-
-                await _servicioCorreo.SendEmail(correo);
-
-                HttpResponseMessage oResponse =  await _servicioWA.SendWhatsAppAsync(mensaje);
-                if(!oResponse.IsSuccessStatusCode)
-                {
-                    oRespuesta.Success = 0;
-                    oRespuesta.Data = await oResponse.Content.ReadAsStringAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                oRespuesta.Success = 0;
-                oRespuesta.Data = ex.Message;
-            }
-
-            return Ok(oRespuesta);
-        }
     }
 }

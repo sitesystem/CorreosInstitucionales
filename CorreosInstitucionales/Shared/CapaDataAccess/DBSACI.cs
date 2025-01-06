@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
-namespace SyncDB.Context
+namespace CorreosInstitucionales.Shared.CapaDataAccess
 {
     public class DBSACI : DbCorreosInstitucionalesUpiicsaContext
     {

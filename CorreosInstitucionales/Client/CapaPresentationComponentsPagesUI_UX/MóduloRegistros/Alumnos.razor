@@ -1,5 +1,6 @@
 ﻿@page "/RegistroAlumnos"
 
+@using CorreosInstitucionales.Shared.CapaDataAccess;
 @attribute [AllowAnonymous]
 
 <style type="text/css"></style>
@@ -237,7 +238,7 @@
                                                     TValue="string"
                                                     ValueProperty="Key"
                                                     TextProperty="Value"
-                                                    Data="@oSemestres"
+                                                    Data="@AppCache.Semestres"
                                                     AllowClear="true"
                                                     AllowFiltering="true"
                                                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
@@ -732,25 +733,6 @@ else
         }
     }
 
-    @*///////////////////////////////////////////////  INICIALIZAR LISTA DE SEMESTRES  ///////////////////////////////////////////////*@
-    public class Semestres
-    {
-        public string Key { get; set; } = null!;
-        public string Value { get; set; } = null!;
-    }
-
-    private List<Semestres> oSemestres = new List<Semestres>
-    {
-        new Semestres() { Key = "1", Value = "1ro semestre" },
-        new Semestres() { Key = "2", Value = "2do semestre" },
-        new Semestres() { Key = "3", Value = "3ro semestre" },
-        new Semestres() { Key = "4", Value = "4to semestre" },
-        new Semestres() { Key = "5", Value = "5to semestre" },
-        new Semestres() { Key = "6", Value = "6to semestre" },
-        new Semestres() { Key = "7", Value = "7mo semestre" },
-        new Semestres() { Key = "8", Value = "8vo semestre" }
-    };
-
     @*///////////////////////////////////////////////  Egresado  //////////////////////////////////////////////////////////////////////*@
     private bool flagEsEgresado;
     private bool flagEsEgresadoDisabled;
@@ -883,164 +865,7 @@ else
             string fecha_hora_alta = ActionAddEdit == "agregar" ? DateTime.Now.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'") : oUsuario.UsuFechaHoraAlta.ToString("dddd',' dd 'de' MMMM 'del' yyyy 'a las' HH:mm:ss 'hrs.'");
             string password = ActionAddEdit == "agregar" ? oUsuario.UsuContrasenia : UsuContraseña;
             string agregar_actualizar = ActionAddEdit == "agregar" ? "registro" : "actualización de datos";
-            string entrega_credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) ? "<br>Por este medio se le hace entrega de sus <b>credenciales de acceso:</b><br>" : "";
-            string credenciales_acceso = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
-                                        $@"
-                                        <div align='center'>
-                                            <article class='container-fluid' style='background-color: rgb(244,244,244); width:700px; border-radius:10px; padding:5px; text-align:justify;'>
-				                                <div align='center'>
-						                            <table style='padding:5px; border: 1px solid black; border-collapse:collapse;' >
-							                            <thead>
-								                            <tr style='background-color: #dddddd;'>
-									                            <th scope='col' colspan='2' style='border: 1px solid black;'><b>Credenciales de Acceso a SACI</b></th>
-								                            </tr>
-							                            </thead>
-							                            <tbody>
-								                            <tr style='background-color: #ffffff;'>
-									                            <td width='250px' style='border: 1px solid black;'><b>✉️ Usuario:</b></td>
-									                            <td width='250px' style='border: 1px solid black;'><b>{oUsuario.UsuCorreoPersonalCuentaActual.Trim()}</b></td>
-								                            </tr>
-								                            <tr style='background-color: #dddddd;'>
-									                            <td width='250px' style='border: 1px solid black;'><b>🔑 Contraseña:</b></td>
-									                            <td width='250px' style='border: 1px solid black;'><b>{password}</b></td>
-								                            </tr>
-							                            </tbody>
-						                            </table>
-				                                </div>
-			                                </article>
-                                        </div>": "";
-
-            string msgEmail = $@"<body>
-	                                <header>
-		                                <div align='center'>
-			                                <p style='font-weight:bold; text-align:center; color:black;'>SACI | Sistema de Atención para Correos Institucionales</p>
-		                                </div>
-	                                </header>
-	                                <main class='container-fluid'>
-		                                <section>
-			                                <article style='background-color: rgb(255, 255, 255); border-radius:10px; padding:5px;'>
-				                                <p style='text-align:justify; color:black;'>
-                                                    ℹ️ <b>POR FAVOR NO RESPONDER A ESTE CORREO.</b><br><br>
-                                                    Estimad@: <br><b>{oUsuario.UsuNombres.Trim()} {oUsuario.UsuPrimerApellido.Trim()} {oUsuario.UsuSegundoApellido?.Trim()}</b><br><br>
-				                                    Se le informa que su {agregar_actualizar} fué exitoso en la <b>Plataforma SACI</b>
-				                                    de la Unidad Académica <b>{oEscuela?.Data?.EscNombreCorto} ({oEscuela?.Data?.EscNombreLargo})</b>.
-                                                    {entrega_credenciales_acceso}
-				                                </p>
-			                                </article>
-                                            {credenciales_acceso}
-			                                <div align='center'>
-				                                <article style='background-color: rgb(255, 255, 255); width:700px; border-radius:10px; padding:5px;'>
-					                                <p style='color:black;'>
-						                                Sus datos son los siguientes:<br>
-						                                <table style='text-align:justify;'>
-							                                <thead>
-								                                <tr>
-									                                <th scope='col' colspan='2' style='border: 1px solid black;'>Datos del Registro</th>
-								                                </tr>
-							                                </thead>
-							                                <tbody>
-								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Rol</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>Usuario</td>
-								                                </tr>
-								                                <tr>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Tipo de Personal</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{oTipoPersonal?.Data?.TipoperNombre}</td>
-								                                </tr>
-								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Nombre</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNombres}</td>
-								                                </tr>
-								                                <tr>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Primer Apellido</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuPrimerApellido}</td>
-								                                </tr>
-								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Segundo Apellido</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuSegundoApellido}</td>
-								                                </tr>
-								                                <tr>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ CURP</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuCurp}</td>
-								                                </tr>
-								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ No. de Celular</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{oUsuario.UsuNoCelularActual}</td>
-								                                </tr>
-								                                <tr>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Boleta</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{boleta}</td>
-								                                </tr>
-								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Carrera</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{carrera}</td>
-								                                </tr>
-								                                <tr>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Semestre</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{semestre}</td>
-								                                </tr>
-                                                                <tr>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Correo Institucional</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{correo_institucional}</td>
-								                                </tr>
-								                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Egresado</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{isEgresado}</td>
-								                                </tr>
-								                                <tr>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Año de Egreso</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{añoEgreso}</td>
-								                                </tr>
-                                                                <tr style='background-color: #dddddd;'>
-									                                <td width='200px' style='border: 1px solid black;'><b>✅ Fecha / Hora de Alta</b></td>
-									                                <td width='300px' style='border: 1px solid black;'>{fecha_hora_alta}</td>
-								                                </tr>
-							                                </tbody>
-						                                </table>
-					                                </p>
-				                                </article>
-			                                </div>
-			                                <footer>
-                                                <p style='color:black;'>
-                                                    Que tenga un excelente día.<br>
-                                                    NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
-                                                </p>
-                                            </footer>
-		                                </section>
-	                                </main>
-	                                <footer>
-		                                <div align='center'>
-			                                
-		                                </div>
-	                                </footer>
-                                </body>";
-
-            string credenciales_acceso_WA = !string.IsNullOrEmpty(UsuContraseña) || ActionAddEdit == "agregar" ?
-                                            "Por este medio se le hace entrega de sus _Credenciales de Acceso_ *a la Plataforma SACI*:\n\n" +
-                                            "   ✉ Usuario:\n               *" + oUsuario.UsuCorreoPersonalCuentaActual + "*\n" +
-                                            "   🔑 Contraseña:\n               *" + password + "*\n\n" : "";
-
-            oSendWhatsApp.Number = oUsuario.UsuNoCelularActual.Replace(" ", string.Empty);
-            oSendWhatsApp.Message = "*SACI (Sistema de Atención para Correos Institucionales)*\n" +
-                                    "ℹ *POR FAVOR NO RESPONDER A ESTE MENSAJE*\n\n" +
-                                    "Se le informa que su " + agregar_actualizar + " fué exitoso en la *Plataforma SACI* " + 
-                                    "de la Unidad Académica *" + oEscuela?.Data?.EscNombreCorto + " (" + oEscuela?.Data?.EscNombreLargo + ")*.\n\n" +
-                                    credenciales_acceso_WA +
-                                    "✅ Rol: *Usuario*\n" +
-                                    "✅ Tipo de Personal: *" + oTipoPersonal?.Data?.TipoperNombre + "*\n" +
-                                    "✅ Nombre: *" + oUsuario.UsuNombres.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido?.Trim() + "*\n" +
-                                    "✅ CURP: *" + oUsuario.UsuCurp + "*\n" +
-                                    "✅ No. de Celular: *" + oUsuario.UsuNoCelularActual + "*\n" +
-                                    "✅ Boleta: *" + boleta + "*\n" +
-                                    "✅ Carrera: *" + carrera + "*\n" +
-                                    "✅ Semestre: *" + semestre + "*\n" +
-                                    "✅ Correo Institucional: *" + correo_institucional + "*\n" +
-                                    "✅ Egresado: *" + isEgresado + "*\n" +
-                                    "✅ Año de Egreso: *" + añoEgreso + "*\n" +
-                                    "✅ Fecha / Hora de Alta: *" + fecha_hora_alta + "*\n\n" +
-                                    "Que tenga un excelente día.\n" +
-                                    "> *NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.*";
-
+            
             if (ActionAddEdit == "agregar")
             {
                 var verification = await servicioUsuario.ValidateByEmailCURP(oUsuario.UsuCorreoPersonalCuentaActual.Trim(), oUsuario.UsuCurp);
@@ -1062,18 +887,6 @@ else
                         oUsuario.UsuFileNameComprobanteEstudios = $"{Comprobante_Inscripcion}{Path.GetExtension(oUsuario.UsuFileNameComprobanteEstudios).ToLower()}";
                         oUploadFile_ComprobanteInscripción.Url = $"/api/RepositoryFiles/UploadSingleFile/{folder}/{idResponse}/{oUsuario.UsuFileNameComprobanteEstudios}/{oGuid}";
                         await oUploadFile_ComprobanteInscripción.Upload();
-
-                        @*//  ENVÍO DE WHATSAPP PARA AVISO DE REGISTRO EXITOSO  //*@
-                        await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
-
-                        @*//  ENVÍO DE CORREO ELECTRÓNICO PARA AVISO DE REGISTRO EXITOSO  //*@
-                        servicioSendEmail.SendEmailAsync(
-                            new RequestDTO_SendEmail()
-                            {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
-                                Subject = "SACI | REGISTRO DE USUARI@",
-                                Body = msgEmail
-                            });
 
                         @*//  NOTIFICATION TOAST REGISTRO EXITOSO  //*@
                         NotificationService.Notify(
@@ -1164,15 +977,7 @@ else
                     }
                     else
                     {
-                        await servicioSendEmail.SendEmailAsync(
-                            new RequestDTO_SendEmail()
-                            {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
-                                Subject = "SACI | ERROR DE REGISTRO",
-                                Body = "Estimad@: " + oUsuario.UsuNombres + " " + oUsuario.UsuPrimerApellido + " " + oUsuario.UsuSegundoApellido + "<br><br>" +
-                                       "Registro NO exitoso en el <b>Sistema de Atención para Correos Institucionales (SACI)</b><br>" +
-                                       "Por favor no responder a este correo, acuda a la unidad de informática de tu escuela<br>"
-                            });
+                        //TODO
                     }
                 }
                 else
@@ -1364,18 +1169,6 @@ else
                                     WrapperCssClass = "custom-dialog-wrapper-class"
                                 });
 
-                            @*//  ENVÍO DE WHATSAPP PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
-                            await servicioSendWhatsApp.SendWhatsAppAsync(oSendWhatsApp);
-
-                            @*//  ENVÍO DE EMAIL PARA ACTUALIZACIÓN DE DATOS EXITOSO  //*@
-                            servicioSendEmail.SendEmailAsync(
-                                new RequestDTO_SendEmail()
-                                {
-                                    EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
-                                    Subject = "SACI | Actualización de Datos",
-                                    Body = msgEmail
-                                });
-
                             await loginService.Logout();
                         }
 
@@ -1383,13 +1176,7 @@ else
                     }
                     else
                     {
-                        await servicioSendEmail.SendEmailAsync(new RequestDTO_SendEmail()
-                            {
-                                EmailTo = oUsuario.UsuCorreoPersonalCuentaActual.Trim(),
-                                Subject = "SACI | ERROR EN ACTUALIZACIÓN DE DATOS",
-                                Body = "Estimad@: " + oUsuario.UsuNombres.Trim() + " " + oUsuario.UsuPrimerApellido.Trim() + " " + oUsuario.UsuSegundoApellido?.Trim() + "<br><br>" +
-                                       "Actualización de datos NO exitosa en el <b>Sistema de Atención de Correos Institucionales IPN (SACI)</b><br>"
-                            });
+                        //TODO
                     }
                 }
                 else

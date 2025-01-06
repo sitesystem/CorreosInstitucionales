@@ -9,7 +9,7 @@ using CorreosInstitucionales.Shared.CapaDataAccess.DBContext;
 
 namespace CorreosInstitucionales.Shared.CapaEntities.Request
 {
-    public class RequestViewModel_Plantilla : McCatPlantilla
+    public class RequestViewModel_Plantilla : McCatPlantillas
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Campo NOMBRE PLANTILLA requerido.")]
         public new string PlaNombre

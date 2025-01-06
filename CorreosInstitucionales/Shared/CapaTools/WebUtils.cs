@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using CorreosInstitucionales.Shared.CapaEntities.Request;
+using CorreosInstitucionales.Shared.CapaEntities.Response;
 using CorreosInstitucionales.Shared.CapaServices.BusinessLogic;
 using CorreosInstitucionales.Shared.Constantes;
 
@@ -14,6 +18,16 @@ namespace CorreosInstitucionales.Shared.CapaTools
 {
     public static class WebUtils
     {
+        private static JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true };
+        public static async Task<Response<T>?> GetResponse<T>(HttpResponseMessage message)
+        {
+            if(message.IsSuccessStatusCode)
+            {
+                return await message.Content.ReadFromJsonAsync< Response<T>>();
+            }
+
+            return new Response<T>() { Success = 0, Message = message.StatusCode.ToString() +Environment.NewLine + message.ReasonPhrase };
+        }
         public static async Task<List<T>> ListByStatusAsync<T>(IGenericService<T> service, bool filterByStatus = true)
         {
             List<T> result = [];

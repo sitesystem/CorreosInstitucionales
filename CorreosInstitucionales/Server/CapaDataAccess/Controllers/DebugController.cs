@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using CorreosInstitucionales.Shared.CapaTools;
+using CorreosInstitucionales.Shared.CapaDataAccess;
 
 namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
 {
@@ -14,6 +16,12 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
         public IActionResult Prueba()
         {
             return Ok("Prueba");
+        }
+
+        [HttpGet("cache")]
+        public IActionResult CacheData()
+        {
+            return Ok($"PLANTILLAS: {AppCache.Plantillas.Length}");
         }
     }
 }
