@@ -302,6 +302,13 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         for (int row = 5; row<=n; row++)
                         {
                             CURP = ws.Cell(row, columna[TipoDatoXLSX.CURP]).Value.ToString().Trim();
+
+                            if (string.IsNullOrEmpty(CURP ))
+                            {
+                                IXLAddress tmp = ws.Cell(row, columna[TipoDatoXLSX.CURP]).Address;
+                                logs.Add($"[INFO] CURP VACÍO EN {tmp.ToString()}, IGNORANDO");
+                                continue;
+                            }
                             
                             lista_curps.Add(CURP);
 
@@ -317,7 +324,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                                 Accion = ws.Cell(row, columna[TipoDatoXLSX.ACCION]).Value.ToString()
                             };
 
-                            if(string.IsNullOrEmpty(registro_actual.Accion ))
+                            if(string.IsNullOrEmpty(registro_actual.Accion))
                             {
                                 registro_actual.Accion = "Registro actualizado";
                             }
@@ -325,7 +332,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                             registros.Add(CURP, registro_actual);
                         }
 
-                        logs.Add("SE ENCONTRARON LAS SIGUIENTES COLUMNAS:");
+                        logs.Add("[INFO] SE ENCONTRARON LAS SIGUIENTES COLUMNAS:");
 
                         IXLCell cell;
 
@@ -343,7 +350,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                     }//LEER XLSX
                     else
                     {
-                        logs.Add("EL ARCHIVO NO CUENTA CON REGISTROS.");
+                        logs.Add("[INFO] EL ARCHIVO NO CUENTA CON REGISTROS.");
                     }
 
                     List<MtTbSolicitudesTicket> notificar = new();
@@ -358,7 +365,14 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         .Include(st => st.SolIdUsuarioNavigation)
                         .ToListAsync();
 
-                    logs.Add($"{Environment.NewLine}SE ACTUALIZARÁN {solicitudes.Count} PENDIENTE{(solicitudes.Count == 1 ? string.Empty : "S")} DE {registros.Count} REGISTRO{(registros.Count == 1 ? string.Empty : "S")} DEL ARCHIVO...");
+                    if (solicitudes.Count > 0)
+                    {
+                        logs.Add($"[INFO] {Environment.NewLine}SE ACTUALIZARÁN {solicitudes.Count} PENDIENTE{(solicitudes.Count == 1 ? string.Empty : "S")} DE {registros.Count} REGISTRO{(registros.Count == 1 ? string.Empty : "S")} DEL ARCHIVO...");
+                    }
+                    else
+                    {
+                        logs.Add($"[INFO] NO SE ACTUALIZARÁN REGISTROS...");
+                    }
 
                     logs.Add(RegistroImportacion.GetHeaders());
 
@@ -402,7 +416,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                                 }
                             }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalCuenta = registro_actual.CorreoInstitucional;
-                            logs.Add($"\t - SE ACTUALIZÓ EL CORREO INSTITUCIONAL");
+                            logs.Add($"\t - [INFO] SE ACTUALIZÓ EL CORREO INSTITUCIONAL");
                         }
 
                         if (datos_a_actualizar.Contains(TipoDatoXLSX.CONTRA) || actualizar_todo)
@@ -418,7 +432,7 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                                 }
                             }
                             solicitud.SolIdUsuarioNavigation.UsuCorreoInstitucionalContrasenia = registro_actual.Clave;
-                            logs.Add($"\t - SE ACTUALIZÓ LA CONTRASEÑA");
+                            logs.Add($"\t - [INFO] SE ACTUALIZÓ LA CONTRASEÑA");
                         }
 
                         solicitud.SolRespuestaDcyC = registro_actual.Accion;
@@ -428,11 +442,15 @@ namespace CorreosInstitucionales.Server.CapaDataAccess.Controllers
                         notificar.Add(solicitud);
                     });
 
-                    int guardados = await _db.SaveChangesAsync();
-
-                    if (guardados > 0)
+                    // GUARDAR ÚNICAMENTE SI ES NECESARIO
+                    if (solicitudes.Count > 0)
                     {
-                        await EnvioMasivo(notificar, (int)TipoEstadoSolicitud.ATENDIDA);
+                        int guardados = await _db.SaveChangesAsync();
+
+                        if (guardados > 0)
+                        {
+                            await EnvioMasivo(notificar, (int)TipoEstadoSolicitud.ATENDIDA);
+                        }
                     }
                 }
 
