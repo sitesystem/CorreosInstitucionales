@@ -3,12 +3,12 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Correo Guardado</title>
+	<title>SACI | Registro en Sistema</title>
 </head>
 <body>
 <!--PLANTILLA_INICIO-->
 <div style="text-align:center;font-family: Arial, Helvetica, sans-serif">
-	<div style="display:inline-block;width:100%;max-width:700px;border:1px solid #AAA;border-radius:2px">
+	<div style="display:inline-block;width:100%;max-width:700px;border:1px solid #CCC;border-radius:2px">
 		<div style="color:#691C32; background-color:#eee;padding:1em;">
 			<img 
 				id="correo_logo_saci" 
@@ -19,27 +19,39 @@
 			<h1 style="text-align:center;font-size: 1.5em;">Sistema de Atención para Correos Institucionales</h1>
 		</div>
 		<div style="padding:1em; text-align:start">
-			<p style="text-align:center">  👉 <b>FAVOR DE NO RESPONDER A ESTE CORREO.</b></p>
+			<p style="text-align:center">👉 <b>FAVOR DE NO RESPONDER A ESTE CORREO.</b></p>
 			<br>
 
 			<p>Saludos, {usuario.UsuNombres} {usuario.UsuPrimerApellido} {usuario.UsuSegundoApellido}:</p>
+
 			<p>
-				Gracias por utilizar SACI. Te agradeceríamos que nos dieras 3 minutos o menos para poder responder una breve encuesta de satisfacción de tu solicitud y compartir cómo fue su experiencia con nosotros.
+				A través de este medio, deseamos notificarle que se ha procesado exitosamente
+				su solicitud de cambio de contraseña, de acceso a la Plataforma SACI
+				de la Unidad Académica {escuela.EscNombreCorto} ({escuela.EscNombreLargo}).
 			</p>
+
+			<br>
 			
 			<p>
-				Le recordamos que puede acceder a la <b>Plataforma SACI</b> desde la dirección 
-				<a href="https://www.saci.upiicsa.ipn.mx" target="_blank">https://www.saci.upiicsa.ipn.mx</a>,
-				utilizando su 
-				<span style="white-space: nowrap;">📧 <b>correo personal</b></span> 
-				y
-				<span style="white-space: nowrap;">🔑 <b>contraseña</b></span>
-				.
+				<b>Datos de Acceso:</b>
+				<ul>
+					<li>📧 <b>Correo personal</b> - {usuario.UsuCorreoPersonalCuentaActual}</li>
+					<li>🔑 <b>Contraseña</b> - {datos.password}</li>
+				</ul>
 			</p>
+
+			<br>
+
+			<p>
+				Le recordamos que puede acceder a la plataforma desde la dirección 
+				<a href="https://www.saci.upiicsa.ipn.mx" target="_blank">https://www.saci.upiicsa.ipn.mx</a>,
+				con su 📧<b>correo personal</b> y 🔑<b>contraseña</b>.
+			</p>
+			<br>
 
 			<p style="text-align: end;">Sin más que añadir, que tenga un excelente día.</p>
 		</div>
-		
+
 		<div style="padding:1em; text-align:justify;background-color: #eee;">
 			NUESTRO MAYOR COMPROMISO ES BRINDARLE CON EFICIENCIA Y CALIDAD EL SERVICIO.
 		</div>
